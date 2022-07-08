@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "callament"
+version = "0.0.1"
+description = "Callament helps people contact their representatives."
+authors = ["Tim Weber"]
+license = "AGPL-3.0"
+
+[tool.poetry.dependencies]
+python = "^3.6.2"
+fastapi = "^0.78"
+
+[tool.poetry.dev-dependencies]
+uvicorn = {extras = ["standard"], version = "^0.16"}
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
