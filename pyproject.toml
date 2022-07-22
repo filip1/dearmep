@@ -6,11 +6,11 @@ authors = ["Tim Weber"]
 license = "AGPL-3.0"
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.7"
 fastapi = "^0.78"
 
 [tool.poetry.dev-dependencies]
-uvicorn = {extras = ["standard"], version = "^0.16"}
+uvicorn = {extras = ["standard"], version = "^0.18.2"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
