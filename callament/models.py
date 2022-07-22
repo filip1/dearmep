@@ -1,19 +1,33 @@
+from re import compile
 from typing import Optional, Tuple
 
-from pydantic import BaseModel, Field, conint, constr
+from pydantic import BaseModel, ConstrainedInt, ConstrainedStr, Field
 
 
-Country = constr(to_lower=True, regex="[a-z]{2}")
+class Country(ConstrainedStr):
+    to_lower = True
+    regex = compile(r"[a-z]{2}")
 
-Language = constr(to_lower=True, regex="[a-z]{2}(?:-[a-z]{2})?")
 
-Weekday = conint(ge=0, le=6)
+class Hour(ConstrainedInt):
+    ge = 0
+    lt = 24
 
 
 class HourRange(BaseModel):
-    start: conint(ge=0, lt=24)
-    end: conint(ge=0, lt=24)
+    start: Hour
+    end: Hour
     # TODO: Validation.
+
+
+class Language(ConstrainedStr):
+    to_lower = True
+    regex = compile(r"[a-z]{2}(?:-[a-z]{2})?")
+
+
+class Weekday(ConstrainedInt):
+    ge = 0
+    le = 6
 
 
 class Schedule(BaseModel):

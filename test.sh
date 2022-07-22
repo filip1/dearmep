@@ -1,3 +1,3 @@
 #!/bin/sh
 
-poetry run flake8
+poetry run sh -c 'flake8 && mypy .'
