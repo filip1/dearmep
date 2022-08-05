@@ -6,7 +6,7 @@ authors = ["Tim Weber"]
 license = "AGPL-3.0"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 fastapi = "^0.79"
 
 [tool.poetry.dev-dependencies]
