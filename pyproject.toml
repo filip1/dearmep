@@ -7,7 +7,7 @@ license = "AGPL-3.0"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-fastapi = "^0.78"
+fastapi = "^0.79"
 
 [tool.poetry.dev-dependencies]
 uvicorn = {extras = ["standard"], version = "^0.18.2"}
