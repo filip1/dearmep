@@ -9,5 +9,5 @@
 ## Running a Development Server
 
 ```sh
-poetry run uvicorn --reload callament.main:app
+poetry run uvicorn --log-level debug --log-config logging.yaml --reload callament.main:app
 ```

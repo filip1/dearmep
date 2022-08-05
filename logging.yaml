@@ -1,0 +1,20 @@
+version: 1
+
+disable_existing_loggers: false
+
+formatters:
+  standard:
+    format: "%(asctime)s [%(name)s] %(levelname)s  %(message)s"
+  uvicorn:
+    format: "%(asctime)s %(levelprefix)s [%(name)s]  %(message)s"
+    class: uvicorn.logging.DefaultFormatter
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    stream: ext://sys.stdout
+    formatter: uvicorn
+
+root:
+  level: DEBUG
+  handlers: [console]
