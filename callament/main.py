@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 
-from . import VERSION
+from . import __version__
 
 from .models import Constraints, ConstraintsSuggestion
 
 
 app = FastAPI(
     title="Callament",
-    version=VERSION,
+    version=__version__,
 )
 
 
