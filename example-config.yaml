@@ -1,0 +1,75 @@
+# Options ending in `_duration` or `_timeout` (or simply named `duration` or
+# `timeout`) should be specified in seconds, unless noted otherwise.
+
+# Options ending in `_limit` (or simply named `limit`) should contain a string
+# compatible to the notation used by the `limit` Python library. See
+# <https://limits.readthedocs.io/en/latest/quickstart.html#rate-limit-string-notation>.
+# If a limit is being documented as applying "per IP address", the exact
+# definition may be more complex, especially when it comes to IPv6.
+
+
+# User authentication.
+authentication:
+
+  # A user's session, usually identified via a one-time code sent via SMS. These
+  # are managed via a non-permanent JWT session cookie that will get deleted
+  # once the user closes their browser window or logs out manually.
+  session:
+
+    # How long until the session times out due to inactivity. Any API request
+    # with a valid token will reset this timeout.
+    inactivity_timeout: 7200
+
+    # How long until the session times out regardless of any activity. This
+    # timeout does not reset. A new verification will need to take place once it
+    # has been reached. Its main purpose is to ensure that the user still owns
+    # the phone number, even if they artificially kept the session alive for
+    # days or even months.
+    authentication_timeout: 86400
+
+
+# Options regarding phone calls and SMS.
+telephony:
+
+  # Verifying phone numbers by sending an SMS to that number.
+  sms_verification:
+
+    # How long until verification codes sent via SMS expire.
+    timeout: 900
+
+    # After this many codes have been sent to a certain number without any of
+    # them being converted into a Session Token, add the number to a block list.
+    # It cannot be used again before being manually unlocked by an admin. This
+    # is to prevent spamming a victim with codes, incurring costs.
+    max_unused: 3
+
+    # How many verifications may be requested (possibly for different phone
+    # numbers, think call party behind a NAT) per IP address?
+    per_ip_limit: 3 per second, 10 per 6 hours
+
+    # How many SMS messages may the system send overall?
+    send_limit: 5 per second, 100 per hour
+
+
+# Localization options.
+l10n:
+
+  # Which language to fall back to if there is no localized message available
+  # for the user's language. Every string defined under `strings` needs to have
+  # a value provided for this language.
+  default_language: en
+
+  # Localized/translated strings.
+  # Each of the keys below `strings` defines a translateable string. You may
+  # either set the value to a simple string, in which case it will be used
+  # regardless of the user's language (good for single-language campaigns), but
+  # the recommended way is to provide a mapping of languages to strings.
+  # TODO: Explain further.
+  # The following placeholders are available in all of the strings:
+  #   {campaign}  The configured campaign name.
+  strings:
+
+    # Content of SMS sent to users when we need to verify their phone number.
+    # {code} will be replaced by a six-digit random number.
+    phone_number_verification_sms:
+      en: {code} is your {campaign} verification code. If you think you have received this message in error, simply ignore it.
