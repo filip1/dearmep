@@ -8,6 +8,7 @@ license = "AGPL-3.0"
 [tool.poetry.dependencies]
 python = "^3.8"
 fastapi = "^0.79"
+prometheus-fastapi-instrumentator = "^5.9.1"
 
 [tool.poetry.dev-dependencies]
 uvicorn = {extras = ["standard"], version = "^0.18.2"}
