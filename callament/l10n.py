@@ -1,11 +1,11 @@
 import re
-from typing import List, Tuple
+from typing import List
 
 
 Q_VALUE_RE = r"^(?:0(?:\.[0-9]{0,3})?|1(?:\.0{0,3})?)$"
 
 
-def parse_accept_language(spec: str) -> List[Tuple[str, float]]:
+def parse_accept_language(spec: str) -> List[str]:
     """Convert the value of an Accept-Language header to an ordered list."""
     # This will become the resulting list.
     pairs = []
@@ -32,4 +32,5 @@ def parse_accept_language(spec: str) -> List[Tuple[str, float]]:
         pairs.append((lang, q))
 
     pairs.sort(reverse=True, key=lambda pair: pair[1])
-    return pairs
+    # Cut off the q-value, the caller is probably not interested in it.
+    return [pair[0] for pair in pairs]
