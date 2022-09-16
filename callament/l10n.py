@@ -22,6 +22,10 @@ def parse_accept_language(spec: str) -> List[str]:
         split = pref.strip().split(";")
         # The base language is everything before the first semicolon.
         lang = split[0].strip()
+        # If the base language is empty (usually because the whole input string
+        # is empty), it makes no sense to use it.
+        if lang == "":
+            continue
 
         # To be future-proof, iterate over the other parts and look for one
         # starting with `q=`. Default to 1.0 if there is none.

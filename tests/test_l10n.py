@@ -13,6 +13,9 @@ import callament.l10n as l10n
     ("pt;gonzo=5", ["pt"]),  # option which is not a q-value
     ("en", ["en"]),
     ("pt;q=0.5,en;q=9000", ["en", "pt"]),  # invalid q-value equals 1.0
+    ("", []),  # empty Accept-Language header
+    ("  ", []),  # some spaces? still empty
+    ("de, , en", ["de", "en"]),  # ignore empty blocks
 ])
 def test_parse_accept_language(header: str, expected: List[str]):
     assert l10n.parse_accept_language(header) == expected
