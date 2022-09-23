@@ -1,12 +1,12 @@
 import logging
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import ValidationError
 from yaml.parser import ParserError
 
 from . import __version__
 from .api import v1 as api_v1
 from .config import APP_NAME, Config, ENV_PREFIX, Settings
-from .metrics import Prometheus
 
 
 _logger = logging.getLogger(__name__)
@@ -47,7 +47,7 @@ def start() -> FastAPI:
         version=__version__,
     )
 
-    Prometheus.get_instance(app).enable()
+    Instrumentator(should_group_status_codes=False).instrument(app).expose(app)
 
     app.include_router(api_v1.router, prefix="/api/v1")
 
