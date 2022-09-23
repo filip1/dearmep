@@ -1,6 +1,7 @@
+from contextlib import contextmanager
 from os import environ
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Optional
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -10,31 +11,50 @@ from callament.config import Config
 from callament.main import start
 
 
-@pytest.fixture
-def fastapi_factory(request: pytest.FixtureRequest, tmp_path: Path):
+@contextmanager
+def fastapi_factory_func(
+    config_path: Optional[Path] = None,
+    config_content: Optional[bytes] = None,
+):
     top_dir = Path(__file__).parent.parent
-    path_marker = request.node.get_closest_marker("config_path")
-    config_path = str(Path(top_dir, "example-config.yaml")) \
-        if path_marker is None else path_marker.args[0]
+    # By default, let the tests use the example config.
+    config_path = Path(top_dir, "example-config.yaml") \
+        if config_path is None else config_path
 
     # Allow dynamically passing config YAML.
-    content_marker = request.node.get_closest_marker("config_content")
-    if content_marker is not None:
-        config_path = tmp_path / "override.yaml"
-        config_path.write_bytes(content_marker.args[0])
+    if config_content is not None:
+        config_path.write_bytes(config_content)
 
     # Point to the example (or override) config file.
     cfg_var = "CALLAMENT_CONFIG"
     config_before = environ.get(cfg_var)
     environ[cfg_var] = str(config_path)
 
-    yield start
+    try:
+        yield start
+    finally:
+        # Restore the config env variable's setting. Probably unnecessary.
+        if config_before is None:
+            del environ[cfg_var]
+        else:
+            environ[cfg_var] = config_before
 
-    # Restore the config env variable's setting. Probably unnecessary.
-    if config_before is None:
-        del environ[cfg_var]
-    else:
-        environ[cfg_var] = config_before
+
+@pytest.fixture
+def fastapi_factory(request: pytest.FixtureRequest, tmp_path: Path):
+    # Allow choosing a different config file.
+    path_marker = request.node.get_closest_marker("config_path")
+    config_path = None if path_marker is None else path_marker.args[0]
+
+    # Allow dynamically passing config YAML.
+    content_marker = request.node.get_closest_marker("config_content")
+    config_content = None
+    if content_marker is not None:
+        config_path = tmp_path / "override.yaml"
+        config_content = content_marker.args[0]
+
+    with fastapi_factory_func(config_path, config_content) as start:
+        yield start
 
 
 @pytest.fixture
