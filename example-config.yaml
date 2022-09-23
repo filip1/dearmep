@@ -53,10 +53,21 @@ telephony:
 
 # Localization options.
 l10n:
+  # The languages your campaign is available in. You have to use a language tag
+  # as defined in RFC 5646. (Try not to be over-specific though. `en-UK` is
+  # fine, `de-Latn-DE-1996` might be overdoing it and cause issues when auto-
+  # detecting a user's language.) The first value in this list will be the
+  # default if the user's browser claims they accept `*` (i.e. "any language").
+  # You therefore probably want to make sure that the first value here is
+  # identical to the `default_language` set below.
+  languages: [ en, de-AT ]
 
   # Which language to fall back to if there is no localized message available
   # for the user's language. Every string defined under `strings` needs to have
-  # a value provided for this language.
+  # a value provided for this language. This is also what the language auto-
+  # detection falls back to if the user does not specify a supported language
+  # in their preferences. This has to be one of the languages defined in the
+  # `languages` list above.
   default_language: en
 
   # Localized/translated strings.
@@ -72,4 +83,4 @@ l10n:
     # Content of SMS sent to users when we need to verify their phone number.
     # {code} will be replaced by a six-digit random number.
     phone_number_verification_sms:
-      en: {code} is your {campaign} verification code. If you think you have received this message in error, simply ignore it.
+      en: "{code} is your {campaign} verification code. If you think you have received this message in error, simply ignore it."

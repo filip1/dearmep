@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import List, Optional
+from typing import List, Optional, Sequence
 
 import maxminddb
 
@@ -55,7 +55,7 @@ def parse_accept_language(spec: str) -> List[str]:
 def find_preferred_language(
     *,
     prefs: List[str],
-    available: List[str],
+    available: Sequence[str],
     fallback: Optional[str] = None,
 ) -> str:
     """From a list of available languages, select the one most preferred.
