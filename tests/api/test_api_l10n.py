@@ -47,3 +47,10 @@ def test_l10n(fastapi_app: FastAPI, client: TestClient):
     assert location["country"] == "de"
     assert location["ip_address"] == ip_addr
     assert location["db_result"] == {"country": {"iso_code": "de"}}
+
+
+def test_l10n_without_addr_override(client: TestClient):
+    # Do a request without overriding the address, mainly for coverage of the
+    # real address dependable.
+    res = client.get("/api/v1/localization")
+    assert res.status_code == status.HTTP_200_OK
