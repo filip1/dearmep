@@ -62,6 +62,7 @@ def test_find_preferred_with_no_available_languages():
 
 
 @pytest.mark.parametrize("db,ip,expect", [
+    (None, "123.123.123.123", {"country": None, "db_result": None}),
     ("", "123.123.123.123", {"country": None, "db_result": None}),
     (TEST_MMDB, "123.123.123.123", {
         "country": "be", "db_result": {"country": "be"},

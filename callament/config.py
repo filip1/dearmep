@@ -18,6 +18,7 @@ class Language(ConstrainedStr):
 class L10nConfig(BaseModel):
     languages: List[Language]
     default_language: Language
+    geo_mmdb: Optional[FilePath]
 
     @validator("default_language")
     def default_language_must_be_in_languages(

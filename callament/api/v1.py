@@ -1,5 +1,3 @@
-from os import environ
-
 from fastapi import APIRouter, Header, Request
 from prometheus_client import Counter
 
@@ -26,9 +24,7 @@ def localize(request: Request, accept_language: str = Header("")):
     l10n_config = Config.get().l10n
     available_languages = l10n_config.languages
     default_language = l10n_config.default_language
-
-    # TODO: Read from config.
-    geo_db = environ.get("GEO_DB", "")
+    geo_db = l10n_config.geo_mmdb
 
     preferences = parse_accept_language(accept_language)
     recommended_lang = find_preferred_language(

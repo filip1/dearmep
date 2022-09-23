@@ -70,6 +70,16 @@ l10n:
   # `languages` list above.
   default_language: en
 
+  # Which MMDB geo-IP lookup database to use. Supply the file name relative to
+  # the working directory you're invoking the application from, or use an
+  # absolute path. If you do not set this value, IP-based geolocation will not
+  # be used.
+  # You may choose any MMDB, as long as the lookup results in a dict with a key
+  # `country` that contains either the ISO code as a string, or a sub-dict with
+  # a key `iso_code` that then contains the ISO code.
+  # Check out <https://github.com/geoacumen/geoacumen-country> for a free MMDB.
+  geo_mmdb: Geoacumen-Country.mmdb
+
   # Localized/translated strings.
   # Each of the keys below `strings` defines a translateable string. You may
   # either set the value to a simple string, in which case it will be used

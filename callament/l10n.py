@@ -1,6 +1,7 @@
 import logging
+from pathlib import Path
 import re
-from typing import List, Optional, Sequence
+from typing import List, Optional, Sequence, Union
 
 import maxminddb
 
@@ -103,7 +104,12 @@ def find_preferred_language(
         "none of the preferred languages are available")
 
 
-def get_country(db_file: str, ip_addr: str):
+def get_country(db_file: Optional[Union[str, Path]], ip_addr: str):
+    if db_file is None:
+        # Convenience to the caller: If no DB file is configured, return an
+        # empty result.
+        return LocationDetection(ip_address=ip_addr)
+
     country = res = None
 
     try:
