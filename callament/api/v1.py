@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Header, Request
+from fastapi import APIRouter, Depends, Header
 from prometheus_client import Counter
 
 from ..config import Config
 from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import LanguageDetection, LocalizationResponse
+from ..util import client_addr
 
 
 l10n_autodetect_counter = Counter(
@@ -20,7 +21,10 @@ router = APIRouter()
     "/localization",
     response_model=LocalizationResponse,
 )
-def localize(request: Request, accept_language: str = Header("")):
+def localize(
+    client_addr: str = Depends(client_addr),
+    accept_language: str = Header(""),
+):
     l10n_config = Config.get().l10n
     available_languages = l10n_config.languages
     default_language = l10n_config.default_language
@@ -33,11 +37,7 @@ def localize(request: Request, accept_language: str = Header("")):
                 fallback=default_language,
             )
 
-    location = get_country(
-        geo_db,
-        # If we don't have a client IP, we can't give it to the lookup code.
-        request.client.host if request.client else "",
-    )
+    location = get_country(geo_db, client_addr)
 
     # Track localization results in Prometheus.
     l10n_autodetect_counter.labels(
