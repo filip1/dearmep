@@ -47,7 +47,11 @@ def start() -> FastAPI:
         version=__version__,
     )
 
-    Instrumentator(should_group_status_codes=False).instrument(app).expose(app)
+    @app.on_event("startup")
+    def prometheus_instrument():
+        Instrumentator(
+            should_group_status_codes=False,
+        ).instrument(app).expose(app)
 
     app.include_router(api_v1.router, prefix="/api/v1")
 

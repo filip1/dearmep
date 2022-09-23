@@ -49,10 +49,14 @@ class Config(BaseModel):
         return cls._instance
 
     @classmethod
+    def load_dict(cls, obj: Dict) -> "Config":
+        cls._instance = cls.parse_obj(obj)
+        return cls._instance
+
+    @classmethod
     def load_yaml_file(cls, filename: Path) -> "Config":
         with filename.open("r") as f:
-            cls._instance = cls.parse_obj(yaml.load(f, yaml.Loader))
-        return cls._instance
+            return cls.load_dict(yaml.load(f, yaml.Loader))
 
 
 class Settings(BaseSettings):
