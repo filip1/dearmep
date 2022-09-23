@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -23,9 +23,36 @@ class LanguageDetection(BaseModel):
     )
 
 
+class LocationDetection(BaseModel):
+    country: Optional[str] = Field(
+        None,
+        description="The ISO code of the country the user most likely "
+                    "currently is in.",
+        example="be",
+    )
+    db_result: Any = Field(
+        None,
+        title="DB Result",
+        description="The raw geo database lookup result, mainly for debugging "
+                    "purposes.",
+        example={"country": "be"},
+    )
+    ip_address: Optional[str] = Field(
+        None,
+        title="IP Address",
+        description="The client's IP address that has been looked up in the "
+                    "location database. Can be IPv4 or IPv6.",
+        example="123.123.123.123",
+    )
+
+
 class LocalizationResponse(BaseModel):
     language: LanguageDetection = Field(
         ...,
         description="Information about the available and recommended "
                     "languages.",
+    )
+    location: LocationDetection = Field(
+        ...,
+        description="Information about the probable physical location.",
     )

@@ -1,8 +1,12 @@
-from typing import List, Literal, Optional, Union
+from pathlib import Path
+from typing import Any, Dict, List, Literal, Optional, Union
 
 import pytest
 
 import callament.l10n as l10n
+
+
+TEST_MMDB = str(Path(Path(__file__).parent, "geo_ip", "test.mmdb"))
 
 
 @pytest.mark.parametrize("header,expected", [
@@ -55,3 +59,22 @@ def test_find_preferred_language(
 def test_find_preferred_with_no_available_languages():
     with pytest.raises(ValueError):
         l10n.find_preferred_language(prefs=["de-DE", "*"], available=[])
+
+
+@pytest.mark.parametrize("db,ip,expect", [
+    ("", "123.123.123.123", {"country": None, "db_result": None}),
+    (TEST_MMDB, "123.123.123.123", {
+        "country": "be", "db_result": {"country": "be"},
+    }),
+    (TEST_MMDB, "2a01:4f8:c012:abcd::1", {
+        "country": "de", "db_result": {"country": {"iso_code": "de"}},
+    }),
+    (TEST_MMDB, "127.1.2.3", {
+        "country": None, "db_result": {"foo": "bar"},
+    }),
+])
+def test_get_country(db: str, ip: str, expect: Dict[str, Any]):
+    res = l10n.get_country(db, ip)
+    assert res.ip_address == ip
+    for k, v in expect.items():
+        assert getattr(res, k) == v

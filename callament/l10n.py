@@ -1,5 +1,13 @@
+import logging
 import re
 from typing import List, Optional
+
+import maxminddb
+
+from .models import LocationDetection
+
+
+_logger = logging.getLogger(__name__)
 
 
 Q_VALUE_RE = r"^(?:0(?:\.[0-9]{0,3})?|1(?:\.0{0,3})?)$"
@@ -93,3 +101,31 @@ def find_preferred_language(
 
     raise LanguageNotAvailableException(
         "none of the preferred languages are available")
+
+
+def get_country(db_file: str, ip_addr: str):
+    country = res = None
+
+    try:
+        with maxminddb.open_database(db_file) as reader:
+            res = reader.get(ip_addr)
+            if isinstance(res, dict):
+                country = res.get("country", None)
+                if isinstance(country, dict):
+                    country = country.get("iso_code", None)
+                if not isinstance(country, str):
+                    # This doesn't look right, country should be a string.
+                    country = None
+    except (
+        FileNotFoundError, ValueError, maxminddb.InvalidDatabaseError
+    ) as e:
+        _logger.exception(e)
+
+    if isinstance(country, str):
+        country = country.lower()
+
+    return LocationDetection(
+        country=country,
+        db_result=res,
+        ip_address=ip_addr,
+    )
