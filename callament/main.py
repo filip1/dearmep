@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 from fastapi import FastAPI
 from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import ValidationError
@@ -12,7 +13,7 @@ from .config import APP_NAME, Config, ENV_PREFIX, Settings
 _logger = logging.getLogger(__name__)
 
 
-def start() -> FastAPI:
+def start(config_dict: Optional[dict] = None) -> FastAPI:
     try:
         settings = Settings()
     except ValidationError as e:
@@ -28,7 +29,10 @@ def start() -> FastAPI:
         raise
 
     try:
-        Config.load_yaml_file(settings.config_file)
+        if config_dict is None:
+            Config.load_yaml_file(settings.config_file)
+        else:
+            Config.load_dict(config_dict)
     except ParserError:
         _logger.error(
             "There was an error loading your YAML config.",

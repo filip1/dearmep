@@ -4,7 +4,7 @@ from fastapi import status
 from fastapi.testclient import TestClient
 import pytest
 
-from conftest import fastapi_factory_func
+from conftest import fastapi_app_func, fastapi_factory_func
 
 
 # If we initialize the Prometheus instrumentator more than once, it will create
@@ -12,10 +12,11 @@ from conftest import fastapi_factory_func
 # this once.
 @pytest.fixture(scope="session")
 def prom_client():
-    # We can't simply use the fastapi_factory fixture because its scope is
+    # We can't simply use the fastapi_app fixture because its scope is
     # per-function, not per-session.
     with fastapi_factory_func() as start:
-        client = TestClient(start())
+        with fastapi_app_func(start) as app:
+            client = TestClient(app)
 
     with client as client_with_events:
         # The `with` causes `@app.on_event("startup")` code to run.

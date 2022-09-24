@@ -1,14 +1,35 @@
 from contextlib import contextmanager
 from os import environ
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable, Dict, Optional
+
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
+from pydantic.utils import deep_update
 import pytest
+import yaml
 
-from callament.config import Config
 from callament.main import start
+
+
+FactoryType = Callable[[Optional[dict]], FastAPI]
+
+
+@contextmanager
+def modified_environ(changes: Dict[str, str]):
+    """Change env variables while in the context, then change them back."""
+    origs: Dict[str, Optional[str]] = {}
+    for name, replacement in changes.items():
+        origs[name] = environ.get(name)
+        environ[name] = replacement
+
+    yield
+
+    for name, orig in origs.items():
+        if orig is None:
+            del environ[name]
+        else:
+            environ[name] = orig
 
 
 @contextmanager
@@ -16,6 +37,16 @@ def fastapi_factory_func(
     config_path: Optional[Path] = None,
     config_content: Optional[bytes] = None,
 ):
+    """Return the app factory, using the example (or a custom) YAML config.
+
+    If you don't supply any argument, the environment will be overridden to use
+    the example config. If you supply a config path, it will use that one
+    instead. If you supply config contents, it will write those into the
+    selected file before using it.
+
+    In other words, if you supply config_content, but not a config_path, this
+    will happily overwrite the example config with whatever you specify.
+    """
     top_dir = Path(__file__).parent.parent
     # By default, let the tests use the example config.
     config_path = Path(top_dir, "example-config.yaml") \
@@ -25,23 +56,19 @@ def fastapi_factory_func(
     if config_content is not None:
         config_path.write_bytes(config_content)
 
-    # Point to the example (or override) config file.
-    cfg_var = "CALLAMENT_CONFIG"
-    config_before = environ.get(cfg_var)
-    environ[cfg_var] = str(config_path)
-
-    try:
+    with modified_environ({"CALLAMENT_CONFIG": str(config_path)}):
         yield start
-    finally:
-        # Restore the config env variable's setting. Probably unnecessary.
-        if config_before is None:
-            del environ[cfg_var]
-        else:
-            environ[cfg_var] = config_before
 
 
 @pytest.fixture
 def fastapi_factory(request: pytest.FixtureRequest, tmp_path: Path):
+    """Provides the app factory.
+
+    This is basically just a fixture wrapping `fastapi_factory_func`. You can
+    supply a custom config path using the `config_path` marker, and custom
+    config contents using the `config_content` marker. If you use the latter,
+    your custom content will always be written to a temporary file.
+    """
     # Allow choosing a different config file.
     path_marker = request.node.get_closest_marker("config_path")
     config_path = None if path_marker is None else path_marker.args[0]
@@ -57,21 +84,31 @@ def fastapi_factory(request: pytest.FixtureRequest, tmp_path: Path):
         yield start
 
 
-@pytest.fixture
-def fastapi_app(fastapi_factory: Callable[[], FastAPI]):
+@contextmanager
+def fastapi_app_func(factory: FactoryType):
+    """Return the FastAPI app.
+
+    The config will be patched to use the test MMDB for geo IP lookups.
+    """
     tests_dir = Path(__file__).parent
 
-    app = fastapi_factory()
-    config = Config.get()
+    # Read the original config file as a Python object.
+    with open(environ["CALLAMENT_CONFIG"], "r") as f:
+        config_dict_orig = yaml.load(f, yaml.Loader)
+    # Modify the MMDB.
+    config_dict = deep_update(config_dict_orig, {
+        "l10n": {"geo_mmdb": str(Path(tests_dir, "geo_ip", "test.mmdb"))},
+    })
 
-    # Change the MMDB to point to the test one.
-    geo_mmdb_before = config.l10n.geo_mmdb
-    config.l10n.geo_mmdb = Path(tests_dir, "geo_ip", "test.mmdb")
+    app = factory(config_dict)
 
     yield app
 
-    # Restore the MMDB setting.
-    config.l10n.geo_mmdb = geo_mmdb_before
+
+@pytest.fixture
+def fastapi_app(fastapi_factory: FactoryType):
+    with fastapi_app_func(fastapi_factory) as app:
+        yield app
 
 
 @pytest.fixture
