@@ -73,6 +73,9 @@ def test_find_preferred_with_no_available_languages():
     (TEST_MMDB, "127.1.2.3", {
         "country": None, "db_result": {"foo": "bar"},
     }),
+    (TEST_MMDB, "1.0.0.1", {
+        "country": None, "db_result": {"country": {"iso_code": "None"}},
+    }),
 ])
 def test_get_country(db: str, ip: str, expect: Dict[str, Any]):
     res = l10n.get_country(db, ip)

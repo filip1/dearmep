@@ -17,9 +17,11 @@ def write_test_db(filename: str):
     be = enc.insert_data({"country": "be"})
     de_iso = enc.insert_data({"country": {"iso_code": "de"}})
     nonsense = enc.insert_data({"foo": "bar"})
+    none_country = enc.insert_data({"country": {"iso_code": "None"}})
     enc.insert_network("123.123.123.0/24", be)
     enc.insert_network("2a01:4f8::/32", de_iso)
     enc.insert_network("127.0.0.0/8", nonsense)
+    enc.insert_network("1.0.0.0/8", none_country)
     enc.write_file(filename)
 
 
