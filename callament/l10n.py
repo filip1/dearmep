@@ -125,16 +125,16 @@ def get_country(db_file: Optional[Union[str, Path]], ip_addr: str):
                 country = res.get("country", None)
                 if isinstance(country, dict):
                     country = country.get("iso_code", None)
-                if not isinstance(country, str):
-                    # This doesn't look right, country should be a string.
-                    country = None
     except (
         FileNotFoundError, ValueError, maxminddb.InvalidDatabaseError
     ) as e:
         _logger.exception(e)
 
-    if isinstance(country, str):
+    if isinstance(country, str) and 1 < len(country) < 4:
         country = country.lower()
+    else:
+        # Doesn't look right, country should be an ISO-639 code.
+        country = None
 
     return LocationDetection(
         available=available_countries,

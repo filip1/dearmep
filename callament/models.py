@@ -1,6 +1,12 @@
 from typing import Any, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConstrainedStr, Field
+
+
+class CountryCode(ConstrainedStr):
+    """An ISO-639 country code."""
+    min_length = 2
+    max_length = 3
 
 
 class LanguageDetection(BaseModel):
@@ -24,12 +30,12 @@ class LanguageDetection(BaseModel):
 
 
 class LocationDetection(BaseModel):
-    available: List[str] = Field(
+    available: List[CountryCode] = Field(
         ...,
         description="The list of countries supported by the server.",
         example=["at", "be", "uk"],
     )
-    country: Optional[str] = Field(
+    country: Optional[CountryCode] = Field(
         None,
         description="The ISO code of the country the user most likely "
                     "currently is in.",
