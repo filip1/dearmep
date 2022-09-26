@@ -24,6 +24,11 @@ class LanguageDetection(BaseModel):
 
 
 class LocationDetection(BaseModel):
+    available: List[str] = Field(
+        ...,
+        description="The list of countries supported by the server.",
+        example=["at", "be", "uk"],
+    )
     country: Optional[str] = Field(
         None,
         description="The ISO code of the country the user most likely "

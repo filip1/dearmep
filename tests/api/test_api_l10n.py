@@ -43,9 +43,13 @@ def test_l10n(fastapi_app: FastAPI, client: TestClient):
     location = data["location"]
     assert isinstance(location, dict)
 
+    assert "available" in location
+    assert location["available"] == ["at", "de"]
     assert "country" in location
     assert location["country"] == "de"
+    assert "ip_address" in location
     assert location["ip_address"] == ip_addr
+    assert "db_result" in location
     assert location["db_result"] == {"country": {"iso_code": "de"}}
 
 

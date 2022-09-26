@@ -105,10 +105,16 @@ def find_preferred_language(
 
 
 def get_country(db_file: Optional[Union[str, Path]], ip_addr: str):
+    # TODO: Generate from MEP list? Make configurable? (see #16)
+    available_countries = ["at", "de"]
+
     if db_file is None:
         # Convenience to the caller: If no DB file is configured, return an
         # empty result.
-        return LocationDetection(ip_address=ip_addr)
+        return LocationDetection(
+            available=available_countries,
+            ip_address=ip_addr,
+        )
 
     country = res = None
 
@@ -131,6 +137,7 @@ def get_country(db_file: Optional[Union[str, Path]], ip_addr: str):
         country = country.lower()
 
     return LocationDetection(
+        available=available_countries,
         country=country,
         db_result=res,
         ip_address=ip_addr,
