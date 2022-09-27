@@ -9,7 +9,7 @@ from pydantic.utils import deep_update
 import pytest
 import yaml
 
-from callament.main import start
+from dearmep.main import start
 
 
 FactoryType = Callable[[Optional[dict]], FastAPI]
@@ -56,7 +56,7 @@ def fastapi_factory_func(
     if config_content is not None:
         config_path.write_bytes(config_content)
 
-    with modified_environ({"CALLAMENT_CONFIG": str(config_path)}):
+    with modified_environ({"DEARMEP_CONFIG": str(config_path)}):
         yield start
 
 
@@ -93,7 +93,7 @@ def fastapi_app_func(factory: FactoryType):
     tests_dir = Path(__file__).parent
 
     # Read the original config file as a Python object.
-    with open(environ["CALLAMENT_CONFIG"], "r") as f:
+    with open(environ["DEARMEP_CONFIG"], "r") as f:
         config_dict_orig = yaml.load(f, yaml.Loader)
     # Modify the MMDB.
     config_dict = deep_update(config_dict_orig, {

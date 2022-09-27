@@ -7,7 +7,7 @@ from pydantic import BaseModel, BaseSettings, ConstrainedStr, Field, \
 import yaml
 
 
-APP_NAME = "Callament"
+APP_NAME = "DearMEP"
 ENV_PREFIX = f"{APP_NAME.upper()}_"
 
 

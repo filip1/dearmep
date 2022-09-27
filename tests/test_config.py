@@ -5,7 +5,7 @@ from pydantic import ValidationError
 import pytest
 from yaml.parser import ParserError
 
-from callament.config import Config, L10nConfig
+from dearmep.config import Config, L10nConfig
 
 
 def test_default_language_in_language_list():

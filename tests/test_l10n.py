@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Literal, Optional, Union
 
 import pytest
 
-import callament.l10n as l10n
+import dearmep.l10n as l10n
 
 
 TEST_MMDB = str(Path(Path(__file__).parent, "geo_ip", "test.mmdb"))

@@ -7,7 +7,7 @@ from .phone import elks
 
 
 app = FastAPI(
-    title="Callament 46elks Experiment",
+    title="DearMEP 46elks Experiment",
 )
 
 

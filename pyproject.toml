@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "callament"
+name = "DearMEP"
 version = "0.0.1"
-description = "Callament helps people contact their representatives."
+description = "DearMEP helps people contact their representatives."
 authors = ["Tim Weber"]
 license = "AGPL-3.0"
 

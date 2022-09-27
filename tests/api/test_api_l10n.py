@@ -1,7 +1,7 @@
 from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
 
-from callament.util import client_addr
+from dearmep.util import client_addr
 
 
 def test_l10n(fastapi_app: FastAPI, client: TestClient):
