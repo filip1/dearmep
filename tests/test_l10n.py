@@ -62,19 +62,25 @@ def test_find_preferred_with_no_available_languages():
 
 
 @pytest.mark.parametrize("db,ip,expect", [
-    (None, "123.123.123.123", {"country": None, "db_result": None}),
+    (None, "123.123.123.123", {
+        "country": None, "recommended": None, "db_result": None,
+    }),
     ("", "123.123.123.123", {"country": None, "db_result": None}),
     (TEST_MMDB, "123.123.123.123", {
-        "country": "be", "db_result": {"country": "be"},
+        "country": "be", "recommended": None, "db_result": {"country": "be"},
     }),
     (TEST_MMDB, "2a01:4f8:c012:abcd::1", {
-        "country": "de", "db_result": {"country": {"iso_code": "de"}},
+        "country": "de", "recommended": "de", "db_result": {
+            "country": {"iso_code": "de"},
+        },
     }),
     (TEST_MMDB, "127.1.2.3", {
-        "country": None, "db_result": {"foo": "bar"},
+        "country": None, "recommended": None, "db_result": {"foo": "bar"},
     }),
     (TEST_MMDB, "1.0.0.1", {
-        "country": None, "db_result": {"country": {"iso_code": "None"}},
+        "country": None, "recommended": None, "db_result": {
+            "country": {"iso_code": "None"},
+        },
     }),
 ])
 def test_get_country(db: str, ip: str, expect: Dict[str, Any]):

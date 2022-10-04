@@ -41,6 +41,14 @@ class LocationDetection(BaseModel):
                     "currently is in.",
         example="be",
     )
+    recommended: Optional[CountryCode] = Field(
+        None,
+        description="Which of the available languages matches the user's "
+                    "location. Will be `null` if none matches. There might "
+                    "be additional logic in the future that provides "
+                    "configurable fallbacks etc.",
+        example="be",
+    )
     db_result: Any = Field(
         None,
         title="DB Result",

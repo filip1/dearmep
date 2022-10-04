@@ -139,6 +139,7 @@ def get_country(db_file: Optional[Union[str, Path]], ip_addr: str):
     return LocationDetection(
         available=available_countries,
         country=country,
+        recommended=country if country in available_countries else None,
         db_result=res,
         ip_address=ip_addr,
     )

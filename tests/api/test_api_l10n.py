@@ -47,6 +47,8 @@ def test_l10n(fastapi_app: FastAPI, client: TestClient):
     assert location["available"] == ["at", "de"]
     assert "country" in location
     assert location["country"] == "de"
+    assert "recommended" in location
+    assert location["recommended"] == "de"
     assert "ip_address" in location
     assert location["ip_address"] == ip_addr
     assert "db_result" in location
