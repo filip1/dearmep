@@ -10,6 +10,7 @@ import pytest
 import yaml
 
 from dearmep.main import start
+from dearmep.util import Limit
 
 
 FactoryType = Callable[[Optional[dict]], FastAPI]
@@ -113,4 +114,5 @@ def fastapi_app(fastapi_factory: FactoryType):
 
 @pytest.fixture
 def client(fastapi_app: FastAPI):
+    Limit.reset_all_limits()
     yield TestClient(fastapi_app)

@@ -2,7 +2,7 @@
 # `timeout`) should be specified in seconds, unless noted otherwise.
 
 # Options ending in `_limit` (or simply named `limit`) should contain a string
-# compatible to the notation used by the `limit` Python library. See
+# compatible to the notation used by the `limits` Python library. See
 # <https://limits.readthedocs.io/en/latest/quickstart.html#rate-limit-string-notation>.
 # If a limit is being documented as applying "per IP address", the exact
 # definition may be more complex, especially when it comes to IPv6.

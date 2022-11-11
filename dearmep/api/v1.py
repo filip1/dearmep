@@ -4,13 +4,13 @@ from prometheus_client import Counter
 from ..config import Config
 from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import LanguageDetection, LocalizationResponse
-from ..util import client_addr
+from ..util import Limit, client_addr
 
 
-l10n_autodetect_counter = Counter(
+l10n_autodetect_total = Counter(
     "l10n_autodetect_total",
-    "Number of times language/country autodetection was performed, by results",
-    ["language", "country"],
+    "Number of times language/country autodetect was performed, by results.",
+    ("language", "country"),
 )
 
 
@@ -20,6 +20,8 @@ router = APIRouter()
 @router.get(
     "/localization",
     response_model=LocalizationResponse,
+    # TODO: This explicit limit here makes little sense, it's more of a demo.
+    dependencies=[Depends(Limit("5/minute"))],
 )
 def localize(
     client_addr: str = Depends(client_addr),
@@ -40,7 +42,7 @@ def localize(
     location = get_country(geo_db, client_addr)
 
     # Track localization results in Prometheus.
-    l10n_autodetect_counter.labels(
+    l10n_autodetect_total.labels(
         recommended_lang, str(location.country)
     ).inc()
 

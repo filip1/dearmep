@@ -4,13 +4,15 @@ from fastapi.testclient import TestClient
 from dearmep.util import client_addr
 
 
-def test_l10n(fastapi_app: FastAPI, client: TestClient):
-    # Set a custom source IP to get a defined geo IP result.
-    ip_addr = "2a01:4f8::1"
-    fastapi_app.dependency_overrides = {
+def override_client_addr(app: FastAPI, ip_addr: str):
+    """Set a custom source IP to get a defined geo IP result."""
+    app.dependency_overrides = {
         client_addr: lambda: ip_addr,
     }
 
+
+def test_l10n(fastapi_app: FastAPI, client: TestClient):
+    override_client_addr(fastapi_app, "2a01:4f8::1")
     res = client.get(
         "/api/v1/localization",
         headers={
@@ -50,7 +52,7 @@ def test_l10n(fastapi_app: FastAPI, client: TestClient):
     assert "recommended" in location
     assert location["recommended"] == "de"
     assert "ip_address" in location
-    assert location["ip_address"] == ip_addr
+    assert location["ip_address"] == "2a01:4f8::1"
     assert "db_result" in location
     assert location["db_result"] == {"country": {"iso_code": "de"}}
 
@@ -60,3 +62,12 @@ def test_l10n_without_addr_override(client: TestClient):
     # real address dependable.
     res = client.get("/api/v1/localization")
     assert res.status_code == status.HTTP_200_OK
+
+
+def test_l10n_ratelimit(fastapi_app: FastAPI, client: TestClient):
+    override_client_addr(fastapi_app, "2a01:abc::1")
+    for _ in range(5):
+        res = client.get("/api/v1/localization")
+        assert res.status_code == status.HTTP_200_OK
+    res = client.get("/api/v1/localization")
+    assert res.status_code == status.HTTP_429_TOO_MANY_REQUESTS
