@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 from fastapi import APIRouter, Depends, Header
 from prometheus_client import Counter
 
@@ -14,7 +16,7 @@ l10n_autodetect_total = Counter(
 )
 
 
-rate_limit_response = {
+rate_limit_response: Dict[int, Dict[str, Any]] = {
     429: {
         "description": "Rate Limit Exceeded",
         "model": RateLimitResponse,
@@ -36,7 +38,7 @@ router = APIRouter()
     response_model=LocalizationResponse,
     # TODO: This explicit limit here makes little sense, it's more of a demo.
     dependencies=[Depends(Limit("5/minute"))],
-    responses=rate_limit_response,
+    responses=rate_limit_response,  # type: ignore[arg-type]
 )
 def localize(
     client_addr: str = Depends(client_addr),
