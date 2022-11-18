@@ -8,6 +8,13 @@
 # definition may be more complex, especially when it comes to IPv6.
 
 
+# Campaign metadata.
+campaign:
+
+  # The name of the campaign.
+  name: Stop Scanning Me!
+
+
 # User authentication.
 authentication:
 
@@ -89,6 +96,10 @@ l10n:
   # The following placeholders are available in all of the strings:
   #   {campaign}  The configured campaign name.
   strings:
+
+    # Name of the campaign. This will be available in every other l10n string
+    # via the {campaign} placeholder.
+    campaign_name: Stop Scanning Me
 
     # Content of SMS sent to users when we need to verify their phone number.
     # {code} will be replaced by a six-digit random number.

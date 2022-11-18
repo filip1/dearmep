@@ -5,17 +5,65 @@ from pydantic import ValidationError
 import pytest
 from yaml.parser import ParserError
 
-from dearmep.config import Config, L10nConfig
+from dearmep.config import Config, L10nConfig, L10nEntry, L10nStrings
+
+
+@pytest.fixture
+def dummy_translation_strings() -> L10nStrings:
+    return L10nStrings.parse_obj({
+        k: "foo"
+        for k in L10nStrings.__fields__.keys()
+    })
 
 
 def test_default_language_in_language_list():
     with pytest.raises(ValidationError) as e_info:
-        L10nConfig(languages=["en", "de"], default_language="fr")
+        L10nConfig(
+            languages=["en", "de"],
+            default_language="fr",
+        )
     errs = e_info.value.errors()
-    assert len(errs) == 1
+    assert len(errs) == 2
     assert errs[0]["loc"] == ("default_language",)
     assert errs[0]["type"] == "value_error"
     assert errs[0]["msg"].find(" needs to be in the list of available ") != -1
+    assert errs[1]["loc"] == ("strings",)
+    assert errs[1]["type"] == "value_error.missing"
+
+
+def test_missing_translation_in_default_language(
+    dummy_translation_strings: L10nStrings,
+):
+    # Replace one of the dummies with one that only has French.
+    dummy_translation_strings.campaign_name = L10nEntry.parse_obj({
+        "fr": "toto",
+    })
+    with pytest.raises(ValidationError) as e_info:
+        L10nConfig(
+            languages=["en", "fr"],
+            default_language="en",
+            strings=dummy_translation_strings,
+        )
+    errs = e_info.value.errors()
+    assert len(errs) == 1
+    assert errs[0]["loc"] == ("strings",)
+    assert errs[0]["type"] == "value_error"
+    assert errs[0]["msg"].find(" needs a translation in the default ") != -1
+
+
+def test_invalid_default_language(
+    dummy_translation_strings: L10nStrings,
+):
+    with pytest.raises(ValidationError) as e_info:
+        L10nConfig(
+            languages=["en"],
+            default_language="",
+            strings=dummy_translation_strings,
+        )
+    errs = e_info.value.errors()
+    assert len(errs) == 1
+    assert errs[0]["loc"] == ("default_language",)
+    assert errs[0]["type"] == "value_error.str.regex"
 
 
 def test_access_config_without_loading():

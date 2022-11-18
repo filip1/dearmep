@@ -3,7 +3,8 @@ from typing import Any, Dict, List, Literal, Optional, Union
 
 import pytest
 
-import dearmep.l10n as l10n
+from dearmep.config import Config
+from dearmep import l10n
 
 
 TEST_MMDB = str(Path(Path(__file__).parent, "geo_ip", "test.mmdb"))
@@ -88,3 +89,11 @@ def test_get_country(db: str, ip: str, expect: Dict[str, Any]):
     assert res.ip_address == ip
     for k, v in expect.items():
         assert getattr(res, k) == v
+
+
+def test_translate_string(fastapi_app):
+    template = Config.strings().phone_number_verification_sms
+    translated = template.apply({"code": "12345"})
+    assert translated == "12345 is your Stop Scanning Me verification code. " \
+        "If you think you have received this message in error, simply " \
+        "ignore it."
