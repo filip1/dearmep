@@ -75,3 +75,16 @@ class LocalizationResponse(BaseModel):
         ...,
         description="Information about the probable physical location.",
     )
+
+
+class RateLimitResponse(BaseModel):
+    """
+    The request was denied, because the client issued too many requests in a
+    certain amount of time.
+    """
+
+    detail: str = Field(
+        ...,
+        description="Error message.",
+        example="rate limit exceeded, try again in 42 seconds",
+    )
