@@ -27,8 +27,8 @@ def prom_client():
 def metrics_lines_func(prom_client: TestClient) -> Iterable[str]:
     res = prom_client.get("/metrics")
     assert res.status_code == status.HTTP_200_OK
-    for line in res.iter_lines(decode_unicode=True):
-        yield str(line)
+    for line in res.iter_lines():
+        yield str(line).rstrip("\r\n")
 
 
 @pytest.fixture
