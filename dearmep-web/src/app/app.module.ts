@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslocoRootModule } from './transloco-root.module';
+import { ApiModule } from './api/api.module';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { TranslocoRootModule } from './transloco-root.module';
     BrowserAnimationsModule,
     HttpClientModule,
     TranslocoRootModule,
+    ApiModule.forRoot({ rootUrl: 'https://127.0.0.1:8000' }),
   ],
   providers: [],
   bootstrap: [AppComponent]
