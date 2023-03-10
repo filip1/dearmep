@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Observable } from 'rxjs';
 import { BaseUrlService } from './common/services/base-url.service';
 
 @Component({
@@ -8,6 +9,8 @@ import { BaseUrlService } from './common/services/base-url.service';
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class AppComponent implements OnChanges {
+  public styleUrl$?: Observable<string>
+
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input("host")
   public baseUrl?: string
@@ -20,5 +23,6 @@ export class AppComponent implements OnChanges {
     if (changes["baseUrl"] && this.baseUrl) {
       this.baseUrlService.setBaseUrl(this.baseUrl)
     }
+    this.styleUrl$ = this.baseUrlService.toAbsoluteUrl$("styles.css")
   }
 }
