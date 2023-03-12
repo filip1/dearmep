@@ -12,6 +12,9 @@ prometheus-fastapi-instrumentator = "^5.9.1"
 maxminddb = "^2.2.0"
 PyYAML = "^6.0"
 limits = "^2.7.0"
+lzip = "^1.2.0"
+rich = "^13.3.2"
+countryguess = "^0.3.0"
 
 [tool.poetry.dev-dependencies]
 uvicorn = {extras = ["standard"], version = "^0.18.2"}

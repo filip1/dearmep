@@ -1,4 +1,4 @@
-from typing import Any, List, Optional
+from typing import Any, ClassVar, Dict, List, Optional, Union, cast
 
 from pydantic import BaseModel, ConstrainedStr, Field
 
@@ -75,6 +75,35 @@ class LocalizationResponse(BaseModel):
         ...,
         description="Information about the probable physical location.",
     )
+
+
+class PersonContact(BaseModel):
+    WELL_KNOWN_KINDS: ClassVar = (
+        "email", "web", "phone", "fax",
+        "facebook", "instagram", "twitter",
+    )
+
+    kind: str
+    address: str
+
+
+class Person(BaseModel):
+    id: str
+    name: str
+    country: Optional[CountryCode]
+    group: Optional[str]
+    party: Optional[str]
+    contact: List[PersonContact] = []
+
+    def contact_dict(self, *, single: bool = False):
+        res: Dict[str, Union[str, List[str]]] = {}
+        for contact in self.contact:
+            if contact.kind not in res:
+                res[contact.kind] = contact.address if single \
+                    else [contact.address]
+            elif not single:
+                cast(List[str], res[contact.kind]).append(contact.address)
+        return res
 
 
 class RateLimitResponse(BaseModel):
