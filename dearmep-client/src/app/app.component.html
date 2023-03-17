@@ -1,0 +1,7 @@
+<!--
+  Optimization: This style is loaded quite late, might make sens to add <link rel="preload" ... /> to the host page.
+-->
+<link *ngIf="baseUrl" rel="stylesheet" [href]="(baseUrl + 'styles.css') | safe: 'resourceUrl'">
+
+<p transloco="hello"></p>
+<button mat-raised-button color="primary">Click Me</button>
