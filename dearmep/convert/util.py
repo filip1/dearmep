@@ -2,11 +2,12 @@ from contextlib import contextmanager
 from functools import lru_cache
 from os import PathLike
 from sys import stdin, stdout
-from typing import IO, Iterator, Optional, Union
+from typing import IO, Iterator, List, Optional, Tuple, Union
 
 import lzip  # type: ignore
 from rich.console import Console
 from rich.progress import Progress
+from rich.table import Table as RichTable
 
 
 InputFile = Union[str, PathLike]
@@ -73,3 +74,31 @@ def open_file_for_write(
 def progress(console: Optional[Console] = None) -> Iterator[Progress]:
     with Progress(console=console or get_console()) as progress:
         yield progress
+
+
+class Table:
+    def __init__(self, *columns: str):
+        self._columns = columns
+        self._rows: List[Tuple[str, ...]] = []
+
+    def __len__(self) -> int:
+        return len(self._rows)
+
+    def __getitem__(self, key: int) -> Tuple[str, ...]:
+        return self._rows[key]
+
+    def add_row(self, *row: str):
+        if len(row) != len(self._columns):
+            raise ValueError(
+                f"row has {len(row)} item(s), expected {len(self._columns)}")
+        self._rows.append(row)
+
+    def as_rich_table(self) -> RichTable:
+        t = RichTable(*self._columns)
+        for row in self._rows:
+            t.add_row(*row)
+        return t
+
+    @property
+    def columns(self) -> List[str]:
+        return list(self._columns)
