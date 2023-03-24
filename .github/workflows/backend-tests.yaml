@@ -1,11 +1,11 @@
-name: Tests
+name: Backend Tests
 
 on:
   - push
 
 jobs:
 
-  test:
+  test-backend:
     runs-on: ubuntu-latest
     strategy:
       matrix:
