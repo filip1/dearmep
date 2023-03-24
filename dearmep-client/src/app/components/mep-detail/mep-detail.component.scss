@@ -1,0 +1,29 @@
+.mep {
+  display: flex;
+  align-items: top;
+  justify-content: flex-start;
+}
+.mep-name {
+  display: flex;
+  align-items: center;
+  p {
+    margin: 0;
+  }
+}
+
+.mep-image {
+  img {
+    border-radius: 20px;
+    max-height: 215px;
+    max-width: 170px;
+    width: auto;
+    height: auto;
+  }
+  margin-right: 16px;
+}
+
+.socials {
+  margin-top: 24px;
+  display: flex;
+  gap: 8px;
+}

@@ -1,0 +1,25 @@
+<div class="container" *transloco="let t">
+  <h2 transloco="call.home.title" class="calling-title"></h2>
+
+  <p *ngFor="let description of t('call.home.descriptions')" class="description">
+    {{ description.text }}
+  </p>
+
+  <div class="btn-container">
+    <button mat-stroked-button color="primary" class="dmep-call-now-btn btn" (click)="onCallNowClick()">
+      <span class="btn-content">
+        <strong>{{ 'call.call-now-btn.title' | transloco }}</strong>
+        <br>
+        {{ 'call.call-now-btn.subtitle' | transloco }}
+      </span>
+    </button>
+  </div>
+
+  <div class="btn-container">
+    <button mat-stroked-button class="dmep-call-later-btn btn">
+      <span class="btn-content">
+        {{ 'call.call-later-btn.title' | transloco }}
+      </span>
+    </button>
+  </div>
+</div>

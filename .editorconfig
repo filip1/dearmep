@@ -6,7 +6,7 @@ charset = utf-8
 [*.{bash,sh}]
 indent_style = tab
 
-[*.{json,md,yaml}]
+[*.{json,md,yaml,html,css,scss}]
 indent_size = 2
 indent_style = space
 

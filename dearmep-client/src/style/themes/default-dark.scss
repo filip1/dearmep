@@ -1,0 +1,70 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$app-typography: mat.define-typography-config();
+
+$app-primary: (
+    50: #ffedee,
+    100: #ffd2d3,
+    200: #ffa39a,
+    300: #fa8072,
+    400: #ff644a,
+    500: #ff582a,
+    600: #fc502d,
+    700: #e94527,
+    800: #dc3f20,
+    900: #cc3512,
+    contrast: (50: rgba(black, 0.87),
+        100: rgba(black, 0.87),
+        200: rgba(black, 0.87),
+        300: white,
+        400: white,
+        500: white,
+        600: white,
+        700: white,
+        800: white,
+        900: white,
+    )
+);
+
+$app-accent: (
+    50: #dffbfe,
+    100: #aef4fb,
+    200: #72ecfa,
+    300: #1de3f7,
+    400: #00dbf2,
+    500: #00d4f0,
+    600: #00c3db,
+    700: #00adc0,
+    800: #0098a7,
+    900: #007479,
+    contrast: (50: rgba(black, 0.87),
+        100: rgba(black, 0.87),
+        200: rgba(black, 0.87),
+        300: white,
+        400: white,
+        500: white,
+        600: white,
+        700: white,
+        800: white,
+        900: white,
+    )
+); 
+
+$app-theme: mat.define-dark-theme((color: (
+        primary: mat.define-palette($app-primary, 300),
+        accent: mat.define-palette($app-accent, 200),
+        warn: mat.define-palette(mat.$red-palette),
+      ),
+      typography: $app-typography,
+      density: 0,
+    ));
+
+@include mat.core-theme($app-theme);
+@include mat.button-theme($app-theme);
+@include mat.autocomplete-theme($app-theme);
+@include mat.select-theme($app-theme);
+@include mat.form-field-theme($app-theme);
+@include mat.input-theme($app-theme);
+@include mat.icon-theme($app-theme);

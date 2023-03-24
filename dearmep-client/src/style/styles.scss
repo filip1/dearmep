@@ -1,0 +1,52 @@
+@import "fonts";
+@import "themes/variables";
+@import "themes/default-dark";
+
+:host {
+  // avoid bleeding style from light-dom into shadow-dom
+  all: initial;
+
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 1.25rem;
+  color: var(--dmep-text-color);
+}
+
+.dmep-app-container {
+  h1 {
+    font-size: 3.75rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+  }
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 8px 0;
+  }
+
+  background: var(--dmep-bg);
+  border-radius: var(--dmep-bg-border-radius);
+  padding: 40px;
+  overflow: hidden;
+
+  .dmep-card-container {
+    background: var(--dmep-card-bg);
+    border-radius: var(--dmep-card-border-radius);
+    padding: 32px;
+  }
+
+  a mat-icon {
+    color: var(--dmep-text-color);
+  }
+
+  p {
+    margin: 8px 0;
+  }
+
+  .grow {
+    flex-grow: 1;
+  }
+}

@@ -1,0 +1,11 @@
+:host {
+  --dmep-primary-color: rgba(250, 128, 114, 1);
+  --dmep-text-color: rgb(255, 255, 255);
+  --dmep-bg: linear-gradient(180deg,
+      rgba(22, 22, 22, 1) 0%,
+      rgba(22, 22, 22, 1) 75%,
+      rgba(12, 18, 59, 1) 100%);
+  --dmep-bg-border-radius: 16px;
+  --dmep-card-bg: rgba(255, 255, 255, 0.24);
+  --dmep-card-border-radius: 16px
+}

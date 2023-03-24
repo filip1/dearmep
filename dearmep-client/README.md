@@ -6,6 +6,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 **DearMEP** is embeded into arbitrary html pages using the following code snippet:
 
+    <link rel="stylesheet" href="http://localhost:4200/fonts.css" type="text/css">
     <dear-mep host="https://dear-mep-server.org/"></dear-mep>
     <script src="https://dear-mep-server.org/dear-mep.js"></script>
 
