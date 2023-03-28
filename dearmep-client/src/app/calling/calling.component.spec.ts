@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { getTranslocoModule } from '../testing/transloco-testing.module';
 
 import { CallingComponent } from './calling.component';
 import { CallingModule } from './calling.module';
@@ -9,7 +10,10 @@ describe('CallingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ CallingModule ],
+      imports: [ 
+        CallingModule,
+        getTranslocoModule(),
+      ],
     })
     .compileComponents();
 
