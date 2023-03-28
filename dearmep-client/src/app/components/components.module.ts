@@ -7,6 +7,7 @@ import { MEPDetailComponent } from './mep-detail/mep-detail.component';
 import { AppCommonModule } from '../common/app-common.module';
 import { LanguageSwitchComponent } from './language-switch/language-switch.component';
 import { TalkingPointsComponent } from './talking-points/talking-points.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { TalkingPointsComponent } from './talking-points/talking-points.componen
     TitleComponent,
     MEPDetailComponent,
     LanguageSwitchComponent,
-    TalkingPointsComponent
+    TalkingPointsComponent,
+    FooterComponent
   ],
   imports: [
     AppCommonModule,
@@ -26,6 +28,7 @@ import { TalkingPointsComponent } from './talking-points/talking-points.componen
     TitleComponent,
     MEPDetailComponent,
     LanguageSwitchComponent,
+    FooterComponent,
   ]
 })
 export class ComponentsModule { }

@@ -38,7 +38,25 @@
     padding: 32px;
   }
 
-  a mat-icon {
+  .dmep-footer {
+    margin-bottom: -40px;
+    height: 40px;
+    margin-top: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 1rem;
+    color: var(--dmep-footer-text-color);
+    a {
+      color: var(--dmep-footer-text-color);
+    }
+  }
+
+  a {
+    color: var(--dmep-text-color);
+  }
+
+  mat-icon {
     color: var(--dmep-text-color);
   }
 

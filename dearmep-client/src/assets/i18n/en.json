@@ -28,5 +28,8 @@
         "name": "Français"
       }
     ]
+  },
+  "footer": {
+    "contentHtml": "<a href=\"https://dearmep.eu\">dearmep</a>&nbsp;powered by&nbsp;<a href=\"https://epicenter.works\">epicenter.works</a>" 
   }
 }
