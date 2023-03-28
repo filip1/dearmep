@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'dmep-home-step',
@@ -7,10 +6,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./home-step.component.scss']
 })
 export class HomeStepComponent {
-  constructor(
-    private readonly router: Router,
-  ) { }
-
   public onCallNowClick() {
     console.log("call now")
   }
