@@ -13,7 +13,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
-    "generate-client": "ng-openapi-gen --input ../openapi.json --output src/app/api"
+    "generate-client": "ng-openapi-gen --input ../openapi.json --output src/app/api",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "private": true,
   "dependencies": {
@@ -47,6 +49,7 @@
     "@angular-eslint/template-parser": "15.2.1",
     "@angular/cli": "~15.2.4",
     "@angular/compiler-cli": "^15.2.3",
+    "@cypress/schematic": "^2.5.0",
     "@types/jasmine": "~4.3.0",
     "@typescript-eslint/eslint-plugin": "5.48.2",
     "@typescript-eslint/parser": "5.48.2",
@@ -60,6 +63,7 @@
     "karma-jasmine-html-reporter": "~2.0.0",
     "ng-openapi-gen": "^0.24.0",
     "source-map-explorer": "^2.5.3",
-    "typescript": "~4.8.2"
+    "typescript": "~4.8.2",
+    "cypress": "latest"
   }
 }
