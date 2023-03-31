@@ -1,6 +1,10 @@
 {
   "title": "Call your MEP now! Lorem ipsum dolor sit",
   "call": {
+    "start-call-btn": {
+      "title": "Start Call",
+      "subtitle": "Free of charge"
+    },
     "call-now-btn": {
       "title": "Call Now",
       "subtitle": "Free of charge"
@@ -14,6 +18,24 @@
         { "text": "We will call you right away and connect you for free." },
         { "text": "Rorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum." }
       ]
+    }
+  },
+  "verification": {
+    "title": "Verify your phone number",
+    "enterNumber": {
+      "description": "Please enter your own phone number and we will send you a one time password to verify your number.",
+      "numberFieldLabel": "Enter your phone number",
+      "policy": "I have read and accept the Privacy Policy.",
+      "sendCode": "Send Code"
+    },
+    "enterCode": {
+      "description": "Please check you phone. We've sent a code to {{ number }}.",
+      "notYourNumber": "If this is not your number click",
+      "codeFieldLabel": "Enter your Code",
+      "verifyCode": "Verify"
+    },
+    "success": {
+      "message": "Succesfully verified with the number: {{ number }}"
     }
   },
   "select-mep": {

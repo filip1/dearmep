@@ -5,6 +5,7 @@ import { CallingComponent } from './calling.component';
 import { HomeStepComponent } from './steps/home-step/home-step.component';
 import { VerifyNumerComponent } from './steps/verify-numer/verify-numer.component';
 import { AppCommonModule } from '../common/app-common.module';
+import { SetupStepComponent } from './steps/setup-step/setup-step.component';
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import { AppCommonModule } from '../common/app-common.module';
     CallingComponent,
     HomeStepComponent,
     VerifyNumerComponent,
+    SetupStepComponent,
   ],
   imports: [
     CommonModule,

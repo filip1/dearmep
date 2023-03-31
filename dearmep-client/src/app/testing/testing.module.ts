@@ -14,6 +14,8 @@ import { TranslocoTestingModule } from '@ngneat/transloco';
   ],
   exports: [ 
     NoopAnimationsModule,
+    TranslocoTestingModule,
+    CommonModule,
   ]
 })
 export class TestingModule { }

@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule, MAT_ICON_DEFAULT_OPTIONS } from '@angular/material/icon';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ShadowRootOverlayContainer } from './shadow-root-overlay-container';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [],
@@ -17,6 +18,7 @@ import { ShadowRootOverlayContainer } from './shadow-root-overlay-container';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatCheckboxModule,
   ],
   providers: [
     { provide: OverlayContainer, useClass: ShadowRootOverlayContainer },
@@ -29,6 +31,7 @@ import { ShadowRootOverlayContainer } from './shadow-root-overlay-container';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatCheckboxModule,
   ]
 })
 export class MaterialModule { }
