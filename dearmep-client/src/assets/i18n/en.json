@@ -25,7 +25,8 @@
     "enterNumber": {
       "description": "Please enter your own phone number and we will send you a one time password to verify your number.",
       "numberFieldLabel": "Enter your phone number",
-      "policy": "I have read and accept the Privacy Policy.",
+      "policy": "I have read and accept the",
+      "pocliyLinkText": "Privacy Policy",
       "sendCode": "Send Code"
     },
     "enterCode": {
@@ -38,8 +39,47 @@
       "message": "Succesfully verified with the number: {{ number }}"
     }
   },
+  "callSetup": {
+    "title": "Your call is being set up",
+    "description": "Please have your mobile phone ready. We will call you right away and connect you with {{ mep }}."
+  },
+  "handover": {
+    "title": "Feedback",
+    "convincingQuestion": "Were you able to convince the person?",
+    "convincingQustionFeedback": {
+      "yes": "Yes",
+      "likeleyYes": "likeley yes",
+      "likeleyNo": "likeley no",
+      "no": "No"
+    },
+    "technicalProblemsQuestion": "There were technical problems",
+    "additionalFeedbackQuestion": "Additional feedback",
+    "additionalFeedbackPlaceholder": "If you have any additional feedback, please type it in here...",
+    "submit": "Submit"
+  },
   "select-mep": {
     "autorenew": "Choose another MEP"
+  },
+  "talkingPoints": {
+    "title": "Talking Points",
+    "points": [
+      {
+        "title": "Argument 1",
+        "body": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis."
+      },      
+      {
+        "title": "Argument 1",
+        "body": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis."
+      },
+      {
+        "title": "Argument 1",
+        "body": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis."
+      },
+      {
+        "title": "Argument 1",
+        "body": "Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis."
+      }
+    ]
   },
   "languages": {
     "available": [

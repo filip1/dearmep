@@ -38,6 +38,12 @@
     padding: 32px;
   }
 
+  .dmep-inner-card-container {
+    background: var(--dmep-inner-card-bg);
+    border-radius: var(--dmep-card-border-radius);
+    padding: 16px;
+  }
+
   .dmep-footer {
     margin-bottom: -40px;
     height: 40px;

@@ -1,0 +1,26 @@
+<h2 transloco="handover.title" class="dmep-handover-title"></h2>
+
+<label id="convincing-question-label" transloco="handover.convincingQuestion"></label>
+<br>
+<mat-radio-group aria-labelledby="convincing-question-label" class="convincing-question-group dmep-inner-card-container"
+  color="primary">
+  <mat-radio-button [value]="3">{{ "handover.convincingQustionFeedback.yes" | transloco }} </mat-radio-button>
+  <mat-radio-button [value]="2">{{ "handover.convincingQustionFeedback.likeleyYes" | transloco }}</mat-radio-button>
+  <mat-radio-button [value]="1">{{ "handover.convincingQustionFeedback.likeleyNo" | transloco }}</mat-radio-button>
+  <mat-radio-button [value]="0">{{ "handover.convincingQustionFeedback.no" | transloco }}</mat-radio-button>
+</mat-radio-group>
+
+<mat-checkbox color="primary">{{ "handover.technicalProblemsQuestion" | transloco }}</mat-checkbox>
+
+<mat-form-field class="" appearance="outline" subscriptSizing="dynamic" class="dmep-additional-feedback-field">
+  <mat-label transloco="handover.additionalFeedbackQuestion"></mat-label>
+  <textarea matInput [placeholder]="'handover.additionalFeedbackPlaceholder' | transloco"></textarea>
+</mat-form-field>
+
+<div class="dmep-btn-container">
+  <button mat-stroked-button class="dmep-submit-feedback-btn dmep-btn dmep-btn-secondary">
+    <span class="btn-content">
+      {{ 'handover.submit' | transloco }}
+    </span>
+  </button>
+</div>

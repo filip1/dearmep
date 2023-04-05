@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
 import { VerificationStep } from './verification-step.enum';
 
 @Component({
@@ -28,6 +29,10 @@ export class VerifyNumerComponent {
 
   public step = this.StepEnterNumber
 
+  constructor(
+    private readonly callingStateManager: CallingStateManagerService,
+  ) { }
+
   public numberFormControl = new FormControl<string | undefined>(undefined, {
     validators: this.numberValidator,
     updateOn: 'change',
@@ -51,5 +56,10 @@ export class VerifyNumerComponent {
     this.step = VerificationStep.Success
   }
 
+  public onCallNowClick() {
+    this.callingStateManager.setUpCall()
+  }
 
+  public onShowPolicyClick() {
+  }
 }

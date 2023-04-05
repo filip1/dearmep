@@ -1,4 +1,4 @@
-<h2 transloco="verification.title" class="verification-title"></h2>
+<h2 transloco="verification.title" class="dmep-verification-title"></h2>
 
 <ng-container [ngSwitch]="step">
   <ng-container *ngSwitchCase="StepEnterNumber">
@@ -10,8 +10,9 @@
     </mat-form-field>
 
     <section class="dmep-policy-section">
-      <mat-checkbox color="primary" [checked]="acceptPolicy" (change)="acceptPolicy = $event.checked">{{
-        'verification.enterNumber.policy' | transloco }}</mat-checkbox>
+      <mat-checkbox color="primary" [checked]="acceptPolicy" (change)="acceptPolicy = $event.checked">
+        {{ 'verification.enterNumber.policy' | transloco }} <a href="#" (click)="onShowPolicyClick(); $event.preventDefault()">{{ 'verification.enterNumber.pocliyLinkText' | transloco }}</a>.
+      </mat-checkbox>
     </section>
 
     <div class="dmep-btn-container">
@@ -27,7 +28,7 @@
 
     <p class="enter-code-description">{{ 'verification.enterCode.description' | transloco: { number: numberFormControl.value } }}</p>
 
-    <p class="not-your-number description">{{ 'verification.enterCode.notYourNumber' | transloco }} <a (click)="onEditNumberClick()">here</a>.</p>
+    <p class="not-your-number description">{{ 'verification.enterCode.notYourNumber' | transloco }} <a (click)="onEditNumberClick(); $event.preventDefault()" href="#">here</a>.</p>
 
     <mat-form-field class="enter-code-form-field" appearance="outline" subscriptSizing="dynamic">
       <mat-label transloco="verification.enterCode.codeFieldLabel"></mat-label>
@@ -55,7 +56,7 @@
 
 <div class="dmep-btn-container">
   <button mat-stroked-button color="primary" class="dmep-start-call-btn dmep-btn dmep-btn-primary"
-    [disabled]="step !== StepSuccess">
+    [disabled]="step !== StepSuccess" (click)="onCallNowClick()">
     <span class="btn-content">
       <strong>{{ 'call.start-call-btn.title' | transloco }}</strong>
       <br>

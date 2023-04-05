@@ -69,3 +69,4 @@ $app-theme: mat.define-dark-theme((color: (
 @include mat.input-theme($app-theme);
 @include mat.icon-theme($app-theme);
 @include mat.checkbox-theme($app-theme);
+@include mat.radio-theme($app-theme);

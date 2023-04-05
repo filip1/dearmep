@@ -15,4 +15,11 @@ export class CallingStateManagerService {
   public goToVerify() {
     this.step$.next(CallingStep.Verify)
   }
+
+  public setUpCall() {
+    this.step$.next(CallingStep.Setup)
+    setTimeout(() => {
+      this.step$.next(CallingStep.Handover)
+    }, 5000);
+  }
 }
