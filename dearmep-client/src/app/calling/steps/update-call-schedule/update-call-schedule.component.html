@@ -1,0 +1,39 @@
+<h3 transloco="schedule.title"></h3>
+
+<p transloco="schedule.description" class="dmep-schedule-call-description description"></p>
+
+<div class="dmep-schedule-select-day">
+  <mat-button-toggle-group name="favoriteColor" aria-label="Favorite Color" [formControl]="selectedDayFormControl">
+    <mat-button-toggle [value]="day" *ngFor="let day of availableDays"
+      [class.dmep-schedule-day-selected]="isTimeSelectedForDay(day)">{{ ('schedule.days-short' | transloco)[day]
+      }}</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<div class="dmep-selected-day-container" *ngIf="selectedDayFormControl.value">
+  <div class="dmep-selected-day" *ngIf="selectedDayFormControl.value">
+    <span>
+      {{ ('schedule.days' | transloco)[selectedDayFormControl.value] }}
+    </span>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dmep-schedule-select-time">
+      <mat-select [formControl]="getSelectTimeFormControl()">
+        <mat-option [value]="time" *ngFor="let time of availableTimes">{{ time }}</mat-option>
+      </mat-select>
+      <mat-icon matSuffix *ngIf="getSelectTimeFormControl().value"
+        (click)="removeSelectedTime(); $event.stopPropagation()">close</mat-icon>
+    </mat-form-field>
+  </div>
+</div>
+
+<p class="dmep-schedule-as-text dmep-description-sm" [innerHtml]="getSelectedTimesAsText()"></p>
+
+<div class="dmep-btn-container">
+  <button mat-stroked-button color="primary" class="dmep-schedule-call-btn dmep-btn dmep-btn-primary">
+    <span class="btn-content">
+      <strong>{{ 'schedule.schedule-btn.title' | transloco }}</strong>
+      <br>
+      {{ 'schedule.schedule-btn.subtitle' | transloco }}
+    </span>
+  </button>
+</div>

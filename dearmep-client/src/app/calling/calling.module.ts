@@ -7,6 +7,7 @@ import { VerifyNumerComponent } from './steps/verification-step/verify-numer.com
 import { AppCommonModule } from '../common/app-common.module';
 import { SetupStepComponent } from './steps/setup-step/setup-step.component';
 import { FeedbackStepComponent } from './steps/feedback-step/feedback-step.component';
+import { UpdateCallScheduleComponent } from './steps/update-call-schedule/update-call-schedule.component';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { FeedbackStepComponent } from './steps/feedback-step/feedback-step.compo
     VerifyNumerComponent,
     SetupStepComponent,
     FeedbackStepComponent,
+    UpdateCallScheduleComponent,
   ],
   imports: [
     CommonModule,

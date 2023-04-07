@@ -13,6 +13,7 @@ export class CallingComponent {
   public readonly StepVerify = CallingStep.Verify
   public readonly StepSetup = CallingStep.Setup
   public readonly StepFeedback = CallingStep.Feedback
+  public readonly StepUpdateCallSchedule = CallingStep.UpdateCallSchedule
 
   public readonly step$
 

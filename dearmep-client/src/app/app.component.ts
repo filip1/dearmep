@@ -40,7 +40,7 @@ export class AppComponent implements OnInit, OnChanges {
       map(step => step !== CallingStep.Home && step !== CallingStep.HomeAuthenticated)
     );
     this.shouldDisplayTitle$ = this.callingStateManagerService.getStep$().pipe(
-      map(step => step === CallingStep.Home || step === CallingStep.HomeAuthenticated)
+      map(step => step === CallingStep.Home || step === CallingStep.HomeAuthenticated || step == CallingStep.UpdateCallSchedule)
     );
     this.shouldDisplayMEP$ = this.callingStateManagerService.getStep$().pipe(
       map(step => step !== CallingStep.UpdateCallSchedule)

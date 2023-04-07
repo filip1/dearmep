@@ -16,6 +16,10 @@ export class CallingStateManagerService {
     this.step$.next(CallingStep.Verify)
   }
 
+  public goToSchedule() {
+    this.step$.next(CallingStep.UpdateCallSchedule)
+  }
+
   public setUpCall() {
     this.step$.next(CallingStep.Setup)
     setTimeout(() => {

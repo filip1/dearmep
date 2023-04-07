@@ -28,6 +28,9 @@
 }
 
 .dmep-app-container {
+  // Define min-height to avoid jumping
+  //min-height: var(--dmep-min-height);
+
   display: flex;
   flex-direction: column;
 
@@ -67,6 +70,10 @@
     background: var(--dmep-inner-card-bg);
     border-radius: var(--dmep-card-border-radius);
     padding: 16px;
+  }
+
+  .dmep-description-sm {
+    font-size: var(--dmep-font-size-sm);
   }
 
   .dmep-footer {

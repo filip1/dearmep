@@ -9,6 +9,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { ShadowRootOverlayContainer } from './shadow-root-overlay-container';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [],
@@ -21,6 +22,7 @@ import { MatRadioModule } from '@angular/material/radio';
     MatIconModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatButtonToggleModule,
   ],
   providers: [
     { provide: OverlayContainer, useClass: ShadowRootOverlayContainer },
@@ -35,6 +37,7 @@ import { MatRadioModule } from '@angular/material/radio';
     MatIconModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatButtonToggleModule,
   ]
 })
 export class MaterialModule { }

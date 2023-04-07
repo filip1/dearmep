@@ -93,5 +93,41 @@
   },
   "footer": {
     "contentHtml": "<a href=\"https://dearmep.eu\" target=\"_blank\">dearmep</a>&nbsp;powered by&nbsp;<a href=\"https://epicenter.works\" target=\"_blank\">epicenter.works</a>" 
+  },
+  "schedule": {
+    "title": "Schedule a call",
+    "description": "Plan now to talk to a politican later! Select a day and time:",
+    "scheduleAsText": "We will give you a ring every {{ timeSlots }} at your number to connect you with a new politician from your country.",
+    "timeSlot": "{{ dayOfWeek }} around {{ time }}",
+    "and": "and",
+    "around": "around",
+    "days": [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+    "days-short": [
+      "Su",
+      "Mo",
+      "Tu",
+      "We",
+      "Th",
+      "Fr",
+      "Sa"
+    ],
+    "schedule-btn": {
+      "title": "Confirm",
+      "subtitle": "Free of charge"
+    }
+  },
+  "util": {
+    "join": {
+      "delimiter": ", ",
+      "lastDelimiter": " and "
+    }
   }
 }

@@ -14,4 +14,8 @@ export class HomeStepComponent {
   public onCallNowClick() {
     this.callingStateManager.goToVerify()
   }
+
+  public onCallLaterClick() {
+    this.callingStateManager.goToSchedule()
+  }
 }

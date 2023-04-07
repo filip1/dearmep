@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
 import { VerificationStep } from './verification-step.enum';
 
@@ -60,6 +60,11 @@ export class VerifyNumerComponent {
     this.callingStateManager.setUpCall()
   }
 
+  public onCallLaterClick() {
+    this.callingStateManager.goToSchedule()
+  }
+
   public onShowPolicyClick() {
+    console.log("show policy")
   }
 }
