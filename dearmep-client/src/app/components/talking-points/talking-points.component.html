@@ -1,1 +1,7 @@
-<p>talking-points works!</p>
+<span transloco="talkingPoints.title" class="dmep-talking-points-title"></span>
+<div class="dmep-talking-points" *transloco="let t">
+  <div class="dmep-talking-point" *ngFor="let talkingPoint of t('talkingPoints.points')">
+    <h3>{{ talkingPoint.title }}</h3>
+    <p>{{ talkingPoint.body }}</p>
+  </div>
+</div>

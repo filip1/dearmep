@@ -1,0 +1,18 @@
+:host {
+  overflow-y: scroll;
+  min-height: 200px;
+  flex-basis: 250px;
+  flex-shrink: 1;
+}
+
+.dmep-talking-points {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  --gap: 16px;
+  gap: var(--gap);
+}
+
+.dmep-talking-point {
+  flex-basis: calc(50% - var(--gap) / 2);
+}
