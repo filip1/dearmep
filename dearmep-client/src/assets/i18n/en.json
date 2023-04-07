@@ -43,7 +43,7 @@
     "title": "Your call is being set up",
     "description": "Please have your mobile phone ready. We will call you right away and connect you with {{ mep }}."
   },
-  "handover": {
+  "feedback": {
     "title": "Feedback",
     "convincingQuestion": "Were you able to convince the person?",
     "convincingQustionFeedback": {

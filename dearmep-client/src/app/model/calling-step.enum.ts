@@ -1,7 +1,8 @@
 export enum CallingStep {
-  Home = 'home-unauthenticated',
+  Home = 'home',
   HomeAuthenticated = 'home-unauthenticated',
   Verify = 'verify',
   Setup = 'call-starting',
-  Handover = 'call-handover',
+  Feedback = 'call-feedback',
+  UpdateCallSchedule = 'update-call-schedule'
 }

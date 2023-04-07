@@ -19,7 +19,7 @@ export class CallingStateManagerService {
   public setUpCall() {
     this.step$.next(CallingStep.Setup)
     setTimeout(() => {
-      this.step$.next(CallingStep.Handover)
+      this.step$.next(CallingStep.Feedback)
     }, 5000);
   }
 }

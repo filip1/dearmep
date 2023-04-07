@@ -1,5 +1,5 @@
 <div class="dmep-card-container">
-  <div class="filter">
+  <div class="filter" *ngIf="mepSelectionPossible$ | async">
     <mat-form-field appearance="outline" class="dmep-search-member-field">
       <mat-label>Search for another member</mat-label>
       <mat-icon matPrefix>search</mat-icon>
@@ -22,5 +22,5 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <dmep-mep-detail></dmep-mep-detail>
+  <dmep-mep-detail [allowChangeMEP]="mepSelectionPossible$ | async"></dmep-mep-detail>
 </div>

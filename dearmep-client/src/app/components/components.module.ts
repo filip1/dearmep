@@ -29,6 +29,7 @@ import { FooterComponent } from './footer/footer.component';
     MEPDetailComponent,
     LanguageSwitchComponent,
     FooterComponent,
+    TalkingPointsComponent,
   ]
 })
 export class ComponentsModule { }

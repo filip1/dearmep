@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { CallingComponent } from './calling.component';
 import { HomeStepComponent } from './steps/home-step/home-step.component';
-import { VerifyNumerComponent } from './steps/verify-numer/verify-numer.component';
+import { VerifyNumerComponent } from './steps/verification-step/verify-numer.component';
 import { AppCommonModule } from '../common/app-common.module';
 import { SetupStepComponent } from './steps/setup-step/setup-step.component';
-import { HandoverStepComponent } from './steps/handover-step/handover-step.component';
+import { FeedbackStepComponent } from './steps/feedback-step/feedback-step.component';
 
 
 @NgModule({
@@ -15,7 +15,7 @@ import { HandoverStepComponent } from './steps/handover-step/handover-step.compo
     HomeStepComponent,
     VerifyNumerComponent,
     SetupStepComponent,
-    HandoverStepComponent,
+    FeedbackStepComponent,
   ],
   imports: [
     CommonModule,

@@ -12,7 +12,7 @@ export class CallingComponent {
   public readonly StepHomeAuthenticated = CallingStep.HomeAuthenticated
   public readonly StepVerify = CallingStep.Verify
   public readonly StepSetup = CallingStep.Setup
-  public readonly StepHandover = CallingStep.Handover
+  public readonly StepFeedback = CallingStep.Feedback
 
   public readonly step$
 

@@ -5,20 +5,21 @@
 <link *ngIf="flagsStyleUrl$ | async" rel="stylesheet" [href]="flagsStyleUrl$ | async | safe: 'resourceUrl'" type="text/css">
 <div class="dmep-app-container">
   <dmep-two-column-layout *ngIf="!disableCalling">
-    <dmep-title left class="grow"></dmep-title>
-    <dmep-select-mep left></dmep-select-mep>
+    <dmep-title left class="grow" *ngIf="shouldDisplayTitle$ | async"></dmep-title>
+    <dmep-select-mep left *ngIf="shouldDisplayMEP$ | async"></dmep-select-mep>
+    <dmep-talking-points left *ngIf="shouldDisplayTalkingPoints$ | async"></dmep-talking-points>
     <dmep-language-switch right></dmep-language-switch>
     <dmep-calling right class="grow"></dmep-calling>
   </dmep-two-column-layout>
 
   <!-- Just a test to see how it would look when calling is disabled -->
-  <div class="" *ngIf="disableCalling">
+  <!-- <div class="" *ngIf="disableCalling">
     <div style="display: flex; align-items: start; justify-content: space-between; gap: 40px;">
       <dmep-title></dmep-title>
       <dmep-language-switch></dmep-language-switch>
     </div>
     <dmep-select-mep></dmep-select-mep>
-  </div>
+  </div> -->
 
   <dmep-footer></dmep-footer>
 </div>

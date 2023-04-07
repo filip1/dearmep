@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'dmep-mep-detail',
@@ -6,4 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./mep-detail.component.scss']
 })
 export class MEPDetailComponent {
+  @Input()
+  public allowChangeMEP?: boolean | null
 }
