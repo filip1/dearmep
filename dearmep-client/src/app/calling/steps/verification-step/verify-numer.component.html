@@ -16,7 +16,7 @@
     </section>
 
     <div class="dmep-btn-container">
-      <button mat-stroked-button class="dmep-send-code-btn dmep-btn-secondary"
+      <button mat-stroked-button class="dmep-send-code-btn dmep-btn-primary-sm" color="primary"
         (click)="onSendCodeClick()"
         [disabled]="!(acceptPolicy && numberFormControl.valid)">
         {{ 'verification.enterNumber.sendCode' | transloco }}
@@ -36,7 +36,7 @@
     </mat-form-field>
 
     <div class="dmep-btn-container">
-      <button mat-stroked-button class="dmep-verify-code-btn dmep-btn-secondary"
+      <button mat-stroked-button class="dmep-verify-code-btn dmep-btn-primary-sm" color="primary"
         (click)="onVerifyCodeClick()"
         [disabled]="!codeFormControl.valid">
         {{ 'verification.enterCode.verifyCode' | transloco }}

@@ -93,7 +93,7 @@
   .dmep-btn-container {
     display: flex;
     justify-content: center;
-    .dmep-btn-primary, .dmep-btn-secondary {
+    .dmep-btn-primary, .dmep-btn-secondary, .dmep-btn-primary-sm {
       flex-basis: 80%;
     }
   }
@@ -102,7 +102,7 @@
     text-transform: uppercase;
   }
 
-  .dmep-btn-primary, .dmep-btn-secondary {
+  .dmep-btn-primary, .dmep-btn-secondary, .dmep-btn-primary-sm {
     border-radius: 16px;
     text-transform: uppercase;
     margin: 4px;
@@ -119,6 +119,13 @@
     background-color: var(--dmep-btn-primary-bg-color);
   }
   .dmep-btn-primary[disabled] {
+    background-color: unset;
+  }
+
+  .dmep-btn-primary-sm {
+    background-color: var(--dmep-btn-primary-bg-color);
+  }
+  .dmep-btn-primary-sm[disabled] {
     background-color: unset;
   }
   
