@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TranslocoService } from '@ngneat/transloco';
+import { addMinutes, format, isBefore, isEqual, set, setHours } from 'date-fns';
+import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 import { StringUtil } from 'src/app/common/util/string.util';
 import { Country } from 'src/app/model/country.model';
 import { DayOfWeek } from 'src/app/model/day-of-week.enum';
+import { TimeService } from 'src/app/services/time.service';
 
 @Component({
   selector: 'dmep-update-call-schedule',
@@ -12,11 +15,12 @@ import { DayOfWeek } from 'src/app/model/day-of-week.enum';
 })
 export class UpdateCallScheduleComponent implements OnInit {
   private readonly startHour = 9
-  private readonly endHour = 16
+  private readonly endHour = 18
+  private readonly targetTimeZone = "Europe/Brussels"
 
   public localTimeZone?: string
 
-  public availableTimes: string[]
+  public availableTimes?: string[]
 
   public selectedCountry: Country | null = null
 
@@ -35,20 +39,12 @@ export class UpdateCallScheduleComponent implements OnInit {
 
   constructor(
     private readonly translocoService: TranslocoService,
-  ) {
-    this.availableTimes = []
-    for (let hour = this.startHour; hour < this.endHour; hour++) {
-      for (let min = 0; min < 60; min += 15) {
-        this.availableTimes.push(this.formatTime(hour, min))
-      }
-    }
-    this.availableTimes.push(this.formatTime(this.endHour, 0))
-  }
+    private readonly timeSerivce: TimeService,
+  ) { }
 
   public ngOnInit(): void {
-    const format = new Intl.DateTimeFormat()
-    const options = format.resolvedOptions()
-    this.localTimeZone = options.timeZone
+    this.localTimeZone = this.timeSerivce.getCurrentTimeZone()
+    this.availableTimes = this.getAvailableTimes()
   }
 
   public isTimeSelectedForDay(day: DayOfWeek) {
@@ -96,12 +92,6 @@ export class UpdateCallScheduleComponent implements OnInit {
     control.reset(null)
   }
 
-  private formatTime(hour: number, min: number) {
-    const hourStr = hour.toString().padStart(2, '0')
-    const minStr = min.toString().padStart(2, '0') 
-    return `${hourStr}:${minStr}`
-  }
-
   private getNameOfDay(day: DayOfWeek): string {
     const days = this.translocoService.translateObject<string[]>("schedule.days")
     if (days && days.length > day) {
@@ -109,4 +99,21 @@ export class UpdateCallScheduleComponent implements OnInit {
     }
     return ""
   } 
+
+  private getTimestampFromHour(hour: number, timezone: string) {
+    const timeTarget = set(new Date(), { hours: hour, minutes: 0, seconds: 0, milliseconds: 0 })
+    return zonedTimeToUtc(timeTarget, timezone)
+  }
+
+  private getAvailableTimes(): string[] {
+    const result: string[] = []
+
+    const startTime = this.getTimestampFromHour(this.startHour, this.targetTimeZone)
+    const endTime = this.getTimestampFromHour(this.endHour, this.targetTimeZone)
+
+    for (let time = startTime; isBefore(time, endTime) || isEqual(time, endTime); time = addMinutes(time, 15)) {
+      result.push(format(time, "HH:mm"))
+    }
+    return result
+  }
 }

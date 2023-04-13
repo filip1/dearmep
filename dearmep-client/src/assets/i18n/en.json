@@ -98,7 +98,7 @@
   "schedule": {
     "title": "Schedule a call",
     "description": "Plan now to talk to a politican later! Select a day and time:",
-    "scheduleAsText": "We will give you a ring every {{ timeSlots }} at your number to connect you with a new politician from {{ country }}.",
+    "scheduleAsText": "We will give you a ring every {{ timeSlots }} at your number to connect you with a politician from {{ country }}.",
     "timeSlot": "{{ dayOfWeek }} around {{ time }}",
     "and": "and",
     "around": "around",

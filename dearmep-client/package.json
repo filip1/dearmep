@@ -35,6 +35,8 @@
     "@ngneat/transloco-locale": "^4.0.0",
     "concat": "^1.0.3",
     "country-flag-icons": "^1.5.6",
+    "date-fns": "^2.29.3",
+    "date-fns-tz": "^2.0.0",
     "fs-extra": "^11.1.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
@@ -53,6 +55,7 @@
     "@types/jasmine": "~4.3.0",
     "@typescript-eslint/eslint-plugin": "5.48.2",
     "@typescript-eslint/parser": "5.48.2",
+    "cypress": "latest",
     "eslint": "^8.33.0",
     "http-server": "^14.1.1",
     "jasmine-core": "~4.5.0",
@@ -63,7 +66,6 @@
     "karma-jasmine-html-reporter": "~2.0.0",
     "ng-openapi-gen": "^0.24.0",
     "source-map-explorer": "^2.5.3",
-    "typescript": "~4.8.2",
-    "cypress": "latest"
+    "typescript": "~4.8.2"
   }
 }
