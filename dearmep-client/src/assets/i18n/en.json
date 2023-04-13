@@ -1,5 +1,5 @@
 {
-  "title": "Call your MEP now! Lorem ipsum dolor sit",
+  "title": "Call your MEP! Lorem ipsum dolor sit",
   "call": {
     "start-call-btn": {
       "title": "Start Call",
@@ -58,7 +58,8 @@
     "submit": "Submit"
   },
   "select-mep": {
-    "autorenew": "Choose another MEP"
+    "autorenew": "Choose another MEP",
+    "country": "Country"
   },
   "talkingPoints": {
     "title": "Talking Points",
@@ -97,7 +98,7 @@
   "schedule": {
     "title": "Schedule a call",
     "description": "Plan now to talk to a politican later! Select a day and time:",
-    "scheduleAsText": "We will give you a ring every {{ timeSlots }} at your number to connect you with a new politician from your country.",
+    "scheduleAsText": "We will give you a ring every {{ timeSlots }} at your number to connect you with a new politician from {{ country }}.",
     "timeSlot": "{{ dayOfWeek }} around {{ time }}",
     "and": "and",
     "around": "around",
@@ -122,12 +123,42 @@
     "schedule-btn": {
       "title": "Confirm",
       "subtitle": "Free of charge"
-    }
+    },
+    "timezone": "Time: {{ zone }}"
   },
   "util": {
     "join": {
       "delimiter": ", ",
       "lastDelimiter": " and "
     }
+  },
+  "countries": {
+    "BE": "Belgium",
+    "BG": "Bulgaria",
+    "CZ": "Czechia",
+    "DK": "Denmark",
+    "DE": "Germany",
+    "EE": "Estonia",
+    "IE": "Estonia",
+    "GR": "Greece",
+    "ES": "Spain",
+    "FR": "France",
+    "HR": "Croatia",
+    "IT": "Italy",
+    "CY": "Cyprus",
+    "LV": "Latvia",
+    "LT": "Lithuania",
+    "LU": "Luxembourg",
+    "HU": "Hungary",
+    "MT": "Malta",
+    "NL": "Netherlands",
+    "AT": "Austria",
+    "PL": "Poland",
+    "PT": "Portugal",
+    "RO": "Romania",
+    "SI": "Slovenia",
+    "SK": "Slovakia",
+    "FI": "Finland",
+    "SE": "Sweden"
   }
 }

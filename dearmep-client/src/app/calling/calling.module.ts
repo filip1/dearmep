@@ -8,6 +8,7 @@ import { AppCommonModule } from '../common/app-common.module';
 import { SetupStepComponent } from './steps/setup-step/setup-step.component';
 import { FeedbackStepComponent } from './steps/feedback-step/feedback-step.component';
 import { UpdateCallScheduleComponent } from './steps/update-call-schedule/update-call-schedule.component';
+import { ComponentsModule } from '../components/components.module';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { UpdateCallScheduleComponent } from './steps/update-call-schedule/update
   imports: [
     CommonModule,
     AppCommonModule,
+    ComponentsModule,
   ],
   exports: [
     CallingComponent,

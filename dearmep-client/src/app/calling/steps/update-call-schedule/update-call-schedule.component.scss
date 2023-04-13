@@ -8,6 +8,14 @@
   }
 }
 
+.dmep-schedule-call-title-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
 .dmep-selected-day-container {
   display: flex;
   justify-content: center;
@@ -23,7 +31,7 @@
 }
 
 .dmep-schedule-select-time {
-  width: 150px;
+  width: 180px;
 }
 
 .dmep-schedule-day-selected {

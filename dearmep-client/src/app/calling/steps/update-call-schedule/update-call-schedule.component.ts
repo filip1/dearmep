@@ -1,20 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TranslocoService } from '@ngneat/transloco';
-import { timestamp } from 'rxjs';
 import { StringUtil } from 'src/app/common/util/string.util';
-import { DayOfWeek } from 'src/app/model/DayOfWeek.enum';
+import { Country } from 'src/app/model/country.model';
+import { DayOfWeek } from 'src/app/model/day-of-week.enum';
 
 @Component({
   selector: 'dmep-update-call-schedule',
   templateUrl: './update-call-schedule.component.html',
   styleUrls: ['./update-call-schedule.component.scss']
 })
-export class UpdateCallScheduleComponent {
+export class UpdateCallScheduleComponent implements OnInit {
   private readonly startHour = 9
   private readonly endHour = 16
 
+  public localTimeZone?: string
+
   public availableTimes: string[]
+
+  public selectedCountry: Country | null = null
 
   public availableDays = [
     DayOfWeek.Monday,
@@ -39,6 +43,12 @@ export class UpdateCallScheduleComponent {
       }
     }
     this.availableTimes.push(this.formatTime(this.endHour, 0))
+  }
+
+  public ngOnInit(): void {
+    const format = new Intl.DateTimeFormat()
+    const options = format.resolvedOptions()
+    this.localTimeZone = options.timeZone
   }
 
   public isTimeSelectedForDay(day: DayOfWeek) {
@@ -76,8 +86,9 @@ export class UpdateCallScheduleComponent {
     const delimiter = this.translocoService.translate("util.join.delimiter")
     const lastDelimiter = this.translocoService.translate("util.join.lastDelimiter")
     const timeSlotsString = StringUtil.JoinAnd(timeSlots, delimiter, lastDelimiter)
+    const countryStrBold = `<b>${ this.selectedCountry?.name }</b>`
 
-    return this.translocoService.translate("schedule.scheduleAsText", { timeSlots: timeSlotsString })
+    return this.translocoService.translate("schedule.scheduleAsText", { timeSlots: timeSlotsString, country: countryStrBold })
   }
 
   public removeSelectedTime() {

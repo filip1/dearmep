@@ -1,4 +1,7 @@
-<h3 transloco="schedule.title"></h3>
+<div class="dmep-schedule-call-title-container">
+  <h3 transloco="schedule.title"></h3>
+  <dmep-country-select (selectionChanged)="selectedCountry = $event"></dmep-country-select>
+</div>
 
 <p transloco="schedule.description" class="dmep-schedule-call-description description"></p>
 
@@ -16,10 +19,11 @@
       {{ ('schedule.days' | transloco)[selectedDayFormControl.value] }}
     </span>
 
-    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dmep-schedule-select-time">
+    <mat-form-field appearance="outline" class="dmep-schedule-select-time">
       <mat-select [formControl]="getSelectTimeFormControl()">
         <mat-option [value]="time" *ngFor="let time of availableTimes">{{ time }}</mat-option>
       </mat-select>
+      <mat-hint transloco="schedule.timezone" [translocoParams]="{ zone: localTimeZone }"></mat-hint>
       <mat-icon matSuffix *ngIf="getSelectTimeFormControl().value"
         (click)="removeSelectedTime(); $event.stopPropagation()">close</mat-icon>
     </mat-form-field>

@@ -8,6 +8,7 @@ import { AppCommonModule } from '../common/app-common.module';
 import { LanguageSwitchComponent } from './language-switch/language-switch.component';
 import { TalkingPointsComponent } from './talking-points/talking-points.component';
 import { FooterComponent } from './footer/footer.component';
+import { CountrySelectComponent } from './country-select/country-select.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { FooterComponent } from './footer/footer.component';
     MEPDetailComponent,
     LanguageSwitchComponent,
     TalkingPointsComponent,
-    FooterComponent
+    FooterComponent,
+    CountrySelectComponent
   ],
   imports: [
     AppCommonModule,
@@ -30,6 +32,7 @@ import { FooterComponent } from './footer/footer.component';
     LanguageSwitchComponent,
     FooterComponent,
     TalkingPointsComponent,
+    CountrySelectComponent,
   ]
 })
 export class ComponentsModule { }
