@@ -1,0 +1,25 @@
+.layout-container {
+    display: flex;
+}
+
+.column-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.column-container.left {
+    flex-grow: 6;
+    flex-shrink: 6;
+    flex-basis: 60%;
+    margin-right: 40px;
+}
+
+.column-container.right {
+    flex-grow: 4;
+    flex-shrink: 4;
+    flex-basis: 40%;
+}
+

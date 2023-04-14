@@ -1,3 +1,32 @@
 {
-  "hello": "Hello MEP"
+  "title": "Call your MEP now! Lorem ipsum dolor sit",
+  "call": {
+    "call-now-btn": {
+      "title": "Call Now",
+      "subtitle": "Free of charge"
+    },
+    "call-later-btn": {
+      "title": "Call later"
+    },
+    "home": {
+      "title": "Contact your Member of the European Parliament. You can call now or schedule calls in the future.",
+      "descriptions": [ 
+        { "text": "We will call you right away and connect you for free." },
+        { "text": "Rorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum." }
+      ]
+    }
+  },
+  "select-mep": {
+    "autorenew": "Choose another MEP"
+  },
+  "languages": {
+    "available": [
+      {
+        "name": "English"
+      }, 
+      {
+        "name": "Français"
+      }
+    ]
+  }
 }

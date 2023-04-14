@@ -7,6 +7,7 @@ import {
 } from '@angular/common/http';
 import { mergeMap, Observable } from 'rxjs';
 import { BaseUrlService } from '../services/base-url.service';
+import { UrlUtil } from '../util/url.util';
 
 /**
  * Detects requests to relative urls and prefixes them with a base-url
@@ -17,7 +18,7 @@ export class BaseUrlInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // leave absolute urls unchanged
-    if (this.isAbsoluteUrl(request.url)) {
+    if (UrlUtil.isAbsolute(request.url)) {
       return next.handle(request);
     }
 
@@ -25,19 +26,9 @@ export class BaseUrlInterceptor implements HttpInterceptor {
     return this.baseUrlService.getBaseUrl$().pipe(
       mergeMap(baseUrl =>
         next.handle(
-          request.clone({ url: this.prefixUrl(baseUrl, request.url) })
+          request.clone({ url: UrlUtil.toAbsolute(request.url, baseUrl) })
         )
       )
     )
-  }
-
-  private isAbsoluteUrl(url: string): boolean {
-    // Matches: "http://", "HTTPS://", "file://", "//", ...
-    const absoluteUrlRegexp = /^([A-Za-z]+:\/\/|\/\/)/
-    return !!url.match(absoluteUrlRegexp)
-  }
-
-  private prefixUrl(baseUrl: string, relativeUrl: string): string {
-    return new URL(relativeUrl, baseUrl).toString()
   }
 }

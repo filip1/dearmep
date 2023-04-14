@@ -1,7 +1,6 @@
 import { DoBootstrap, Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -9,23 +8,27 @@ import { TranslocoRootModule } from './transloco-root.module';
 import { ApiModule } from './api/api.module';
 import { createCustomElement } from '@angular/elements';
 
-import { MatButtonModule } from '@angular/material/button'
-import { CommonModule } from './common/common.module';
+import { AppCommonModule } from './common/app-common.module';
 import { BaseUrlInterceptor } from './common/interceptors/base-url.interceptor';
+import { ComponentsModule } from './components/components.module';
+import { LayoutModule } from './layout/layout.module';
+import { CallingModule } from './calling/calling.module';
+import { Router } from '@angular/router';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
     TranslocoRootModule,
-    ApiModule.forRoot({ rootUrl: 'http://127.0.0.1:8000' }), // TODO: Make configurable later
-    MatButtonModule,
-    CommonModule,
+    ApiModule.forRoot({ rootUrl: '/' }),
+    AppCommonModule,
+    ComponentsModule,
+    LayoutModule,
+    CallingModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BaseUrlInterceptor, multi: true },
@@ -38,5 +41,7 @@ export class AppModule implements DoBootstrap {
   ngDoBootstrap() {
     const app = createCustomElement(AppComponent, { injector: this.injector });
     customElements.define('dear-mep', app);
+    const router = this.injector.get(Router)
+    router.initialNavigation()
   }
 }

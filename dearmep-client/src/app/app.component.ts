@@ -1,20 +1,36 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Observable } from 'rxjs';
 import { BaseUrlService } from './common/services/base-url.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'dmep-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom,
 })
-export class AppComponent implements OnChanges {
+export class AppComponent implements OnInit, OnChanges {
+  public styleUrl$?: Observable<string>
+  public flagsStyleUrl$?: Observable<string>
+
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input("host")
   public baseUrl?: string
 
+  @Input()
+  public language?: string
+
+  // eslint-disable-next-line @angular-eslint/no-input-rename
+  @Input("disable-calling")
+  public disableCalling = false
+
   constructor(
     private readonly baseUrlService: BaseUrlService,
   ) {}
+
+  public ngOnInit() {
+    this.styleUrl$ = this.baseUrlService.toAbsoluteUrl$("styles.css")
+    this.flagsStyleUrl$ = this.baseUrlService.toAbsoluteUrl$("flags.css")
+  }
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes["baseUrl"] && this.baseUrl) {

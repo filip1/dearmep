@@ -13,7 +13,10 @@ import { DomSanitizer, SafeHtml, SafeResourceUrl, SafeScript, SafeStyle, SafeUrl
 export class SafePipe implements PipeTransform {
   constructor(private readonly sanitizer: DomSanitizer) { }
 
-  transform(value: string, type: string): SafeHtml | SafeStyle | SafeScript | SafeUrl | SafeResourceUrl {
+  transform(value: string | undefined | null, type: string): SafeHtml | SafeStyle | SafeScript | SafeUrl | SafeResourceUrl | undefined | null {
+    if (!value) {
+      return value
+    }
     switch (type) {
       case 'html':
         return this.sanitizer.bypassSecurityTrustHtml(value);

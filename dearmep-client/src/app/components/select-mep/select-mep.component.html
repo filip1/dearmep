@@ -1,0 +1,26 @@
+<div class="dmep-card-container">
+  <div class="filter">
+    <mat-form-field appearance="outline" class="dmep-search-member-field">
+      <mat-label>Search for another member</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <mat-icon matSuffix>expand_more</mat-icon>
+      <input type="text"
+        placeholder="Search for another member"
+        matInput
+        [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option value="Daniel FREUND">Daniel FREUND</mat-option>
+        <mat-option value="Alexandra GEESE">Alexandra GEESE</mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-icon matPrefix>pin_drop</mat-icon>
+      <mat-label>Country</mat-label>
+      <mat-select value="at">
+        <mat-option value="at">Austria</mat-option>
+        <mat-option value="de">Germany</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <dmep-mep-detail></dmep-mep-detail>
+</div>

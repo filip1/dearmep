@@ -1,7 +1,22 @@
 <!--
   Optimization: This style is loaded quite late, might make sens to add <link rel="preload" ... /> to the host page.
 -->
-<link *ngIf="baseUrl" rel="stylesheet" [href]="(baseUrl + 'styles.css') | safe: 'resourceUrl'">
+<link *ngIf="styleUrl$ | async" rel="stylesheet" [href]="styleUrl$ | async | safe: 'resourceUrl'" type="text/css">
+<link *ngIf="flagsStyleUrl$ | async" rel="stylesheet" [href]="flagsStyleUrl$ | async | safe: 'resourceUrl'" type="text/css">
+<div class="dmep-app-container">
+  <dmep-two-column-layout *ngIf="!disableCalling">
+    <dmep-title left class="grow"></dmep-title>
+    <dmep-select-mep left></dmep-select-mep>
+    <dmep-language-switch right></dmep-language-switch>
+    <dmep-calling right class="grow"></dmep-calling>
+  </dmep-two-column-layout>
 
-<p transloco="hello"></p>
-<button mat-raised-button color="primary">Click Me</button>
+  <!-- Just a test to see how it would look when calling is disabled -->
+  <div class="" *ngIf="disableCalling">
+    <div style="display: flex; align-items: start; justify-content: space-between; gap: 40px;">
+      <dmep-title></dmep-title>
+      <dmep-language-switch></dmep-language-switch>
+    </div>
+    <dmep-select-mep></dmep-select-mep>
+  </div>
+</div>
