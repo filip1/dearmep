@@ -21,7 +21,7 @@ countryguess = "^0.3.0"
 defusedxml = "^0.7.1"
 httpx = ">=0.23"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 uvicorn = {extras = ["standard"], version = "^0.18.2"}
 flake8 = "^4.0.1"
 flake8-quotes = "^3.3.1"
