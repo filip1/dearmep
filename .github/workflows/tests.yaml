@@ -1,11 +1,11 @@
-name: Tests
+name: Backend Tests
 
 on:
   - push
 
 jobs:
 
-  test:
+  test-backend:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -21,14 +21,26 @@ jobs:
           python -m pip install poetry
           poetry install
       - name: Lint with flake8
-        run: |
-          poetry run flake8
+        run: poetry run flake8
       - name: Typecheck with mypy
-        run: |
-          poetry run mypy
+        run: poetry run mypy
       - name: Test with pytest
+        run: poetry run pytest
+      - name: Export OpenAPI spec
+        if: ${{ matrix.python-version == '3.10' }}  # We only need it once.
+        # The example config does not work without a geolocation database. Of
+        # course the real database is not required to generate the OpenAPI, so
+        # we simply use an empty file.
         run: |
-          poetry run pytest
+          touch Geoacumen-Country.mmdb
+          poetry run dearmep-openapi-spec > openapi.json
+      - name: Collect OpenAPI spec as an artifact
+        if: ${{ matrix.python-version == '3.10' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: openapi-spec
+          path: |
+            openapi.json
       - name: Collect test results
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
@@ -37,3 +49,31 @@ jobs:
           path: |
             coverage.xml
             report.xml
+
+  test-frontend:
+    needs: test-backend  # Because of the OpenAPI spec.
+    defaults:
+      run:
+        working-directory: dearmep-client
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ["16.x", "18.x", "19.x"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Retrieve OpenAPI spec
+        uses: actions/download-artifact@v3
+        with:
+          name: openapi-spec
+      - name: Install dependencies
+        run: npm ci
+      - name: Build API client
+        run: npm run generate-client
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
