@@ -16,3 +16,9 @@ See [`example-config.yaml`](example-config.yaml) for an example.
 ```sh
 poetry run uvicorn --log-level debug --log-config logging.yaml --reload --factory dearmep.main:start
 ```
+
+## Retrieving the OpenAPI specification
+
+A running DearMEP server will provide its OpenAPI specification at `/openapi.json` and GUIs for it at `/docs` and `/redoc`.
+
+To quickly dump the OpenAPI spec to stdout, use `poetry run dearmep-openapi-spec`.

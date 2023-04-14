@@ -5,6 +5,9 @@ description = "DearMEP helps people contact their representatives."
 authors = ["Tim Weber"]
 license = "AGPL-3.0"
 
+[tool.poetry.scripts]
+dearmep-openapi-spec = "dearmep.dump_openapi:cli"
+
 [tool.poetry.dependencies]
 python = "^3.8"
 fastapi = "^0.87"
@@ -16,6 +19,7 @@ lzip = "^1.2.0"
 rich = "^13.3.2"
 countryguess = "^0.3.0"
 defusedxml = "^0.7.1"
+httpx = ">=0.23"
 
 [tool.poetry.dev-dependencies]
 uvicorn = {extras = ["standard"], version = "^0.18.2"}
