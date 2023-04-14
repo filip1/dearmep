@@ -69,7 +69,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: openapi-spec
-          path: ..
       - name: Install dependencies
         run: npm ci
       - name: Build API client
