@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.10"]
+        python-version: ["3.8", "3.11"]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -27,7 +27,7 @@ jobs:
       - name: Test with pytest
         run: poetry run pytest
       - name: Export OpenAPI spec
-        if: ${{ matrix.python-version == '3.10' }}  # We only need it once.
+        if: ${{ matrix.python-version == '3.11' }}  # We only need it once.
         # The example config does not work without a geolocation database. Of
         # course the real database is not required to generate the OpenAPI, so
         # we simply use an empty file.
@@ -35,7 +35,7 @@ jobs:
           touch Geoacumen-Country.mmdb
           poetry run dearmep-openapi-spec > openapi.json
       - name: Collect OpenAPI spec as an artifact
-        if: ${{ matrix.python-version == '3.10' }}
+        if: ${{ matrix.python-version == '3.11' }}
         uses: actions/upload-artifact@v3
         with:
           name: openapi-spec
@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ["16.x", "18.x", "19.x"]
+        node-version: ["16.x", "18.x", "19.x", "20.x"]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Node.js ${{ matrix.node-version }}
