@@ -25,7 +25,7 @@ def demo_html(
     base_url = f"{protocol}://{host}{'' if port is None else f':{port}'}/"
     static_url = f"{base_url.rstrip('/')}{path}/"
     return DEMO_TEMPLATE.format(
-        base_url=static_url,  # FIXME: until snippet adds "static" prefix
+        base_url=base_url,
         static_url=static_url,
     )
 
