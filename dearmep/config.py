@@ -123,18 +123,16 @@ class Settings(BaseSettings):
     """Settings supplied via environment variables."""
     config_file: FilePath = Field(
         "config.yaml",
-        env=f"{ENV_PREFIX}CONFIG",
+        env={f"{ENV_PREFIX}CONFIG", f"{ENV_PREFIX}CONFIG_FILE"},  # allow both
     )
     demo_page: bool = Field(
         False,
-        env=f"{ENV_PREFIX}DEMO_PAGE",
         description="Whether to return a HTML demo skeleton at the root path. "
         f"This setting is ignored unless {ENV_PREFIX}STATIC_FILES_DIR is also "
         "provided.",
     )
     static_files_dir: Optional[DirectoryPath] = Field(
         None,
-        env=f"{ENV_PREFIX}STATIC_FILES_DIR",
         description="Path to a directory that will be served as static files. "
         "Normally, this is used to let this application serve the front end.",
     )
