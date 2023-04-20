@@ -58,6 +58,6 @@ def start(config_dict: Optional[dict] = None) -> FastAPI:
         ).instrument(app).expose(app)
 
     app.include_router(api_v1.router, prefix="/api/v1")
-    static_files.mount_if_configured(app, "/")
+    static_files.mount_if_configured(app, "/static")
 
     return app

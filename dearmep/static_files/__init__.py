@@ -22,9 +22,11 @@ def demo_html(
     port: Optional[int],
     path: str,
 ) -> str:
-    self_url = f"{protocol}://{host}{'' if port is None else f':{port}'}{path}"
+    base_url = f"{protocol}://{host}{'' if port is None else f':{port}'}/"
+    static_url = f"{base_url.rstrip('/')}{path}/"
     return DEMO_TEMPLATE.format(
-        self_url=self_url,
+        base_url=static_url,  # FIXME: until snippet adds "static" prefix
+        static_url=static_url,
     )
 
 
@@ -39,7 +41,7 @@ def mount_if_configured(app: FastAPI, path: str):
 
     if settings.demo_page:
         @app.get(
-            path,
+            "/",
             response_class=HTMLResponse,
         )
         async def demo(req: Request):
