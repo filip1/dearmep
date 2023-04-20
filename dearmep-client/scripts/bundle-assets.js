@@ -11,5 +11,21 @@ const concat = require('concat');
   await fs.ensureDir('./dist/dear-mep-bundle')
   await concat(files, './dist/dear-mep-bundle/dear-mep.js');
   await fs.copyFile('./dist/dear-mep/styles.css', './dist/dear-mep-bundle/styles.css')
-  await fs.copy('./dist/dear-mep/assets/', './dist/dear-mep-bundle/assets/' )
+  await fs.copyFile('./dist/dear-mep/fonts.css', './dist/dear-mep-bundle/fonts.css')
+  
+  // fonts
+  await fs.copyFile('./dist/dear-mep/flags.css', './dist/dear-mep-bundle/flags.css')
+  await fs.copyFile('./dist/dear-mep/material-icons-outlined-all-400-normal.woff', './dist/dear-mep-bundle/material-icons-outlined-all-400-normal.woff')
+  await fs.copyFile('./dist/dear-mep/material-icons-outlined-all-400-normal.woff2', './dist/dear-mep-bundle/material-icons-outlined-all-400-normal.woff2')
+  await fs.copyFile('./dist/dear-mep/roboto-latin-300-normal.woff', './dist/dear-mep-bundle/roboto-latin-300-normal.woff')
+  await fs.copyFile('./dist/dear-mep/roboto-latin-300-normal.woff2', './dist/dear-mep-bundle/roboto-latin-300-normal.woff2')
+  await fs.copyFile('./dist/dear-mep/roboto-latin-400-normal.woff', './dist/dear-mep-bundle/roboto-latin-400-normal.woff')
+  await fs.copyFile('./dist/dear-mep/roboto-latin-400-normal.woff2', './dist/dear-mep-bundle/roboto-latin-400-normal.woff2')
+  await fs.copyFile('./dist/dear-mep/roboto-latin-500-normal.woff', './dist/dear-mep-bundle/roboto-latin-500-normal.woff')
+  await fs.copyFile('./dist/dear-mep/roboto-latin-500-normal.woff2', './dist/dear-mep-bundle/roboto-latin-500-normal.woff2')
+  await fs.copyFile('./dist/dear-mep/roboto-latin-700-normal.woff', './dist/dear-mep-bundle/roboto-latin-700-normal.woff')
+  await fs.copyFile('./dist/dear-mep/roboto-latin-700-normal.woff2', './dist/dear-mep-bundle/roboto-latin-700-normal.woff2')
+
+  // assets
+  await fs.copy('./dist/dear-mep/assets/', './dist/dear-mep-bundle/assets/')
 })()
