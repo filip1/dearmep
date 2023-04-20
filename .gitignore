@@ -1,8 +1,12 @@
 __pycache__/
+dist/
 
 /.coverage
 /coverage.xml
 /report.xml
+
+# Directory of the snippet bundled into the back-end.
+/dearmep/static_files/static/
 
 *.mmdb
 openapi.json

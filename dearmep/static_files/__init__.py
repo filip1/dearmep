@@ -35,7 +35,7 @@ def mount_if_configured(app: FastAPI, path: str):
     static_files_dir = settings.static_files_dir
     if static_files_dir is None:
         _logger.info(
-            f"{ENV_PREFIX}STATIC_FILES_DIR is unconfigured, will not serve "
+            f"{ENV_PREFIX}STATIC_FILES_DIR is unset, will not serve "
             "static files")
         return
 

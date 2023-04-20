@@ -11,6 +11,12 @@ APP_NAME = "DearMEP"
 ENV_PREFIX = f"{APP_NAME.upper()}_"
 
 
+EMBEDDED_STATIC_DIR: Optional[Path] = Path(
+    Path(__file__).parent, "static_files", "static")
+if EMBEDDED_STATIC_DIR and not EMBEDDED_STATIC_DIR.is_dir():
+    EMBEDDED_STATIC_DIR = None
+
+
 class Language(ConstrainedStr):
     regex = re.compile(r"^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$")
 
@@ -132,10 +138,14 @@ class Settings(BaseSettings):
         "provided.",
     )
     static_files_dir: Optional[DirectoryPath] = Field(
-        None,
+        EMBEDDED_STATIC_DIR,
         description="Path to a directory that will be served as static files. "
         "Normally, this is used to let this application serve the front end.",
     )
 
     class Config:
         env_prefix = ENV_PREFIX
+
+    @validator("static_files_dir", pre=True)
+    def empty_string_is_none(cls, v):
+        return None if v == "" else v

@@ -1,11 +1,11 @@
-name: Backend Tests
+name: Build
 
 on:
   - push
 
 jobs:
 
-  test-backend:
+  backend:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -39,6 +39,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: openapi-spec
+          retention-days: 8
           path: |
             openapi.json
       - name: Collect test results
@@ -46,12 +47,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-results-${{ matrix.python-version }}
+          retention-days: 15
           path: |
             coverage.xml
             report.xml
 
-  test-frontend:
-    needs: test-backend  # Because of the OpenAPI spec.
+  frontend:
+    needs: backend  # Because of the OpenAPI spec.
     defaults:
       run:
         working-directory: dearmep-client
@@ -77,3 +79,47 @@ jobs:
         run: npm run lint
       - name: Build
         run: npm run build
+      - name: Collect completed frontend build as an artifact
+        if: ${{ matrix.node-version == '20.x' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend
+          retention-days: 8
+          path: |
+            dearmep-client/dist/dear-mep-bundle/
+
+  build:
+    needs: frontend  # For JS, CSS & assets.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: |
+          python -m pip install poetry
+          poetry install
+      - name: Retrieve frontend
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend
+          path: dearmep/static_files/static
+      - name: Build Python package
+        run: |
+          if [ "$GITHUB_REF_TYPE" = 'tag' ]; then
+            printf '%s' "$GITHUB_REF_NAME" > .build-version
+          else
+            sed -n -e "0,/^version = \"\\(.*\\)-dev\.9999999999\"$/s//\\1-dev.$(date +%s)+gh$(git rev-parse --short HEAD)/p" pyproject.toml > .build-version
+          fi
+          cat .build-version; echo
+          sed -i -e "0,/^version = \".*\$/s//version = \"$(cat .build-version)\"/" pyproject.toml
+          poetry build
+      - name: Collect Python package as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-package
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
