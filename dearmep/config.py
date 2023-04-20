@@ -2,8 +2,8 @@ from pathlib import Path
 import re
 from typing import Any, ClassVar, Dict, List, Optional, Union
 
-from pydantic import BaseModel, BaseSettings, ConstrainedStr, Field, \
-                     FilePath, validator
+from pydantic import BaseModel, BaseSettings, ConstrainedStr, DirectoryPath, \
+    Field, FilePath, validator
 import yaml
 
 
@@ -124,6 +124,19 @@ class Settings(BaseSettings):
     config_file: FilePath = Field(
         "config.yaml",
         env=f"{ENV_PREFIX}CONFIG",
+    )
+    demo_page: bool = Field(
+        False,
+        env=f"{ENV_PREFIX}DEMO_PAGE",
+        description="Whether to return a HTML demo skeleton at the root path. "
+        f"This setting is ignored unless {ENV_PREFIX}STATIC_FILES_DIR is also "
+        "provided.",
+    )
+    static_files_dir: Optional[DirectoryPath] = Field(
+        None,
+        env=f"{ENV_PREFIX}STATIC_FILES_DIR",
+        description="Path to a directory that will be served as static files. "
+        "Normally, this is used to let this application serve the front end.",
     )
 
     class Config:
