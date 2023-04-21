@@ -20,4 +20,4 @@ def run():
         parser.print_help(stderr)
         exit(127)
 
-    args.func()
+    args.func(args)

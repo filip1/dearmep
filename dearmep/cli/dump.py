@@ -9,11 +9,11 @@ def dump_included_file(name: str):
     print(file.read_text())
 
 
-def dump_example_config():
+def dump_example_config(args):
     dump_included_file("example-config.yaml")
 
 
-def dump_log_config():
+def dump_log_config(args):
     dump_included_file("logging.yaml")
 
 
@@ -42,4 +42,4 @@ def add_parser(subparsers: _SubParsersAction):
     )
     log_config.set_defaults(func=dump_log_config)
 
-    parser.set_defaults(func=lambda: parser.error("no item selected"))
+    parser.set_defaults(func=lambda args: parser.error("no item selected"))

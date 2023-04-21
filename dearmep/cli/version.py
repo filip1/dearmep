@@ -12,7 +12,7 @@ ADDITIONAL_PACKAGES = (
 )
 
 
-def run():
+def run(args):
     versions = {
         APP_NAME: __version__,
         "Python": sys.version.replace("\n", " "),
