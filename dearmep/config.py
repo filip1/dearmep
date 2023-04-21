@@ -4,6 +4,7 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 
 from pydantic import BaseModel, BaseSettings, ConstrainedStr, DirectoryPath, \
     Field, FilePath, ValidationError, validator
+from pydantic.utils import deep_update
 import yaml
 
 
@@ -101,6 +102,7 @@ class Config(BaseModel):
     l10n: L10nConfig
 
     _instance: ClassVar[Optional["Config"]] = None
+    _patch: ClassVar[Optional[Dict]] = None
 
     @classmethod
     def get(cls) -> "Config":
@@ -112,6 +114,8 @@ class Config(BaseModel):
 
     @classmethod
     def load_dict(cls, obj: Dict) -> "Config":
+        if cls._patch:
+            obj = deep_update(obj, cls._patch)
         cls._instance = cls.parse_obj(obj)
         return cls._instance
 
@@ -119,6 +123,10 @@ class Config(BaseModel):
     def load_yaml_file(cls, filename: Path) -> "Config":
         with filename.open("r") as f:
             return cls.load_dict(yaml.load(f, yaml.Loader))
+
+    @classmethod
+    def set_patch(cls, patch: Optional[Dict]):
+        cls._patch = patch
 
     @classmethod
     def strings(cls) -> L10nStrings:

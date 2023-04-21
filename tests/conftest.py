@@ -97,6 +97,7 @@ def fastapi_app_func(factory: FactoryType):
     with open(environ["DEARMEP_CONFIG"], "r") as f:
         config_dict_orig = yaml.load(f, yaml.Loader)
     # Modify the MMDB.
+    # TODO: This can probably be simplified using Config.set_patch().
     config_dict = deep_update(config_dict_orig, {
         "l10n": {"geo_mmdb": str(Path(tests_dir, "geo_ip", "test.mmdb"))},
     })
