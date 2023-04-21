@@ -37,7 +37,8 @@ LOG_CONFIG = {
 
 def create_server(port: int) -> uvicorn.Server:
     top = Path(__file__).parent.parent
-    environ.setdefault("DEARMEP_CONFIG", str(Path(top, "example-config.yaml")))
+    environ.setdefault("DEARMEP_CONFIG",
+                       str(Path(top, "dearmep", "example-config.yaml")))
     config = uvicorn.Config(
         "dearmep.main:start",
         factory=True,

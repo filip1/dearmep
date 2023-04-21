@@ -50,7 +50,7 @@ def fastapi_factory_func(
     """
     top_dir = Path(__file__).parent.parent
     # By default, let the tests use the example config.
-    config_path = Path(top_dir, "example-config.yaml") \
+    config_path = Path(top_dir, "dearmep", "example-config.yaml") \
         if config_path is None else config_path
 
     # Allow dynamically passing config YAML.

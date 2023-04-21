@@ -9,7 +9,7 @@
 ## Providing a Configuration File
 
 Please set the environment variable `DEARMEP_CONFIG` (which defaults to `config.yaml`) to the name of a YAML file containing the configuration.
-See [`example-config.yaml`](example-config.yaml) for an example.
+See [`example-config.yaml`](dearmep/example-config.yaml) for an example.
 
 ## Running a Development Server
 
