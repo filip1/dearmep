@@ -105,3 +105,222 @@ l10n:
     # {code} will be replaced by a six-digit random number.
     phone_number_verification_sms:
       en: "{code} is your {campaign} verification code. If you think you have received this message in error, simply ignore it."
+      
+    title:
+      en: Call your MEP! Lorem ipsum dolor sit
+    call:
+      start-call-btn:
+        title:
+          en: Start Call
+        subtitle:
+          en: Free of charge
+      call-now-btn:
+        title:
+          en: Call Now
+        subtitle:
+          en: Free of charge
+      call-later-btn:
+        title:
+          en: Call later
+      home:
+        title:
+          en: Contact your Member of the European Parliament. You can call now or schedule
+            calls in the future.
+        descriptions:
+        - text:
+            en: We will call you right away and connect you for free.
+        - text:
+            en: Rorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate
+              libero et velit interdum.
+    verification:
+      title:
+        en: Verify your phone number
+      enterNumber:
+        description:
+          en: Please enter your own phone number and we will send you a one time password
+            to verify your number.
+        numberFieldLabel:
+          en: Enter your phone number
+        policy:
+          en: I have read and accept the
+        pocliyLinkText:
+          en: Privacy Policy
+        sendCode:
+          en: Send Code
+      enterCode:
+        description:
+          en: Please check you phone. We've sent a code to {{ number }}.
+        notYourNumber:
+          en: If this is not your number click
+        codeFieldLabel:
+          en: Enter your Code
+        verifyCode:
+          en: Verify
+      success:
+        message:
+          en: 'Succesfully verified with the number: {{ number }}'
+    callSetup:
+      title:
+        en: Your call is being set up
+      description:
+        en: Please have your mobile phone ready. We will call you right away and connect
+          you with {{ mep }}.
+    feedback:
+      title:
+        en: Feedback
+      convincingQuestion:
+        en: Were you able to convince the person?
+      convincingQustionFeedback:
+        'yes':
+          en: 'Yes'
+        likeleyYes:
+          en: likeley yes
+        likeleyNo:
+          en: likeley no
+        'no':
+          en: 'No'
+      technicalProblemsQuestion:
+        en: There were technical problems
+      additionalFeedbackQuestion:
+        en: Additional feedback
+      additionalFeedbackPlaceholder:
+        en: If you have any additional feedback, please type it in here...
+      submit:
+        en: Submit
+    select-mep:
+      autorenew:
+        en: Choose another MEP
+      country:
+        en: Country
+    talkingPoints:
+      title:
+        en: Talking Points
+      points:
+      - title:
+          en: Argument 1
+        body:
+          en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate
+            libero et velit interdum, ac aliquet odio mattis.
+      - title:
+          en: Argument 2
+        body:
+          en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate
+            libero et velit interdum, ac aliquet odio mattis.
+      - title:
+          en: Argument 3
+        body:
+          en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate
+            libero et velit interdum, ac aliquet odio mattis.
+      - title:
+          en: Argument 4
+        body:
+          en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate
+            libero et velit interdum, ac aliquet odio mattis.
+    languages:
+      available:
+      - name:
+          en: English
+      - name:
+          en: Français
+    footer:
+      contentHtml:
+        en: <a href="https://dearmep.eu" target="_blank">dearmep</a>&nbsp;powered by&nbsp;<a
+          href="https://epicenter.works" target="_blank">epicenter.works</a>
+    schedule:
+      title:
+        en: Schedule a call
+      description:
+        en: 'Plan now to talk to a politican later! Select a day and time:'
+      scheduleAsText:
+        en: We will give you a ring every {{ timeSlots }} at your number to connect you
+          with a politician from {{ country }}.
+      timeSlot:
+        en: "{{ dayOfWeek }} around {{ time }}"
+      and:
+        en: and
+      around:
+        en: around
+      days:
+      - en: Sunday
+      - en: Monday
+      - en: Tuesday
+      - en: Wednesday
+      - en: Thursday
+      - en: Friday
+      - en: Saturday
+      days-short:
+      - en: Su
+      - en: Mo
+      - en: Tu
+      - en: We
+      - en: Th
+      - en: Fr
+      - en: Sa
+      schedule-btn:
+        title:
+          en: Confirm
+        subtitle:
+          en: Free of charge
+      timezone:
+        en: 'Time: {{ zone }}'
+    util:
+      join:
+        delimiter:
+          en: ", "
+        lastDelimiter:
+          en: " and "
+    countries:
+      BE:
+        en: Belgium
+      BG:
+        en: Bulgaria
+      CZ:
+        en: Czechia
+      DK:
+        en: Denmark
+      DE:
+        en: Germany
+      EE:
+        en: Estonia
+      IE:
+        en: Estonia
+      GR:
+        en: Greece
+      ES:
+        en: Spain
+      FR:
+        en: France
+      HR:
+        en: Croatia
+      IT:
+        en: Italy
+      CY:
+        en: Cyprus
+      LV:
+        en: Latvia
+      LT:
+        en: Lithuania
+      LU:
+        en: Luxembourg
+      HU:
+        en: Hungary
+      MT:
+        en: Malta
+      NL:
+        en: Netherlands
+      AT:
+        en: Austria
+      PL:
+        en: Poland
+      PT:
+        en: Portugal
+      RO:
+        en: Romania
+      SI:
+        en: Slovenia
+      SK:
+        en: Slovakia
+      FI:
+        en: Finland
+      SE:
+        en: Sweden
