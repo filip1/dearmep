@@ -8,6 +8,7 @@ license = "AGPL-3.0"
 include = ["dearmep/static_files/static/**/*"]
 
 [tool.poetry.scripts]
+dearmep = "dearmep.cli:run"
 dearmep-openapi-spec = "dearmep.dump_openapi:cli"
 
 [tool.poetry.dependencies]
