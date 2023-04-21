@@ -1,10 +1,22 @@
 from argparse import ArgumentParser
+from sys import exit, stderr
 
 from ..config import APP_NAME
+from . import version
 
 
 def run():
     parser = ArgumentParser(
         prog=APP_NAME.lower(),
     )
-    parser.parse_args()
+    subparsers = parser.add_subparsers(
+        metavar="COMMAND",
+    )
+    version.add_parser(subparsers)
+    args = parser.parse_args()
+
+    if "func" not in args:
+        parser.print_help(stderr)
+        exit(127)
+
+    args.func()
