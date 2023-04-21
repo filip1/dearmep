@@ -28,8 +28,8 @@ export class AppComponent implements OnInit, OnChanges {
   ) {}
 
   public ngOnInit() {
-    this.styleUrl$ = this.baseUrlService.toAbsoluteUrl$("styles.css")
-    this.flagsStyleUrl$ = this.baseUrlService.toAbsoluteUrl$("flags.css")
+    this.styleUrl$ = this.baseUrlService.toAbsoluteUrl$("static/styles.css")
+    this.flagsStyleUrl$ = this.baseUrlService.toAbsoluteUrl$("static/flags.css")
   }
 
   public ngOnChanges(changes: SimpleChanges): void {

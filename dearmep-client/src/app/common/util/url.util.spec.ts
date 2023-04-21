@@ -39,6 +39,15 @@ describe('UrlUtil', () => {
       expect(UrlUtil.toAbsolute("assets", "http://localhost")).toBe("http://localhost/assets")
     })
 
+    // TODO
+    // it('should handle base-url with sub-folder', () => {
+    //   expect(UrlUtil.toAbsolute("assets", "http://localhost/static")).toBe("http://localhost/static/assets")
+    // })
+
+    // it('should handle base-url with sub-folder (trailing slash)', () => {
+    //   expect(UrlUtil.toAbsolute("assets", "http://localhost/static/")).toBe("http://localhost/static/assets")
+    // })
+
     it('should handle relative base url', () => {
       for (const relUrl of relativeUrls) {
         expect(() => UrlUtil.toAbsolute("style.css", relUrl)).toThrowError("Failed to construct 'URL': Invalid base URL")
