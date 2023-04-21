@@ -9,6 +9,7 @@ import yaml
 
 
 APP_NAME = "DearMEP"
+CMD_NAME = APP_NAME.lower()
 ENV_PREFIX = f"{APP_NAME.upper()}_"
 
 
@@ -168,3 +169,7 @@ def is_config_missing(e: ValidationError):
         ):
             return True
     return False
+
+
+def included_file(name: str) -> Path:
+    return Path(Path(__file__).parent, name)

@@ -21,8 +21,11 @@ See [`example-config.yaml`](dearmep/example-config.yaml) for an example.
 ## Running a Development Server
 
 ```sh
-uvicorn --log-level debug --log-config dearmep/logging.yaml --reload --factory dearmep.main:create_app
+dearmep serve --log-level debug --reload
 ```
+
+You can modify the port with `-p 1234`.
+See `dearmep serve --help` for other options, including how to start it via a separate ASGI server.
 
 ## Serving Static Files (e.g. the Client)
 

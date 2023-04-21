@@ -1,13 +1,13 @@
 from argparse import _SubParsersAction, ArgumentParser
 import json
 from os import environ
-from pathlib import Path
 import sys
 from typing import Dict, Optional
 
 from pydantic import ValidationError
 
-from ..config import APP_NAME, ENV_PREFIX, Config, Settings, is_config_missing
+from ..config import APP_NAME, ENV_PREFIX, Config, Settings, included_file, \
+    is_config_missing
 from ..main import create_app
 
 
@@ -24,10 +24,6 @@ def fake_config(patch: Optional[Dict] = None):
     if patch:
         Config.set_patch(patch)
     Config.load_yaml_file(s.config_file)
-
-
-def included_file(name: str) -> Path:
-    return Path(Path(__file__).parent.parent, name)
 
 
 def dump_included_file(name: str):

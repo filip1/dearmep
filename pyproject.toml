@@ -22,9 +22,9 @@ rich = "^13.3.2"
 countryguess = "^0.3.0"
 defusedxml = "^0.7.1"
 httpx = ">=0.23"
+uvicorn = {extras = ["standard"], version = "^0.21.1"}
 
 [tool.poetry.group.dev.dependencies]
-uvicorn = {extras = ["standard"], version = "^0.21.1"}
 flake8 = "^4.0.1"
 flake8-quotes = "^3.3.1"
 mypy = "<1.0"
