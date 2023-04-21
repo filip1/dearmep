@@ -36,4 +36,4 @@ This option only has an effect if you have also configured `DEARMEP_STATIC_FILES
 
 A running DearMEP server will provide its OpenAPI specification at `/openapi.json` and GUIs for it at `/docs` and `/redoc`.
 
-To quickly dump the OpenAPI spec to stdout, use `poetry run dearmep-openapi-spec`.
+To quickly dump the OpenAPI spec to stdout, use `poetry run dearmep dump openapi`.

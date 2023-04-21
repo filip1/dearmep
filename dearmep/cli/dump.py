@@ -1,12 +1,37 @@
 from argparse import _SubParsersAction, ArgumentParser
+import json
+from os import environ
 from pathlib import Path
+import sys
+from typing import Dict, Optional
 
-from ..config import APP_NAME
+from pydantic import ValidationError
+
+from ..config import APP_NAME, ENV_PREFIX, Config, Settings, is_config_missing
+from ..main import create_app
+
+
+def fake_config(patch: Optional[Dict] = None):
+    try:
+        s = Settings()
+    except ValidationError as e:
+        if not is_config_missing(e):
+            raise
+        # Use the builtin config instead.
+        environ[ENV_PREFIX+"CONFIG"] = str(
+            included_file("example-config.yaml"))
+        s = Settings()
+    if patch:
+        Config.set_patch(patch)
+    Config.load_yaml_file(s.config_file)
+
+
+def included_file(name: str) -> Path:
+    return Path(Path(__file__).parent.parent, name)
 
 
 def dump_included_file(name: str):
-    file = Path(Path(__file__).parent.parent, name)
-    print(file.read_text())
+    print(included_file(name).read_text())
 
 
 def dump_example_config(args):
@@ -15,6 +40,13 @@ def dump_example_config(args):
 
 def dump_log_config(args):
     dump_included_file("logging.yaml")
+
+
+def dump_openapi(args):
+    # We don't need the Geo DB to dump an OpenAPI spec.
+    fake_config({"l10n": {"geo_mmdb": None}})
+    app = create_app()
+    print(json.dumps(app.openapi(), indent=None if args.compact else 2))
 
 
 def add_parser(subparsers: _SubParsersAction):
@@ -41,5 +73,26 @@ def add_parser(subparsers: _SubParsersAction):
         "stdout.",
     )
     log_config.set_defaults(func=dump_log_config)
+
+    openapi = subsub.add_parser(
+        "openapi",
+        help="OpenAPI spec",
+        description=f"Dump the {APP_NAME} OpenAPI specification to stdout.",
+    )
+    openapi.set_defaults(func=dump_openapi)
+    openapi_compact = openapi.add_mutually_exclusive_group()
+    openapi_compact.add_argument(
+        "--compact",
+        help="use a compact JSON representation (default if stdout is not a "
+        "terminal)",
+        action="store_const", dest="compact", const=True,
+    )
+    openapi_compact.add_argument(
+        "--no-compact",
+        help="use a human-readable, indented JSON representation (default if "
+        "stdout is a terminal)",
+        action="store_const", dest="compact", const=False,
+    )
+    openapi.set_defaults(compact=not sys.stdout.isatty())
 
     parser.set_defaults(func=lambda args: parser.error("no item selected"))

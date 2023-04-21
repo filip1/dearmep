@@ -33,7 +33,7 @@ jobs:
         # we simply use an empty file.
         run: |
           touch Geoacumen-Country.mmdb
-          poetry run dearmep-openapi-spec > openapi.json
+          poetry run dearmep dump openapi > openapi.json
       - name: Collect OpenAPI spec as an artifact
         if: ${{ matrix.python-version == '3.11' }}
         uses: actions/upload-artifact@v3
