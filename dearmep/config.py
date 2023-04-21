@@ -3,7 +3,7 @@ import re
 from typing import Any, ClassVar, Dict, List, Optional, Union
 
 from pydantic import BaseModel, BaseSettings, ConstrainedStr, DirectoryPath, \
-    Field, FilePath, validator
+    Field, FilePath, ValidationError, validator
 import yaml
 
 
@@ -149,3 +149,14 @@ class Settings(BaseSettings):
     @validator("static_files_dir", pre=True)
     def empty_string_is_none(cls, v):
         return None if v == "" else v
+
+
+def is_config_missing(e: ValidationError):
+    """Check whether e means that the config is missing."""
+    cfg_errs = (err for err in e.errors() if err["loc"] == ("config_file",))
+    for err in cfg_errs:
+        if err["type"] in (
+            "value_error.path.not_exists", "value_error.path.not_a_file",
+        ):
+            return True
+    return False
