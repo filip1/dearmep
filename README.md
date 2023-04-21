@@ -14,7 +14,7 @@ See [`example-config.yaml`](dearmep/example-config.yaml) for an example.
 ## Running a Development Server
 
 ```sh
-poetry run uvicorn --log-level debug --log-config dearmep/logging.yaml --reload --factory dearmep.main:start
+poetry run uvicorn --log-level debug --log-config dearmep/logging.yaml --reload --factory dearmep.main:create_app
 ```
 
 ## Serving Static Files (e.g. the Client)

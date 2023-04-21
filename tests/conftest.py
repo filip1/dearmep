@@ -9,7 +9,7 @@ from pydantic.utils import deep_update
 import pytest
 import yaml
 
-from dearmep.main import start
+from dearmep.main import create_app
 from dearmep.util import Limit
 
 
@@ -58,7 +58,7 @@ def fastapi_factory_func(
         config_path.write_bytes(config_content)
 
     with modified_environ({"DEARMEP_CONFIG": str(config_path)}):
-        yield start
+        yield create_app
 
 
 @pytest.fixture

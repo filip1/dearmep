@@ -13,7 +13,7 @@ from .config import APP_NAME, Config, ENV_PREFIX, Settings
 _logger = logging.getLogger(__name__)
 
 
-def start(config_dict: Optional[dict] = None) -> FastAPI:
+def create_app(config_dict: Optional[dict] = None) -> FastAPI:
     try:
         settings = Settings()
     except ValidationError as e:
