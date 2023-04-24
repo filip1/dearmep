@@ -3,25 +3,26 @@ import { CommonModule } from '@angular/common';
 
 import { CallingComponent } from './calling.component';
 import { HomeStepComponent } from './steps/home-step/home-step.component';
-import { VerifyNumerComponent } from './steps/verification-step/verify-numer.component';
+import { VerifyNumberComponent } from './steps/verify-number-step/verify-number.component';
 import { AppCommonModule } from '../common/app-common.module';
 import { SetupStepComponent } from './steps/setup-step/setup-step.component';
+import { ComponentsModule } from '../components/components.module';
 import { FeedbackStepComponent } from './steps/feedback-step/feedback-step.component';
 import { UpdateCallScheduleComponent } from './steps/update-call-schedule/update-call-schedule.component';
-import { ComponentsModule } from '../components/components.module';
 
 
 @NgModule({
   declarations: [
     CallingComponent,
     HomeStepComponent,
-    VerifyNumerComponent,
+    VerifyNumberComponent,
     SetupStepComponent,
     FeedbackStepComponent,
     UpdateCallScheduleComponent,
   ],
   imports: [
     CommonModule,
+    ComponentsModule,
     AppCommonModule,
     ComponentsModule,
   ],

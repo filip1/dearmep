@@ -1,5 +1,4 @@
-import { format } from 'date-fns';
-import { formatInTimeZone, getTimezoneOffset } from 'date-fns-tz';
+import { getTimezoneOffset } from 'date-fns-tz';
 
 import { TimeService } from './time.service';
 
@@ -8,10 +7,6 @@ describe('TimeService', () => {
 
   beforeEach(() => {
     service = new TimeService()
-  });
-
-  it('should create', () => {
-    expect(service).toBeTruthy();
   });
 
   it('should return current timezone', () => {

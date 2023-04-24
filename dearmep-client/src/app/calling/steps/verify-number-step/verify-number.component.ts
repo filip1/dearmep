@@ -2,15 +2,17 @@ import { Component } from '@angular/core';
 import { FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
 import { VerificationStep } from './verification-step.enum';
+import { PhoneNumber } from 'src/app/model/phone-number.model';
 
 @Component({
-  selector: 'dmep-verify-numer',
-  templateUrl: './verify-numer.component.html',
-  styleUrls: ['./verify-numer.component.scss']
+  selector: 'dmep-verify-number',
+  templateUrl: './verify-number.component.html',
+  styleUrls: ['./verify-number.component.scss']
 })
-export class VerifyNumerComponent {
+export class VerifyNumberComponent {
   private readonly numberValidator: ValidatorFn = (control): ValidationErrors | null => {
-    if (control.value?.length > 0) {
+    const number: PhoneNumber | null | undefined = control.value
+    if (number && number.callingCode && number.number) {
       return null
     }
     return { numberError: "invalid-number" }
@@ -20,7 +22,7 @@ export class VerifyNumerComponent {
     if (control.value?.length > 0) {
       return null
     }
-    return { numberError: "invalid-number" }
+    return { numberError: "invalid-code" }
   }
 
   public readonly StepEnterNumber = VerificationStep.EnterNumber
@@ -31,15 +33,16 @@ export class VerifyNumerComponent {
 
   constructor(
     private readonly callingStateManager: CallingStateManagerService,
-  ) { }
+  ) { 
+  }
 
-  public numberFormControl = new FormControl<string | undefined>(undefined, {
+  public numberFormControl = new FormControl<PhoneNumber>({ callingCode: "+43", number: "" }, {
     validators: this.numberValidator,
     updateOn: 'change',
   })
   public acceptPolicy = false
 
-  public codeFormControl = new FormControl<string | undefined>(undefined, {
+  public codeFormControl = new FormControl<string | null>(null, {
     validators: this.codeValidator,
     updateOn: 'change',
   })
@@ -64,7 +67,8 @@ export class VerifyNumerComponent {
     this.callingStateManager.goToSchedule()
   }
 
-  public onShowPolicyClick() {
-    console.log("show policy")
+  public getSelectedNumber(): string | undefined {
+    const number = this.numberFormControl.value
+    return number ? `${number.callingCode} ${number.number}` : undefined
   }
 }

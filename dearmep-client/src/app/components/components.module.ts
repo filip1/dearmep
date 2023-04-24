@@ -9,6 +9,7 @@ import { LanguageSwitchComponent } from './language-switch/language-switch.compo
 import { TalkingPointsComponent } from './talking-points/talking-points.component';
 import { FooterComponent } from './footer/footer.component';
 import { CountrySelectComponent } from './country-select/country-select.component';
+import { PhoneNumberInputComponent } from './phone-number-input/phone-number-input.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { CountrySelectComponent } from './country-select/country-select.componen
     LanguageSwitchComponent,
     TalkingPointsComponent,
     FooterComponent,
-    CountrySelectComponent
+    CountrySelectComponent,
+    PhoneNumberInputComponent,
   ],
   imports: [
     AppCommonModule,
@@ -33,6 +35,7 @@ import { CountrySelectComponent } from './country-select/country-select.componen
     FooterComponent,
     TalkingPointsComponent,
     CountrySelectComponent,
+    PhoneNumberInputComponent,
   ]
 })
 export class ComponentsModule { }

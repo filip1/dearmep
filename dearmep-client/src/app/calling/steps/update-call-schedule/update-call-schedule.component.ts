@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TranslocoService } from '@ngneat/transloco';
-import { addMinutes, format, isBefore, isEqual, set, setHours } from 'date-fns';
-import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
+// Change this import to enable optimizations as soon as https://github.com/marnusw/date-fns-tz/issues/193 is fixed
+import {zonedTimeToUtc} from 'date-fns-tz';
+import { addMinutes, format, isBefore, isEqual, set } from 'date-fns/esm';
 import { StringUtil } from 'src/app/common/util/string.util';
 import { Country } from 'src/app/model/country.model';
 import { DayOfWeek } from 'src/app/model/day-of-week.enum';
-import { TimeService } from 'src/app/services/time.service';
+import { TimeService } from 'src/app/services/time/time.service';
 
 @Component({
   selector: 'dmep-update-call-schedule',
