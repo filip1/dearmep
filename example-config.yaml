@@ -208,8 +208,8 @@ frontend:
       languages.available.1.name:
         en: Français
       footer.contentHtml:
-        en: <a href="https://dearmep.eu" target="_blank">dearmep</a>&nbsp;powered by&nbsp;<a
-          href="https://epicenter.works" target="_blank">epicenter.works</a>
+        en: <a href="https://dearmep.eu" target="_blank">DearMEP</a>&nbsp;powered by&nbsp;<a
+          href="https://epicenter.works" target="_blank">Epicenter.works</a>
       schedule.title:
         en: Schedule a call
       schedule.description:
