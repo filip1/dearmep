@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.callback-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.callback-icon {
+  width: 125px;
+  height: 125px;
+  font-size: 125px;
+  margin: 32px 0;
+}

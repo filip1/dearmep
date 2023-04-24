@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.description {
+  margin: 8px 0 16px 0;
+}
+
+.dmep-verify-code-btn, .dmep-send-code-btn {
+  margin-top: 16px;
+}
+
+.success-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 24px 0;
+}
+.success-icon {
+  font-size: 125px;
+  height: 125px;
+  width: 125px;
+}

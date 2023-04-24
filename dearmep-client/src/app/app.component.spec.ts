@@ -3,6 +3,7 @@ import { By } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppModule } from './app.module';
 import { TestingModule } from './testing/testing.module';
+import { getTranslocoModule } from './testing/transloco-testing.module';
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -12,6 +13,7 @@ describe('AppComponent', () => {
       imports: [
         AppModule,
         TestingModule,
+        getTranslocoModule(),
       ],
     }).compileComponents();
     fixture = TestBed.createComponent(AppComponent);
@@ -29,7 +31,12 @@ describe('AppComponent', () => {
   })
 
   it('should display calling section', () => {
-    const callingTitle = fixture.debugElement.query(By.css("router-outlet[name=calling-router]"))
+    const callingTitle = fixture.debugElement.query(By.css("h2.calling-title"))
     expect(callingTitle).toBeTruthy()
+  })
+
+  it('should display footer section', () => {
+    const footer = fixture.debugElement.query(By.css(".dmep-footer"))
+    expect(footer).toBeTruthy()
   })
 });

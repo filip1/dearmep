@@ -1,0 +1,20 @@
+<div role="group" class="dmep-phone-number-input-container" [formGroup]="_numberFormGroup"
+  [attr.aria-labelledby]="_formField.getLabelId()" (focusin)="onFocusIn()" (focusout)="onFocusOut($event)">
+  <mat-select [formControl]="_numberFormGroup.controls.country" #countrySelect class="dmep-country-select" [compareWith]="compareCountry">
+    <mat-select-trigger>
+      <div class="dmep-country-option">
+        <span [classList]=" 'flag:' + _numberFormGroup.controls.country.value?.countryCode"></span>
+      </div>
+    </mat-select-trigger>
+    <mat-option [value]="country" *ngFor="let country of _countries">
+      <div class="dmep-country-option">
+        <span [classList]=" 'flag:' + country.countryCode"></span>
+        <span>{{ country.name }} ({{ country.callingCode }})</span>
+      </div>
+    </mat-option>
+  </mat-select>
+
+  <span>{{ _numberFormGroup.controls.country.value?.callingCode }}</span>
+
+  <input type="tel" matInput [formControl]="_numberFormGroup.controls.number" #numberInput class="dmep-number-input">
+</div>

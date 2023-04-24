@@ -1,17 +1,21 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
 
 @Component({
   selector: 'dmep-home-step',
   templateUrl: './home-step.component.html',
   styleUrls: ['./home-step.component.scss']
 })
-export class HomeStepComponent {
+export class HomeStepComponent { 
   constructor(
-    private readonly router: Router,
-  ) { }
+    private readonly callingStateManager: CallingStateManagerService,
+  ) {}
 
   public onCallNowClick() {
-    console.log("call now")
+    this.callingStateManager.goToVerify()
+  }
+
+  public onCallLaterClick() {
+    this.callingStateManager.goToSchedule()
   }
 }

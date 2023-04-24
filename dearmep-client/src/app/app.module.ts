@@ -13,7 +13,6 @@ import { BaseUrlInterceptor } from './common/interceptors/base-url.interceptor';
 import { ComponentsModule } from './components/components.module';
 import { LayoutModule } from './layout/layout.module';
 import { CallingModule } from './calling/calling.module';
-import { Router } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -41,7 +40,5 @@ export class AppModule implements DoBootstrap {
   ngDoBootstrap() {
     const app = createCustomElement(AppComponent, { injector: this.injector });
     customElements.define('dear-mep', app);
-    const router = this.injector.get(Router)
-    router.initialNavigation()
   }
 }

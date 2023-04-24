@@ -1,5 +1,5 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
+  "include": ["src/**/*.ts"],
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
@@ -19,6 +19,7 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
+    "resolveJsonModule": true,
     "lib": [
       "ES2022",
       "dom"
@@ -29,5 +30,5 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
 }
