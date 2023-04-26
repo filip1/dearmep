@@ -19,9 +19,9 @@ def dummy_translation_strings() -> L10nStrings:
 
 @pytest.fixture
 def dummy_frontend_strings() -> FrontendStrings:
-    return {
+    return FrontendStrings.parse_obj({
         "title": L10nEntry.parse_obj("foo"),
-    }
+    })
 
 
 def test_default_language_in_language_list():

@@ -4,6 +4,7 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 
 from pydantic import BaseModel, BaseSettings, ConstrainedStr, DirectoryPath, \
     Field, FilePath, ValidationError, validator
+from pydantic.fields import ModelField
 from pydantic.utils import deep_update
 import yaml
 
@@ -55,12 +56,13 @@ class L10nEntry(BaseModel):
         )
 
 
+class FrontendStrings(BaseModel):
+    __root__: Dict[str, L10nEntry]
+
+
 class L10nStrings(BaseModel):
     campaign_name: L10nEntry
     phone_number_verification_sms: L10nEntry
-
-
-FrontendStrings = Dict[str, L10nEntry]
 
 
 class L10nConfig(BaseModel):
@@ -87,17 +89,19 @@ class L10nConfig(BaseModel):
     def every_string_must_be_available_in_default_language(
         cls,
         v: Union[FrontendStrings, L10nStrings],
+        field: ModelField,
         values: Dict[str, Any],
     ):
         if "default_language" not in values:
             # Validation of `default_language` probably failed, skip.
             return v
         default = values["default_language"]
-        as_dict = v.dict() if isinstance(v, BaseModel) else v
-        for k, entry in as_dict.items():
+        d = v.dict()
+        for k, entry in d.get("__root__", d).items():
             if isinstance(entry, dict) and default not in entry:
+                src = "l10n" if field.name == "strings" else "frontend"
                 raise ValueError(
-                    f"l10n string '{k}' needs a translation in the default "
+                    f"{src} string '{k}' needs a translation in the default "
                     f"language ('{default}')"
                 )
         return v
