@@ -4,6 +4,7 @@ import re
 from typing import List, Optional, Sequence, Union
 
 import maxminddb
+from maxminddb import errors as mmdberrors
 
 from .models import LocationDetection
 
@@ -109,24 +110,21 @@ def get_country(db_file: Optional[Union[str, Path]], ip_addr: str):
     available_countries = ["at", "de"]
 
     if db_file is None:
-        # Convenience to the caller: If no DB file is configured, return an
-        # empty result.
-        return LocationDetection(
-            available=available_countries,
-            ip_address=ip_addr,
-        )
+        # Use the bundled one.
+        import geoacumen  # type: ignore
+        db_file = geoacumen.db_path
 
     country = res = None
 
     try:
-        with maxminddb.open_database(db_file) as reader:
+        with maxminddb.open_database(str(db_file)) as reader:
             res = reader.get(ip_addr)
             if isinstance(res, dict):
                 country = res.get("country", None)
                 if isinstance(country, dict):
                     country = country.get("iso_code", None)
     except (
-        FileNotFoundError, ValueError, maxminddb.InvalidDatabaseError
+        FileNotFoundError, ValueError, mmdberrors.InvalidDatabaseError
     ) as e:
         _logger.exception(e)
 

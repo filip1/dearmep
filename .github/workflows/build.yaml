@@ -28,12 +28,7 @@ jobs:
         run: poetry run pytest
       - name: Export OpenAPI spec
         if: ${{ matrix.python-version == '3.11' }}  # We only need it once.
-        # The example config does not work without a geolocation database. Of
-        # course the real database is not required to generate the OpenAPI, so
-        # we simply use an empty file.
-        run: |
-          touch Geoacumen-Country.mmdb
-          poetry run dearmep dump openapi > openapi.json
+        run: poetry run dearmep dump openapi > openapi.json
       - name: Collect OpenAPI spec as an artifact
         if: ${{ matrix.python-version == '3.11' }}
         uses: actions/upload-artifact@v3

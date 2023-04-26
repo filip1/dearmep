@@ -39,8 +39,7 @@ def dump_log_config(args):
 
 
 def dump_openapi(args):
-    # We don't need the Geo DB to dump an OpenAPI spec.
-    fake_config({"l10n": {"geo_mmdb": None}})
+    fake_config()
     app = create_app()
     print(json.dumps(app.openapi(), indent=None if args.compact else 2))
 
