@@ -1,5 +1,5 @@
 <div class="dmep-card-container">
-  <div class="filter">
+  <div class="filter" *ngIf="mepSelectionPossible$ | async">
     <mat-form-field appearance="outline" class="dmep-search-member-field">
       <mat-label>Search for another member</mat-label>
       <mat-icon matPrefix>search</mat-icon>
@@ -13,14 +13,7 @@
         <mat-option value="Alexandra GEESE">Alexandra GEESE</mat-option>
       </mat-autocomplete>
     </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-icon matPrefix>pin_drop</mat-icon>
-      <mat-label>Country</mat-label>
-      <mat-select value="at">
-        <mat-option value="at">Austria</mat-option>
-        <mat-option value="de">Germany</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <dmep-country-select></dmep-country-select>
   </div>
-  <dmep-mep-detail></dmep-mep-detail>
+  <dmep-mep-detail [allowChangeMEP]="mepSelectionPossible$ | async"></dmep-mep-detail>
 </div>

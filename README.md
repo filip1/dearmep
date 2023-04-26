@@ -3,19 +3,29 @@
 ## Installation for Development
 
 1. Install [Poetry](https://python-poetry.org/).
-2. Run `poetry install`.
-3. Done.
+2. Clone this repository and `cd` into it.
+3. Run `poetry install`.
+4. Done.
+
+Poetry takes care of managing a [virtual environment](https://docs.python.org/3/tutorial/venv.html) for you, containing DearMEP and all of its dependencies, without messing with your global installation.
+You can use `poetry shell` to launch a new subshell with your `$PATH` modified to use the virtual environment.
+Alternatively, you can prefix individual commands with `poetry run` to run just that command inside of the virtual environment.
+
+**In the examples below, commands like `dearmep` or `uvicorn` should either be run inside of a `poetry shell`, or prefixed like `poetry run dearmep`.**
 
 ## Providing a Configuration File
 
 Please set the environment variable `DEARMEP_CONFIG` (which defaults to `config.yaml`) to the name of a YAML file containing the configuration.
-See [`example-config.yaml`](example-config.yaml) for an example.
+See [`example-config.yaml`](dearmep/example-config.yaml) for an example.
 
 ## Running a Development Server
 
 ```sh
-poetry run uvicorn --log-level debug --log-config logging.yaml --reload --factory dearmep.main:start
+dearmep serve --log-level debug --reload
 ```
+
+You can modify the port with `-p 1234`.
+See `dearmep serve --help` for other options, including how to start it via a separate ASGI server.
 
 ## Serving Static Files (e.g. the Client)
 
@@ -36,4 +46,4 @@ This option only has an effect if you have also configured `DEARMEP_STATIC_FILES
 
 A running DearMEP server will provide its OpenAPI specification at `/openapi.json` and GUIs for it at `/docs` and `/redoc`.
 
-To quickly dump the OpenAPI spec to stdout, use `poetry run dearmep-openapi-spec`.
+To quickly dump the OpenAPI spec to stdout, use `dearmep dump openapi`.

@@ -1,11 +1,32 @@
 :host {
+  // Layout
+  --dmep-min-height: 630px;
+
+  // Colors
+  --dmep-text-color: rgb(255, 255, 255, 0.9);
+  --dmep-footer-text-color: rgba(255, 255, 255, 0.75);
   --dmep-primary-color: rgba(250, 128, 114, 1);
-  --dmep-text-color: rgb(255, 255, 255);
+  --dmep-title-light-text-color: rgba(255, 255, 255, 0.75);
+  --dmep-scrollbar-color: rgba(255, 255, 255, 0.8);
+
+  // Fonts
+  --dmep-font-family: Roboto, "Helvetica Neue", sans-serif;
+  --dmep-font-size: 1.25rem;  
+  --dmep-title-font-size: 3.75rem;
+  --dmep-sub-title-font-size: 1.5rem;
+  --dmep-footer-font-size: 1rem;
+  --dmep-font-size-sm: 1rem;  
+
+  // Background
   --dmep-bg: linear-gradient(180deg,
       rgba(22, 22, 22, 1) 0%,
       rgba(22, 22, 22, 1) 75%,
       rgba(12, 18, 59, 1) 100%);
   --dmep-bg-border-radius: 16px;
   --dmep-card-bg: rgba(255, 255, 255, 0.24);
-  --dmep-card-border-radius: 16px
+  --dmep-inner-card-bg: rgba(255, 255, 255, 0.34);
+  --dmep-card-border-radius: 16px;
+
+  // Buttons
+  --dmep-btn-primary-bg-color: rgb(255, 255, 255);
 }

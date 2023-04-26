@@ -1,0 +1,74 @@
+<h2 transloco="verification.title" class="dmep-verification-title"></h2>
+
+<ng-container [ngSwitch]="step">
+  <ng-container *ngSwitchCase="StepEnterNumber">
+    <p transloco="verification.enterNumber.description" class="enter-number-description description"></p>
+
+    <mat-form-field appearance="outline">
+      <mat-label transloco="verification.enterNumber.numberFieldLabel"></mat-label>
+      <dmep-phone-number-input [formControl]="numberFormControl"></dmep-phone-number-input>
+    </mat-form-field>
+
+    <section class="dmep-policy-section">
+      <mat-checkbox color="primary" [checked]="acceptPolicy" (change)="acceptPolicy = $event.checked">
+        {{ 'verification.enterNumber.policy' | transloco }} <a href="#">{{ 'verification.enterNumber.pocliyLinkText' | transloco }}</a>.
+      </mat-checkbox>
+    </section>
+
+    <div class="dmep-btn-container">
+      <button mat-stroked-button class="dmep-send-code-btn dmep-btn-primary-sm" color="primary"
+        (click)="onSendCodeClick()"
+        [disabled]="!(acceptPolicy && numberFormControl.valid)">
+        {{ 'verification.enterNumber.sendCode' | transloco }}
+      </button>
+    </div>
+
+  </ng-container>
+  <ng-container *ngSwitchCase="StepEnterCode">
+
+    <p class="enter-code-description">{{ 'verification.enterCode.description' | transloco: { number: getSelectedNumber() } }}</p>
+
+    <p class="not-your-number description">{{ 'verification.enterCode.notYourNumber' | transloco }} <a (click)="onEditNumberClick(); $event.preventDefault()" href="#">here</a>.</p>
+
+    <mat-form-field class="enter-code-form-field" appearance="outline" subscriptSizing="dynamic">
+      <mat-label transloco="verification.enterCode.codeFieldLabel"></mat-label>
+      <input type="text" matInput [formControl]="codeFormControl">
+    </mat-form-field>
+
+    <div class="dmep-btn-container">
+      <button mat-stroked-button class="dmep-verify-code-btn dmep-btn-primary-sm" color="primary"
+        (click)="onVerifyCodeClick()"
+        [disabled]="!codeFormControl.valid">
+        {{ 'verification.enterCode.verifyCode' | transloco }}
+      </button>
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="StepSuccess">
+
+    <div class="success-icon-container">
+      <mat-icon class="success-icon" [inline]="false">check_circle</mat-icon>
+    </div>
+
+    <p class="success-description">{{ 'verification.success.message' | transloco: { number: getSelectedNumber() } }}</p>
+
+  </ng-container>
+</ng-container>
+
+<div class="dmep-btn-container">
+  <button mat-stroked-button color="primary" class="dmep-start-call-btn dmep-btn dmep-btn-primary"
+    [disabled]="step !== StepSuccess" (click)="onCallNowClick()">
+    <span class="btn-content">
+      <strong>{{ 'call.start-call-btn.title' | transloco }}</strong>
+      <br>
+      {{ 'call.start-call-btn.subtitle' | transloco }}
+    </span>
+  </button>
+</div>
+
+<div class="dmep-btn-container">
+  <button mat-stroked-button class="dmep-call-later-btn dmep-btn dmep-btn-secondary" [disabled]="step !== StepSuccess" (click)="onCallLaterClick()">
+    <span class="btn-content">
+      {{ 'call.call-later-btn.title' | transloco }}
+    </span>
+  </button>
+</div>

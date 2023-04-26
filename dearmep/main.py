@@ -7,19 +7,17 @@ from yaml.parser import ParserError
 
 from . import __version__, static_files
 from .api import v1 as api_v1
-from .config import APP_NAME, Config, ENV_PREFIX, Settings
+from .config import APP_NAME, Config, ENV_PREFIX, Settings, is_config_missing
 
 
 _logger = logging.getLogger(__name__)
 
 
-def start(config_dict: Optional[dict] = None) -> FastAPI:
+def create_app(config_dict: Optional[dict] = None) -> FastAPI:
     try:
         settings = Settings()
     except ValidationError as e:
-        err = e.errors()
-        if len(err) == 1 and err[0]["loc"] == ("config_file",) \
-           and err[0]["type"] == "value_error.path.not_exists":
+        if is_config_missing(e):
             _logger.error(
                 "The configuration file was not found. This usually means "
                 f"that you did not set the {ENV_PREFIX}CONFIG environment "

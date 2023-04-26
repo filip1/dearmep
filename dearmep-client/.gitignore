@@ -43,3 +43,6 @@ Thumbs.db
 
 # Generated api client
 src/app/api
+
+# Cypress tests
+cypress/videos
