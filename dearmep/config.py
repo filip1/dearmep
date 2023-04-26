@@ -58,10 +58,14 @@ class L10nStrings(BaseModel):
     phone_number_verification_sms: L10nEntry
 
 
+FrontendStrings = Dict[str, L10nEntry]
+
+
 class L10nConfig(BaseModel):
     languages: List[Language]
     default_language: Language
     geo_mmdb: Optional[FilePath]
+    frontend_strings: FrontendStrings
     strings: L10nStrings
 
     @validator("default_language")
@@ -77,17 +81,18 @@ class L10nConfig(BaseModel):
             )
         return v
 
-    @validator("strings")
+    @validator("frontend_strings", "strings")
     def every_string_must_be_available_in_default_language(
         cls,
-        v: L10nStrings,
+        v: Union[FrontendStrings, L10nStrings],
         values: Dict[str, Any],
     ):
         if "default_language" not in values:
             # Validation of `default_language` probably failed, skip.
             return v
         default = values["default_language"]
-        for k, entry in v.dict().items():
+        as_dict = v.dict() if isinstance(v, BaseModel) else v
+        for k, entry in as_dict.items():
             if isinstance(entry, dict) and default not in entry:
                 raise ValueError(
                     f"l10n string '{k}' needs a translation in the default "
