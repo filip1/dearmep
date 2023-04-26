@@ -3,9 +3,10 @@ from typing import Any, Dict
 from fastapi import APIRouter, Depends, Header
 from prometheus_client import Counter
 
-from ..config import Config
+from ..config import Config, Language, all_frontend_strings
 from ..l10n import find_preferred_language, get_country, parse_accept_language
-from ..models import LanguageDetection, LocalizationResponse, RateLimitResponse
+from ..models import FrontendStringsResponse, LanguageDetection, \
+    LocalizationResponse, RateLimitResponse
 from ..util import Limit, client_addr
 
 
@@ -74,4 +75,25 @@ def localize(
             user_preferences=preferences,
         ),
         location=location,
+    )
+
+
+# TODO: Add caching headers, this is pretty static data.
+@router.get(
+    "/frontend-strings/{language}",
+    response_model=FrontendStringsResponse,
+    responses=rate_limit_response,  # type: ignore[arg-type]
+)
+def get_frontend_strings(
+    language: Language,
+):
+    """
+    Returns a list of translation strings, for the given language, to be used
+    by the frontend code. If a string is not available in that language, it
+    will be returned in the default language instead. All strings that exist
+    in the config's `frontend_strings` section are guaranteed to be available
+    at least in the default language.
+    """
+    return FrontendStringsResponse(
+        frontend_strings=all_frontend_strings(language),
     )

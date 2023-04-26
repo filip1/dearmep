@@ -9,6 +9,19 @@ class CountryCode(ConstrainedStr):
     max_length = 3
 
 
+class FrontendStringsResponse(BaseModel):
+    frontend_strings: Dict[str, str] = Field(
+        description="A key-value mapping of translation keys to translation "
+        "template strings. The template strings can contain placeholders, but "
+        "those have to be interpreted by the frontend.",
+        example={
+            "title": "Call your MEP!",
+            "call.start-call-btn.title": "Start Call",
+            "veification.description": "We've sent a code to {{ number }}.",
+        }
+    )
+
+
 class LanguageDetection(BaseModel):
     available: List[str] = Field(
         ...,

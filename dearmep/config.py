@@ -1,3 +1,4 @@
+from functools import lru_cache
 from pathlib import Path
 import re
 from typing import Any, ClassVar, Dict, List, Optional, Union
@@ -182,3 +183,16 @@ def is_config_missing(e: ValidationError):
 
 def included_file(name: str) -> Path:
     return Path(Path(__file__).parent, name)
+
+
+@lru_cache(maxsize=1000)
+def all_frontend_strings(language: Language) -> Dict[str, str]:
+    """Get all frontend strings, if possible in the given language.
+
+    If a given string has not been translated to the requested language, it
+    will be returned in the default language instead.
+    """
+    return {
+        k: entry.for_language(language)
+        for k, entry in Config.get().l10n.frontend_strings.__root__.items()
+    }
