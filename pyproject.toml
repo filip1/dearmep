@@ -8,13 +8,12 @@ license = "AGPL-3.0"
 include = ["dearmep/static_files/static/**/*"]
 
 [tool.poetry.scripts]
-dearmep-openapi-spec = "dearmep.dump_openapi:cli"
+dearmep = "dearmep.cli:run"
 
 [tool.poetry.dependencies]
 python = "^3.8"
 fastapi = "^0.87"
 prometheus-fastapi-instrumentator = "^5.9.1"
-maxminddb = "^2.2.0"
 PyYAML = "^6.0"
 limits = "^3.3.1"
 lzip = "^1.2.0"
@@ -22,9 +21,10 @@ rich = "^13.3.2"
 countryguess = "^0.3.0"
 defusedxml = "^0.7.1"
 httpx = ">=0.23"
+uvicorn = {extras = ["standard"], version = "^0.21.1"}
+python-geoacumen = ">=2023"
 
 [tool.poetry.group.dev.dependencies]
-uvicorn = {extras = ["standard"], version = "^0.21.1"}
 flake8 = "^4.0.1"
 flake8-quotes = "^3.3.1"
 mypy = "<1.0"
@@ -35,6 +35,7 @@ py-mmdb-encoder = "^1.0.4"
 types-PyYAML = "^6.0.11"
 httpx = "^0.23.1"
 types-attrs = "^19.1.0"
+types-maxminddb = "^1.5.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

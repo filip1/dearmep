@@ -3,11 +3,13 @@ import re
 from typing import Any, ClassVar, Dict, List, Optional, Union
 
 from pydantic import BaseModel, BaseSettings, ConstrainedStr, DirectoryPath, \
-    Field, FilePath, validator
+    Field, FilePath, ValidationError, validator
+from pydantic.utils import deep_update
 import yaml
 
 
 APP_NAME = "DearMEP"
+CMD_NAME = APP_NAME.lower()
 ENV_PREFIX = f"{APP_NAME.upper()}_"
 
 
@@ -101,6 +103,7 @@ class Config(BaseModel):
     l10n: L10nConfig
 
     _instance: ClassVar[Optional["Config"]] = None
+    _patch: ClassVar[Optional[Dict]] = None
 
     @classmethod
     def get(cls) -> "Config":
@@ -112,6 +115,8 @@ class Config(BaseModel):
 
     @classmethod
     def load_dict(cls, obj: Dict) -> "Config":
+        if cls._patch:
+            obj = deep_update(obj, cls._patch)
         cls._instance = cls.parse_obj(obj)
         return cls._instance
 
@@ -119,6 +124,10 @@ class Config(BaseModel):
     def load_yaml_file(cls, filename: Path) -> "Config":
         with filename.open("r") as f:
             return cls.load_dict(yaml.load(f, yaml.Loader))
+
+    @classmethod
+    def set_patch(cls, patch: Optional[Dict]):
+        cls._patch = patch
 
     @classmethod
     def strings(cls) -> L10nStrings:
@@ -149,3 +158,18 @@ class Settings(BaseSettings):
     @validator("static_files_dir", pre=True)
     def empty_string_is_none(cls, v):
         return None if v == "" else v
+
+
+def is_config_missing(e: ValidationError):
+    """Check whether e means that the config is missing."""
+    cfg_errs = (err for err in e.errors() if err["loc"] == ("config_file",))
+    for err in cfg_errs:
+        if err["type"] in (
+            "value_error.path.not_exists", "value_error.path.not_a_file",
+        ):
+            return True
+    return False
+
+
+def included_file(name: str) -> Path:
+    return Path(Path(__file__).parent, name)

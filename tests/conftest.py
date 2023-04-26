@@ -9,7 +9,7 @@ from pydantic.utils import deep_update
 import pytest
 import yaml
 
-from dearmep.main import start
+from dearmep.main import create_app
 from dearmep.util import Limit
 
 
@@ -50,7 +50,7 @@ def fastapi_factory_func(
     """
     top_dir = Path(__file__).parent.parent
     # By default, let the tests use the example config.
-    config_path = Path(top_dir, "example-config.yaml") \
+    config_path = Path(top_dir, "dearmep", "example-config.yaml") \
         if config_path is None else config_path
 
     # Allow dynamically passing config YAML.
@@ -58,7 +58,7 @@ def fastapi_factory_func(
         config_path.write_bytes(config_content)
 
     with modified_environ({"DEARMEP_CONFIG": str(config_path)}):
-        yield start
+        yield create_app
 
 
 @pytest.fixture
@@ -97,6 +97,7 @@ def fastapi_app_func(factory: FactoryType):
     with open(environ["DEARMEP_CONFIG"], "r") as f:
         config_dict_orig = yaml.load(f, yaml.Loader)
     # Modify the MMDB.
+    # TODO: This can probably be simplified using Config.set_patch().
     config_dict = deep_update(config_dict_orig, {
         "l10n": {"geo_mmdb": str(Path(tests_dir, "geo_ip", "test.mmdb"))},
     })
