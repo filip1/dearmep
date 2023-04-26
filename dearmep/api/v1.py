@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from fastapi import APIRouter, Depends, Header
+from fastapi import APIRouter, Depends, Header, Query
 from prometheus_client import Counter
 
 from ..config import Config, Language, all_frontend_strings
@@ -42,6 +42,13 @@ router = APIRouter()
     responses=rate_limit_response,  # type: ignore[arg-type]
 )
 def localize(
+    frontend_strings: bool = Query(
+        False,
+        description="Whether to also include all frontend translation strings "
+        "for the detected language. If you don’t request this, the "
+        "`frontend_strings` field in the response will be `null` to save "
+        "bandwidth.",
+    ),
     client_addr: str = Depends(client_addr),
     accept_language: str = Header(""),
 ):
@@ -75,6 +82,8 @@ def localize(
             user_preferences=preferences,
         ),
         location=location,
+        frontend_strings=all_frontend_strings(recommended_lang)
+        if frontend_strings else None,
     )
 
 

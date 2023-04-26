@@ -9,17 +9,20 @@ class CountryCode(ConstrainedStr):
     max_length = 3
 
 
+frontend_strings_field = Field(
+    description="A key-value mapping of translation keys to translation "
+    "template strings. The template strings can contain placeholders, but "
+    "those have to be interpreted by the frontend.",
+    example={
+        "title": "Call your MEP!",
+        "call.start-call-btn.title": "Start Call",
+        "veification.description": "We've sent a code to {{ number }}.",
+    }
+)
+
+
 class FrontendStringsResponse(BaseModel):
-    frontend_strings: Dict[str, str] = Field(
-        description="A key-value mapping of translation keys to translation "
-        "template strings. The template strings can contain placeholders, but "
-        "those have to be interpreted by the frontend.",
-        example={
-            "title": "Call your MEP!",
-            "call.start-call-btn.title": "Start Call",
-            "veification.description": "We've sent a code to {{ number }}.",
-        }
-    )
+    frontend_strings: Dict[str, str] = frontend_strings_field
 
 
 class LanguageDetection(BaseModel):
@@ -88,6 +91,7 @@ class LocalizationResponse(BaseModel):
         ...,
         description="Information about the probable physical location.",
     )
+    frontend_strings: Optional[Dict[str, str]] = frontend_strings_field
 
 
 class PersonContact(BaseModel):
