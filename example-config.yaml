@@ -106,212 +106,210 @@ l10n:
     phone_number_verification_sms:
       en: "{code} is your {campaign} verification code. If you think you have received this message in error, simply ignore it."
 
-frontend: 
-  l10n:
-    strings:
-      title:
-        en: Call your MEP! Lorem ipsum dolor sit
-      call.start-call-btn.title:
-        en: Start Call
-      call.start-call-btn.subtitle:
-        en: Free of charge
-      call.call-now-btn.title:
-        en: Call Now
-      call.call-now-btn.subtitle:
-        en: Free of charge
-      call.call-later-btn.title:
-        en: Call later
-      call.home.title:
-        en: Contact your Member of the European Parliament. You can call now or schedule
-          calls in the future.
-      call.home.descriptions.0.text:
-        en: We will call you right away and connect you for free.
-      call.home.descriptions.1.text:
-        en: Rorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
-          et velit interdum.
-      verification.title:
-        en: Verify your phone number
-      verification.enterNumber.description:
-        en: Please enter your own phone number and we will send you a one time password
-          to verify your number.
-      verification.enterNumber.numberFieldLabel:
-        en: Enter your phone number
-      verification.enterNumber.policy:
-        en: I have read and accept the
-      verification.enterNumber.pocliyLinkText:
-        en: Privacy Policy
-      verification.enterNumber.sendCode:
-        en: Send Code
-      verification.enterCode.description:
-        en: Please check you phone. We've sent a code to {{ number }}.
-      verification.enterCode.notYourNumber:
-        en: If this is not your number click
-      verification.enterCode.codeFieldLabel:
-        en: Enter your Code
-      verification.enterCode.verifyCode:
-        en: Verify
-      verification.success.message:
-        en: 'Succesfully verified with the number: {{ number }}'
-      callSetup.title:
-        en: Your call is being set up
-      callSetup.description:
-        en: Please have your mobile phone ready. We will call you right away and connect
-          you with {{ mep }}.
-      feedback.title:
-        en: Feedback
-      feedback.convincingQuestion:
-        en: Were you able to convince the person?
-      feedback.convincingQustionFeedback.yes:
-        en: 'Yes'
-      feedback.convincingQustionFeedback.likeleyYes:
-        en: likeley yes
-      feedback.convincingQustionFeedback.likeleyNo:
-        en: likeley no
-      feedback.convincingQustionFeedback.no:
-        en: 'No'
-      feedback.technicalProblemsQuestion:
-        en: There were technical problems
-      feedback.additionalFeedbackQuestion:
-        en: Additional feedback
-      feedback.additionalFeedbackPlaceholder:
-        en: If you have any additional feedback, please type it in here...
-      feedback.submit:
-        en: Submit
-      select-mep.autorenew:
-        en: Choose another MEP
-      select-mep.country:
-        en: Country
-      talkingPoints.title:
-        en: Talking Points
-      talkingPoints.points.0.title:
-        en: Argument 1
-      talkingPoints.points.0.body:
-        en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
-          et velit interdum, ac aliquet odio mattis.
-      talkingPoints.points.1.title:
-        en: Argument 2
-      talkingPoints.points.1.body:
-        en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
-          et velit interdum, ac aliquet odio mattis.
-      talkingPoints.points.2.title:
-        en: Argument 3
-      talkingPoints.points.2.body:
-        en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
-          et velit interdum, ac aliquet odio mattis.
-      talkingPoints.points.3.title:
-        en: Argument 4
-      talkingPoints.points.3.body:
-        en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
-          et velit interdum, ac aliquet odio mattis.
-      languages.available.0.name:
-        en: English
-      languages.available.1.name:
-        en: Français
-      footer.contentHtml:
-        en: <a href="https://dearmep.eu" target="_blank">DearMEP</a>&nbsp;powered by&nbsp;<a
-          href="https://epicenter.works" target="_blank">Epicenter.works</a>
-      schedule.title:
-        en: Schedule a call
-      schedule.description:
-        en: 'Plan now to talk to a politican later! Select a day and time:'
-      schedule.scheduleAsText:
-        en: We will give you a ring every {{ timeSlots }} at your number to connect you
-          with a politician from {{ country }}.
-      schedule.timeSlot:
-        en: "{{ dayOfWeek }} around {{ time }}"
-      schedule.and:
-        en: and
-      schedule.around:
-        en: around
-      schedule.days.0:
-        en: Sunday
-      schedule.days.1:
-        en: Monday
-      schedule.days.2:
-        en: Tuesday
-      schedule.days.3:
-        en: Wednesday
-      schedule.days.4:
-        en: Thursday
-      schedule.days.5:
-        en: Friday
-      schedule.days.6:
-        en: Saturday
-      schedule.days-short.0:
-        en: Su
-      schedule.days-short.1:
-        en: Mo
-      schedule.days-short.2:
-        en: Tu
-      schedule.days-short.3:
-        en: We
-      schedule.days-short.4:
-        en: Th
-      schedule.days-short.5:
-        en: Fr
-      schedule.days-short.6:
-        en: Sa
-      schedule.schedule-btn.title:
-        en: Confirm
-      schedule.schedule-btn.subtitle:
-        en: Free of charge
-      schedule.timezone:
-        en: 'Time: {{ zone }}'
-      util.join.delimiter:
-        en: ", "
-      util.join.lastDelimiter:
-        en: " and "
-      countries.BE:
-        en: Belgium
-      countries.BG:
-        en: Bulgaria
-      countries.CZ:
-        en: Czechia
-      countries.DK:
-        en: Denmark
-      countries.DE:
-        en: Germany
-      countries.EE:
-        en: Estonia
-      countries.IE:
-        en: Estonia
-      countries.GR:
-        en: Greece
-      countries.ES:
-        en: Spain
-      countries.FR:
-        en: France
-      countries.HR:
-        en: Croatia
-      countries.IT:
-        en: Italy
-      countries.CY:
-        en: Cyprus
-      countries.LV:
-        en: Latvia
-      countries.LT:
-        en: Lithuania
-      countries.LU:
-        en: Luxembourg
-      countries.HU:
-        en: Hungary
-      countries.MT:
-        en: Malta
-      countries.NL:
-        en: Netherlands
-      countries.AT:
-        en: Austria
-      countries.PL:
-        en: Poland
-      countries.PT:
-        en: Portugal
-      countries.RO:
-        en: Romania
-      countries.SI:
-        en: Slovenia
-      countries.SK:
-        en: Slovakia
-      countries.FI:
-        en: Finland
-      countries.SE:
-        en: Sweden
+  frontend_strings:
+    title:
+      en: Call your MEP! Lorem ipsum dolor sit
+    call.start-call-btn.title:
+      en: Start Call
+    call.start-call-btn.subtitle:
+      en: Free of charge
+    call.call-now-btn.title:
+      en: Call Now
+    call.call-now-btn.subtitle:
+      en: Free of charge
+    call.call-later-btn.title:
+      en: Call later
+    call.home.title:
+      en: Contact your Member of the European Parliament. You can call now or schedule
+        calls in the future.
+    call.home.descriptions.0.text:
+      en: We will call you right away and connect you for free.
+    call.home.descriptions.1.text:
+      en: Rorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
+        et velit interdum.
+    verification.title:
+      en: Verify your phone number
+    verification.enterNumber.description:
+      en: Please enter your own phone number and we will send you a one time password
+        to verify your number.
+    verification.enterNumber.numberFieldLabel:
+      en: Enter your phone number
+    verification.enterNumber.policy:
+      en: I have read and accept the
+    verification.enterNumber.pocliyLinkText:
+      en: Privacy Policy
+    verification.enterNumber.sendCode:
+      en: Send Code
+    verification.enterCode.description:
+      en: Please check you phone. We've sent a code to {{ number }}.
+    verification.enterCode.notYourNumber:
+      en: If this is not your number click
+    verification.enterCode.codeFieldLabel:
+      en: Enter your Code
+    verification.enterCode.verifyCode:
+      en: Verify
+    verification.success.message:
+      en: 'Succesfully verified with the number: {{ number }}'
+    callSetup.title:
+      en: Your call is being set up
+    callSetup.description:
+      en: Please have your mobile phone ready. We will call you right away and connect
+        you with {{ mep }}.
+    feedback.title:
+      en: Feedback
+    feedback.convincingQuestion:
+      en: Were you able to convince the person?
+    feedback.convincingQustionFeedback.yes:
+      en: 'Yes'
+    feedback.convincingQustionFeedback.likeleyYes:
+      en: likeley yes
+    feedback.convincingQustionFeedback.likeleyNo:
+      en: likeley no
+    feedback.convincingQustionFeedback.no:
+      en: 'No'
+    feedback.technicalProblemsQuestion:
+      en: There were technical problems
+    feedback.additionalFeedbackQuestion:
+      en: Additional feedback
+    feedback.additionalFeedbackPlaceholder:
+      en: If you have any additional feedback, please type it in here...
+    feedback.submit:
+      en: Submit
+    select-mep.autorenew:
+      en: Choose another MEP
+    select-mep.country:
+      en: Country
+    talkingPoints.title:
+      en: Talking Points
+    talkingPoints.points.0.title:
+      en: Argument 1
+    talkingPoints.points.0.body:
+      en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
+        et velit interdum, ac aliquet odio mattis.
+    talkingPoints.points.1.title:
+      en: Argument 2
+    talkingPoints.points.1.body:
+      en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
+        et velit interdum, ac aliquet odio mattis.
+    talkingPoints.points.2.title:
+      en: Argument 3
+    talkingPoints.points.2.body:
+      en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
+        et velit interdum, ac aliquet odio mattis.
+    talkingPoints.points.3.title:
+      en: Argument 4
+    talkingPoints.points.3.body:
+      en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
+        et velit interdum, ac aliquet odio mattis.
+    languages.available.0.name:
+      en: English
+    languages.available.1.name:
+      en: Français
+    footer.contentHtml:
+      en: <a href="https://dearmep.eu" target="_blank">DearMEP</a>&nbsp;powered by&nbsp;<a
+        href="https://epicenter.works" target="_blank">Epicenter.works</a>
+    schedule.title:
+      en: Schedule a call
+    schedule.description:
+      en: 'Plan now to talk to a politican later! Select a day and time:'
+    schedule.scheduleAsText:
+      en: We will give you a ring every {{ timeSlots }} at your number to connect you
+        with a politician from {{ country }}.
+    schedule.timeSlot:
+      en: "{{ dayOfWeek }} around {{ time }}"
+    schedule.and:
+      en: and
+    schedule.around:
+      en: around
+    schedule.days.0:
+      en: Sunday
+    schedule.days.1:
+      en: Monday
+    schedule.days.2:
+      en: Tuesday
+    schedule.days.3:
+      en: Wednesday
+    schedule.days.4:
+      en: Thursday
+    schedule.days.5:
+      en: Friday
+    schedule.days.6:
+      en: Saturday
+    schedule.days-short.0:
+      en: Su
+    schedule.days-short.1:
+      en: Mo
+    schedule.days-short.2:
+      en: Tu
+    schedule.days-short.3:
+      en: We
+    schedule.days-short.4:
+      en: Th
+    schedule.days-short.5:
+      en: Fr
+    schedule.days-short.6:
+      en: Sa
+    schedule.schedule-btn.title:
+      en: Confirm
+    schedule.schedule-btn.subtitle:
+      en: Free of charge
+    schedule.timezone:
+      en: 'Time: {{ zone }}'
+    util.join.delimiter:
+      en: ", "
+    util.join.lastDelimiter:
+      en: " and "
+    countries.BE:
+      en: Belgium
+    countries.BG:
+      en: Bulgaria
+    countries.CZ:
+      en: Czechia
+    countries.DK:
+      en: Denmark
+    countries.DE:
+      en: Germany
+    countries.EE:
+      en: Estonia
+    countries.IE:
+      en: Estonia
+    countries.GR:
+      en: Greece
+    countries.ES:
+      en: Spain
+    countries.FR:
+      en: France
+    countries.HR:
+      en: Croatia
+    countries.IT:
+      en: Italy
+    countries.CY:
+      en: Cyprus
+    countries.LV:
+      en: Latvia
+    countries.LT:
+      en: Lithuania
+    countries.LU:
+      en: Luxembourg
+    countries.HU:
+      en: Hungary
+    countries.MT:
+      en: Malta
+    countries.NL:
+      en: Netherlands
+    countries.AT:
+      en: Austria
+    countries.PL:
+      en: Poland
+    countries.PT:
+      en: Portugal
+    countries.RO:
+      en: Romania
+    countries.SI:
+      en: Slovenia
+    countries.SK:
+      en: Slovakia
+    countries.FI:
+      en: Finland
+    countries.SE:
+      en: Sweden
