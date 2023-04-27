@@ -38,7 +38,7 @@ jobs:
           path: |
             openapi.json
       - name: Collect test results
-        if: ${{ always() }}
+        if: ${{ always() }}  # Meaning: also if the job fails.
         uses: actions/upload-artifact@v3
         with:
           name: test-results-${{ matrix.python-version }}
@@ -121,3 +121,11 @@ jobs:
           path: |
             dist/*.whl
             dist/*.tar.gz
+      - name: Upload Python package to Nextcloud
+        env:
+          NEXTCLOUD_HOST: ${{ secrets.NEXTCLOUD_HOST }}
+          NEXTCLOUD_SHARE_ID: ${{ secrets.NEXTCLOUD_SHARE_ID }}
+          NEXTCLOUD_BASE: https://${{ secrets.NEXTCLOUD_HOST }}/public.php/webdav/
+        run: |
+          cd dist
+          find . -type f -exec curl --netrc-file <(cat <<<"machine $NEXTCLOUD_HOST login $NEXTCLOUD_SHARE_ID") --upload-file '{}' "$NEXTCLOUD_BASE" \;
