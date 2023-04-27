@@ -127,5 +127,6 @@ jobs:
           NEXTCLOUD_SHARE_ID: ${{ secrets.NEXTCLOUD_SHARE_ID }}
           NEXTCLOUD_BASE: https://${{ secrets.NEXTCLOUD_HOST }}/public.php/webdav/
         run: |
+          (umask 0077; printf "machine $NEXTCLOUD_HOST login $NEXTCLOUD_SHARE_ID\\n" >> ~/.netrc)
           cd dist
-          find . -type f -exec curl --netrc-file <(cat <<<"machine $NEXTCLOUD_HOST login $NEXTCLOUD_SHARE_ID") --upload-file '{}' "$NEXTCLOUD_BASE" \;
+          find . -type f -exec curl --netrc --upload-file '{}' "$NEXTCLOUD_BASE" \;
