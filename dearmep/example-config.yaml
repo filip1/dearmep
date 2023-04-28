@@ -135,7 +135,7 @@ l10n:
       en: Enter your phone number
     verification.enterNumber.policy:
       en: I have read and accept the
-    verification.enterNumber.pocliyLinkText:
+    verification.enterNumber.policyLinkText:
       en: Privacy Policy
     verification.enterNumber.sendCode:
       en: Send Code
@@ -158,13 +158,13 @@ l10n:
       en: Feedback
     feedback.convincingQuestion:
       en: Were you able to convince the person?
-    feedback.convincingQustionFeedback.yes:
+    feedback.convincingQuestionFeedback.yes:
       en: 'Yes'
-    feedback.convincingQustionFeedback.likeleyYes:
+    feedback.convincingQuestionFeedback.likeleyYes:
       en: likeley yes
-    feedback.convincingQustionFeedback.likeleyNo:
+    feedback.convincingQuestionFeedback.likeleyNo:
       en: likeley no
-    feedback.convincingQustionFeedback.no:
+    feedback.convincingQuestionFeedback.no:
       en: 'No'
     feedback.technicalProblemsQuestion:
       en: There were technical problems

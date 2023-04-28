@@ -26,7 +26,7 @@
       "description": "Please enter your own phone number and we will send you a one time password to verify your number.",
       "numberFieldLabel": "Enter your phone number",
       "policy": "I have read and accept the",
-      "pocliyLinkText": "Privacy Policy",
+      "policyLinkText": "Privacy Policy",
       "sendCode": "Send Code"
     },
     "enterCode": {
@@ -46,7 +46,7 @@
   "feedback": {
     "title": "Feedback",
     "convincingQuestion": "Were you able to convince the person?",
-    "convincingQustionFeedback": {
+    "convincingQuestionFeedback": {
       "yes": "Yes",
       "likeleyYes": "likeley yes",
       "likeleyNo": "likeley no",
