@@ -8,13 +8,20 @@ import {
   TranslocoModule
 } from '@ngneat/transloco';
 import { Injectable, isDevMode, NgModule } from '@angular/core';
+import { BaseUrlService } from './common/services/base-url.service';
+import { Observable, mergeMap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private baseUrlService: BaseUrlService,
+  ) {}
 
-  getTranslation(lang: string) {
-    return this.http.get<Translation>(`/static/assets/i18n/${lang}.json`);
+  getTranslation(lang: string): Observable<Translation> {
+    return this.baseUrlService.toAbsoluteUrl$(`./assets/i18n/${lang}.json`).pipe(
+      mergeMap(url => this.http.get<Translation>(url))
+    )
   }
 }
 
