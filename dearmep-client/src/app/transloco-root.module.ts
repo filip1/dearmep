@@ -10,6 +10,7 @@ import { Injectable, isDevMode, NgModule } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { ApiService } from './api/services';
 
+
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
   constructor(

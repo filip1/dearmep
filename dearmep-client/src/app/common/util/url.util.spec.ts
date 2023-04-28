@@ -39,14 +39,29 @@ describe('UrlUtil', () => {
       expect(UrlUtil.toAbsolute("assets", "http://localhost")).toBe("http://localhost/assets")
     })
 
-    // TODO
-    // it('should handle base-url with sub-folder', () => {
-    //   expect(UrlUtil.toAbsolute("assets", "http://localhost/static")).toBe("http://localhost/static/assets")
-    // })
+    it('should handle base-url with sub-folder', () => {
+      expect(UrlUtil.toAbsolute("styles.css", "http://localhost/static")).toBe("http://localhost/static/styles.css")
+    })
 
-    // it('should handle base-url with sub-folder (trailing slash)', () => {
-    //   expect(UrlUtil.toAbsolute("assets", "http://localhost/static/")).toBe("http://localhost/static/assets")
-    // })
+    it('should handle base-url with sub-folder', () => {
+      expect(UrlUtil.toAbsolute("styles.css", "http://localhost/static")).toBe("http://localhost/static/styles.css")
+    })
+
+    it('should handle base-url with sub-folder (trailing slash)', () => {
+      expect(UrlUtil.toAbsolute("styles.css", "http://localhost/static/")).toBe("http://localhost/static/styles.css")
+    })
+
+    it('should handle base-url with sub-folder (url starting with dot slash)', () => {
+      expect(UrlUtil.toAbsolute("./styles.css", "http://localhost/static")).toBe("http://localhost/static/styles.css")
+    })
+
+    it('should handle absolute urls', () => {
+      expect(UrlUtil.toAbsolute("http://example.com/abc", "http://localhost/static")).toBe("http://example.com/abc")
+    })
+
+    it('should handle absolute urls (undefined base-url)', () => {
+      expect(UrlUtil.toAbsolute("http://example.com/abc", undefined)).toBe("http://example.com/abc")
+    })
 
     it('should handle relative base url', () => {
       for (const relUrl of relativeUrls) {

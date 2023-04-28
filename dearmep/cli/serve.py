@@ -19,6 +19,7 @@ def serve(args):
         reload_excludes=["node_modules"],  # TODO: doesn't seem to be working
         log_config=args.log_config,
         log_level=args.log_level,
+        proxy_headers=True,  # Parse headers from a reverse proxy.
     )
 
 

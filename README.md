@@ -47,3 +47,11 @@ This option only has an effect if you have also configured `DEARMEP_STATIC_FILES
 A running DearMEP server will provide its OpenAPI specification at `/openapi.json` and GUIs for it at `/docs` and `/redoc`.
 
 To quickly dump the OpenAPI spec to stdout, use `dearmep dump openapi`.
+
+## Running Behind a Reverse Proxy
+
+If you run DearMEP behind a reverse proxy like [Caddy](https://caddyserver.com/), [nginx](https://nginx.org/) or [Træfik](https://traefik.io/traefik/), make sure to provide the remote client’s original IP address via the `X-Forwarded-For` header.
+This is required for the geolocation to work.
+
+For nginx, and if you’re using `dearmep serve`, check out [Uvicorn’s best practices](https://www.uvicorn.org/deployment/#running-behind-nginx).
+`dearmep serve` currently doesn’t support listening to a Unix domain socket, so please use a normal TCP HTTP connection instead (e.g. `proxy_pass http://localhost:8000/;`).

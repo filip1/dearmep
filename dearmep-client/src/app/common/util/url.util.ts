@@ -7,7 +7,14 @@ export class UrlUtil {
       return !!url.match(absoluteUrlRegexp)
   }
 
-  public static toAbsolute(relativeUrl: string, baseUrl: string): string {
-    return new URL(relativeUrl, baseUrl).toString()
+  public static toAbsolute(url: string, baseUrl?: string): string {
+    // Turn "http://localhost/static" into "http://localhost/static/" because otherwise the 
+    // pathname "/static" will be removed from the base-url
+    if (baseUrl && !baseUrl.endsWith("/")) {
+      baseUrl += "/"
+    }
+
+    const u = new URL(url, baseUrl)
+    return u.toString()
   }
 }
