@@ -23,7 +23,7 @@ import { CallingModule } from './calling/calling.module';
     BrowserAnimationsModule,
     HttpClientModule,
     TranslocoRootModule,
-    ApiModule.forRoot({ rootUrl: '/' }),
+    ApiModule.forRoot({ rootUrl: '' }),
     AppCommonModule,
     ComponentsModule,
     LayoutModule,
