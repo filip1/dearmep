@@ -27,5 +27,9 @@ const concat = require('concat');
   await fs.copyFile('./dist/dear-mep/roboto-latin-700-normal.woff2', './dist/dear-mep-bundle/roboto-latin-700-normal.woff2')
 
   // assets
-  await fs.copy('./dist/dear-mep/assets/', './dist/dear-mep-bundle/assets/')
+  if (await fs.exists('./dist/dear-mep/assets/')) {
+    await fs.copy('./dist/dear-mep/assets/', './dist/dear-mep-bundle/assets/')
+  } else {
+    await fs.mkdir('./dist/dear-mep-bundle/assets/')
+  }
 })()
