@@ -134,7 +134,7 @@ l10n:
     verification.enterNumber.numberFieldLabel:
       en: Enter your phone number
     verification.enterNumber.policy:
-      en: I have read and accept the
+      en: I have read and accept the {{ policyLink }}.
     verification.enterNumber.policyLinkText:
       en: Privacy Policy
     verification.enterNumber.sendCode:

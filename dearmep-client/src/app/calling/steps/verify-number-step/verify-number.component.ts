@@ -3,6 +3,7 @@ import { FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
 import { VerificationStep } from './verification-step.enum';
 import { PhoneNumber } from 'src/app/model/phone-number.model';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'dmep-verify-number',
@@ -33,6 +34,7 @@ export class VerifyNumberComponent {
 
   constructor(
     private readonly callingStateManager: CallingStateManagerService,
+    private readonly translocoService: TranslocoService,
   ) { 
   }
 
@@ -70,5 +72,9 @@ export class VerifyNumberComponent {
   public getSelectedNumber(): string | undefined {
     const number = this.numberFormControl.value
     return number ? `${number.callingCode} ${number.number}` : undefined
+  }
+
+  public getPolicyLinkHtml(): string {
+    return `<a href="#" target="_blank">${this.translocoService.translate('verification.enterNumber.policyLinkText')}</a>`
   }
 }
