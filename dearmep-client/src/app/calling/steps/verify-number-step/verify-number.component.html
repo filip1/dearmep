@@ -30,8 +30,10 @@
 
     <p class="enter-code-description">{{ 'verification.enterCode.description' | transloco: { number: getSelectedNumber() } }}</p>
 
-    <p class="not-your-number description">{{ 'verification.enterCode.notYourNumber' | transloco }} <a (click)="onEditNumberClick(); $event.preventDefault()" href="#">here</a>.</p>
-
+    <p class="not-your-number description">
+      <a (click)="onEditNumberClick(); $event.preventDefault()" href="#">{{ 'verification.enterCode.notYourNumber' | transloco }}</a>
+    </p>
+    
     <mat-form-field class="enter-code-form-field" appearance="outline" subscriptSizing="dynamic">
       <mat-label transloco="verification.enterCode.codeFieldLabel"></mat-label>
       <input type="text" matInput [formControl]="codeFormControl">

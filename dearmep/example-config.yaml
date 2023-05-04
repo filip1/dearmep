@@ -201,7 +201,7 @@ l10n:
       en: Send Code
 
     # Short description for the second sub-step of the verification (where the user is supposed to enter the code)
-    # The placeholder {{ number }} is replaced with the previosly entered number. This allows the user to check if 
+    # The placeholder {{ number }} is replaced with the previosly entered number. This allows the user to check if
     # they entered the number correcly in case the verification SMS is somehow delayed or fails to arrive.
     verification.enterCode.description:
       en: Please check you phone. We've sent a code to {{ number }}.
@@ -209,7 +209,7 @@ l10n:
     # Description text for the link-button that allowes the user to go one step back and edit the number in order 
     # to resend the verification SMS to the correct number. 
     verification.enterCode.notYourNumber:
-      en: If this is not your number click
+      en: Not your number?
 
     # Label that describes the form field which is used to enter the verification code that was sent via SMS to the
     # users phone.
@@ -223,7 +223,7 @@ l10n:
 
     # Message that is displayed in the final sub-step of the verification process informing the user of the successfull 
     # verification.
-    # The placeholder {{ number }} is replaced with the previosly entered number. This allows the user to check if 
+    # The placeholder {{ number }} is replaced with the previosly entered number.
     # After clicking the call-button in this step the call is being set-up instantly without any further confirmations.
     verification.success.message:
       en: 'Succesfully verified with the number: {{ number }}'
@@ -338,12 +338,17 @@ l10n:
         et velit interdum, ac aliquet odio mattis.
 
   # Translation strings for the language switcher component 
-
-    # TODO: this will change in one of the next commits since available languages will be read from the API-Endpoint
-    languages.available.0.name:
-      en: English
-    languages.available.1.name:
-      en: Français
+    
+    # All names of the available languages should be listed in this section. 
+    # It is preferred that the name of each language is in that language rather 
+    # than translated. 
+    # The translation keys should be named according to the languages specified
+    # under "l10n.languages".
+    # It is required that each language specified under "l10n.languages" is also 
+    # listed in this section.
+    languages.en: English
+    languages.de: Deutsch
+    languages.de-AT: Deutsch (Österreich)
 
   # Footer text of the app. 
   # Html formatting is allowed in this string.
