@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import {
   TRANSLOCO_LOADER,
   Translation,
@@ -8,19 +7,21 @@ import {
   TranslocoModule
 } from '@ngneat/transloco';
 import { Injectable, isDevMode, NgModule } from '@angular/core';
-import { BaseUrlService } from './common/services/base-url.service';
-import { Observable, mergeMap } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { ApiService } from './api/services';
+import { ObjectUtil } from './common/util/object.util';
+
 
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
   constructor(
-    private http: HttpClient,
-    private baseUrlService: BaseUrlService,
+    private apiService: ApiService,
   ) {}
 
   getTranslation(lang: string): Observable<Translation> {
-    return this.baseUrlService.toAbsoluteUrl$(`./assets/i18n/${lang}.json`).pipe(
-      mergeMap(url => this.http.get<Translation>(url))
+    return this.apiService.getFrontendStringsApiV1FrontendStringsLanguageGet({ language: lang })
+    .pipe(
+      map(r => ObjectUtil.UnflattenObject(r.frontend_strings) as Translation)
     )
   }
 }

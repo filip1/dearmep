@@ -1,9 +1,11 @@
+from functools import lru_cache
 from pathlib import Path
 import re
 from typing import Any, ClassVar, Dict, List, Optional, Union
 
 from pydantic import BaseModel, BaseSettings, ConstrainedStr, DirectoryPath, \
     Field, FilePath, ValidationError, validator
+from pydantic.fields import ModelField
 from pydantic.utils import deep_update
 import yaml
 
@@ -55,6 +57,10 @@ class L10nEntry(BaseModel):
         )
 
 
+class FrontendStrings(BaseModel):
+    __root__: Dict[str, L10nEntry]
+
+
 class L10nStrings(BaseModel):
     campaign_name: L10nEntry
     phone_number_verification_sms: L10nEntry
@@ -64,6 +70,7 @@ class L10nConfig(BaseModel):
     languages: List[Language]
     default_language: Language
     geo_mmdb: Optional[FilePath]
+    frontend_strings: FrontendStrings
     strings: L10nStrings
 
     @validator("default_language")
@@ -79,23 +86,46 @@ class L10nConfig(BaseModel):
             )
         return v
 
-    @validator("strings")
+    @validator("frontend_strings", "strings")
     def every_string_must_be_available_in_default_language(
         cls,
-        v: L10nStrings,
+        v: Union[FrontendStrings, L10nStrings],
+        field: ModelField,
         values: Dict[str, Any],
     ):
         if "default_language" not in values:
             # Validation of `default_language` probably failed, skip.
             return v
         default = values["default_language"]
-        for k, entry in v.dict().items():
+        d = v.dict()
+        for k, entry in d.get("__root__", d).items():
             if isinstance(entry, dict) and default not in entry:
+                src = "l10n" if field.name == "strings" else "frontend"
                 raise ValueError(
-                    f"l10n string '{k}' needs a translation in the default "
+                    f"{src} string '{k}' needs a translation in the default "
                     f"language ('{default}')"
                 )
         return v
+
+    @validator("frontend_strings")
+    def every_language_must_have_a_name(
+        cls,
+        v: FrontendStrings,
+        values: Dict[str, Any],
+    ):
+        languages: List[Language] = values["languages"]
+        for lang in languages:
+            lang_key = f"languages.{lang}"
+            if lang_key not in v.__root__:
+                raise ValueError(
+                    f'missing name for language "{lang}" ("frontend_strings" '
+                    f'should have a key "{lang_key}")'
+                )
+            # We also recommend the language names to _not_ have sub-dicts for
+            # translation. That way, the language name can be _in_ the very
+            # language that it signifies. However, if campaigns want to go
+            # against that recommendation and translate language names, they
+            # are free to do so, which is why we're not checking it here.
 
 
 class Config(BaseModel):
@@ -173,3 +203,16 @@ def is_config_missing(e: ValidationError):
 
 def included_file(name: str) -> Path:
     return Path(Path(__file__).parent, name)
+
+
+@lru_cache(maxsize=1000)
+def all_frontend_strings(language: Language) -> Dict[str, str]:
+    """Get all frontend strings, if possible in the given language.
+
+    If a given string has not been translated to the requested language, it
+    will be returned in the default language instead.
+    """
+    return {
+        k: entry.for_language(language)
+        for k, entry in Config.get().l10n.frontend_strings.__root__.items()
+    }

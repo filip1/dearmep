@@ -104,3 +104,393 @@ l10n:
     # {code} will be replaced by a six-digit random number.
     phone_number_verification_sms:
       en: "{code} is your {campaign} verification code. If you think you have received this message in error, simply ignore it."
+
+  frontend_strings:
+    # Main title of the campaign.
+    # Ideally this should be short, concise and no more than two lines.
+    title:
+      en: Call your MEP! Lorem ipsum dolor sit
+
+  # Translation strings for the calling-section on the right side of the screen
+
+    # Main text of the primary button that lets the user initiate a call now to the selected MEP.
+    # Keep in mind that this button does not instantly start the call. A verification-step (if user
+    # is not verified) or at least a confirmation-step (allowing the user to change the number) comes
+    # before the call is actually started.
+    call.start-call-btn.title:
+      en: Start Call
+
+    # Sub-text of primary button that lets the user initiate a call now.
+    # Currently the intention of this sub-text is to reassure the user that they will not be charged
+    # for the call.
+    call.start-call-btn.subtitle:
+      en: Free of charge
+
+    # Main text of the pimrary button that lets the user initiate the actuall call.
+    # After this button is clicked an actual phone-call will be set-up.
+    call.call-now-btn.title:
+      en: Call Now
+
+    # Sub-text of the primary button that lets the user initiate the actual call.
+    # Currently the intention of this sub-text is to reassure the user that they will not be charged
+    # for the call.
+    call.call-now-btn.subtitle:
+      en: Free of charge
+
+    # Text of the button that allows the user to schedule a call at a later point in time.
+    call.call-later-btn.title:
+      en: Call later
+
+    # Title of the calling-section of the app.
+    # This title is displayed in the first step (thus "home") of the calling flow. This means
+    # it is visible on the initial screen as soon as the user loads the app. It should explain
+    # the functionality and invite users to use the app.
+    # Make sure to use a short and concise title. Ideally it should be no more than two or three
+    # lines of text.
+    call.home.title:
+      en: Contact your Member of the European Parliament. You can call now or schedule
+        calls in the future.
+
+    # Description paragraphs of the calling-section of the app.
+    # The paragraphs are displayed in the first step (thus "home") of the calling flow. This means
+    # they are visible on the initial screen as soon as the user loads the app. They are meant to
+    # give further information about how the main-feature of the app works and invite the user to
+    # start a call.
+    # Use the numeric index to display multiple paragraphs. Example keys: "call.home.descriptions.0.text",
+    # "call.home.descriptions.1.text", ... . Each item represents a single paragraph. Ideally one or two
+    # paragraphs should be used, more than that might cause layout issues.
+    # Make sure to write short and concise paragraphs. Each paragraph should not be more than two or three
+    # lines of text.
+    call.home.descriptions.0.text:
+      en: We will call you right away and connect you for free.
+    call.home.descriptions.1.text:
+      en: Rorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
+        et velit interdum.
+
+  # Translation strings related to the phone number verification step in the frontend
+  # This step consists of three sub-steps: "enterNumber", "enterCode", "success"
+
+    # Title of the phone number verification step of the app. This title is present during
+    # all three sub-steps of the verfication process.
+    verification.title:
+      en: Verify your phone number
+
+    # Short description of the first step (entering number) of the phone number verification.
+    # The description is displayed below the title and above the number-field.
+    verification.enterNumber.description:
+      en: Please enter your own phone number and we will send you a one time password
+        to verify your number.
+
+    # Label that describes the number-input of the first step of the phone number verification
+    verification.enterNumber.numberFieldLabel:
+      en: Enter your phone number
+
+    # Text for the mandatory privacy-policy checkbox below the number-input.
+    # The placeholder {{ policyLink }} is replaced with an HTML A-Tag linking to the privacy
+    # policy that is configured to open in a new tab when clicked.
+    verification.enterNumber.policy:
+      en: I have read and accept the {{ policyLink }}.
+
+    # Link-Text of the privacy-policy link which replaces the {{ policyLink }} placeholder of
+    # the translation key "verification.enterNumber.policy"
+    verification.enterNumber.policyLinkText:
+      en: Privacy Policy
+
+    # Button text of the button that lets the user send a verification code to the specified phone number
+    verification.enterNumber.sendCode:
+      en: Send Code
+
+    # Short description for the second sub-step of the verification (where the user is supposed to enter the code)
+    # The placeholder {{ number }} is replaced with the previosly entered number. This allows the user to check if
+    # they entered the number correcly in case the verification SMS is somehow delayed or fails to arrive.
+    verification.enterCode.description:
+      en: Please check you phone. We've sent a code to {{ number }}.
+
+    # Description text for the link-button that allowes the user to go one step back and edit the number in order
+    # to resend the verification SMS to the correct number.
+    verification.enterCode.notYourNumber:
+      en: Not your number?
+
+    # Label that describes the form field which is used to enter the verification code that was sent via SMS to the
+    # users phone.
+    verification.enterCode.codeFieldLabel:
+      en: Enter your Code
+
+    # Button text of the button that allows the user to submit the verification code in order to complete the verification
+    # process.
+    verification.enterCode.verifyCode:
+      en: Verify
+
+    # Message that is displayed in the final sub-step of the verification process informing the user of the successfull
+    # verification.
+    # The placeholder {{ number }} is replaced with the previosly entered number.
+    # After clicking the call-button in this step the call is being set-up instantly without any further confirmations.
+    verification.success.message:
+      en: 'Succesfully verified with the number: {{ number }}'
+
+  # Translation strings related to the step that shows the user that their call is being set up right now.
+
+    # Title of the call-setup-page
+    callSetup.title:
+      en: Your call is being set up
+
+    # Description of the call-setup-page informing the user that the call is currently being set up meaning their phone
+    # is going to ring in the next few seconds.
+    # The placeholder {{ mep }} will be replaced with the full name (first + last name) of the MEP that was previously
+    # selected for this call.
+    callSetup.description:
+      en: Please have your mobile phone ready. We will call you right away and connect
+        you with {{ mep }}.
+
+  # Translation strings related to the feedback step that will be displayed as soon as the user is connected to the MEP.
+  # This means the feedback can already be entered during the call. This can be helpful for textual notes during the call.
+
+    # Title of the feedback step
+    feedback.title:
+      en: Feedback
+
+    # Question-text of the first feedback item. The item is a question with four mutually exclusive radio-buttons.
+    # The intention of the question is to ask the user whether they beleive they were able to convice the MEP.
+    feedback.convincingQuestion:
+      en: Were you able to convince the person?
+
+    # First possible answer indicates a strong yes in the question of whether the MEP was convinced.
+    feedback.convincingQuestionFeedback.yes:
+      en: 'Yes'
+
+    # Second possible answer indicates more likely yes than no in the question of whether the MEP was convinced.
+    feedback.convincingQuestionFeedback.likelyYes:
+      en: likely yes
+
+    # Third possible answer indicates more likely no than yes in the question of whether the MEP was convinced.
+    feedback.convincingQuestionFeedback.likelyNo:
+      en: likely no
+
+    # Third possible answer indicates a strong no in the question of whether the MEP was convinced.
+    feedback.convincingQuestionFeedback.no:
+      en: 'No'
+
+    # Checkbox-text for a checkbox that lets the user indicate that there were technical problems during the call.
+    feedback.technicalProblemsQuestion:
+      en: There were technical problems
+
+    # Label describing a text-area that can be used to enter additional feedback in textual form.
+    feedback.additionalFeedbackQuestion:
+      en: Additional feedback
+
+    # Placeholder for a text-area that can be used to enter additional feedback in textual form.
+    feedback.additionalFeedbackPlaceholder:
+      en: If you have any additional feedback, please type it in here …
+
+    # Submit button that allows the user to send their feedback.
+    feedback.submit:
+      en: Submit
+
+  # Translation strings related to the section of the MEP-Selection section on the left side of the screen
+
+    # Alternative text for an icon-button using a renew-icon that lets the user ask for a new MEP-Suggestion
+    # from the system.
+    # This text is not normally visible in the screen it is only supposed to explain the functionality of the
+    # button on hover and for screenreaders.
+    select-mep.autorenew:
+      en: Choose another MEP
+
+    # Label for the select-form-control that lets the user choose a different country for the automatic or
+    # manual selection of MEPs
+    select-mep.country:
+      en: Country
+
+  # Translation strings for the talking-points that will be displayed during the call or while scheduling a call
+
+    # Title of the talking-points section
+    talkingPoints.title:
+      en: Talking Points
+
+    # Enumeration of talking-points. The numeric index in the key can be used to configure an arbirary number of talking-points
+    # starting with the index of zero. Example: "talkingPoints.points.0.title" and "talkingPoints.points.0.body".
+    # The indexes also define the order of the talking-points. It is recommended to specify the talking points in the order of
+    # their importance.
+    # Each talking-point consists of a title and a body, it is necessary to specify both keys for each talking-point.
+    # The talking-points are displayed in two columns this means it is advantageous to have an even number of talking-points.
+    # Talking-points should ideally be roughly similar in the number of lines. Otherwise the styling of the grid might not look
+    # particularly nice.
+    # Ideally the number of talking-points should not be greater than four since everything beyond that will likeley not be seen
+    # by many users because scrolling would be required.
+    talkingPoints.points.0.title:
+      en: Argument 1
+    talkingPoints.points.0.body:
+      en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
+        et velit interdum, ac aliquet odio mattis.
+    talkingPoints.points.1.title:
+      en: Argument 2
+    talkingPoints.points.1.body:
+      en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
+        et velit interdum, ac aliquet odio mattis.
+    talkingPoints.points.2.title:
+      en: Argument 3
+    talkingPoints.points.2.body:
+      en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
+        et velit interdum, ac aliquet odio mattis.
+    talkingPoints.points.3.title:
+      en: Argument 4
+    talkingPoints.points.3.body:
+      en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
+        et velit interdum, ac aliquet odio mattis.
+
+  # Translation strings for the language switcher component
+
+    # All names of the available languages should be listed in this section.
+    # It is preferred that the name of each language is in that language rather
+    # than translated.
+    # The translation keys should be named according to the languages specified
+    # under "l10n.languages".
+    # It is required that each language specified under "l10n.languages" is also
+    # listed in this section.
+    languages.en: English
+    languages.de: Deutsch
+    languages.de-AT: Deutsch (Österreich)
+
+  # Footer text of the app.
+  # Html formatting is allowed in this string.
+  # Keep in mind that the content should fit in a single line of text in order to not break the layout.
+    footer.contentHtml:
+      en: <a href="https://dearmep.eu" target="_blank">DearMEP</a>&nbsp;powered by&nbsp;
+          <a href="https://epicenter.works" target="_blank">Epicenter.works</a>
+
+  # Translation strings for the call-scheduling section of the app.
+
+    schedule.title:
+      en: Schedule a call
+    schedule.description:
+      en: 'Plan now to talk to a politican later! Select a day and time:'
+    schedule.scheduleAsText:
+      en: We will give you a ring every {{ timeSlots }} at your number to connect you
+        with a politician from {{ country }}.
+    schedule.timeSlot:
+      en: "{{ dayOfWeek }} around {{ time }}"
+
+    # Long-Names of the seven weekdays.
+    # The inxex is zero-based and ordered according to the semantics of 'Date.getDay()' in JavaScript.
+    # Example: 0 => "Sunday", 1 => "Monday", ...
+    # See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getDay
+    schedule.days.0:
+      en: Sunday
+    schedule.days.1:
+      en: Monday
+    schedule.days.2:
+      en: Tuesday
+    schedule.days.3:
+      en: Wednesday
+    schedule.days.4:
+      en: Thursday
+    schedule.days.5:
+      en: Friday
+    schedule.days.6:
+      en: Saturday
+
+    # Short-Names of the seven weekdays.
+    # Ideally two-letter abbreviations of the weekdays should be used.
+    # It is possible to use more than two letters if necessary but it might lead to styling-issues.
+    # The inxex is zero-based and ordered according to the semantics of 'Date.getDay()' in JavaScript.
+    # Example: 0 => "Sunday", 1 => "Monday", ...
+    # See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getDay
+    schedule.days-short.0:
+      en: Su
+    schedule.days-short.1:
+      en: Mo
+    schedule.days-short.2:
+      en: Tu
+    schedule.days-short.3:
+      en: We
+    schedule.days-short.4:
+      en: Th
+    schedule.days-short.5:
+      en: Fr
+    schedule.days-short.6:
+      en: Sa
+
+    # Main text of the primary button that lets the user save the configured schedule.
+    schedule.schedule-btn.title:
+      en: Confirm
+
+    # Sub-text of the primary button that lets the user save the configured schedule.
+    # Currently the intention of this sub-text is to reassure the user that they will not be charged
+    # for the call.
+    schedule.schedule-btn.subtitle:
+      en: Free of charge
+
+    # Text to hint the time-zone of the displayed times.
+    # This is usually the currently selected time-zone of the browser.
+    # Placeholder {{ zone }} is replaced by the name of the time-zone
+    # Example: "Time: {{ zone }}" => "Time: Europe/Vienna"
+    schedule.timezone:
+      en: 'Time: {{ zone }}'
+
+  # Names of all countries available for selection
+  # Make sure to use two-letter ISO country codes (ISO-3166) in the keys.
+    countries.BE:
+      en: Belgium
+    countries.BG:
+      en: Bulgaria
+    countries.CZ:
+      en: Czechia
+    countries.DK:
+      en: Denmark
+    countries.DE:
+      en: Germany
+    countries.EE:
+      en: Estonia
+    countries.IE:
+      en: Estonia
+    countries.GR:
+      en: Greece
+    countries.ES:
+      en: Spain
+    countries.FR:
+      en: France
+    countries.HR:
+      en: Croatia
+    countries.IT:
+      en: Italy
+    countries.CY:
+      en: Cyprus
+    countries.LV:
+      en: Latvia
+    countries.LT:
+      en: Lithuania
+    countries.LU:
+      en: Luxembourg
+    countries.HU:
+      en: Hungary
+    countries.MT:
+      en: Malta
+    countries.NL:
+      en: Netherlands
+    countries.AT:
+      en: Austria
+    countries.PL:
+      en: Poland
+    countries.PT:
+      en: Portugal
+    countries.RO:
+      en: Romania
+    countries.SI:
+      en: Slovenia
+    countries.SK:
+      en: Slovakia
+    countries.FI:
+      en: Finland
+    countries.SE:
+      en: Sweden
+
+  # General purpose string snippets
+
+    # Delimiter used in enumerations of items
+    # Example: [ "A", "B", "C" ] => "A, B, C" using the delimiter ", "
+    util.join.delimiter:
+      en: ", "
+
+    # Delimiter used in between the last and second-to-last items of an enumeration
+    # Example: [ "A", "B", "C" ] => "A, B and C" using the lastDelimiter " and "
+    util.join.lastDelimiter:
+      en: " and "
