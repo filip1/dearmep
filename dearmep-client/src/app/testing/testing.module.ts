@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslocoTestingModule } from '@ngneat/transloco';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @NgModule({
   declarations: [],
@@ -9,6 +10,7 @@ import { TranslocoTestingModule } from '@ngneat/transloco';
     CommonModule,
     NoopAnimationsModule,
     TranslocoTestingModule,
+    HttpClientTestingModule,
   ],
   providers: [
   ],
@@ -16,6 +18,7 @@ import { TranslocoTestingModule } from '@ngneat/transloco';
     NoopAnimationsModule,
     TranslocoTestingModule,
     CommonModule,
+    HttpClientTestingModule,
   ]
 })
 export class TestingModule { }

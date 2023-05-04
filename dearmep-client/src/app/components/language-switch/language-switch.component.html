@@ -1,7 +1,6 @@
 <mat-form-field appearance="outline" subscriptSizing="dynamic">
   <mat-label>Language</mat-label>
-  <mat-select value="en">
-    <mat-option value="en">English</mat-option>
-    <mat-option value="fr">French</mat-option>
+  <mat-select [value]="selectedLanguage" (valueChange)="setLanguage($event)">
+    <mat-option [value]="lang" *ngFor="let lang of availableLanguages">{{ 'languages.' + lang | transloco }}</mat-option>
   </mat-select>
 </mat-form-field>
