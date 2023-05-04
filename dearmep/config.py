@@ -107,6 +107,26 @@ class L10nConfig(BaseModel):
                 )
         return v
 
+    @validator("frontend_strings")
+    def every_language_must_have_a_name(
+        cls,
+        v: FrontendStrings,
+        values: Dict[str, Any],
+    ):
+        languages: List[Language] = values["languages"]
+        for lang in languages:
+            lang_key = f"languages.{lang}"
+            if lang_key not in v.__root__:
+                raise ValueError(
+                    f'missing name for language "{lang}" ("frontend_strings" '
+                    f'should have a key "{lang_key}")'
+                )
+            # We also recommend the language names to _not_ have sub-dicts for
+            # translation. That way, the language name can be _in_ the very
+            # language that it signifies. However, if campaigns want to go
+            # against that recommendation and translate language names, they
+            # are free to do so, which is why we're not checking it here.
+
 
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""

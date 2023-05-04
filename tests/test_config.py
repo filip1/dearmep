@@ -21,6 +21,9 @@ def dummy_translation_strings() -> L10nStrings:
 def dummy_frontend_strings() -> FrontendStrings:
     return FrontendStrings.parse_obj({
         "title": L10nEntry.parse_obj("foo"),
+        "languages.de": "Deutsch",
+        "languages.en": "English",
+        "languages.fr": "Français",
     })
 
 
