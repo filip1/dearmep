@@ -131,7 +131,7 @@ l10n:
     call.call-now-btn.title:
       en: Call Now
 
-    # Sub-text of the pimrary button that lets the user initiate the actuall call. 
+    # Sub-text of the primary button that lets the user initiate the actual call. 
     # Currently the intention of this sub-text is to reassure the user that they will not be charged
     # for the call.
     call.call-now-btn.subtitle:
@@ -159,7 +159,7 @@ l10n:
     # Use the numeric index to display multiple paragraphs. Example keys: "call.home.descriptions.0.text", 
     # "call.home.descriptions.1.text", ... . Each item represents a single paragraph. Ideally one or two
     # paragraphs should be used, more than that might cause layout issues. 
-    # Make sure to write short and concise paragraphs. Each paragraph should not be more thatn two or three
+    # Make sure to write short and concise paragraphs. Each paragraph should not be more than two or three
     # lines of text.
     call.home.descriptions.0.text:
       en: We will call you right away and connect you for free.
@@ -176,7 +176,7 @@ l10n:
       en: Verify your phone number
 
     # Short description of the first step (entering number) of the phone number verification. 
-    # The description dis displayed below the title and above the number-field.
+    # The description is displayed below the title and above the number-field.
     verification.enterNumber.description:
       en: Please enter your own phone number and we will send you a one time password
         to verify your number.
@@ -211,7 +211,7 @@ l10n:
     verification.enterCode.notYourNumber:
       en: If this is not your number click
 
-    # Label that describes the form-filed which is used to enter the verification code that was sent via SMS to the
+    # Label that describes the form field which is used to enter the verification code that was sent via SMS to the
     # users phone.
     verification.enterCode.codeFieldLabel:
       en: Enter your Code
@@ -236,7 +236,7 @@ l10n:
 
     # Description of the call-setup-page informing the user that the call is currently being set up meaning their phone 
     # is going to ring in the next few seconds.
-    # The placeholder {{ mep }} will be replaced with the full name (first + last name) of the MEP that was previosly 
+    # The placeholder {{ mep }} will be replaced with the full name (first + last name) of the MEP that was previously 
     # selected for this call.
     callSetup.description:
       en: Please have your mobile phone ready. We will call you right away and connect
@@ -258,13 +258,13 @@ l10n:
     feedback.convincingQuestionFeedback.yes:
       en: 'Yes'
 
-    # Second possible answer indicates more likeley yes than no in the question of whether the MEP was convinced.
-    feedback.convincingQuestionFeedback.likeleyYes:
-      en: likeley yes
+    # Second possible answer indicates more likely yes than no in the question of whether the MEP was convinced.
+    feedback.convincingQuestionFeedback.likelyYes:
+      en: likely yes
 
-    # Third possible answer indicates more likeley no than yes in the question of whether the MEP was convinced.
-    feedback.convincingQuestionFeedback.likeleyNo:
-      en: likeley no
+    # Third possible answer indicates more likely no than yes in the question of whether the MEP was convinced.
+    feedback.convincingQuestionFeedback.likelyNo:
+      en: likely no
 
     # Third possible answer indicates a strong no in the question of whether the MEP was convinced.
     feedback.convincingQuestionFeedback.no:
@@ -280,7 +280,7 @@ l10n:
 
     # Placeholder for a text-area that can be used to enter additional feedback in textual form.
     feedback.additionalFeedbackPlaceholder:
-      en: If you have any additional feedback, please type it in here...
+      en: If you have any additional feedback, please type it in here …
     
     # Submit button that allows the user to send their feedback. 
     feedback.submit:
@@ -308,14 +308,14 @@ l10n:
 
     # Enumeration of talking-points. The numeric index in the key can be used to configure an arbirary number of talking-points 
     # starting with the index of zero. Example: "talkingPoints.points.0.title" and "talkingPoints.points.0.body". 
-    # The indexes also define the order of the talking-points. It is recommendet to specify the talking points in the order of 
+    # The indexes also define the order of the talking-points. It is recommended to specify the talking points in the order of 
     # their importance. 
     # Each talking-point consists of a title and a body, it is necessary to specify both keys for each talking-point.
     # The talking-points are displayed in two columns this means it is advantageous to have an even number of talking-points.
     # Talking-points should ideally be roughly similar in the number of lines. Otherwise the styling of the grid might not look
     # particularly nice.
     # Ideally the number of talking-points should not be greater than four since everything beyond that will likeley not be seen
-    # by many users because scrolling would be reired.
+    # by many users because scrolling would be required.
     talkingPoints.points.0.title:
       en: Argument 1
     talkingPoints.points.0.body:
@@ -404,11 +404,11 @@ l10n:
     schedule.days-short.6:
       en: Sa
 
-    # Main text of the pimrary button that lets the user save the configured schedule.
+    # Main text of the primary button that lets the user save the configured schedule.
     schedule.schedule-btn.title:
       en: Confirm
 
-    # Sub-text of the pimrary button that lets the user save the configured schedule.
+    # Sub-text of the primary button that lets the user save the configured schedule.
     # Currently the intention of this sub-text is to reassure the user that they will not be charged
     # for the call.
     schedule.schedule-btn.subtitle:
@@ -478,7 +478,7 @@ l10n:
     countries.SE:
       en: Sweden
 
-  # Generl purpose string snippets
+  # General purpose string snippets
 
     # Delimiter used in enumerations of items 
     # Example: [ "A", "B", "C" ] => "A, B, C" using the delimiter ", "
