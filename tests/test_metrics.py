@@ -4,36 +4,19 @@ from fastapi import status
 from fastapi.testclient import TestClient
 import pytest
 
-from conftest import fastapi_app_func, fastapi_factory_func
+from dearmep.config import APP_NAME
 
 
-# If we initialize the Prometheus instrumentator more than once, it will create
-# duplicate timeseries, which is not allowed. Therefore, we only get to call
-# this once.
-@pytest.fixture(scope="session")
-def prom_client():
-    # We can't simply use the fastapi_app fixture because its scope is
-    # per-function, not per-session.
-    with fastapi_factory_func() as start:
-        with fastapi_app_func(start) as app:
-            client = TestClient(app)
-
-    with client as client_with_events:
-        # The `with` causes `@app.on_event("startup")` code to run.
-        # <https://fastapi.tiangolo.com/advanced/testing-events/>
-        yield client_with_events
-
-
-def metrics_lines_func(prom_client: TestClient) -> Iterable[str]:
-    res = prom_client.get("/metrics")
+def metrics_lines_func(client: TestClient) -> Iterable[str]:
+    res = client.get("/metrics")
     assert res.status_code == status.HTTP_200_OK
     for line in res.iter_lines():
         yield str(line).rstrip("\r\n")
 
 
 @pytest.fixture
-def metrics_lines(prom_client: TestClient):
-    yield list(metrics_lines_func(prom_client))
+def metrics_lines(client: TestClient):
+    yield list(metrics_lines_func(client))
 
 
 def test_python_info_in_metrics(metrics_lines: Iterable[str]):
@@ -45,14 +28,15 @@ def test_python_info_in_metrics(metrics_lines: Iterable[str]):
     ]
 
 
-def test_non_grouped_status_codes(prom_client: TestClient):
+def test_non_grouped_status_codes(client: TestClient):
     # Do a throwaway request in order to have at least one request in the
     # metrics when doing the actual test.
-    assert prom_client.get("/metrics").status_code == status.HTTP_200_OK
+    assert client.get("/metrics").status_code == status.HTTP_200_OK
 
-    mark = 'http_requests_total{handler="/metrics",method="GET",status="200"} '
+    mark = f'starlette_requests_total{{app_name="{APP_NAME}",method="GET",' \
+        + 'path="/metrics",status_code="200"} '
     assert [
         line
-        for line in metrics_lines_func(prom_client)
+        for line in metrics_lines_func(client)
         if line.startswith(mark)
     ]
