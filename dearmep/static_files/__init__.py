@@ -41,10 +41,10 @@ def mount_if_configured(app: FastAPI, path: str):
 
     if settings.demo_page:
         @app.get(
-            "/",
+            "/", operation_id="getDemoHTML",
             response_class=HTMLResponse,
         )
-        async def demo(req: Request):
+        async def get_demo_html(req: Request):
             return demo_html(
                 protocol="http" if req.url.scheme.lower() == "http"
                 else "https",
