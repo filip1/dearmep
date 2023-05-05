@@ -112,7 +112,7 @@ class L10nConfig(BaseModel):
         cls,
         v: FrontendStrings,
         values: Dict[str, Any],
-    ):
+    ) -> FrontendStrings:
         languages: List[Language] = values["languages"]
         for lang in languages:
             lang_key = f"languages.{lang}"
@@ -126,6 +126,7 @@ class L10nConfig(BaseModel):
             # language that it signifies. However, if campaigns want to go
             # against that recommendation and translate language names, they
             # are free to do so, which is why we're not checking it here.
+        return v
 
 
 class Config(BaseModel):
