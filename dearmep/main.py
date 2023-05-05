@@ -1,8 +1,11 @@
 import logging
 from typing import Optional
+
 from fastapi import FastAPI
-from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import ValidationError
+from starlette_exporter import PrometheusMiddleware, handle_metrics
+from starlette_exporter.optional_metrics import request_body_size, \
+    response_body_size
 from yaml.parser import ParserError
 
 from . import __version__, static_files
@@ -49,13 +52,15 @@ def create_app(config_dict: Optional[dict] = None) -> FastAPI:
         version=__version__,
     )
 
-    @app.on_event("startup")
-    def prometheus_instrument():
-        Instrumentator(
-            should_group_status_codes=False,
-        ).instrument(app).expose(app)
-
     app.include_router(api_v1.router, prefix="/api/v1")
     static_files.mount_if_configured(app, "/static")
+
+    app.add_middleware(
+        PrometheusMiddleware,
+        app_name=APP_NAME,
+        group_paths=True,
+        optional_metrics=[request_body_size, response_body_size],
+    )
+    app.add_route("/metrics", handle_metrics)
 
     return app
