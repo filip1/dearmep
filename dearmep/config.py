@@ -30,6 +30,10 @@ class Language(ConstrainedStr):
     regex = re.compile(r"^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$")
 
 
+class DatabaseConfig(BaseModel):
+    url: str  # AnyUrl requires a host, which doesn't apply for SQLite.
+
+
 class L10nEntry(BaseModel):
     __root__: Union[str, Dict[Language, str]]
 
@@ -136,6 +140,7 @@ class L10nConfig(BaseModel):
 
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""
+    database: DatabaseConfig
     l10n: L10nConfig
 
     _instance: ClassVar[Optional["Config"]] = None

@@ -23,6 +23,7 @@ httpx = ">=0.23"
 uvicorn = {extras = ["standard"], version = "^0.21.1"}
 python-geoacumen = ">=2023"
 starlette-exporter = "^0.15.1"
+sqlmodel = "^0.0.8"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^4.0.1"

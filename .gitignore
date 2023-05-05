@@ -9,6 +9,7 @@ dist/
 /dearmep/static_files/static/
 
 *.mmdb
+*.sqlite
 openapi.json
 
 # For convenience, if people use their own config.yaml.

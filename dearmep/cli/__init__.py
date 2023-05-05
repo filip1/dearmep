@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 from sys import exit, stderr
 
 from ..config import CMD_NAME
-from . import dump, serve, version
+from . import db, dump, serve, version
 
 
 def run():
@@ -13,6 +13,7 @@ def run():
         metavar="COMMAND",
     )
     version.add_parser(subparsers)
+    db.add_parser(subparsers)
     dump.add_parser(subparsers)
     serve.add_parser(subparsers)
     args = parser.parse_args()
