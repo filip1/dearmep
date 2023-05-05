@@ -1,4 +1,5 @@
 from functools import lru_cache
+import logging
 from pathlib import Path
 import re
 from typing import Any, ClassVar, Dict, List, Optional, Union
@@ -8,6 +9,10 @@ from pydantic import BaseModel, BaseSettings, ConstrainedStr, DirectoryPath, \
 from pydantic.fields import ModelField
 from pydantic.utils import deep_update
 import yaml
+from yaml.parser import ParserError
+
+
+_logger = logging.getLogger(__name__)
 
 
 APP_NAME = "DearMEP"
@@ -145,16 +150,46 @@ class Config(BaseModel):
         return cls._instance
 
     @classmethod
+    def load(cls) -> "Config":
+        """Try to load the config as specified in the environment."""
+        try:
+            settings = Settings()
+        except ValidationError as e:
+            if is_config_missing(e):
+                _logger.exception(
+                    "The configuration file was not found. This usually means "
+                    f"that you did not set the {ENV_PREFIX}CONFIG environment "
+                    "variable to the config file name, or its path is "
+                    "incorrect.",
+                )
+            raise
+        return cls.load_yaml_file(settings.config_file)
+
+    @classmethod
     def load_dict(cls, obj: Dict) -> "Config":
         if cls._patch:
             obj = deep_update(obj, cls._patch)
-        cls._instance = cls.parse_obj(obj)
+        try:
+            cls._instance = cls.parse_obj(obj)
+        except ValidationError:
+            _logger.exception(
+                "Your config file is correct YAML, but did not pass semantic "
+                "validation.",
+            )
+            raise
         return cls._instance
 
     @classmethod
     def load_yaml_file(cls, filename: Path) -> "Config":
         with filename.open("r") as f:
-            return cls.load_dict(yaml.load(f, yaml.Loader))
+            try:
+                yaml_dict = yaml.load(f, yaml.Loader)
+            except ParserError:
+                _logger.exception(
+                    "There was an error loading your YAML config.",
+                )
+                raise
+            return cls.load_dict(yaml_dict)
 
     @classmethod
     def set_patch(cls, patch: Optional[Dict]):
