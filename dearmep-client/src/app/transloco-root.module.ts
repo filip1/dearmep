@@ -19,7 +19,7 @@ export class TranslocoHttpLoader implements TranslocoLoader {
   ) {}
 
   getTranslation(lang: string): Observable<Translation> {
-    return this.apiService.getFrontendStringsApiV1FrontendStringsLanguageGet({ language: lang })
+    return this.apiService.getFrontendStrings({ language: lang })
     .pipe(
       map(r => ObjectUtil.UnflattenObject(r.frontend_strings) as Translation)
     )

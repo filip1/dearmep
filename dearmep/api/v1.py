@@ -35,13 +35,13 @@ router = APIRouter()
 
 
 @router.get(
-    "/localization",
+    "/localization", operation_id="getLocalization",
     response_model=LocalizationResponse,
     # TODO: This explicit limit here makes little sense, it's more of a demo.
     dependencies=[Depends(Limit("5/minute"))],
     responses=rate_limit_response,  # type: ignore[arg-type]
 )
-def localize(
+def get_localization(
     frontend_strings: bool = Query(
         False,
         description="Whether to also include all frontend translation strings "
@@ -89,7 +89,7 @@ def localize(
 
 # TODO: Add caching headers, this is pretty static data.
 @router.get(
-    "/frontend-strings/{language}",
+    "/frontend-strings/{language}", operation_id="getFrontendStrings",
     response_model=FrontendStringsResponse,
     responses=rate_limit_response,  # type: ignore[arg-type]
 )
