@@ -48,11 +48,15 @@ To do that, we send a Verification Code to the number entered by the User, and r
 For this to work, we need to keep track of the phone numbers and associated codes.
 This information is persisted to the database in order to survive application restarts.
 
-In this phase of authentication, however, we technically only need a value derived from the phone number, not the number itself.
+However, for authentication, we technically only need a value derived from the phone number, not the number itself.
 Therefore, we only keep a peppered hash of the number, in order to minimize the exposure of personal information in case of a breach.
-It should be noted, though, that brute-forcing these hashes is significantly easier than passwords, due to them only consisting of digits.
+It should be noted, though, that brute-forcing these hashes (should the database _and_ the pepper be obtained by an attacker) is significantly easier than passwords, due to them only consisting of digits.
 
-For monitoring and debugging purposes, the hashed value will also the country code of the number, as well as the first _n_ digits of the phone number, unhashed.
+Depending on the exact feature that is using these password hashes, the hashing must also be able to be performed quickly, in order to minimize latency.
+For example, in IVR webhooks, even a one-second delay might degrade the user experience significantly.
+Therefore, we are not specifying the exact algorithms to be used in this document, and there may even be different algorithms in use in different parts of the application.
+
+For monitoring and debugging purposes, the hashed value will also store the country code of the number, as well as the first _n_ digits of the phone number, unhashed.
 This allows us, for example, to detect provider outages to a certain degree.
 The amount of data stored unhashed is configurable:
 Administrators can choose to store only the country code, the country code and 1 to 5 first digits (configurable), or nothing at all.
@@ -65,14 +69,14 @@ We are using the same peppered hashes as above for this.
 (**TODO:** Hashing these numbers here means that we will not be able to retrieve a list of “which numbers have been abused” from the system. Would we need that? Even when using the hashes, we would still be able to tell, given a specific number, whether this number has been abused. My recommendation is to _not_ hash these records.)
 
 The verification abuse database entry for a given number will be removed once that number has been verified (by telling us the correct code).
-By design, there is no automatic purging of these entries.
+By design, there is no automatic time-based purging of these entries.
 
 Sending the SMS messages involves a third party, which will most likely keep a record of the recipient’s number.
 
 ### Authentication Credentials
 
-After a User has been verified to own a certain phone number, the system will issue a JSON Web Token (JWT) to be stored in a cookie in that user’s browser.
-The token is signed by the server, which allows the server to detect whether a cookie might have been forged.
+After a User has been verified to own a certain phone number, the system will issue a JSON Web Token (JWT) to be stored in a cookie in that User’s browser.
+The token is signed by the server, which allows the server to detect whether a cookie has been forged.
 
 This way, the server does not need to keep track of which phone numbers have been verified, which significantly lowers the impact in case of a breach.
 
@@ -93,16 +97,17 @@ While keeping track of the call state in RAM only would be nice from a data prot
 Therefore, we need to persist call state to the database, as long as the call is ongoing.
 The User’s phone number will nevertheless be hashed as described above.
 
-The call state database record will be deleted once a call terminates, and (should we somehow not be notified of the termination) after a configurable timeout.
+The call state database record will be deleted once a call terminates, and (should the application somehow not be notified of the termination) after a configurable timeout.
 
-Additionally to the call state, DearMEP also (optionally, configurable) keeps a record called a “call summary”.
+Additionally to the call state, DearMEP also keeps a record called a “call summary”.
 This will include the User’s phone number (hashed, as above), the called Destination, and time stamps.
-It can be used for statistics, cost controlling, and debugging.
+The call summary can be used for statistics, cost controlling, and debugging.
+DearMEP can be configured to not store the User’s phone number in call summaries.
 
 ### Scheduled Phone Calls
 
 A user requesting DearMEP to schedule a phone call for later is the only time the system has to store an un-hashed version of the phone number.
-Instead, the database records for Scheduled Calls will contain the phone number encrypted with a configurable secret only known to the application.
+Instead, the database records for Scheduled Calls will contain the phone number encrypted with a configurable secret only known to the application, possibly the same secret that’s used as a pepper when hashing.
 
 These scheduling database records will be deleted as soon as they are no longer required, i.e. as soon as the User is no longer interested in Scheduled Calls.
 
