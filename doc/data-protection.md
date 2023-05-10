@@ -55,7 +55,7 @@ Therefore, we only keep a peppered hash of the number, in order to minimize the 
 It should be noted, though, that brute-forcing these hashes (should the database _and_ the pepper be obtained by an attacker) is significantly easier than passwords, due to them only consisting of digits.
 
 Depending on the exact feature that is using these password hashes, the hashing must also be able to be performed quickly, in order to minimize latency.
-For example, in IVR webhooks, even a one-second delay might degrade the user experience significantly.
+For example, in IVR webhooks (i.e. when controlling a phone call’s flow), even a one-second delay might degrade the user experience significantly.
 Therefore, we are not specifying the exact algorithms to be used in this document, and there may even be different algorithms in use in different parts of the application.
 
 For monitoring and debugging purposes, the hashed value will also store the country code of the number, as well as the first _n_ digits of the phone number, unhashed.
