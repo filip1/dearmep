@@ -127,6 +127,11 @@ After a call, Users are asked to provide feedback about the experience, and whet
 This feedback is stored in the database, together with some statistical information like the User’s country and language as well as the unhashed country code and prefix as described above, but not the whole phone number.
 
 A unique feedback token will be issued per call to allow users to only leave feedback if they actually made a call, and only once per call.
+If the User declined being connected to their Destination, or we detect that connecting the call did not work, no token will be generated.
+
+The token will be sent to the User via SMS as soon as the call with their Destination has ended, or (if the application cannot detect whether the forwarded call is complete or still ongoing) a few minutes after initially connecting the User to the Destination.
+The application needs to persist the association between (encrypted) phone number and feedback token until the feedback SMS has been sent.
+Afterwards, it will be deleted.
 
 
 ## Browser Fingerprints & Request Headers
