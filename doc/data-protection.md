@@ -58,10 +58,9 @@ Depending on the exact feature that is using these password hashes, the hashing 
 For example, in IVR webhooks (i.e. when controlling a phone call’s flow), even a one-second delay might degrade the user experience significantly.
 Therefore, we are not specifying the exact algorithms to be used in this document, and there may even be different algorithms in use in different parts of the application.
 
-For monitoring and debugging purposes, the hashed value will also store the country code of the number, as well as the first _n_ digits of the phone number, unhashed.
-This allows us, for example, to detect provider outages to a certain degree.
-The amount of data stored unhashed is configurable:
-Administrators can choose to store only the country code, the country code and 1 to 5 first digits (configurable), or nothing at all.
+For monitoring and debugging purposes, in _addition_ to the hashed phone number, the application can also store the country code of the number, as well as the first _n_ (or everything except for the last _n_) digits of the phone number, in clear text.
+This allows an administrator to e.g. detect provider outages to a certain degree.
+The amount of data stored unhashed is configurable.
 
 As the Verification Codes have an expiration date, expired database entries will be purged automatically and regularly at least once per hour.
 
@@ -128,7 +127,7 @@ The administrator can then eventually read the clear-text version and delete it 
 ## Call Feedback
 
 After a call, Users are asked to provide feedback about the experience, and whether they think they were successful in convincing the other person.
-This feedback is stored in the database, together with some statistical information like the User’s country and language as well as the unhashed country code and prefix as described above, but not the whole phone number.
+This feedback is stored in the database, together with some statistical information like the User’s country and language as well as possibly the unhashed country code and prefix as described above, but not the whole phone number.
 
 A unique feedback token will be issued per call to allow users to only leave feedback if they actually made a call, and only once per call.
 If the User declined being connected to their Destination, or we detect that connecting the call did not work, no token will be generated.
