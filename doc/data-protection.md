@@ -24,7 +24,7 @@ The lookup occurs locally on the server, not via a third-party service.
 The IP address is not persisted.
 However, a counter that tracks successful geolocation lookups is increased, receiving the country (not the IP address) as a parameter.
 
-Campaigns which are not multi-national could disable the geolocation feature.
+Instances which do not span multiple countries could disable the geolocation feature.
 
 ### Abuse Prevention
 
