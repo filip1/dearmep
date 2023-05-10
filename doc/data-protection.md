@@ -8,12 +8,16 @@ Please note that not all of the functionality outlined in this text may have bee
 
 DearMEP is using the User’s IP address for two purposes:
 geolocation and abuse prevention.
-The IP address is kept in RAM only and not persisted.
-(**TODO:** Should we, or do we even need to, keep the IP addresses used when logging in, intiating a call, or scheduling calls, for abuse investigation purposes?)
 
-Note that we are only talking about the DearMEP application itself.
-When deployed, a reverse proxy or other services running on the server machine(s) might persist IP addresses as well, which is out of scope of this document.
-(**TODO:** We should probably not log full IP addresses on HTTP access though, as is currently the case.)
+The IP address is not persisted to the database by the application itself.
+However, other software might:
+
+* The application logs IP addresses to standard output by default, which may be streamed to the system journal and even end up in long-term backups.
+* A reverse proxy server might log requests and their IP addresses.
+* Application memory might be paged to disk by the operating system.
+* The administrator might configure the DearMEP logging config to persist logs to disk or send them to other services.
+
+These processes are out of scope for this document and up to the system administrator(s) to assess what is logged, and for how long.
 
 ### Geolocation
 
@@ -30,7 +34,7 @@ Many of DearMEP’s API endpoints use rate limiting to prevent abuse.
 As most of the endpoints do not require any kind of user authentication, this rate limiting cannot target the specific user, and instead has to take other identifying information into consideration.
 
 Currently, rate limits are applied per IP address.
-Rate limit tracking is taking place in RAM only and will not be persisted.
+Rate limit tracking is taking place in the application’s memory only and will not be persisted.
 (Restarting the application will reset the rate limit tracking.)
 
 
