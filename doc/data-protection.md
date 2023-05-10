@@ -17,14 +17,12 @@ When deployed, a reverse proxy or other services running on the server machine(s
 
 ### Geolocation
 
-The IP address is looked up in DearMEP’s geolocation database (except if explicitly disabled) to determine the country from which the User is accessing the application.
+The IP address is looked up in DearMEP’s geolocation database to determine the country from which the User is accessing the application.
 This is being used to select a Destination to call.
 
 The lookup occurs locally on the server, not via a third-party service.
 The IP address is not persisted.
 However, a counter that tracks successful geolocation lookups is increased, receiving the country (not the IP address) as a parameter.
-
-Instances which do not span multiple countries could disable the geolocation feature.
 
 ### Abuse Prevention
 
