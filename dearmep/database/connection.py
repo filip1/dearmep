@@ -4,7 +4,7 @@ from typing import Optional
 from sqlalchemy.future import Engine
 from sqlmodel import Session, SQLModel, create_engine
 
-from .config import Config
+from ..config import Config
 
 
 class AutoEngine:
