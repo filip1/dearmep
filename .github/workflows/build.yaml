@@ -18,8 +18,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          apt update
-          apt install -y graphviz graphviz-dev python3-dev
+          sudo apt update
+          sudo apt install -y graphviz graphviz-dev python3-dev
           python -m pip install poetry
           poetry install --all-extras
       - name: Lint with flake8
