@@ -2,7 +2,7 @@ from contextlib import contextmanager
 from typing import Optional
 
 from sqlalchemy.future import Engine
-from sqlmodel import Session, SQLModel, create_engine
+from sqlmodel import MetaData, Session, SQLModel, create_engine
 
 from ..config import Config
 
@@ -15,6 +15,10 @@ class AutoEngine:
         if cls.engine is None:
             cls.engine = create_engine(Config.get().database.url)
         return cls.engine
+
+
+def get_metadata() -> MetaData:
+    return SQLModel.metadata
 
 
 @contextmanager

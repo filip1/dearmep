@@ -1,5 +1,5 @@
 from .models import Contact, Destination
-from .connection import AutoEngine, create_db, get_session
+from .connection import AutoEngine, create_db, get_metadata, get_session
 
 
 __all__ = [
@@ -7,5 +7,6 @@ __all__ = [
     "Contact",
     "Destination",
     "create_db",
+    "get_metadata",
     "get_session",
 ]
