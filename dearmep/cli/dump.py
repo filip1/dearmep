@@ -1,5 +1,6 @@
 from argparse import _SubParsersAction, ArgumentParser
 import json
+import logging
 from os import environ
 import sys
 from typing import Dict, Optional
@@ -9,6 +10,9 @@ from pydantic import ValidationError
 from ..config import APP_NAME, ENV_PREFIX, Config, Settings, included_file, \
     is_config_missing
 from ..main import create_app
+
+
+_logger = logging.getLogger(__name__)
 
 
 def fake_config(patch: Optional[Dict] = None):
@@ -28,6 +32,19 @@ def fake_config(patch: Optional[Dict] = None):
 
 def dump_included_file(name: str):
     print(included_file(name).read_text())
+
+
+def dump_erd(args):
+    try:
+        from eralchemy2 import render_er
+        from ..database import get_metadata
+    except ModuleNotFoundError:
+        _logger.exception(
+            f"eralchemy2 not found; have you installed {APP_NAME} with the "
+            "[specs] extra?"
+        )
+        sys.exit(1)
+    render_er(get_metadata(), args.outfile)
 
 
 def dump_example_config(args):
@@ -52,6 +69,19 @@ def add_parser(subparsers: _SubParsersAction):
         "specifications.",
     )
     subsub = parser.add_subparsers(metavar="ITEM")
+
+    erd = subsub.add_parser(
+        "erd",
+        help="output an entity relationship diagram (requires [specs] extra)",
+        description="Output an entity relationship diagram from the schema.",
+    )
+    erd.add_argument(
+        "outfile",
+        help="output filename; format determined by suffix; all output "
+        "formats supported by eralchemy2 are available, including .png, .svg, "
+        ".er, .dot, .md (Mermaid)",
+    )
+    erd.set_defaults(func=dump_erd)
 
     example_config = subsub.add_parser(
         "example-config",

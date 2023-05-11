@@ -32,7 +32,7 @@ jobs:
         if: ${{ matrix.python-version == '3.11' }}  # We only need it once.
         run: |
           poetry run dearmep dump openapi > openapi.json
-          poetry run dearmep db erd dearmep-erd.svg
+          poetry run dearmep dump erd dearmep-erd.svg
       - name: Collect OpenAPI spec & ERD as an artifact
         if: ${{ matrix.python-version == '3.11' }}
         uses: actions/upload-artifact@v3
