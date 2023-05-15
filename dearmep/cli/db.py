@@ -1,10 +1,14 @@
+from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from . import Context
 from ..config import APP_NAME, Config
 from ..database import create_db
 
 
-def cmd_init(args):
+def cmd_init(ctx: Context):
     Config.load()
     create_db()
 
@@ -24,4 +28,4 @@ def add_parser(subparsers: _SubParsersAction):
     )
     init.set_defaults(func=cmd_init)
 
-    parser.set_defaults(func=lambda args: parser.error("no command selected"))
+    parser.set_defaults(func=lambda ctx: parser.error("no command selected"))

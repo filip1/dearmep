@@ -1,7 +1,11 @@
+from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
 from importlib import metadata
 import sys
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from . import Context
 from .. import __version__
 from ..config import APP_NAME
 
@@ -13,7 +17,7 @@ ADDITIONAL_PACKAGES = (
 )
 
 
-def run(args):
+def run(ctx: Context):
     versions = {
         APP_NAME: __version__,
         "Python": sys.version.replace("\n", " "),

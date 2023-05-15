@@ -1,8 +1,13 @@
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from sys import exit, stderr
+from typing import NamedTuple
 
 from ..config import CMD_NAME
 from . import db, dump, serve, version
+
+
+class Context(NamedTuple):
+    args: Namespace
 
 
 def run():
@@ -22,4 +27,4 @@ def run():
         parser.print_help(stderr)
         exit(127)
 
-    args.func(args)
+    args.func(Context(args))
