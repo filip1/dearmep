@@ -25,7 +25,7 @@ class _SARelationshipKWArgs(TypedDict):
     sa_relationship_kwargs: Dict[str, str]
 
 
-def _rel_field(join: str) -> _SARelationshipKWArgs:
+def _rel_join(join: str) -> _SARelationshipKWArgs:
     """Convenience function to disambiguate Relationship associations."""
     return {
         "sa_relationship_kwargs": {
@@ -167,7 +167,7 @@ class Destination(SQLModel, table=True):
         description="The portrait image of this Destination.",
     )
     portrait: Optional[Blob] = Relationship(
-        **_rel_field("Destination.portrait_id==Blob.id"),
+        **_rel_join("Destination.portrait_id==Blob.id"),
     )
     name_audio_id: Optional[int] = Field(
         None,
@@ -175,7 +175,7 @@ class Destination(SQLModel, table=True):
         description="The spoken name of this Destination.",
     )
     name_audio: Optional[Blob] = Relationship(
-        **_rel_field("Destination.name_audio_id==Blob.id"),
+        **_rel_join("Destination.name_audio_id==Blob.id"),
     )
     groups: List["DestinationGroup"] = Relationship(
         back_populates="destinations", link_model=DestinationGroupLink,
