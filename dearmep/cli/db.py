@@ -13,7 +13,7 @@ def cmd_init(ctx: Context):
     create_db()
 
 
-def add_parser(subparsers: _SubParsersAction):
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
     parser: ArgumentParser = subparsers.add_parser(
         "db",
         help="manage the database",
@@ -28,4 +28,4 @@ def add_parser(subparsers: _SubParsersAction):
     )
     init.set_defaults(func=cmd_init)
 
-    parser.set_defaults(func=lambda ctx: parser.error("no command selected"))
+    help_if_no_subcommand(parser)
