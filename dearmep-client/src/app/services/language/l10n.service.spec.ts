@@ -1,22 +1,22 @@
 import { TestBed } from '@angular/core/testing';
 
-import { L10nPerferencesService } from './l10n-preferences.service';
+import { L10nService } from './l10n.service';
 import { TestingModule } from 'src/app/testing/testing.module';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 
-describe('L10nPerferencesService', () => {
-  let service: L10nPerferencesService;
+describe('L10nService', () => {
+  let service: L10nService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ 
+      imports: [
         TestingModule,
       ],
       providers: [
         LocalStorageService,
       ]
     });
-    service = TestBed.inject(L10nPerferencesService);
+    service = TestBed.inject(L10nService);
   });
 
   it('should be created', () => {

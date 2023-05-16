@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TranslocoService } from '@ngneat/transloco';
 // Change this import to enable optimizations as soon as https://github.com/marnusw/date-fns-tz/issues/193 is fixed
 import {zonedTimeToUtc} from 'date-fns-tz';
 import { addMinutes, format, isBefore, isEqual, set } from 'date-fns/esm';
+import { Subject, takeUntil } from 'rxjs';
 import { StringUtil } from 'src/app/common/util/string.util';
-import { Country } from 'src/app/model/country.model';
 import { DayOfWeek } from 'src/app/model/day-of-week.enum';
+import { L10nService } from 'src/app/services/language/l10n.service';
 import { TimeService } from 'src/app/services/time/time.service';
 
 @Component({
@@ -14,7 +15,8 @@ import { TimeService } from 'src/app/services/time/time.service';
   templateUrl: './update-call-schedule.component.html',
   styleUrls: ['./update-call-schedule.component.scss']
 })
-export class UpdateCallScheduleComponent implements OnInit {
+export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
+  private readonly destroyed$ = new Subject<void>()
   private readonly startHour = 9
   private readonly endHour = 18
   private readonly targetTimeZone = "Europe/Brussels"
@@ -23,7 +25,7 @@ export class UpdateCallScheduleComponent implements OnInit {
 
   public availableTimes?: string[]
 
-  public selectedCountry: Country | null = null
+  public selectedCountry: string | undefined
 
   public availableDays = [
     DayOfWeek.Monday,
@@ -41,11 +43,23 @@ export class UpdateCallScheduleComponent implements OnInit {
   constructor(
     private readonly translocoService: TranslocoService,
     private readonly timeSerivce: TimeService,
+    private readonly l10nService: L10nService,
   ) { }
 
   public ngOnInit(): void {
     this.localTimeZone = this.timeSerivce.getCurrentTimeZone()
     this.availableTimes = this.getAvailableTimes()
+
+    this.l10nService.getCountry$().pipe(
+      takeUntil(this.destroyed$),
+    ).subscribe({
+      next: (c) => this.selectedCountry = c
+    })
+  }
+
+  public ngOnDestroy(): void {
+    this.destroyed$.next()
+    this.destroyed$.complete()
   }
 
   public isTimeSelectedForDay(day: DayOfWeek) {
@@ -66,7 +80,7 @@ export class UpdateCallScheduleComponent implements OnInit {
   public getSelectedTimesAsText() {
     const timeSlots: string[] = []
     for (const day of this.availableDays) {
-      const control = this.selectedTimeFormControls.get(day) 
+      const control = this.selectedTimeFormControls.get(day)
       if (control?.value) {
         const nameOfDay = this.getNameOfDay(day)
         const time = control.value
@@ -83,7 +97,8 @@ export class UpdateCallScheduleComponent implements OnInit {
     const delimiter = this.translocoService.translate("util.join.delimiter")
     const lastDelimiter = this.translocoService.translate("util.join.lastDelimiter")
     const timeSlotsString = StringUtil.JoinAnd(timeSlots, delimiter, lastDelimiter)
-    const countryStrBold = `<b>${ this.selectedCountry?.name }</b>`
+    const countryName = this.translocoService.translate(`countries.${this.selectedCountry}`)
+    const countryStrBold = `<b>${ countryName }</b>`
 
     return this.translocoService.translate("schedule.scheduleAsText", { timeSlots: timeSlotsString, country: countryStrBold })
   }
@@ -99,7 +114,7 @@ export class UpdateCallScheduleComponent implements OnInit {
       return days[day]
     }
     return ""
-  } 
+  }
 
   private getTimestampFromHour(hour: number, timezone: string) {
     const timeTarget = set(new Date(), { hours: hour, minutes: 0, seconds: 0, milliseconds: 0 })

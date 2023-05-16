@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Observable, map } from 'rxjs';
-import { L10nPerferencesService } from 'src/app/services/language/l10n-preferences.service';
+import { L10nService } from 'src/app/services/language/l10n.service';
 
 @Component({
   selector: 'dmep-language-switch',
@@ -13,7 +11,7 @@ export class LanguageSwitchComponent implements OnInit {
   public selectedLanguage?: string
 
   constructor(
-    private readonly l10nPerfService: L10nPerferencesService,
+    private readonly l10nPerfService: L10nService,
   ) { }
 
   public ngOnInit(): void {

@@ -339,6 +339,9 @@ l10n:
 
   # Translation strings for the language switcher component
 
+    # Label for the language select component
+    languages.language: Language
+
     # All names of the available languages should be listed in this section.
     # It is preferred that the name of each language is in that language rather
     # than translated.
