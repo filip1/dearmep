@@ -32,14 +32,11 @@ export class TranslocoHttpLoader implements TranslocoLoader {
     {
       provide: TRANSLOCO_CONFIG,
       useValue: translocoConfig({
-        availableLangs: ['en', 'fr'],
-        defaultLang: 'en',
-        fallbackLang: 'en',
         failedRetries: 3,
         reRenderOnLangChange: true,
         prodMode: !isDevMode(),
         missingHandler: {
-          useFallbackTranslation: true,
+          useFallbackTranslation: false
         }
       })
     },
