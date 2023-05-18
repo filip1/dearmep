@@ -47,10 +47,7 @@ def run():
             subparsers,
             help_if_no_subcommand=help_if_no_subcommand,
         )
+    help_if_no_subcommand(parser)
     args = parser.parse_args()
-
-    if "func" not in args:
-        parser.print_help(stderr)
-        exit(127)
 
     args.func(Context(args=args))
