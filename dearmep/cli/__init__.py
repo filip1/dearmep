@@ -1,14 +1,31 @@
 from __future__ import annotations
 from argparse import ArgumentParser, Namespace
+from contextlib import contextmanager
 from sys import exit, stderr
-from typing import NamedTuple
 
+from rich.console import Console
+from rich.progress import Progress
+
+from . import convert, db, dump, serve, version
 from ..config import CMD_NAME
-from . import db, dump, serve, version
+from ..progress import RichTaskFactory
 
 
-class Context(NamedTuple):
-    args: Namespace
+class Context:
+    def __init__(self, *, args: Namespace):
+        self.args = args
+        self.console = Console(stderr=True)
+
+    @contextmanager
+    def task_factory(self, redirect_stdout: bool = False):
+        progress = Progress(
+            console=self.console,
+            # This needs to be False for commands that dump actual data to
+            # standard output, else Rich will mangle it.
+            redirect_stdout=redirect_stdout,
+        )
+        with progress:
+            yield RichTaskFactory(progress)
 
 
 def help_if_no_subcommand(parser: ArgumentParser):
@@ -25,8 +42,8 @@ def run():
     subparsers = parser.add_subparsers(
         metavar="COMMAND",
     )
-    for cmd in (version, db, dump, serve):
-        cmd.add_parser(
+    for module in (version, dump, serve, db, convert):
+        module.add_parser(
             subparsers,
             help_if_no_subcommand=help_if_no_subcommand,
         )
@@ -36,4 +53,4 @@ def run():
         parser.print_help(stderr)
         exit(127)
 
-    args.func(Context(args))
+    args.func(Context(args=args))
