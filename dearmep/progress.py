@@ -34,7 +34,7 @@ class BaseTask:
             self.done()
         return False
 
-    def advance(self, amount: float):
+    def advance(self, amount: float = 1.):
         self._completed += amount
 
     @property
