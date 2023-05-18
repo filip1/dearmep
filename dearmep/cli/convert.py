@@ -12,7 +12,7 @@ def run_csv2json(ctx: Context):
     with ctx.task_factory() as tf:
         for jsonstr in json.obj2json(
             csv.csv2dict(ctx.args.input, tf),
-            tf,
+            ctx.dummy_factory,
             compact=ctx.args.compact,
             ascii_only=not ctx.args.non_ascii,
         ):
