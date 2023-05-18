@@ -12,17 +12,19 @@ from ..progress import RichTaskFactory
 
 
 class Context:
-    def __init__(self, *, args: Namespace):
+    def __init__(self, *, args: Namespace, raw_stdout: bool = False):
         self.args = args
-        self.console = Console(stderr=True)
+        # Let the Console run on stderr if we need stdout for raw data.
+        self.console = Console(stderr=raw_stdout)
+        self.raw_stdout = raw_stdout
 
     @contextmanager
-    def task_factory(self, redirect_stdout: bool = False):
+    def task_factory(self):
         progress = Progress(
             console=self.console,
             # This needs to be False for commands that dump actual data to
             # standard output, else Rich will mangle it.
-            redirect_stdout=redirect_stdout,
+            redirect_stdout=not self.raw_stdout,
         )
         with progress:
             yield RichTaskFactory(progress)
@@ -50,4 +52,8 @@ def run():
     help_if_no_subcommand(parser)
     args = parser.parse_args()
 
-    args.func(Context(args=args))
+    args.func(Context(
+        args=args,
+        # Commands can opt-in to have a raw stdout.
+        raw_stdout=getattr(args, "raw_stdout", False),
+    ))

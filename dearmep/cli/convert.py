@@ -1,6 +1,5 @@
 from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
-from time import sleep
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -17,7 +16,6 @@ def run_csv2json(ctx: Context):
             compact=ctx.args.compact,
             ascii_only=not ctx.args.non_ascii,
         ):
-            sleep(0.1)
             print(jsonstr)
 
 
@@ -49,6 +47,6 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         action="store_true",
         help="don't escape non-ASCII characters in the JSON output",
     )
-    csv2json.set_defaults(func=run_csv2json)
+    csv2json.set_defaults(func=run_csv2json, raw_stdout=True)
 
     help_if_no_subcommand(parser)
