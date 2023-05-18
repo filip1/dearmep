@@ -8,7 +8,7 @@ from rich.progress import Progress
 
 from . import convert, db, dump, serve, version
 from ..config import CMD_NAME
-from ..progress import RichTaskFactory
+from ..progress import DummyTaskFactory, RichTaskFactory
 
 
 class Context:
@@ -17,6 +17,7 @@ class Context:
         # Let the Console run on stderr if we need stdout for raw data.
         self.console = Console(stderr=raw_stdout)
         self.raw_stdout = raw_stdout
+        self.dummy_factory = DummyTaskFactory()
 
     @contextmanager
     def task_factory(self):
