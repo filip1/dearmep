@@ -13,11 +13,7 @@ def obj2json(
 ) -> Iterable[str]:
     """Convert objects to JSON."""
     seps = (",", ":") if compact else (", ", ": ")
-    try:
-        size = len(input)
-    except TypeError:
-        size = None
-    with tf.create_task("converting to JSON", total=size) as task:
+    with tf.create_task("converting to JSON", total=input) as task:
         for obj in input:
             yield json.dumps(
                 obj,

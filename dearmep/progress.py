@@ -1,8 +1,10 @@
 from __future__ import annotations
 from argparse import ArgumentParser
+from collections.abc import Sized
 from contextlib import contextmanager
 from functools import partial
 import io
+from numbers import Real
 import os
 from pathlib import Path
 import sys
@@ -17,10 +19,11 @@ class BaseTask:
         self,
         description: str,
         *,
-        total: Optional[float] = None,
+        total: Union[Sized, float, None] = None,
     ):
         self._description = description
-        self._total = total
+        self._total: Optional[float] = len(total) if isinstance(total, Sized) \
+            else (total if isinstance(total, Real) else None)
         self._completed = 0.
 
     def __enter__(self):
@@ -65,11 +68,11 @@ class RichTask(BaseTask):
         self,
         description: str,
         progress: RichProgress,
-        total: Optional[float] = None,
+        total: Union[Sized, float, None] = None,
     ):
         super().__init__(description, total=total)
         self._progress = progress
-        self._id = progress.add_task(self._description, total=total)
+        self._id = progress.add_task(self._description, total=self._total)
         self._task = self._get_task()
 
     def _get_task(self) -> _RichTask:
