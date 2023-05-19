@@ -7,6 +7,7 @@ import io
 from numbers import Real
 import os
 from pathlib import Path
+import stat
 import sys
 from typing import IO, Any, Dict, Optional, Union
 import warnings
@@ -246,9 +247,7 @@ class FlexiReader:
         stream = self._stream
         if not (stream and hasattr(stream, "fileno")):
             return None
-        size = os.fstat(stream.fileno()).st_size
-        # Non-file streams like stdin will have a size of 0, but can be
-        # distinguished from 0-byte files by whether tell() is working.
-        if size == 0 and not self.can_tell:
-            return None
-        return size
+        stats = os.fstat(stream.fileno())
+        # Iff the file descriptor is a regular file, we can retrieve its size.
+        # Note that this also works on stdin, if it is redirected from a file.
+        return stats.st_size if stat.S_ISREG(stats.st_mode) else None
