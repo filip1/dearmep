@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 import stat
 import sys
-from typing import IO, Any, Dict, Optional, Union
+from typing import IO, Any, Dict, Generator, Iterable, Optional, Union
 import warnings
 
 from rich.progress import Progress as RichProgress, Task as _RichTask
@@ -60,7 +60,8 @@ class BaseTask:
 
 class DummyTask(BaseTask):
     @classmethod
-    def if_no(cls, existing_task: Optional[BaseTask]) -> BaseTask:
+    def if_no(cls, existing_task: Optional[BaseTask] = None) -> BaseTask:
+        """Return `existing_task` or, if `None`, a new `DummyTask`."""
         return existing_task if existing_task else cls("Dummy")
 
 
@@ -137,9 +138,9 @@ class FlexiReader:
         self._input = input
         self._stream: Optional[IO[str]] = None
         self._reconfigure = reconfigure
-        self._did_open = False
-        self.task = None
-        self.can_tell: Optional[bool] = None
+        self._did_open: bool = False
+        self.task = DummyTask.if_no()
+        self.can_tell: bool = False
 
     @classmethod
     def add_as_argument(
@@ -151,6 +152,7 @@ class FlexiReader:
         constructor_args: Dict[str, Any] = {},
         **kwargs,
     ):
+        """Create an `ArgumentParser` argument that becomes a `FlexiReader`."""
         if not names:
             names = ("input",) if positional else ("-i", "--input")
         constructor = partial(
@@ -191,9 +193,11 @@ class FlexiReader:
             raise IOError("context was already entered")
         if isinstance(self._input, Path):
             self._stream = self._input.open("r")
-            self._did_open = True
+            self._did_open = True  # we need to close it on exit
         else:
             self._stream = self._input
+
+        # Now that the stream is opened, reconfigure it if requested.
         if self._reconfigure:
             if hasattr(self._stream, "reconfigure"):
                 self._stream.reconfigure(**self._reconfigure)
@@ -204,6 +208,7 @@ class FlexiReader:
                     "reconfiguration"
                 )
 
+        # Check whether the stream supports tell().
         try:
             self._stream.tell()
             self.can_tell = True
@@ -215,13 +220,14 @@ class FlexiReader:
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self._stream is None:
             raise IOError("context was never entered")
-        if self._did_open:
+        if self._did_open:  # we need to close it again
             self._did_open = False
             self._stream.close()
         return False
 
     @property
-    def task(self) -> Optional[BaseTask]:
+    def task(self) -> BaseTask:
+        """The Task that will be updated to show the reading progress."""
         return self._task
 
     @task.setter
@@ -229,7 +235,7 @@ class FlexiReader:
         self._task = DummyTask.if_no(task)
 
     @contextmanager
-    def lines(self):
+    def lines(self) -> Generator[Iterable[str], None, None]:
         with self as stream:
             size = self.size
             if size is not None:
