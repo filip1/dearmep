@@ -216,6 +216,7 @@ class FlexiReader:
         if self._stream is None:
             raise IOError("context was never entered")
         if self._did_open:
+            self._did_open = False
             self._stream.close()
         return False
 
