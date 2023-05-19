@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from . import Context
 from ..convert import csv, json
-from ..progress import FlexiReader
+from ..progress import FlexiStrReader
 
 
 def run_csv2json(ctx: Context):
@@ -32,7 +32,7 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         help="convert CSV to JSON",
         description="Convert CSV data into JSON objects on standard output.",
     )
-    FlexiReader.add_as_argument(
+    FlexiStrReader.add_as_argument(
         csv2json,
         # As requested by the csv module, don't mangle newlines.
         constructor_args={"reconfigure": {"newline": ""}},

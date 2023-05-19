@@ -129,14 +129,16 @@ class RichTaskFactory(BaseTaskFactory):
 
 
 class FlexiReader:
+    OPEN_FLAGS = ""
+
     def __init__(
         self,
-        input: Union[IO[str], Path],
+        input: Union[IO, Path],
         *,
         reconfigure: Dict[str, Any] = {},
     ):
         self._input = input
-        self._stream: Optional[IO[str]] = None
+        self._stream: Optional[IO] = None
         self._reconfigure = reconfigure
         self._did_open: bool = False
         self.task = DummyTask.if_no()
@@ -188,11 +190,11 @@ class FlexiReader:
             return cls(sys.stdin, **constructor_args)
         return cls(Path(filename), **constructor_args)
 
-    def __enter__(self) -> IO[str]:
+    def __enter__(self) -> IO:
         if self._stream is not None:
             raise IOError("context was already entered")
         if isinstance(self._input, Path):
-            self._stream = self._input.open("r")
+            self._stream = self._input.open(f"r{self.OPEN_FLAGS}")
             self._did_open = True  # we need to close it on exit
         else:
             self._stream = self._input
@@ -234,6 +236,26 @@ class FlexiReader:
     def task(self, task: Optional[BaseTask]):
         self._task = DummyTask.if_no(task)
 
+    @property
+    def size(self) -> Optional[int]:
+        stream = self._stream
+        if not (stream and hasattr(stream, "fileno")):
+            return None
+        stats = os.fstat(stream.fileno())
+        # Iff the file descriptor is a regular file, we can retrieve its size.
+        # Note that this also works on stdin, if it is redirected from a file.
+        return stats.st_size if stat.S_ISREG(stats.st_mode) else None
+
+
+class FlexiStrReader(FlexiReader):
+    def __init__(
+        self,
+        input: Union[IO[str], Path],
+        *,
+        reconfigure: Dict[str, Any] = {},
+    ):
+        super().__init__(input, reconfigure=reconfigure)
+
     @contextmanager
     def lines(self) -> Generator[Iterable[str], None, None]:
         with self as stream:
@@ -248,13 +270,3 @@ class FlexiReader:
                         self._task.completed = stream.tell()
 
             yield generator()
-
-    @property
-    def size(self) -> Optional[int]:
-        stream = self._stream
-        if not (stream and hasattr(stream, "fileno")):
-            return None
-        stats = os.fstat(stream.fileno())
-        # Iff the file descriptor is a regular file, we can retrieve its size.
-        # Note that this also works on stdin, if it is redirected from a file.
-        return stats.st_size if stat.S_ISREG(stats.st_mode) else None

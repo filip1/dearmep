@@ -1,11 +1,11 @@
 import csv
 from typing import Dict, Iterable, Optional, Sequence
 
-from ..progress import BaseTaskFactory, FlexiReader
+from ..progress import BaseTaskFactory, FlexiStrReader
 
 
 def csv2dict(
-    input: FlexiReader,
+    input: FlexiStrReader,
     tf: BaseTaskFactory,
     fieldnames: Optional[Sequence[str]] = None,
 ) -> Iterable[Dict[str, str]]:
