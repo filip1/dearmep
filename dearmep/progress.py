@@ -1,7 +1,6 @@
 from __future__ import annotations
 from argparse import ArgumentParser
 from collections.abc import Sized
-from contextlib import contextmanager
 from functools import partial
 from io import BufferedReader, TextIOWrapper, UnsupportedOperation
 from numbers import Real
@@ -9,8 +8,8 @@ import os
 from pathlib import Path
 import stat
 import sys
-from typing import IO, Any, Callable, Dict, Generator, Iterable, Literal, \
-    Optional, Tuple, TypeVar, Union, overload
+from typing import IO, Any, Callable, Dict, Iterator, Literal, Optional, \
+    Tuple, TypeVar, Union, overload
 import warnings
 
 from rich.progress import Progress as RichProgress, Task as _RichTask
@@ -347,11 +346,5 @@ class FlexiStrReader(FlexiReader):
     def _stdin() -> IO:
         return sys.stdin
 
-    @contextmanager
-    def lines(self) -> Generator[Iterable[str], None, None]:
-        with self as stream:
-            def generator():
-                while line := stream.readline():
-                    yield line
-
-            yield generator()
+    def __iter__(self) -> Iterator[str]:
+        return iter(self._stream)

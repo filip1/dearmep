@@ -12,6 +12,6 @@ def csv2dict(
     """Convert CSV data into a dict."""
     with tf.create_task("parsing CSV") as task:
         input.set_task(task)
-        with input.lines() as lines:
-            reader = csv.DictReader(lines, fieldnames)
+        with input:
+            reader = csv.DictReader(input, fieldnames)
             yield from reader
