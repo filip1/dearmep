@@ -317,19 +317,19 @@ l10n:
     talkingPoints.points.0.title:
       en: Illegal Surveillance
     talkingPoints.points.0.body:
-      en: The independend research services of the EU Commission, Parliament and Council all agree, this law is unconstitutional and would not survive the high court. No child is protected, if this law is struck down in court in three years. 
+      en: The independent research services of the EU Commission, Parliament and Council all agree, this law is unconstitutional and would not survive the high court. No child is protected, if this law is struck down in court in three years.
     talkingPoints.points.1.title:
-      en: Magic Technology won't safe us
+      en: Magic Technology won't save us
     talkingPoints.points.1.body:
-      en: There is no filter technology in the world that can accurately detect these type of illegal content. With the billions of messages Europeans send every day, hundrets of millions of legal messages would end up with the police. Legal speech would be deleted on a massive scale. 
+      en: There is no filter technology in the world that can accurately detect these type of illegal content. With the billions of messages Europeans send every day, hundreds of millions of legal messages would end up with the police. Legal speech would be deleted on a massive scale.
     talkingPoints.points.2.title:
-      en: Police will be overwhelmed with false positives 
+      en: Police will be overwhelmed with false positives
     talkingPoints.points.2.body:
-      en: Computers are well suited to test the hypothesis of a suspicion, but they are ill-suited to initiate suspicions against someone. Police already can't handle the case load and with these new automated tools million more false positives would end up on their desks. That will valuable time away from investigating real perpetrators. 
+      en: Computers are well suited to test the hypothesis of a suspicion, but they are ill-suited to initiate suspicions against someone. Police already can't handle the case load and with these new automated tools million more false positives would end up on their desks. That will take valuable time and resources away from investigating real perpetrators.
     talkingPoints.points.3.title:
       en: Encryption is the precondition for privacy, security and trust online
     talkingPoints.points.3.body:
-      en: If encryption is broken for one use case it is broken for all of society. We cannot take the right to secure and private communication away from just a few bad actors. If private messaging or cloud hosting services have to scan the messages of their users, they need to be able to circumvent the protections that right now make such scanning impossible. Intelligence agencies and law enforcement are the main beneficiaries of a world in which no online communication can be trusted. 
+      en: If encryption is broken for one use case it is broken for all of society. We cannot take the right to secure and private communication away from just a few bad actors. If private messaging or cloud hosting services have to scan the messages of their users, they need to be able to circumvent the protections that right now make such scanning impossible. Intelligence agencies and law enforcement are the main beneficiaries of a world in which no online communication can be trusted.
 
   # Translation strings for the language switcher component
 
