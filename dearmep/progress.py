@@ -3,13 +3,14 @@ from argparse import ArgumentParser
 from collections.abc import Sized
 from contextlib import contextmanager
 from functools import partial
-import io
+from io import BufferedReader, TextIOWrapper, UnsupportedOperation
 from numbers import Real
 import os
 from pathlib import Path
 import stat
 import sys
-from typing import IO, Any, Dict, Generator, Iterable, Optional, Union
+from typing import IO, Any, Callable, Dict, Generator, Iterable, Literal, \
+    Optional, Tuple, TypeVar, Union, overload
 import warnings
 
 from rich.progress import Progress as RichProgress, Task as _RichTask
@@ -128,9 +129,66 @@ class RichTaskFactory(BaseTaskFactory):
         return RichTask(description, self._progress, **kwargs)
 
 
-class FlexiReader:
-    OPEN_FLAGS = ""
+SB = TypeVar("SB", str, bytes)
 
+
+class TrackingMixin:
+    def _with_tracking(self, val: SB, tellfunc: Callable[[], int]) -> SB:
+        if self._can_tell is True and self._task:
+            self._task.completed = tellfunc()
+        return val
+
+    def init_tracking(
+        self,
+        *,
+        task: Optional[BaseTask] = None,
+        can_tell: bool = False,
+    ):
+        self._task = task
+        self._can_tell = bool(can_tell)
+        fileno: Optional[int] = getattr(self, "fileno", lambda: None)()
+        if self._task and fileno is not None:
+            stats = os.fstat(fileno)
+            # Iff the file descriptor is a regular file, we can retrieve its
+            # size. Note that this also works on stdin, if it is redirected
+            # from a file.
+            if stat.S_ISREG(stats.st_mode):
+                self._task.total = stats.st_size
+        return self
+
+
+# Deriving from the builtin io classes alone, in combination with
+# TrackingMixin, will cause type errors with mypy even on a completely empty
+# class. I don't think this is our fault, but this is why we have these "type:
+# ignore" markers.
+
+
+class TrackingBytesReader(BufferedReader, TrackingMixin):  # type: ignore[misc]
+    def read(self, size: Optional[int] = -1) -> bytes:
+        return self._with_tracking(super().read(size), self.tell)
+
+    def read1(self, size: int = -1) -> bytes:
+        return self._with_tracking(super().read1(size), self.tell)
+
+
+class TrackingStrReader(TextIOWrapper, TrackingMixin):  # type: ignore[misc]
+    def read(self, size: Optional[int] = -1) -> str:
+        return self._with_tracking(super().read(size), self.buffer.tell)
+
+    def readline(  # type: ignore[override]
+        self,
+        size: Optional[int] = -1,
+    ) -> str:
+        return self._with_tracking(
+            super().readline(-1 if size is None else size),
+            self.buffer.tell,
+        )
+
+
+AnyTrackingReader = Union[TrackingBytesReader, TrackingStrReader]
+
+
+class FlexiReader:
     def __init__(
         self,
         input: Union[IO, Path],
@@ -138,11 +196,11 @@ class FlexiReader:
         reconfigure: Dict[str, Any] = {},
     ):
         self._input = input
+        self._orig_stream: Optional[IO] = None
         self._stream: Optional[IO] = None
         self._reconfigure = reconfigure
         self._did_open: bool = False
-        self.task = DummyTask.if_no()
-        self.can_tell: bool = False
+        self._task: Optional[BaseTask] = None
 
     @classmethod
     def add_as_argument(
@@ -187,22 +245,34 @@ class FlexiReader:
     ) -> FlexiReader:
         """Create a new FlexiReader, interpreting str argument as file name."""
         if filename == "-" and dash_stdin:
-            return cls(sys.stdin, **constructor_args)
+            return cls(cls._stdin(), **constructor_args)
         return cls(Path(filename), **constructor_args)
 
-    def __enter__(self) -> IO:
+    @staticmethod
+    def _stdin() -> IO:
+        return sys.stdin.buffer
+
+    @overload
+    def _prepare(self, open_flags: Literal["r"]) -> Tuple[IO[str], bool]:
+        ...
+
+    @overload
+    def _prepare(self, open_flags: Literal["rb"]) -> Tuple[IO[bytes], bool]:
+        ...
+
+    def _prepare(self, open_flags: str) -> Tuple[IO, bool]:
         if self._stream is not None:
             raise IOError("context was already entered")
         if isinstance(self._input, Path):
-            self._stream = self._input.open(f"r{self.OPEN_FLAGS}")
+            stream = self._input.open(open_flags)
             self._did_open = True  # we need to close it on exit
         else:
-            self._stream = self._input
+            stream = self._input
 
         # Now that the stream is opened, reconfigure it if requested.
         if self._reconfigure:
-            if hasattr(self._stream, "reconfigure"):
-                self._stream.reconfigure(**self._reconfigure)
+            if hasattr(stream, "reconfigure"):
+                stream.reconfigure(**self._reconfigure)
             else:
                 warnings.warn(
                     f"reconfiguration of stream {self._input} was requested "
@@ -212,39 +282,41 @@ class FlexiReader:
 
         # Check whether the stream supports tell().
         try:
-            self._stream.tell()
-            self.can_tell = True
-        except io.UnsupportedOperation:
-            self.can_tell = False
+            stream.tell()
+            can_tell = True
+        except UnsupportedOperation:
+            can_tell = False
 
-        return self._stream
+        return stream, can_tell
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self._stream is None:
             raise IOError("context was never entered")
+        self._stream.close()
         if self._did_open:  # we need to close it again
             self._did_open = False
-            self._stream.close()
+            self._orig_stream.close()
         return False
 
-    @property
-    def task(self) -> BaseTask:
-        """The Task that will be updated to show the reading progress."""
-        return self._task
+    def set_task(self, task: BaseTask):
+        self._task = task
 
-    @task.setter
-    def task(self, task: Optional[BaseTask]):
-        self._task = DummyTask.if_no(task)
 
-    @property
-    def size(self) -> Optional[int]:
-        stream = self._stream
-        if not (stream and hasattr(stream, "fileno")):
-            return None
-        stats = os.fstat(stream.fileno())
-        # Iff the file descriptor is a regular file, we can retrieve its size.
-        # Note that this also works on stdin, if it is redirected from a file.
-        return stats.st_size if stat.S_ISREG(stats.st_mode) else None
+class FlexiBytesReader(FlexiReader):
+    def __enter__(self) -> TrackingBytesReader:
+        stream, can_tell = self._prepare("rb")
+
+        # Put the stream into a tracking wrapper.
+        self._orig_stream = stream
+        self._stream: TrackingBytesReader = TrackingBytesReader(
+            # TODO: can we get rid of the `type: ignore`?
+            stream,  # type: ignore[arg-type]
+        ).init_tracking(
+            can_tell=can_tell,
+            task=self._task,
+        )
+
+        return self._stream
 
 
 class FlexiStrReader(FlexiReader):
@@ -256,17 +328,30 @@ class FlexiStrReader(FlexiReader):
     ):
         super().__init__(input, reconfigure=reconfigure)
 
+    def __enter__(self) -> TrackingStrReader:
+        stream, can_tell = self._prepare("r")
+
+        # Put the stream into a tracking wrapper.
+        self._orig_stream = stream
+        self._stream: TrackingStrReader = TrackingStrReader(
+            # TODO: can we get rid of the `type: ignore`?
+            stream.buffer,  # type: ignore[attr-defined]
+        ).init_tracking(
+            can_tell=can_tell,
+            task=self._task,
+        )
+
+        return self._stream
+
+    @staticmethod
+    def _stdin() -> IO:
+        return sys.stdin
+
     @contextmanager
     def lines(self) -> Generator[Iterable[str], None, None]:
         with self as stream:
-            size = self.size
-            if size is not None:
-                self._task.total = size
-
             def generator():
                 while line := stream.readline():
                     yield line
-                    if self.can_tell:
-                        self._task.completed = stream.tell()
 
             yield generator()
