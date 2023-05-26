@@ -109,7 +109,7 @@ l10n:
     # Main title of the campaign.
     # Ideally this should be short, concise and no more than two lines.
     title:
-      en: Call your MEP! Lorem ipsum dolor sit
+      en: Stop Scaning Me! The EU wants to scan all our private chat messages
 
   # Translation strings for the calling-section on the right side of the screen
 
@@ -148,8 +148,7 @@ l10n:
     # Make sure to use a short and concise title. Ideally it should be no more than two or three
     # lines of text.
     call.home.title:
-      en: Contact your Member of the European Parliament. You can call now or schedule
-        calls in the future.
+      en: Contact your Member of the European Parliament. Make your voice heard and convince them to stop the chatcontrol bill! 
 
     # Description paragraphs of the calling-section of the app.
     # The paragraphs are displayed in the first step (thus "home") of the calling flow. This means
@@ -162,10 +161,9 @@ l10n:
     # Make sure to write short and concise paragraphs. Each paragraph should not be more than two or three
     # lines of text.
     call.home.descriptions.0.text:
-      en: We will call you right away and connect you for free.
+      en: You can call now or schedule daily or weekly calls in the future. 
     call.home.descriptions.1.text:
-      en: Rorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
-        et velit interdum.
+      en: We will always connect you free of charge to the Politican that you are most likely to convince. 
 
   # Translation strings related to the phone number verification step in the frontend
   # This step consists of three sub-steps: "enterNumber", "enterCode", "success"
@@ -280,7 +278,7 @@ l10n:
 
     # Placeholder for a text-area that can be used to enter additional feedback in textual form.
     feedback.additionalFeedbackPlaceholder:
-      en: If you have any additional feedback, please type it in here …
+      en: If you have any additional feedback, please type it in here … If you want us to contact you for a debrief, please provide your contact information here. 
 
     # Submit button that allows the user to send their feedback.
     feedback.submit:
@@ -293,7 +291,7 @@ l10n:
     # This text is not normally visible in the screen it is only supposed to explain the functionality of the
     # button on hover and for screenreaders.
     select-mep.autorenew:
-      en: Choose another MEP
+      en: Choose another Politician
 
     # Label for the select-form-control that lets the user choose a different country for the automatic or
     # manual selection of MEPs
@@ -317,25 +315,21 @@ l10n:
     # Ideally the number of talking-points should not be greater than four since everything beyond that will likeley not be seen
     # by many users because scrolling would be required.
     talkingPoints.points.0.title:
-      en: Argument 1
+      en: Illegal Surveillance
     talkingPoints.points.0.body:
-      en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
-        et velit interdum, ac aliquet odio mattis.
+      en: The independend research services of the EU Commission, Parliament and Council all agree, this law is unconstitutional and would not survive the high court. No child is protected, if this law is struck down in court in three years. 
     talkingPoints.points.1.title:
-      en: Argument 2
+      en: Magic Technology won't safe us
     talkingPoints.points.1.body:
-      en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
-        et velit interdum, ac aliquet odio mattis.
+      en: There is no filter technology in the world that can accurately detect these type of illegal content. With the billions of messages Europeans send every day, hundrets of millions of legal messages would end up with the police. Legal speech would be deleted on a massive scale. 
     talkingPoints.points.2.title:
-      en: Argument 3
+      en: Police will be overwhelmed with false positives 
     talkingPoints.points.2.body:
-      en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
-        et velit interdum, ac aliquet odio mattis.
+      en: Computers are well suited to test the hypothesis of a suspicion, but they are ill-suited to initiate suspicions against someone. Police already can't handle the case load and with these new automated tools million more false positives would end up on their desks. That will valuable time away from investigating real perpetrators. 
     talkingPoints.points.3.title:
-      en: Argument 4
+      en: Encryption is the precondition for privacy, security and trust online
     talkingPoints.points.3.body:
-      en: Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero
-        et velit interdum, ac aliquet odio mattis.
+      en: If encryption is broken for one use case it is broken for all of society. We cannot take the right to secure and private communication away from just a few bad actors. If private messaging or cloud hosting services have to scan the messages of their users, they need to be able to circumvent the protections that right now make such scanning impossible. Intelligence agencies and law enforcement are the main beneficiaries of a world in which no online communication can be trusted. 
 
   # Translation strings for the language switcher component
 
@@ -358,7 +352,7 @@ l10n:
   # Keep in mind that the content should fit in a single line of text in order to not break the layout.
     footer.contentHtml:
       en: <a href="https://dearmep.eu" target="_blank">DearMEP</a>&nbsp;powered by&nbsp;
-          <a href="https://epicenter.works" target="_blank">Epicenter.works</a>
+          <a href="https://en.epicenter.works" target="_blank">Epicenter.works</a>
 
   # Translation strings for the call-scheduling section of the app.
 
