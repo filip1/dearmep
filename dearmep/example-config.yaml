@@ -188,8 +188,7 @@ l10n:
     verification.enterNumber.description:
       en: Please enter your own phone number and we will send you a one time password
         to verify your number.
-      de_DE: Gib bitte deine eigene Telefonnummer an, damit wir dir
-      einen Code zur Bestätigung deiner Nummer schicken können.
+      de_DE: Gib bitte deine eigene Telefonnummer an, damit wir dir einen Code zur Bestätigung deiner Nummer schicken können.
 
     # Label that describes the number-input of the first step of the phone number verification
     verification.enterNumber.numberFieldLabel:
