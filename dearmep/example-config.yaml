@@ -156,6 +156,7 @@ l10n:
     # lines of text.
     call.home.title:
       en: Contact your Member of the European Parliament. Make your voice heard and convince them to stop the chatcontrol bill! 
+      de_DE: Sprich mit deinen Abgeordneten im EU Parlament. Überzeuge sie den Gesetzesvorschlag zur Chatkontrolle zu stoppen!
 
     # Description paragraphs of the calling-section of the app.
     # The paragraphs are displayed in the first step (thus "home") of the calling flow. This means
@@ -218,8 +219,7 @@ l10n:
     # they entered the number correcly in case the verification SMS is somehow delayed or fails to arrive.
     verification.enterCode.description:
       en: Please check you phone. We've sent a code to {{ number }}.
-      de_DE: Wir haben einen Code an {{ number }} geschickt. Bitte
-      schau auf deinem Telefon nach.
+      de_DE: Wir haben einen Code an {{ number }} geschickt. Bitte schau auf deinem Telefon nach.
 
     # Description text for the link-button that allowes the user to go one step back and edit the number in order
     # to resend the verification SMS to the correct number.
@@ -262,7 +262,7 @@ l10n:
       en: Please have your mobile phone ready. We will call you right away and connect
         you with {{ mep }}.
       de_DE: Halte dein Mobiltelefon bereit. Wir werden dich umgehend
-      anrufen und mit {{ mep }} verbinden.
+        anrufen und mit {{ mep }} verbinden.
 
   # Translation strings related to the feedback step that will be displayed as soon as the user is connected to the MEP.
   # This means the feedback can already be entered during the call. This can be helpful for textual notes during the call.
@@ -276,7 +276,7 @@ l10n:
     # The intention of the question is to ask the user whether they beleive they were able to convice the MEP.
     feedback.convincingQuestion:
       en: Were you able to convince the person?
-      de_DE: Warst du in der Lage, dein Gegegnüber zu überzeugen?
+      de_DE: Warst du in der Lage, dein Gegenüber zu überzeugen?
 
     # First possible answer indicates a strong yes in the question of whether the MEP was convinced.
     feedback.convincingQuestionFeedback.yes:
@@ -369,26 +369,26 @@ l10n:
     talkingPoints.points.2.body:
       en: Computers are well suited to test the hypothesis of a suspicion, but they are ill-suited to initiate suspicions against someone. Police already can't handle the case load and with these new automated tools million more false positives would end up on their desks. That will take valuable time and resources away from investigating real perpetrators.
       de_DE: Computer können automatisiert Nachrichten als verdächtig
-      markieren. Um den Verdacht zu überprüfen und weiter zu verfolgen
-      braucht es aber Menschen. Schon heute kann die Polizei nicht
-      allen Anzeigen nachgehen. Täglich Millionen neuer Anzeigen aufgrund
-      überwiegend falscher Verdachtsfälle würden die Behörden lahmlegen und
-      wertvolle Ressourcen für tatsächliche Strafverfolgung stehlen.
+        markieren. Um den Verdacht zu überprüfen und weiter zu verfolgen
+        braucht es aber Menschen. Schon heute kann die Polizei nicht
+        allen Anzeigen nachgehen. Täglich Millionen neuer Anzeigen aufgrund
+        überwiegend falscher Verdachtsfälle würden die Behörden lahmlegen und
+        wertvolle Ressourcen für tatsächliche Strafverfolgung stehlen.
     talkingPoints.points.3.title:
       en: Encryption is the precondition for privacy, security and trust online
       de_DE: Verschlüsselung bildet die Grundlage für Privatsphäre, Sicherheit und Vertrauen im Netz
     talkingPoints.points.3.body:
       en: If encryption is broken for one use case it is broken for all of society. We cannot take the right to secure and private communication away from just a few bad actors. If private messaging or cloud hosting services have to scan the messages of their users, they need to be able to circumvent the protections that right now make such scanning impossible. Intelligence agencies and law enforcement are the main beneficiaries of a world in which no online communication can be trusted.
       de_DE: Wenn Verschlüsselung für diesen Anwendungsfall
-      ausgehebelt wird, ist sie für die gesamte Gesellschaft
-      verloren. Es ist nicht möglich, lediglich den Verbrechern das
-      Recht auf sichere und vertrauliche Kommunikation zu
-      entziehen. Wenn Dienstleiser für private Kommunikation oder
-      Cloud-Speicher verpflichtet sind die Nachrichten ihrer Anwender
-      zu scannen, müssen sie zwangsläufig den Schutz dieser
-      Nachrichten umgehen. Nachrichtendienste und
-      Strafverfolgungsbehörden sind die Gewinner in einer Welt, in der
-      Kommunikation im Netz nicht mehr vertraut werden kann. 
+        ausgehebelt wird, ist sie für die gesamte Gesellschaft
+        verloren. Es ist nicht möglich, lediglich den Verbrechern das
+        Recht auf sichere und vertrauliche Kommunikation zu
+        entziehen. Wenn Dienstleiser für private Kommunikation oder
+        Cloud-Speicher verpflichtet sind die Nachrichten ihrer Anwender
+        zu scannen, müssen sie zwangsläufig den Schutz dieser
+        Nachrichten umgehen. Nachrichtendienste und
+        Strafverfolgungsbehörden sind die Gewinner in einer Welt, in der
+        Kommunikation im Netz nicht mehr vertraut werden kann. 
 
   # Translation strings for the language switcher component
 
