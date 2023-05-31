@@ -156,7 +156,7 @@ l10n:
     # lines of text.
     call.home.title:
       en: Contact your Member of the European Parliament. Make your voice heard and convince them to stop the chatcontrol bill! 
-      de: Sprich mit deinen Abgeordneten im EU Parlament. Überzeuge sie den Gesetzesvorschlag zur Chatkontrolle zu stoppen!
+      de: Sprich mit deinen Abgeordneten im EU Parlament. Überzeuge sie, den Gesetzesvorschlag zur Chatkontrolle zu stoppen!
 
     # Description paragraphs of the calling-section of the app.
     # The paragraphs are displayed in the first step (thus "home") of the calling flow. This means
@@ -362,11 +362,13 @@ l10n:
       de: Technische Wundermittel sind nicht die Rettung
     talkingPoints.points.1.body:
       en: There is no filter technology in the world that can accurately detect these types of illegal content. With the billions of messages Europeans send every day, hundreds of millions of legal messages would end up with the police. Legal speech would be deleted on a massive scale.
-      de: Keine Filtertechnologie der Welt kann diese Art illegaler Inhalte zuverlässig detektieren. Selbst bei optimistischen Fehlerraten im einstelligen Prozentbereich würden in Anbetracht von Milliarden täglich gesendeter Nachrichten hunderte Millionen harmloser Nachrichten bei der Polizei landen. In unerhörtem Umfang würde freie Rede behindert. 
+      de: Keine Filtertechnologie der Welt kann diese Art illegaler Inhalte zuverlässig detektieren. Selbst bei optimistischen Fehlerraten im einstelligen Prozentbereich würden in Anbetracht von Milliarden täglicher Nachrichten hunderte Millionen harmloser Nachrichten bei der Polizei landen. In unerhörtem Umfang würde freie Rede behindert. 
     talkingPoints.points.2.title:
       en: Chat control does not protect children
+      de: Chatkontrolle schützt Kinder nicht
     talkingPoints.points.2.body:
-      This chat control law will not help to significantly improve the situation of victims. Instead of pouring money into expensive surveillance technologies that don't work, the EU should promote prevention, education and victim protection measures. The EU Commission is preventing meaningful solutions by its narrow focus on surveillance technology as a supposed panacea for complex social problems.
+      en: This chat control law will not help to significantly improve the situation of victims. Instead of pouring money into expensive surveillance technologies that don't work, the EU should promote prevention, education and victim protection measures. The EU Commission is preventing meaningful solutions by its narrow focus on surveillance technology as a supposed panacea for complex social problems.
+      de: Dieses Gesetz wird nicht helfen, die Situation der Opfer wesentlich zu verbessern. Statt Gelder in teure, fehleranfällige Überwachungstechniken zu stecken, sollte die EU Maßnahmen zur Aufklärung und zum Opferschutz fördern. Mit ihrem engen Fokus auf Überwachungstechnologie als Allheilmittel verhindert die EU sinnvolle Lösungsansätze für komplexe soziale Probleme.      
     talkingPoints.points.3.title:
       en: Police will be overwhelmed with false positives
       de: Massenweiser Falschalarm überlastet die Polizei
@@ -375,22 +377,28 @@ l10n:
       de: Computer können automatisiert Nachrichten als verdächtig markieren. Um den Verdacht zu überprüfen und weiter zu verfolgen braucht es aber Menschen. Schon heute kann die Polizei nicht allen Anzeigen nachgehen. Täglich Millionen neuer Anzeigen aufgrund überwiegend falscher Verdachtsfälle würden die Behörden lahmlegen und wertvolle Ressourcen für tatsächliche Strafverfolgung stehlen.
     talkingPoints.points.4.title:
       en: False positives endanger innocent people
+      de: Fehlalarme gefährden Unschuldige
     talkingPoints.points.4.body:
       en: There are already documented cases in which voluntary chat control by companies has led to suspicion reports against innocent people. For example, an American man was reported as an alleged perpetrator even though he was communicating with his child's pediatrician in an acute emergency. The father of the family not only lost access to all his online accounts with the company, but was also reported to the police. With chat control, such false suspicions would happen every day.
+      de: Es gibt bereits bekannte Fälle in denen freiwillige Chatkontrolle durch Unternehmen zu Anzeigen gegen unschuldige Nutzer geführt hat. Zum Beispiel wurde ein Mann in den USA als mutmaßlicher Täter angezeigt, obwohl er nur in einem Notfall mit dem Kinderarzt seines Sohns kommunizierte. Der Vater verlor nicht nur den Zugang zu seinen Nutzerkonten sondern wurde auch bei der Polizei angezeigt. Mit verpflichtender Chatkontrolle würden derartige Fehlalarme ständig passieren.
     talkingPoints.points.5.title:
       en: Encryption is the precondition for privacy, security and trust online
-      de: Verschlüsselung bildet die Grundlage für Privatsphäre, Sicherheit und Vertrauen im Netz
+      de: Verschlüsselung ist Voraussetzung für Privatsphäre, Sicherheit und Vertrauen im Netz
     talkingPoints.points.5.body:
       en: If encryption is broken for one use case it is broken for all of society. We cannot take the right to secure and private communication away from just a few bad actors. If private messaging or cloud hosting services have to scan the messages of their users, they need to be able to circumvent the protections that right now make such scanning impossible. Intelligence agencies but also criminals are the main beneficiaries of a world in which no online communication can be trusted.
       de: Wenn Verschlüsselung für diesen Anwendungsfall ausgehebelt wird, ist sie für die gesamte Gesellschaft verloren. Es ist nicht möglich, lediglich den Verbrechern das Recht auf sichere und vertrauliche Kommunikation zu entziehen. Wenn Dienstleiser für private Kommunikation oder Cloud-Speicher verpflichtet sind die Nachrichten ihrer Anwender zu scannen, müssen sie zwangsläufig den Schutz dieser Nachrichten umgehen. Nachrichtendienste und Strafverfolgungsbehörden sind die Gewinner in einer Welt, in der Kommunikation im Netz nicht mehr vertraut werden kann. 
     talkingPoints.points.6.title:
       en: Threats to professional secrecy
+      de: Gefährdung des Berufsgeheimnisses
     talkingPoints.points.6.body:
       en: The analog equivalent of the current proposal would be, among other things, that in every stairwell there is a machine that reads all the letters we have taken out of the mailbox. Except that we communicate and reveal much more about ourselves and our contacts online than we do with letters. Some professions are bound to secrecy for good reasons, e.g. doctors, lawyers and journalists. Chat control threatens the protection of such professional secrets that are important for our democratic societies.
+      de: Die Entsprechung zum aktuellen Vorschlag wäre in der analogen Welt unter anderem ein Gerät in jedem Treppenaufgang, das jeden Brief liest den wir aus dem Briefkasten holen. Nur dass wir online viel mehr über uns verraten als in Briefen. Das betrifft besonders auch Ärzte, Rechtsanwälte und Journalisten. Für diese Berufe gibt es aus gutem Grund ein Berufsgeheimnis, das essentiell für unsere demokratische Gesellschaft ist.  
     talkingPoints.points.7.title:
       en: Setting a bad example globally
+      de: Schechte Vorbildwirkung weltweit
     talkingPoints.points.7.body:
       en: The GDPR has shown that the European Union can set global standards that other parts of the world will follow. If this legislation is passed, the European Union is giving authoritarian governments around the world an excuse to implement mass surveillance plans with a similar design. Such a surveillance infrastructure can easily be misused for other purposes once it has been created.
+      de: Die DSGVO hat gezeigt, dass die EU weltweit Standards setzen kann, denen andere Teile der Welt folgen. Falls die Gesetzgebung zur Chatkontrolle angenommen wird, bietet die EU autoritären Regimen eine Ausrede, ähnliche Maßnahmen zur Massenüberwachung einzuführen. Wenn einmal vorhanden, kann eine derartige Überwachungsinfrastruktur leicht für andere Zwecke missbraucht werden.  
 
   # Translation strings for the language switcher component
 
@@ -414,6 +422,8 @@ l10n:
     footer.contentHtml:
       en: <a href="https://dearmep.eu" target="_blank">DearMEP</a>&nbsp;powered by&nbsp;
           <a href="https://en.epicenter.works" target="_blank">Epicenter.works</a>
+      de: <a href="https://dearmep.eu" target="_blank">DearMEP</a>&nbsp;powered by&nbsp;
+          <a href="https://epicenter.works" target="_blank">Epicenter.works</a>
 
   # Translation strings for the call-scheduling section of the app.
 
