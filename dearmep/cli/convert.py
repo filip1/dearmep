@@ -108,8 +108,9 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         help="list all votes for/against a given topic",
     )
     rcv_votes.add_argument(
-        "topic",
+        "--topic", "-t",
         help="ID of the topic to return the votes for",
+        required=True,
     )
     rcv_template(rcv_votes, rollcallvote_votes)
 
