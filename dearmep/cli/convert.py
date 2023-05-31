@@ -4,10 +4,9 @@ from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
     from . import Context
-from ..convert import csv, json
 from ..convert.europarl import rollcallvote
 from ..convert.tabular import CSVStreamTabular, Tabular
-from ..progress import FlexiBytesReader, FlexiStrReader
+from ..progress import FlexiBytesReader
 
 
 def tabular_class(ctx: Context):
@@ -17,17 +16,6 @@ def tabular_class(ctx: Context):
         return CSVStreamTabular
     else:
         return Tabular
-
-
-def run_csv2json(ctx: Context):
-    with ctx.task_factory() as tf:
-        for jsonstr in json.obj2json(
-            csv.csv2dict(ctx.args.input, tf),
-            ctx.dummy_factory,
-            compact=ctx.args.compact,
-            ascii_only=not ctx.args.non_ascii,
-        ):
-            print(jsonstr)
 
 
 def rollcallvote_topics(ctx: Context):
@@ -68,28 +56,6 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         description="Convert several data formats into others.",
     )
     subsub = parser.add_subparsers(metavar="CONVERTER")
-
-    csv2json = subsub.add_parser(
-        "csv2json",
-        help="convert CSV to JSON",
-        description="Convert CSV data into JSON objects on standard output.",
-    )
-    FlexiStrReader.add_as_argument(
-        csv2json,
-        # As requested by the csv module, don't mangle newlines.
-        constructor_args={"reconfigure": {"newline": ""}},
-    )
-    csv2json.add_argument(
-        "--compact",
-        action="store_true",
-        help="remove unnecessary whitespace",
-    )
-    csv2json.add_argument(
-        "--non-ascii",
-        action="store_true",
-        help="don't escape non-ASCII characters in the JSON output",
-    )
-    csv2json.set_defaults(func=run_csv2json, raw_stdout=True)
 
     rcv = subsub.add_parser(
         "europarl.rollcallvote",
