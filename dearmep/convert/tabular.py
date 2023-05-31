@@ -4,6 +4,7 @@ from itertools import chain
 import sys
 from typing import Any, Iterable, List, Mapping, Optional
 
+from rich.console import Console
 from rich.table import Table
 
 
@@ -56,6 +57,9 @@ class Tabular:
                 )
             self._rows.append(values)
 
+    def print_to_console(self, console: Console):
+        console.print(self.to_rich_table())
+
     def to_rich_table(self, **kwargs) -> Table:
         t = Table(*self._headers, **kwargs)
         for row in self._rows:
@@ -83,3 +87,7 @@ class CSVStreamTabular(Tabular):
                     f"expected {num_headers}"
                 )
             self._csvw.writerow(row)
+
+    def print_to_console(self, console: Console):
+        # We have already printed our stuff, nothing to do here.
+        pass

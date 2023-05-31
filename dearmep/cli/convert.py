@@ -37,7 +37,7 @@ def rollcallvote_topics(ctx: Context):
             tf,
             tabular_class(ctx),
         )
-    ctx.console.print(table.to_rich_table())
+    table.print_to_console(ctx.console)
 
 
 def rollcallvote_votes(ctx: Context):
@@ -48,7 +48,7 @@ def rollcallvote_votes(ctx: Context):
             tabular_class(ctx),
             ctx.args.topic,
         )
-    ctx.console.print(table.to_rich_table())
+    table.print_to_console(ctx.console)
 
 
 def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
