@@ -50,7 +50,7 @@ def list_votes(
     table_class: Type[T],
     topic: str,
 ) -> T:
-    table = table_class("Group", "MEPID", "PersID", "Name", "Vote")
+    table = table_class("PersID", "MEPID", "Group", "Name", "Vote")
     with tf.create_task("parsing XML") as task:
         input.set_task(task)
         with input as stream:
@@ -73,9 +73,9 @@ def list_votes(
                             if person_child.tagName != MEMBER_TAG:
                                 continue
                             table.append(
-                                group,
-                                person_child.getAttribute("MepId"),
                                 person_child.getAttribute("PersId"),
+                                person_child.getAttribute("MepId"),
+                                group,
                                 get_text(person_child),
                                 vote,
                             )
