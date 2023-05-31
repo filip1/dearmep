@@ -283,7 +283,7 @@ class FlexiReader:
         try:
             stream.tell()
             can_tell = True
-        except UnsupportedOperation:
+        except (OSError, UnsupportedOperation):
             can_tell = False
 
         return stream, can_tell
