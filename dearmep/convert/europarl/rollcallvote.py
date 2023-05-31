@@ -1,3 +1,4 @@
+from typing import Type, TypeVar
 from xml.dom import pulldom
 
 from defusedxml.pulldom import parse as pulldom_parse  # type: ignore[import]
@@ -19,8 +20,15 @@ RESULT_MAP = {
 }
 
 
-def list_topics(input: FlexiBytesReader, tf: BaseTaskFactory) -> Tabular:
-    table = Tabular("ID", "Description")
+T = TypeVar("T", bound=Tabular)
+
+
+def list_topics(
+    input: FlexiBytesReader,
+    tf: BaseTaskFactory,
+    table_class: Type[T],
+) -> T:
+    table = table_class("ID", "Description")
     with tf.create_task("parsing XML") as task:
         input.set_task(task)
         with input as stream:
@@ -39,9 +47,10 @@ def list_topics(input: FlexiBytesReader, tf: BaseTaskFactory) -> Tabular:
 def list_votes(
     input: FlexiBytesReader,
     tf: BaseTaskFactory,
+    table_class: Type[T],
     topic: str,
-) -> Tabular:
-    table = Tabular("Group", "MEPID", "PersID", "Name", "Vote")
+) -> T:
+    table = table_class("Group", "MEPID", "PersID", "Name", "Vote")
     with tf.create_task("parsing XML") as task:
         input.set_task(task)
         with input as stream:

@@ -1,5 +1,7 @@
 from __future__ import annotations
+import csv
 from itertools import chain
+import sys
 from typing import Any, Iterable, List, Mapping, Optional
 
 from rich.table import Table
@@ -59,3 +61,25 @@ class Tabular:
         for row in self._rows:
             t.add_row(*row)
         return t
+
+
+class CSVStreamTabular(Tabular):
+    def __init__(
+        self,
+        *headers: str,
+        rows: Optional[Iterable[Iterable]] = None,
+    ):
+        super().__init__(*headers, rows=rows)
+        self._csvw = csv.writer(sys.stdout)
+        self._csvw.writerow(self._headers)
+
+    def extend(self, *rows: Iterable):
+        num_headers = len(self._headers)
+        for row_num, row in enumerate(rows, 1):
+            values = tuple(row)
+            if len(values) != num_headers:
+                raise ValueError(
+                    f"input row {row_num} has {len(values)} value(s), "
+                    f"expected {num_headers}"
+                )
+            self._csvw.writerow(row)

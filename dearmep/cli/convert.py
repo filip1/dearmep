@@ -1,12 +1,22 @@
 from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
     from . import Context
 from ..convert import csv, json
 from ..convert.europarl import rollcallvote
+from ..convert.tabular import CSVStreamTabular, Tabular
 from ..progress import FlexiBytesReader, FlexiStrReader
+
+
+def tabular_class(ctx: Context):
+    """Return the correct Tabular subclass depending on the output format."""
+    format = ctx.args.output_format
+    if format == "csv":
+        return CSVStreamTabular
+    else:
+        return Tabular
 
 
 def run_csv2json(ctx: Context):
@@ -22,17 +32,36 @@ def run_csv2json(ctx: Context):
 
 def rollcallvote_topics(ctx: Context):
     with ctx.task_factory() as tf:
-        table = rollcallvote.list_topics(ctx.args.input, tf)
+        table = rollcallvote.list_topics(
+            ctx.args.input,
+            tf,
+            tabular_class(ctx),
+        )
     ctx.console.print(table.to_rich_table())
 
 
 def rollcallvote_votes(ctx: Context):
     with ctx.task_factory() as tf:
-        table = rollcallvote.list_votes(ctx.args.input, tf, ctx.args.topic)
+        table = rollcallvote.list_votes(
+            ctx.args.input,
+            tf,
+            tabular_class(ctx),
+            ctx.args.topic,
+        )
     ctx.console.print(table.to_rich_table())
 
 
 def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
+    def rcv_template(parser: ArgumentParser, func: Callable):
+        FlexiBytesReader.add_as_argument(parser)
+        parser.add_argument(
+            "-f", "--output-format",
+            metavar="FORMAT", choices=("csv", "table"),
+            default="table",
+            help="output data format",
+        )
+        parser.set_defaults(func=func, raw_stdout=True)
+
     parser: ArgumentParser = subparsers.add_parser(
         "convert",
         help="convert data formats into others",
@@ -72,8 +101,7 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         "topics",
         help="list all voting topics in the input file",
     )
-    FlexiBytesReader.add_as_argument(rcv_topics)
-    rcv_topics.set_defaults(func=rollcallvote_topics, raw_stdout=True)
+    rcv_template(rcv_topics, rollcallvote_topics)
 
     rcv_votes = rcv_sub.add_parser(
         "votes",
@@ -83,8 +111,7 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         "topic",
         help="ID of the topic to return the votes for",
     )
-    FlexiBytesReader.add_as_argument(rcv_votes)
-    rcv_votes.set_defaults(func=rollcallvote_votes, raw_stdout=True)
+    rcv_template(rcv_votes, rollcallvote_votes)
 
     help_if_no_subcommand(rcv)
 
