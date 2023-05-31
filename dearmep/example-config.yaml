@@ -104,12 +104,14 @@ l10n:
     # {code} will be replaced by a six-digit random number.
     phone_number_verification_sms:
       en: "{code} is your {campaign} verification code. If you think you have received this message in error, simply ignore it."
+      de: "{code} ist dein Verifikationscode für {campaign}. Wenn du glaubst, diese Nachricht irrtümlicherweise erhalten zu haben, ignoriere sie bitte."
 
   frontend_strings:
     # Main title of the campaign.
     # Ideally this should be short, concise and no more than two lines.
     title:
-      en: Stop Scaning Me! The EU wants to scan all our private chat messages
+      en: Stop Scanning Me! The EU wants to scan all our private chat messages
+      de: Stop Scanning Me! Die EU will alle unsere privaten Chatnachrichten scannen 
 
   # Translation strings for the calling-section on the right side of the screen
 
@@ -119,27 +121,32 @@ l10n:
     # before the call is actually started.
     call.start-call-btn.title:
       en: Start Call
+      de: Anruf starten
 
     # Sub-text of primary button that lets the user initiate a call now.
     # Currently the intention of this sub-text is to reassure the user that they will not be charged
     # for the call.
     call.start-call-btn.subtitle:
       en: Free of charge
+      de: Kostenfrei
 
     # Main text of the pimrary button that lets the user initiate the actuall call.
     # After this button is clicked an actual phone-call will be set-up.
     call.call-now-btn.title:
       en: Call Now
+      de: Jetzt anrufen
 
     # Sub-text of the primary button that lets the user initiate the actual call.
     # Currently the intention of this sub-text is to reassure the user that they will not be charged
     # for the call.
     call.call-now-btn.subtitle:
       en: Free of charge
+      de: Kostenfrei
 
     # Text of the button that allows the user to schedule a call at a later point in time.
     call.call-later-btn.title:
       en: Call later
+      de: Später anrufen
 
     # Title of the calling-section of the app.
     # This title is displayed in the first step (thus "home") of the calling flow. This means
@@ -149,6 +156,7 @@ l10n:
     # lines of text.
     call.home.title:
       en: Contact your Member of the European Parliament. Make your voice heard and convince them to stop the chatcontrol bill! 
+      de: Sprich mit deinen Abgeordneten im EU Parlament. Überzeuge sie, den Gesetzesvorschlag zur Chatkontrolle zu stoppen!
 
     # Description paragraphs of the calling-section of the app.
     # The paragraphs are displayed in the first step (thus "home") of the calling flow. This means
@@ -161,9 +169,11 @@ l10n:
     # Make sure to write short and concise paragraphs. Each paragraph should not be more than two or three
     # lines of text.
     call.home.descriptions.0.text:
-      en: You can call now or schedule daily or weekly calls in the future. 
+      en: You can call now or schedule daily or weekly calls in the future.
+      de: Du kannst entweder jetzt anrufen oder für später tägliche oder wöchentliche Anrufe planen.
     call.home.descriptions.1.text:
-      en: We will always connect you free of charge to the Politican that you are most likely to convince. 
+      en: We will always connect you free of charge to the Politican that you are most likely to convince.
+      de: Wir werden dich immer mit dem Politiker verbinden, der wahrscheinlich am leichtesten zu überzeugen ist.
 
   # Translation strings related to the phone number verification step in the frontend
   # This step consists of three sub-steps: "enterNumber", "enterCode", "success"
@@ -172,52 +182,62 @@ l10n:
     # all three sub-steps of the verfication process.
     verification.title:
       en: Verify your phone number
+      de: Bestätige deine Telefonnummer
 
     # Short description of the first step (entering number) of the phone number verification.
     # The description is displayed below the title and above the number-field.
     verification.enterNumber.description:
       en: Please enter your own phone number and we will send you a one time password
         to verify your number.
+      de: Gib bitte deine eigene Telefonnummer an, damit wir dir einen Code zur Bestätigung deiner Nummer schicken können.
 
     # Label that describes the number-input of the first step of the phone number verification
     verification.enterNumber.numberFieldLabel:
       en: Enter your phone number
+      de: Gib deine Telefonnummer ein
 
     # Text for the mandatory privacy-policy checkbox below the number-input.
     # The placeholder {{ policyLink }} is replaced with an HTML A-Tag linking to the privacy
     # policy that is configured to open in a new tab when clicked.
     verification.enterNumber.policy:
       en: I have read and accept the {{ policyLink }}.
+      de: Ich habe die {{ policyLink }} gelesen und akzeptiere sie.
 
     # Link-Text of the privacy-policy link which replaces the {{ policyLink }} placeholder of
     # the translation key "verification.enterNumber.policy"
     verification.enterNumber.policyLinkText:
       en: Privacy Policy
+      de: Datenschutzerklärung
 
     # Button text of the button that lets the user send a verification code to the specified phone number
     verification.enterNumber.sendCode:
       en: Send Code
+      de: Code schicken
 
     # Short description for the second sub-step of the verification (where the user is supposed to enter the code)
     # The placeholder {{ number }} is replaced with the previosly entered number. This allows the user to check if
     # they entered the number correcly in case the verification SMS is somehow delayed or fails to arrive.
     verification.enterCode.description:
       en: Please check you phone. We've sent a code to {{ number }}.
+      de: Wir haben einen Code an {{ number }} geschickt. Bitte schau auf deinem Telefon nach.
 
     # Description text for the link-button that allowes the user to go one step back and edit the number in order
     # to resend the verification SMS to the correct number.
     verification.enterCode.notYourNumber:
       en: Not your number?
+      de: Nicht deine Nummer?
 
     # Label that describes the form field which is used to enter the verification code that was sent via SMS to the
     # users phone.
     verification.enterCode.codeFieldLabel:
       en: Enter your Code
+      de: Code eingeben
 
     # Button text of the button that allows the user to submit the verification code in order to complete the verification
     # process.
     verification.enterCode.verifyCode:
       en: Verify
+      de: Verifizieren
 
     # Message that is displayed in the final sub-step of the verification process informing the user of the successfull
     # verification.
@@ -225,12 +245,14 @@ l10n:
     # After clicking the call-button in this step the call is being set-up instantly without any further confirmations.
     verification.success.message:
       en: 'Succesfully verified with the number: {{ number }}'
+      de: '{{ number }} wurde erfolgreich verifiziert'
 
   # Translation strings related to the step that shows the user that their call is being set up right now.
 
     # Title of the call-setup-page
     callSetup.title:
       en: Your call is being set up
+      de: Dein Anruf wird aufgebaut
 
     # Description of the call-setup-page informing the user that the call is currently being set up meaning their phone
     # is going to ring in the next few seconds.
@@ -239,6 +261,8 @@ l10n:
     callSetup.description:
       en: Please have your mobile phone ready. We will call you right away and connect
         you with {{ mep }}.
+      de: Halte dein Mobiltelefon bereit. Wir werden dich umgehend
+        anrufen und mit {{ mep }} verbinden.
 
   # Translation strings related to the feedback step that will be displayed as soon as the user is connected to the MEP.
   # This means the feedback can already be entered during the call. This can be helpful for textual notes during the call.
@@ -246,43 +270,53 @@ l10n:
     # Title of the feedback step
     feedback.title:
       en: Feedback
+      de: Feedback
 
     # Question-text of the first feedback item. The item is a question with four mutually exclusive radio-buttons.
     # The intention of the question is to ask the user whether they beleive they were able to convice the MEP.
     feedback.convincingQuestion:
       en: Were you able to convince the person?
+      de: Warst du in der Lage, dein Gegenüber zu überzeugen?
 
     # First possible answer indicates a strong yes in the question of whether the MEP was convinced.
     feedback.convincingQuestionFeedback.yes:
       en: 'Yes'
+      de: 'Ja'
 
     # Second possible answer indicates more likely yes than no in the question of whether the MEP was convinced.
     feedback.convincingQuestionFeedback.likelyYes:
       en: likely yes
+      de: Eher ja
 
     # Third possible answer indicates more likely no than yes in the question of whether the MEP was convinced.
     feedback.convincingQuestionFeedback.likelyNo:
       en: likely no
+      de: Eher nicht
 
     # Third possible answer indicates a strong no in the question of whether the MEP was convinced.
     feedback.convincingQuestionFeedback.no:
       en: 'No'
+      de: 'Nein'
 
     # Checkbox-text for a checkbox that lets the user indicate that there were technical problems during the call.
     feedback.technicalProblemsQuestion:
       en: There were technical problems
+      de: Es gab technische Probleme
 
     # Label describing a text-area that can be used to enter additional feedback in textual form.
     feedback.additionalFeedbackQuestion:
       en: Additional feedback
+      de: Weiteres Feedback
 
     # Placeholder for a text-area that can be used to enter additional feedback in textual form.
     feedback.additionalFeedbackPlaceholder:
       en: If you have any additional feedback, please type it in here … If you want us to contact you for a debrief, please provide your contact information here. 
+      de: Falls du uns weiteres Feedback geben möchtest, nutze bitte dieses Feld. 
 
     # Submit button that allows the user to send their feedback.
     feedback.submit:
       en: Submit
+      de: Abschicken
 
   # Translation strings related to the section of the MEP-Selection section on the left side of the screen
 
@@ -292,17 +326,20 @@ l10n:
     # button on hover and for screenreaders.
     select-mep.autorenew:
       en: Choose another Politician
+      de: Einen anderen Politiker wählen
 
     # Label for the select-form-control that lets the user choose a different country for the automatic or
     # manual selection of MEPs
     select-mep.country:
       en: Country
+      de: Land
 
   # Translation strings for the talking-points that will be displayed during the call or while scheduling a call
 
     # Title of the talking-points section
     talkingPoints.title:
       en: Talking Points
+      de: Themen
 
     # Enumeration of talking-points. The numeric index in the key can be used to configure an arbirary number of talking-points
     # starting with the index of zero. Example: "talkingPoints.points.0.title" and "talkingPoints.points.0.body".
@@ -316,20 +353,52 @@ l10n:
     # by many users because scrolling would be required.
     talkingPoints.points.0.title:
       en: Illegal Surveillance
+      de: Illegale Überwachung
     talkingPoints.points.0.body:
       en: The independent research services of the EU Commission, Parliament and Council all agree, this law is unconstitutional and would not survive the high court. No child is protected, if this law is struck down in court in three years.
+      de: Die wissenschaftlichen Dienste von EU-Kommission, Parlament und Rat sind sich einig, dass dieser Gesetzesvorschlag verfassungswidrig ist und vor dem EuGh nicht bestehen würde. 
     talkingPoints.points.1.title:
       en: Magic Technology won't save us
+      de: Technische Wundermittel sind nicht die Rettung
     talkingPoints.points.1.body:
-      en: There is no filter technology in the world that can accurately detect these type of illegal content. With the billions of messages Europeans send every day, hundreds of millions of legal messages would end up with the police. Legal speech would be deleted on a massive scale.
+      en: There is no filter technology in the world that can accurately detect these types of illegal content. With the billions of messages Europeans send every day, hundreds of millions of legal messages would end up with the police. Legal speech would be deleted on a massive scale.
+      de: Keine Filtertechnologie der Welt kann diese Art illegaler Inhalte zuverlässig detektieren. Selbst bei optimistischen Fehlerraten im einstelligen Prozentbereich würden in Anbetracht von Milliarden täglicher Nachrichten hunderte Millionen harmloser Nachrichten bei der Polizei landen. In unerhörtem Umfang würde freie Rede behindert. 
     talkingPoints.points.2.title:
-      en: Police will be overwhelmed with false positives
+      en: Chat control does not protect children
+      de: Chatkontrolle schützt Kinder nicht
     talkingPoints.points.2.body:
-      en: Computers are well suited to test the hypothesis of a suspicion, but they are ill-suited to initiate suspicions against someone. Police already can't handle the case load and with these new automated tools million more false positives would end up on their desks. That will take valuable time and resources away from investigating real perpetrators.
+      en: This chat control law will not help to significantly improve the situation of victims. Instead of pouring money into expensive surveillance technologies that don't work, the EU should promote prevention, education and victim protection measures. The EU Commission is preventing meaningful solutions by its narrow focus on surveillance technology as a supposed panacea for complex social problems.
+      de: Dieses Gesetz wird nicht helfen, die Situation der Opfer wesentlich zu verbessern. Statt Gelder in teure, fehleranfällige Überwachungstechniken zu stecken, sollte die EU Maßnahmen zur Aufklärung und zum Opferschutz fördern. Mit ihrem engen Fokus auf Überwachungstechnologie als Allheilmittel verhindert die EU sinnvolle Lösungsansätze für komplexe soziale Probleme.      
     talkingPoints.points.3.title:
-      en: Encryption is the precondition for privacy, security and trust online
+      en: Police will be overwhelmed with false positives
+      de: Massenweiser Falschalarm überlastet die Polizei
     talkingPoints.points.3.body:
-      en: If encryption is broken for one use case it is broken for all of society. We cannot take the right to secure and private communication away from just a few bad actors. If private messaging or cloud hosting services have to scan the messages of their users, they need to be able to circumvent the protections that right now make such scanning impossible. Intelligence agencies and law enforcement are the main beneficiaries of a world in which no online communication can be trusted.
+      en: Computers are well suited to test the hypothesis of a suspicion, but they are ill-suited to initiate suspicions against someone. Police already can't handle the case load and with these new automated tools million more false positives would end up on their desks. That will take valuable time and resources away from investigating real perpetrators.
+      de: Computer können automatisiert Nachrichten als verdächtig markieren. Um den Verdacht zu überprüfen und weiter zu verfolgen braucht es aber Menschen. Schon heute kann die Polizei nicht allen Anzeigen nachgehen. Täglich Millionen neuer Anzeigen aufgrund überwiegend falscher Verdachtsfälle würden die Behörden lahmlegen und wertvolle Ressourcen für tatsächliche Strafverfolgung stehlen.
+    talkingPoints.points.4.title:
+      en: False positives endanger innocent people
+      de: Fehlalarme gefährden Unschuldige
+    talkingPoints.points.4.body:
+      en: There are already documented cases in which voluntary chat control by companies has led to suspicion reports against innocent people. For example, an American man was reported as an alleged perpetrator even though he was communicating with his child's pediatrician in an acute emergency. The father of the family not only lost access to all his online accounts with the company, but was also reported to the police. With chat control, such false suspicions would happen every day.
+      de: Es gibt bereits bekannte Fälle in denen freiwillige Chatkontrolle durch Unternehmen zu Anzeigen gegen unschuldige Nutzer geführt hat. Zum Beispiel wurde ein Mann in den USA als mutmaßlicher Täter angezeigt, obwohl er nur in einem Notfall mit dem Kinderarzt seines Sohns kommunizierte. Der Vater verlor nicht nur den Zugang zu seinen Nutzerkonten sondern wurde auch bei der Polizei angezeigt. Mit verpflichtender Chatkontrolle würden derartige Fehlalarme ständig passieren.
+    talkingPoints.points.5.title:
+      en: Encryption is the precondition for privacy, security and trust online
+      de: Verschlüsselung ist Voraussetzung für Privatsphäre, Sicherheit und Vertrauen im Netz
+    talkingPoints.points.5.body:
+      en: If encryption is broken for one use case it is broken for all of society. We cannot take the right to secure and private communication away from just a few bad actors. If private messaging or cloud hosting services have to scan the messages of their users, they need to be able to circumvent the protections that right now make such scanning impossible. Intelligence agencies but also criminals are the main beneficiaries of a world in which no online communication can be trusted.
+      de: Wenn Verschlüsselung für diesen Anwendungsfall ausgehebelt wird, ist sie für die gesamte Gesellschaft verloren. Es ist nicht möglich, lediglich den Verbrechern das Recht auf sichere und vertrauliche Kommunikation zu entziehen. Wenn Dienstleiser für private Kommunikation oder Cloud-Speicher verpflichtet sind die Nachrichten ihrer Anwender zu scannen, müssen sie zwangsläufig den Schutz dieser Nachrichten umgehen. Nachrichtendienste und Strafverfolgungsbehörden sind die Gewinner in einer Welt, in der Kommunikation im Netz nicht mehr vertraut werden kann. 
+    talkingPoints.points.6.title:
+      en: Threats to professional secrecy
+      de: Gefährdung des Berufsgeheimnisses
+    talkingPoints.points.6.body:
+      en: The analog equivalent of the current proposal would be, among other things, that in every stairwell there is a machine that reads all the letters we have taken out of the mailbox. Except that we communicate and reveal much more about ourselves and our contacts online than we do with letters. Some professions are bound to secrecy for good reasons, e.g. doctors, lawyers and journalists. Chat control threatens the protection of such professional secrets that are important for our democratic societies.
+      de: Die Entsprechung zum aktuellen Vorschlag wäre in der analogen Welt unter anderem ein Gerät in jedem Treppenaufgang, das jeden Brief liest den wir aus dem Briefkasten holen. Nur dass wir online viel mehr über uns verraten als in Briefen. Das betrifft besonders auch Ärzte, Rechtsanwälte und Journalisten. Für diese Berufe gibt es aus gutem Grund ein Berufsgeheimnis, das essentiell für unsere demokratische Gesellschaft ist.  
+    talkingPoints.points.7.title:
+      en: Setting a bad example globally
+      de: Schechte Vorbildwirkung weltweit
+    talkingPoints.points.7.body:
+      en: The GDPR has shown that the European Union can set global standards that other parts of the world will follow. If this legislation is passed, the European Union is giving authoritarian governments around the world an excuse to implement mass surveillance plans with a similar design. Such a surveillance infrastructure can easily be misused for other purposes once it has been created.
+      de: Die DSGVO hat gezeigt, dass die EU weltweit Standards setzen kann, denen andere Teile der Welt folgen. Falls die Gesetzgebung zur Chatkontrolle angenommen wird, bietet die EU autoritären Regimen eine Ausrede, ähnliche Maßnahmen zur Massenüberwachung einzuführen. Wenn einmal vorhanden, kann eine derartige Überwachungsinfrastruktur leicht für andere Zwecke missbraucht werden.  
 
   # Translation strings for the language switcher component
 
@@ -353,18 +422,24 @@ l10n:
     footer.contentHtml:
       en: <a href="https://dearmep.eu" target="_blank">DearMEP</a>&nbsp;powered by&nbsp;
           <a href="https://en.epicenter.works" target="_blank">Epicenter.works</a>
+      de: <a href="https://dearmep.eu" target="_blank">DearMEP</a>&nbsp;powered by&nbsp;
+          <a href="https://epicenter.works" target="_blank">Epicenter.works</a>
 
   # Translation strings for the call-scheduling section of the app.
 
     schedule.title:
       en: Schedule a call
+      de: Anruf planen
     schedule.description:
       en: 'Plan now to talk to a politican later! Select a day and time:'
+      de: 'Wähle jetzt Tag und Uhrzeit für dein Gespräch mit einem Politiker:'
     schedule.scheduleAsText:
       en: We will give you a ring every {{ timeSlots }} at your number to connect you
         with a politician from {{ country }}.
+      de: Wir werden dich jeden {{ timeSlots }} auf deiner Nummer anrufen um dich mit einem Politiker aus {{ country }} zu verbinden.
     schedule.timeSlot:
       en: "{{ dayOfWeek }} around {{ time }}"
+      de: "{{ dayOfWeek }} um {{ time }}"
 
     # Long-Names of the seven weekdays.
     # The inxex is zero-based and ordered according to the semantics of 'Date.getDay()' in JavaScript.
@@ -372,18 +447,25 @@ l10n:
     # See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getDay
     schedule.days.0:
       en: Sunday
+      de: Sonntag
     schedule.days.1:
       en: Monday
+      de: Montag
     schedule.days.2:
       en: Tuesday
+      de: Dienstag
     schedule.days.3:
       en: Wednesday
+      de: Mittwoch
     schedule.days.4:
       en: Thursday
+      de: Donnerstag
     schedule.days.5:
       en: Friday
+      de: Freitag
     schedule.days.6:
       en: Saturday
+      de: Samstag
 
     # Short-Names of the seven weekdays.
     # Ideally two-letter abbreviations of the weekdays should be used.
@@ -393,28 +475,37 @@ l10n:
     # See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getDay
     schedule.days-short.0:
       en: Su
+      de: So
     schedule.days-short.1:
       en: Mo
+      de: Mo
     schedule.days-short.2:
       en: Tu
+      de: Di
     schedule.days-short.3:
       en: We
+      de: Mi
     schedule.days-short.4:
       en: Th
+      de: Do
     schedule.days-short.5:
       en: Fr
+      de: Fr
     schedule.days-short.6:
       en: Sa
+      de: Sa
 
     # Main text of the primary button that lets the user save the configured schedule.
     schedule.schedule-btn.title:
       en: Confirm
+      de: Bestätige
 
     # Sub-text of the primary button that lets the user save the configured schedule.
     # Currently the intention of this sub-text is to reassure the user that they will not be charged
     # for the call.
     schedule.schedule-btn.subtitle:
       en: Free of charge
+      de: Kostenfrei
 
     # Text to hint the time-zone of the displayed times.
     # This is usually the currently selected time-zone of the browser.
@@ -427,58 +518,85 @@ l10n:
   # Make sure to use two-letter ISO country codes (ISO-3166) in the keys.
     countries.BE:
       en: Belgium
+      de: Belgien
     countries.BG:
       en: Bulgaria
+      de: Bulgarien
     countries.CZ:
       en: Czechia
+      de: Tschechien
     countries.DK:
       en: Denmark
+      de: Dänemark
     countries.DE:
       en: Germany
+      de: Deutschland
     countries.EE:
       en: Estonia
+      de: Estland
     countries.IE:
       en: Estonia
+      de: Estland
     countries.GR:
       en: Greece
+      de: Griechenland
     countries.ES:
       en: Spain
+      de: Spanien
     countries.FR:
       en: France
+      de: Frankreich
     countries.HR:
       en: Croatia
+      de: Kroatien
     countries.IT:
       en: Italy
+      de: Italien
     countries.CY:
       en: Cyprus
+      de: Zypern
     countries.LV:
       en: Latvia
+      de: Lettland
     countries.LT:
       en: Lithuania
+      de: Litauen
     countries.LU:
       en: Luxembourg
+      de: Luxemburg
     countries.HU:
       en: Hungary
+      de: Ungarn
     countries.MT:
       en: Malta
+      de: Malta
     countries.NL:
       en: Netherlands
+      de: Niederlande
     countries.AT:
       en: Austria
+      de: Österreich
     countries.PL:
       en: Poland
+      de: Polen
     countries.PT:
       en: Portugal
+      de: Portugal
     countries.RO:
       en: Romania
+      de: Rumänien
     countries.SI:
       en: Slovenia
+      de: Slowenien
     countries.SK:
       en: Slovakia
+      de: Slowakei
     countries.FI:
       en: Finland
+      de: Finnland
     countries.SE:
       en: Sweden
+      de: Schweden
 
   # General purpose string snippets
 
@@ -486,8 +604,10 @@ l10n:
     # Example: [ "A", "B", "C" ] => "A, B, C" using the delimiter ", "
     util.join.delimiter:
       en: ", "
+      de: ", "
 
     # Delimiter used in between the last and second-to-last items of an enumeration
     # Example: [ "A", "B", "C" ] => "A, B and C" using the lastDelimiter " and "
     util.join.lastDelimiter:
       en: " and "
+      de: " und "
