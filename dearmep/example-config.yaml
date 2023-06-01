@@ -399,6 +399,8 @@ l10n:
     talkingPoints.points.7.body:
       en: The GDPR has shown that the European Union can set global standards that other parts of the world will follow. If this legislation is passed, the European Union is giving authoritarian governments around the world an excuse to implement mass surveillance plans with a similar design. Such a surveillance infrastructure can easily be misused for other purposes once it has been created.
       de: Die DSGVO hat gezeigt, dass die EU weltweit Standards setzen kann, denen andere Teile der Welt folgen. Falls die Gesetzgebung zur Chatkontrolle angenommen wird, bietet die EU autoritären Regimen eine Ausrede, ähnliche Maßnahmen zur Massenüberwachung einzuführen. Wenn einmal vorhanden, kann eine derartige Überwachungsinfrastruktur leicht für andere Zwecke missbraucht werden.  
+    talkingPoints.moreArgumentsHtml: 
+      en: <a href="https://edri.org/wp-content/uploads/2023/05/CSAR-summary-booklet.pdf>"More Arguments</a>
 
   # Translation strings for the language switcher component
 
