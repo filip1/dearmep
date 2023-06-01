@@ -449,7 +449,7 @@ l10n:
       de: Die DSGVO hat gezeigt, dass die EU weltweit Standards setzen kann, denen andere Teile der Welt folgen. Falls die Gesetzgebung zur Chatkontrolle angenommen wird, bietet die EU autoritären Regimen eine Ausrede, ähnliche Maßnahmen zur Massenüberwachung einzuführen. Wenn einmal vorhanden, kann eine derartige Überwachungsinfrastruktur leicht für andere Zwecke missbraucht werden.
       de: Die DSGVO hat gezeigt, dass die EU weltweit Standards setzen kann, denen andere Teile der Welt folgen. Falls die Gesetzgebung zur Chatkontrolle angenommen wird, bietet die EU autoritären Regimen eine Ausrede, ähnliche Maßnahmen zur Massenüberwachung einzuführen. Wenn einmal vorhanden, kann eine derartige Überwachungsinfrastruktur leicht für andere Zwecke missbraucht werden.
       sv: GDPR har visat att lagar som införs i EU kan vara förebild för länder utanför unionen. Ifall lagen om chatkontroll antas är det en fantastisk ursäkt för auktoritära regimer världen för att installera liknande åtgärder för massövervakning. En gång på plats, kan infrastrukturen användas för alla möjliga andra syften.
-    talkingPoints.moreArgumentsHtml: 
+    talkingPoints.moreArgumentsHtml:
       en: <a href="https://edri.org/wp-content/uploads/2023/05/CSAR-summary-booklet.pdf>"More Arguments</a>
 
   # Translation strings for the language switcher component
