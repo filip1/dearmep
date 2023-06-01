@@ -340,7 +340,7 @@ l10n:
     feedback.additionalFeedbackPlaceholder:
       en: If you have any additional feedback, please type it in here. If you want us to contact you for a debrief, please provide your contact information here …
       de: Falls du uns weiteres Feedback geben möchtest, nutze bitte dieses Feld. Wenn du von uns kontaktiert werden willst, bitte nenne uns hier deine Kontaktinformationen …
-      sv: Här kan du lämna fler kommentarer kring samtalet. Om du vill prata med oss om din upplevelse, tala om för oss hur vi kan nå dig.  
+      sv: Här kan du lämna fler kommentarer kring samtalet. Om du vill prata med oss om din upplevelse, tala om för oss hur vi kan nå dig.
 
     # Submit button that allows the user to send their feedback.
     feedback.submit:
