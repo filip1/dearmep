@@ -130,7 +130,8 @@ l10n:
     # for the call.
     call.start-call-btn.subtitle:
       en: Free of charge
-      de: Kostenfrei
+      de: Kostenlos
+      sv: Kostnadsfri
 
     # Main text of the pimrary button that lets the user initiate the actuall call.
     # After this button is clicked an actual phone-call will be set-up.
@@ -144,7 +145,7 @@ l10n:
     # for the call.
     call.call-now-btn.subtitle:
       en: Free of charge
-      de: Kostenfrei
+      de: Kostenlos
       sv: Kostnadsfri
 
     # Text of the button that allows the user to schedule a call at a later point in time.
@@ -264,6 +265,7 @@ l10n:
     verification.success.message:
       en: 'Succesfully verified with the number: {{ number }}'
       de: '{{ number }} wurde erfolgreich verifiziert'
+      sv: 'Ditt nummer {{ number }} är nu verifierat'
 
   # Translation strings related to the step that shows the user that their call is being set up right now.
 
@@ -450,6 +452,8 @@ l10n:
       sv: GDPR har visat att lagar som införs i EU kan vara förebild för länder utanför unionen. Ifall lagen om chatkontroll antas är det en fantastisk ursäkt för auktoritära regimer världen för att installera liknande åtgärder för massövervakning. En gång på plats, kan infrastrukturen användas för alla möjliga andra syften.
     talkingPoints.moreArgumentsHtml:
       en: <a href="https://edri.org/wp-content/uploads/2023/05/CSAR-summary-booklet.pdf>"More Arguments</a>
+      de: <a href="https://edri.org/wp-content/uploads/2023/05/CSAR-summary-booklet.pdf>"Mehr Argumente</a>
+      sv: <a href="https://edri.org/wp-content/uploads/2023/05/CSAR-summary-booklet.pdf>"Fler argument</a>
 
   # Translation strings for the language switcher component
 
@@ -578,7 +582,7 @@ l10n:
     # for the call.
     schedule.schedule-btn.subtitle:
       en: Free of charge
-      de: Kostenfrei
+      de: Kostenlos
       sv: Kostnadsfri
 
     # Text to hint the time-zone of the displayed times.
