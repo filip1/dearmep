@@ -391,15 +391,15 @@ l10n:
       de: Illegale Überwachung
       sv: Illegal övervakning
     talkingPoints.points.0.body:
-      en: The independent research services of the EU Commission, Parliament and Council all agree, this law is unconstitutional and would not survive the high court. No child is protected, if this law is struck down in court in three years.
-      de: Die wissenschaftlichen Dienste von EU-Kommission, Parlament und Rat sind sich einig, dass dieser Gesetzesvorschlag verfassungswidrig ist und vor dem EuGh nicht bestehen würde.
-      sv: EU parlamentets utredningstjänst samt kommissionens och ministerrådets rättstjänst är eniga om att lagförslaget bryter mot EUs grundlag och skulle sågas av högsta domstolen. Inga barn kommer att skyddas om lagen förkastas av EU domstolen om tre år.
+      en: The independent research / scrutiny services of the EU Commission, Parliament, Council and data protection supervisor all agree, this law is unconstitutional and would likely not survive the high court. No child is protected, if this law is struck down in court in three years.
+      de: Die wissenschaftlichen Dienste von EU-Kommission, Parlament und Rat sowie die Datenschutzbeauftragten sind sich einig, dass dieser Gesetzesvorschlag verfassungswidrig ist und vor dem EuGh nicht bestehen würde.
+      sv: EU parlamentets utredningstjänst, kommissionens och ministerrådets rättstjänst och dataskyddsansvariga är eniga om att lagförslaget bryter mot EUs grundlag och skulle sannoliken sågas av högsta domstolen. Inga barn kommer att skyddas om lagen förkastas av EU domstolen om tre år.
     talkingPoints.points.1.title:
       en: Magic Technology won't save us
       de: Technische Wundermittel sind nicht die Rettung
-      sv: Teknologi är inte räddningen
+      sv: Teknologiskt trolleri är inte räddningen
     talkingPoints.points.1.body:
-      en: There is no filter technology in the world that can accurately detect these types of illegal content. With the billions of messages Europeans send every day, hundreds of millions of legal messages would end up with the police. Legal speech would be deleted on a massive scale.
+      en: There is no filter technology in the world that can accurately detect these types of illegal content. With the billions of messages Europeans send every day, hundreds of millions of legal messages would end up with the police. Legal speech would be suppressed on a massive scale.
       de: Keine Filtertechnologie der Welt kann diese Art illegaler Inhalte zuverlässig detektieren. Selbst bei optimistischen Fehlerraten im einstelligen Prozentbereich würden in Anbetracht von Milliarden täglicher Nachrichten hunderte Millionen harmloser Nachrichten bei der Polizei landen. In unerhörtem Umfang würde freie Rede behindert.
       sv: Det finns ingen filterteknologi som på ett pålitligt sätt identifierar den här typen av olagligt innehåll. Det skickas miljarder meddelanden varje dag, så polisen skulle översvämmas med hundramiljontals helt oskyldiga meddelanden. Yttrandefriheten skulle begränsas kolossalt.
     talkingPoints.points.2.title:
@@ -407,25 +407,25 @@ l10n:
       de: Chatkontrolle schützt Kinder nicht
       sv: Chatkontroll skyddar inte barnen
     talkingPoints.points.2.body:
-      en: This chat control law will not help to significantly improve the situation of victims. Instead of pouring money into expensive surveillance technologies that don't work, the EU should promote prevention, education and victim protection measures. The EU Commission is preventing meaningful solutions by its narrow focus on surveillance technology as a supposed panacea for complex social problems.
-      de: Dieses Gesetz wird nicht helfen, die Situation der Opfer wesentlich zu verbessern. Statt Gelder in teure, fehleranfällige Überwachungstechniken zu stecken, sollte die EU Maßnahmen zur Aufklärung und zum Opferschutz fördern. Mit ihrem engen Fokus auf Überwachungstechnologie als Allheilmittel verhindert die EU sinnvolle Lösungsansätze für komplexe soziale Probleme.
-      sv: Lagen om chatkontroll kommer inte på ett väsentligt sätt förbättra offrens situation. Istället för att lägga pengar på dyra, verkningslösa övervakningsteknologier, EU borde främja utbildning och andra förebyggande åtgärder. Kommissionen förhindrar effektiva åtgärder genom att satsa enbart på övervakning som ett medel mot komplexa sociala problem.
+      en: This chat control law lacks evidence that it would improve the situation of victims. Instead of pouring money into expensive surveillance technologies that don't work, the EU should promote prevention, education and victim protection measures. The EU Commission is preventing meaningful solutions by its narrow focus on surveillance technology as a supposed panacea for complex social problems.
+      de: Es gibt keinerlei Nachweise, dass dieses Gesetz die Situation der Opfer wesentlich verbessern würde. Statt Gelder in teure, fehleranfällige Überwachungstechniken zu stecken, sollte die EU Maßnahmen zur Aufklärung und zum Opferschutz fördern. Mit ihrem engen Fokus auf Überwachungstechnologie als Allheilmittel verhindert die EU sinnvolle Lösungsansätze für komplexe soziale Probleme.
+      sv: Det saknas bevis för att  chatkontroll kommer att på ett väsentligt sätt förbättra offrens situation. Istället för att lägga pengar på dyra, verkningslösa övervakningsteknologier, EU borde främja utbildning och andra förebyggande åtgärder. Kommissionen förhindrar effektiva åtgärder genom att satsa enbart på övervakning som ett medel mot komplexa sociala problem.
     talkingPoints.points.3.title:
       en: Police will be overwhelmed with false positives
       de: Massenweiser Falschalarm überlastet die Polizei
       sv: Falska larm vill överlasta polisen
     talkingPoints.points.3.body:
-      en: Computers are well suited to test the hypothesis of a suspicion, but they are ill-suited to initiate suspicions against someone. Police already can't handle the case load and with these new automated tools million more false positives would end up on their desks. That will take valuable time and resources away from investigating real perpetrators.
-      de: Computer können automatisiert Nachrichten als verdächtig markieren. Um den Verdacht zu überprüfen und weiter zu verfolgen braucht es aber Menschen. Schon heute kann die Polizei nicht allen Anzeigen nachgehen. Täglich Millionen neuer Anzeigen aufgrund überwiegend falscher Verdachtsfälle würden die Behörden lahmlegen und wertvolle Ressourcen für tatsächliche Strafverfolgung stehlen.
-      sv: Datorer är bra på att markera misstänkta meddelanden, men för att dubbelkolla och ta ärenden vidare behövs det människor. Redan idag är polisen helt överlastad. Miljontals nya anmälningar dagligen på grund av den höga felkvoten skulle översvämma myndigheterna och stjäla värdefulla resurser som hade behövts för att få fast dem verkliga bovarna.
+      en: Evidence shows that these tools already routinely flag lawful images such as family beach photos or consensual adult content. Police already can't handle the case load and with these new automated tools million more false positives would end up on their desks. That will take valuable time and resources away from investigating actual perpetrators.
+      de:  Nachweislich kennzeichnen diese Tools routinemäßig rechtmäßige Bilder wie Familienfotos vom Strand oder einvernehmlich geteilte sexuelle Inhalte in Konversationen zwischen Erwachsenen. Schon heute kann die Polizei nicht allen Anzeigen nachgehen. Täglich Millionen neuer Anzeigen aufgrund überwiegend falscher Verdachtsfälle würden die Behörden lahmlegen und wertvolle Ressourcen für tatsächliche Strafverfolgung stehlen.
+      sv: Det finns bevis för att dessa verktyg rutinmässigt flaggar helt lagliga bilder, t.ex. familjefoton från stranden eller samtyckesinnehåll för vuxna. Redan idag är polisen helt överlastad. Miljontals nya anmälningar dagligen på grund av den höga felkvoten skulle översvämma myndigheterna och stjäla värdefulla resurser som hade behövts för att få fast dem verkliga bovarna.
     talkingPoints.points.4.title:
       en: False positives endanger innocent people
       de: Fehlalarme gefährden Unschuldige
       sv: Oskyldiga utsätts för falska larm
     talkingPoints.points.4.body:
-      en: There are already documented cases in which voluntary chat control by companies has led to suspicion reports against innocent people. For example, an American man was reported as an alleged perpetrator even though he was communicating with his child's pediatrician in an acute emergency. The father of the family not only lost access to all his online accounts with the company, but was also reported to the police. With chat control, such false suspicions would happen every day.
-      de: Es gibt bereits bekannte Fälle in denen freiwillige Chatkontrolle durch Unternehmen zu Anzeigen gegen unschuldige Nutzer geführt hat. Zum Beispiel wurde ein Mann in den USA als mutmaßlicher Täter angezeigt, obwohl er nur in einem Notfall mit dem Kinderarzt seines Sohns kommunizierte. Der Vater verlor nicht nur den Zugang zu seinen Nutzerkonten sondern wurde auch bei der Polizei angezeigt. Mit verpflichtender Chatkontrolle würden derartige Fehlalarme ständig passieren.
-      sv: Redan idag finns det kända fall där oskyldiga användare pekas ut som kriminella av företag som använder frivillig chatkontroll. I USA anmäldes till exempel en man till polisen som hade skickat bilder av sin son till sonens barnläkare i samband med ett läkarbesök. Även om anmälan drogs tillbaka senare så blev pappan av med sina användarkonton. Med chatkontroll, vi kan vänta oss den typen av falska larm hela tiden.
+      en: There are already documented cases in which voluntary chat control by companies has led to suspicion reports against innocent people. For example, several people have pursued court cases in the EU because they were permanently locked out of all their digital accounts following an accusation of sharing abuse material - despite the subsequent investigation clearing them of any wrongdoing. With chat control, such false suspicions would happen every day.
+      de: Es gibt bereits bekannte Fälle in denen freiwillige Chatkontrolle durch Unternehmen zu Anzeigen gegen unschuldige Nutzer geführt hat. So haben beispielsweise mehrere Personen in der EU vor Gericht geklagt, weil sie nach einer Beschuldigung, Missbrauchsmaterial geteilt zu haben, dauerhaft aus allen ihren digitalen Konten ausgesperrt wurden - obwohl die anschließende Untersuchung sie von jeglichem Fehlverhalten freisprach. Mit verpflichtender Chatkontrolle würden derartige Fehlalarme ständig passieren.
+      sv: Redan idag finns det kända fall där oskyldiga användare pekas ut som kriminella av företag som använder frivillig chatkontroll. Till exempel behövde flera personer driva domstolsprocesser i EU efter att de permanent låsts ut från alla sina digitala konton i samband med en anklagelse om att ha delat övergreppsmaterial - trots att den efterföljande utredningen friade dem från alla felaktigheter. Med chatkontroll, vi kan vänta oss den typen av falska larm hela tiden.
     talkingPoints.points.5.title:
       en: Encryption is the precondition for privacy, security and trust online
       de: Verschlüsselung ist Voraussetzung für Privatsphäre, Sicherheit und Vertrauen im Netz
@@ -439,9 +439,9 @@ l10n:
       de: Gefährdung des Berufsgeheimnisses
       sv: Yrken med tystnadsplikt hotas
     talkingPoints.points.6.body:
-      en: The analog equivalent of the current proposal would be, among other things, that in every stairwell there is a machine that reads all the letters we have taken out of the mailbox. Except that we communicate and reveal much more about ourselves and our contacts online than we do with letters. Some professions are bound to secrecy for good reasons, e.g. doctors, lawyers and journalists. Chat control threatens the protection of such professional secrets that are important for our democratic societies.
-      de: Die Entsprechung zum aktuellen Vorschlag wäre in der analogen Welt unter anderem ein Gerät in jedem Treppenaufgang, das jeden Brief liest den wir aus dem Briefkasten holen. Nur dass wir online viel mehr über uns verraten als in Briefen. Das betrifft besonders auch Ärzte, Rechtsanwälte und Journalisten. Für diese Berufe gibt es aus gutem Grund ein Berufsgeheimnis, das essentiell für unsere demokratische Gesellschaft ist.
-      sv: 'Tänker man sig en liknelse till chatkontroll i den analoga världen så vore det nog att alla brevlådor har ett inbyggt system som öppnar och läser samtliga brev. Bara att vi berättar så mycket mer om oss idag i vår kommunikation på nätet. Vissa yrken skulle drabbas särskilt hårt av en lag om chatkontroll: Advokater, läkare med tystnadsplikt, journalister som vill skydda sina källor. Att undergräva deras rätt till förtrolig kommunikation utgör ett massivt hot mot vårt demokratiskt samhälle.'
+      en: The analog equivalent of the current proposal would be, among other things, that  a machine in our home reads our letters before we put them in the envelope, and sends them to private moderators and police when they predict anything seems suspicious. Except that we communicate and reveal much more about ourselves and our contacts online than we do with letters. Some professions are bound to secrecy for good reasons, e.g. doctors, lawyers and journalists. Chat control threatens the protection of such professional secrets that are important for our democratic societies.
+      de: Die Entsprechung zum aktuellen Vorschlag in der analogen Welt wäre ein Gerät, das jeden Brief liest bevor wir ihn in einen Umschlag stecken, und bei "verdächtigem" Inhalt private Moderatoren und die Polizei informiert. Nur dass wir online viel mehr über uns verraten als in Briefen. Das betrifft besonders auch Ärzte, Rechtsanwälte und Journalisten. Für diese Berufe gibt es aus gutem Grund ein Berufsgeheimnis, das essentiell für unsere demokratische Gesellschaft ist.
+      sv: 'Tänker man sig en liknelse till chatkontroll i den analoga världen så vore det  en maskin som läser samtliga brev innan de läggs i ett kuvert, och att maskinen skickar vidare breven till polisen så snart den tror sig ha hittat "misstänkt" innehåll. Bara att vi berättar så mycket mer om oss idag i vår kommunikation på nätet. Vissa yrken skulle drabbas särskilt hårt av en lag om chatkontroll: Advokater, läkare med tystnadsplikt, journalister som vill skydda sina källor. Att undergräva deras rätt till förtrolig kommunikation utgör ett massivt hot mot vårt demokratiskt samhälle.'
     talkingPoints.points.7.title:
       en: Setting a bad example globally
       de: Schlechte Vorbildwirkung weltweit
@@ -450,6 +450,14 @@ l10n:
       en: The GDPR has shown that the European Union can set global standards that other parts of the world will follow. If this legislation is passed, the European Union is giving authoritarian governments around the world an excuse to implement mass surveillance plans with a similar design. Such a surveillance infrastructure can easily be misused for other purposes once it has been created.
       de: Die DSGVO hat gezeigt, dass die EU weltweit Standards setzen kann, denen andere Teile der Welt folgen. Falls die Gesetzgebung zur Chatkontrolle angenommen wird, bietet die EU autoritären Regimen eine Ausrede, ähnliche Maßnahmen zur Massenüberwachung einzuführen. Wenn einmal vorhanden, kann eine derartige Überwachungsinfrastruktur leicht für andere Zwecke missbraucht werden.
       sv: GDPR har visat att lagar som införs i EU kan vara förebild för länder utanför unionen. Ifall lagen om chatkontroll antas är det en fantastisk ursäkt för auktoritära regimer världen för att installera liknande åtgärder för massövervakning. En gång på plats, kan infrastrukturen användas för alla möjliga andra syften.
+    talkingPoints.points.8.title:
+      en: Putting people’s personal devices at risk
+      de: Gefährdet die Sicherheit mobiler Endgeräte
+      sv: Utsätter mobila enheter för större risker
+    talkingPoints.points.8.body:
+      en: There is consensus from the tech community that technologies to scan encrypted messages are unsafe and create dangerous vulnerabilities in our personal devices. This could put victims of intimate partner violence and child abuse at greater risk of cyber stalking and violence, and journalists, politicians and activists at greater risk of illegal spyware being put on their phones.
+      de: In der Tech-Community herrscht Konsens, dass Technologien zum Scannen verschlüsselter Nachrichten unsicher sind und gefährliche Schwachstellen in unseren Geräten schaffen. Dies setzt Opfer häuslicher Gewalt oder Kindesmissbrauchs der Gefahr des Cyber-Stalkings aus und erhöht das Risiko für Journalisten, Politiker oder Aktivisten, dass ihre Geräte ausgespäht werden.
+      sv: Inom tech communityn råder det samförstånd att teknologier som kan läsa krypterade meddelanden skapar farliga sårbarheter i våra mobila enheter. Offer för våld i nära relationer och barnmisshandel löper då större risk för cyberstalking, och journalister, politiker och aktivister riskerar i ännu större utsträckning att få spionprogram installerade på sina telefoner.
     talkingPoints.moreArgumentsHtml:
       en: <a href="https://edri.org/wp-content/uploads/2023/05/CSAR-summary-booklet.pdf>"More Arguments</a>
       de: <a href="https://edri.org/wp-content/uploads/2023/05/CSAR-summary-booklet.pdf>"Mehr Argumente</a>
@@ -469,7 +477,6 @@ l10n:
     # listed in this section.
     languages.en: English
     languages.de: Deutsch
-    languages.de-AT: Deutsch (Österreich)
     languages.sv: Svenska
 
   # Footer text of the app.
