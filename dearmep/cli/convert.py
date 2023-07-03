@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
     from . import Context
-from ..config import APP_NAME
+from ..config import APP_NAME, CMD_NAME
 from ..convert import dump
 from ..convert.europarl import rollcallvote
 from ..convert.parltrack import mep
@@ -101,7 +101,8 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         help="ParlTrack MEP list",
         description="Convert one of ParlTrack's \"MEPs\" dumps (see "
         f"<https://parltrack.org/dumps>) into {APP_NAME} Destination JSON "
-        "that can then be imported as the list of Destinations to contact."
+        f"that can then be imported (e.g. using `{CMD_NAME} import "
+        "destinations`) as the list of Destinations to contact.",
     )
     FlexiBytesReader.add_as_argument(meps)
     meps_lz = meps.add_mutually_exclusive_group()

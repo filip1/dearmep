@@ -6,7 +6,7 @@ from sys import exit, stderr
 from rich.console import Console
 from rich.progress import Progress
 
-from . import convert, db, dump, serve, version
+from . import convert, db, dump, importing, serve, version
 from ..config import CMD_NAME
 from ..progress import DummyTaskFactory, RichTaskFactory
 
@@ -45,7 +45,7 @@ def run():
     subparsers = parser.add_subparsers(
         metavar="COMMAND",
     )
-    for module in (version, dump, serve, db, convert):
+    for module in (version, dump, serve, db, convert, importing):
         module.add_parser(
             subparsers,
             help_if_no_subcommand=help_if_no_subcommand,
