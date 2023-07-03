@@ -169,6 +169,9 @@ class TrackingBytesReader(BufferedReader, TrackingMixin):  # type: ignore[misc]
     def read1(self, size: int = -1) -> bytes:
         return self._with_tracking(super().read1(size), self.tell)
 
+    def readline(self, size: Optional[int] = -1) -> bytes:
+        return self._with_tracking(super().readline(size), self.tell)
+
 
 class TrackingStrReader(TextIOWrapper, TrackingMixin):  # type: ignore[misc]
     def read(self, size: Optional[int] = -1) -> str:
