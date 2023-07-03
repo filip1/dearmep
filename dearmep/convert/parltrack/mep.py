@@ -135,6 +135,7 @@ def convert_person(raw_mep: Dict[str, Any]) -> Iterable[DumpableModels]:
         if constituency else None,
         groups=groups,
         contacts=contacts,
+        portrait=f"{raw_mep['UserID']}.jpg",
     )
 
 

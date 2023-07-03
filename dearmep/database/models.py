@@ -182,14 +182,6 @@ class DestinationBase(SQLModel):
         index=True,
         description="The country code associated with this Destination.",
     )
-    portrait_id: Optional[BlobID] = Field(
-        None,
-        foreign_key="blobs.id",
-        description="The portrait image of this Destination.",
-    )
-    portrait: Optional[Blob] = Relationship(
-        **_rel_join("Destination.portrait_id==Blob.id"),
-    )
     name_audio_id: Optional[BlobID] = Field(
         None,
         foreign_key="blobs.id",
@@ -205,11 +197,20 @@ class Destination(DestinationBase, table=True):
     groups: List["DestinationGroup"] = Relationship(
         back_populates="destinations", link_model=DestinationGroupLink,
     )
+    portrait_id: Optional[BlobID] = Field(
+        None,
+        foreign_key="blobs.id",
+        description="The portrait image of this Destination.",
+    )
+    portrait: Optional[Blob] = Relationship(
+        **_rel_join("Destination.portrait_id==Blob.id"),
+    )
 
 
 class DestinationDump(DestinationBase):
     contacts: List[ContactRead] = []
     groups: List[DestinationGroupID] = []
+    portrait: Optional[str]
 
 
 class DestinationGroupBase(SQLModel):
