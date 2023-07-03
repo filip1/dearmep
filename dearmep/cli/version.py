@@ -14,6 +14,7 @@ ADDITIONAL_PACKAGES = (
     "FastAPI",
     "Pydantic",
     "python-geoacumen",
+    "countryguess",
 )
 
 

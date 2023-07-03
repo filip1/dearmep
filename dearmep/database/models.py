@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional, TypedDict
+from typing import Any, Dict, List, Optional, TypedDict, Union
 from uuid import uuid4
 
 from pydantic import UUID4, BaseModel
@@ -39,6 +39,15 @@ CONTACT_TYPES = (
 )
 
 
+# These need to be individual lines, else (e.g. A = B = C = str) mypy won't
+# recognize them as type aliases. This is intentional (but not very clever
+# imho), see <https://github.com/python/mypy/issues/11858>.
+BlobID = str
+ContactID = str
+DestinationID = str
+DestinationGroupID = str
+
+
 class ModifiedTimestampMixin(BaseModel):
     modified_at: Optional[datetime] = Field(
         sa_column=Column(
@@ -53,7 +62,7 @@ class ModifiedTimestampMixin(BaseModel):
 class Blob(SQLModel, ModifiedTimestampMixin, table=True):
     """A binary data object, e.g. an image or audio."""
     __tablename__ = "blobs"
-    id: Optional[int] = Field(
+    id: Optional[BlobID] = Field(
         None,
         primary_key=True,
         description="A (probably auto-generated) ID to uniquely identify this "
@@ -92,16 +101,16 @@ class Blob(SQLModel, ModifiedTimestampMixin, table=True):
     )
 
 
-class Contact(SQLModel, table=True):
+class ContactBase(SQLModel):
     """A single contact datum (e.g. website) belonging to a Destination."""
     __tablename__ = "contacts"
-    id: Optional[int] = Field(
+    id: Optional[ContactID] = Field(
         None,
         primary_key=True,
         description="A (probably auto-generated) ID to uniquely identify this "
         "Contact.",
     )
-    destination_id: str = Field(
+    destination_id: Optional[DestinationID] = Field(
         foreign_key="destinations.id", index=True,
         description="The Destination this Contact belongs to.",
     )
@@ -131,23 +140,35 @@ class Contact(SQLModel, table=True):
     )
 
 
+class Contact(ContactBase, table=True):
+    pass
+
+
+class ContactDump(ContactBase):
+    pass
+
+
+class ContactRead(ContactBase):
+    pass
+
+
 class DestinationGroupLink(SQLModel, table=True):
     """Association between a Destination and a DestinationGroup."""
     __tablename__ = "dest_group_link"
-    destination_id: Optional[str] = Field(
+    destination_id: Optional[DestinationID] = Field(
         None,
         foreign_key="destinations.id", primary_key=True,
     )
-    group_id: Optional[int] = Field(
+    group_id: Optional[DestinationGroupID] = Field(
         None,
         foreign_key="dest_groups.id", primary_key=True,
     )
 
 
-class Destination(SQLModel, table=True):
+class DestinationBase(SQLModel):
     """A person (or entity) users are supposed to contact."""
     __tablename__ = "destinations"
-    id: str = Field(
+    id: DestinationID = Field(
         primary_key=True,
         description="A unique string to identify this Destination.",
         **_example("36e04ddf-73e7-4af6-a8af-24556d610f6d"),
@@ -161,7 +182,7 @@ class Destination(SQLModel, table=True):
         index=True,
         description="The country code associated with this Destination.",
     )
-    portrait_id: Optional[int] = Field(
+    portrait_id: Optional[BlobID] = Field(
         None,
         foreign_key="blobs.id",
         description="The portrait image of this Destination.",
@@ -169,7 +190,7 @@ class Destination(SQLModel, table=True):
     portrait: Optional[Blob] = Relationship(
         **_rel_join("Destination.portrait_id==Blob.id"),
     )
-    name_audio_id: Optional[int] = Field(
+    name_audio_id: Optional[BlobID] = Field(
         None,
         foreign_key="blobs.id",
         description="The spoken name of this Destination.",
@@ -177,16 +198,24 @@ class Destination(SQLModel, table=True):
     name_audio: Optional[Blob] = Relationship(
         **_rel_join("Destination.name_audio_id==Blob.id"),
     )
+
+
+class Destination(DestinationBase, table=True):
+    contacts: List[Contact] = Relationship(back_populates="destination")
     groups: List["DestinationGroup"] = Relationship(
         back_populates="destinations", link_model=DestinationGroupLink,
     )
-    contacts: List[Contact] = Relationship(back_populates="destination")
 
 
-class DestinationGroup(SQLModel, table=True):
+class DestinationDump(DestinationBase):
+    contacts: List[ContactRead] = []
+    groups: List[DestinationGroupID] = []
+
+
+class DestinationGroupBase(SQLModel):
     """A group to which Destinations may belong."""
     __tablename__ = "dest_groups"
-    id: Optional[int] = Field(
+    id: Optional[DestinationGroupID] = Field(
         None,
         primary_key=True,
         description="A (probably auto-generated) ID to uniquely identify this "
@@ -200,8 +229,8 @@ class DestinationGroup(SQLModel, table=True):
         "`delegation` etc.",
         **_example("parl_group"),
     )
-    name: str = Field(
-        unique=True,
+    short_name: Optional[str] = Field(
+        None,
         description="The short name of this group.",
         **_example("S&D"),
     )
@@ -219,3 +248,14 @@ class DestinationGroup(SQLModel, table=True):
     destinations: List[Destination] = Relationship(
         back_populates="groups", link_model=DestinationGroupLink,
     )
+
+
+class DestinationGroup(DestinationGroupBase, table=True):
+    pass
+
+
+class DestinationGroupDump(DestinationGroupBase):
+    pass
+
+
+DumpableModels = Union[DestinationDump, DestinationGroupDump]
