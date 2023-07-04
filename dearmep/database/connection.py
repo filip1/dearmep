@@ -2,7 +2,8 @@ from contextlib import contextmanager
 from typing import Optional
 
 from sqlalchemy.future import Engine
-from sqlmodel import MetaData, Session, SQLModel, create_engine
+from sqlalchemy.exc import MultipleResultsFound, NoResultFound
+from sqlmodel import MetaData, Session, SQLModel, create_engine, select
 
 from ..config import Config
 
@@ -29,3 +30,12 @@ def get_session():
 
 def create_db() -> None:
     SQLModel.metadata.create_all(AutoEngine.get_engine())
+
+
+__all__ = [
+    "MultipleResultsFound",
+    "NoResultFound",
+    "Session",
+    "get_session",
+    "select",
+]

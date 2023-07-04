@@ -79,7 +79,7 @@ class Blob(SQLModel, ModifiedTimestampMixin, table=True):
         **_example("image/svg+xml"),
     )
     name: str = Field(
-        index=True,
+        unique=True,
         description="The name of this Blob. Should be a valid file name.",
         **_example("dearmep.svg"),
     )

@@ -1,9 +1,13 @@
 from typing import Any, Dict
 
-from fastapi import APIRouter, Depends, Header, Query
+from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
+    Response, status
 from prometheus_client import Counter
+from typing_extensions import Annotated
 
 from ..config import Config, Language, all_frontend_strings
+from ..database.connection import NoResultFound, Session, get_session, select
+from ..database.models import Blob
 from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import FrontendStringsResponse, LanguageDetection, \
     LocalizationResponse, RateLimitResponse
@@ -29,6 +33,11 @@ rate_limit_response: Dict[int, Dict[str, Any]] = {
         },
     },
 }
+
+
+def session():
+    with get_session() as s:
+        yield s
 
 
 router = APIRouter()
@@ -106,3 +115,24 @@ def get_frontend_strings(
     return FrontendStringsResponse(
         frontend_strings=all_frontend_strings(language),
     )
+
+
+# TODO: Add caching headers.
+@router.get(
+    "/blob/{name}",
+)
+def get_blob_contents(
+    name: str,
+    session: Annotated[Session, Depends(session)],
+):
+    """
+    Returns the contents of a blob, e.g. an image or audio file.
+    """
+    try:
+        blob = session.exec(select(Blob).where(Blob.name == name)).one()
+    except NoResultFound:
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            "no blob with that name",
+        )
+    return Response(blob.data, media_type=blob.mime_type)
