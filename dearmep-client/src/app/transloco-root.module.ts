@@ -19,7 +19,7 @@ export class TranslocoHttpLoader implements TranslocoLoader {
   ) {}
 
   getTranslation(lang: string): Observable<Translation> {
-    return this.apiService.getFrontendStringsApiV1FrontendStringsLanguageGet({ language: lang })
+    return this.apiService.getFrontendStrings({ language: lang })
     .pipe(
       map(r => ObjectUtil.UnflattenObject(r.frontend_strings) as Translation)
     )
@@ -32,14 +32,11 @@ export class TranslocoHttpLoader implements TranslocoLoader {
     {
       provide: TRANSLOCO_CONFIG,
       useValue: translocoConfig({
-        availableLangs: ['en', 'fr'],
-        defaultLang: 'en',
-        fallbackLang: 'en',
         failedRetries: 3,
         reRenderOnLangChange: true,
         prodMode: !isDevMode(),
         missingHandler: {
-          useFallbackTranslation: true,
+          useFallbackTranslation: false
         }
       })
     },

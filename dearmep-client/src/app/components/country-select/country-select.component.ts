@@ -1,9 +1,6 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { TranslocoService } from '@ngneat/transloco';
-import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
-import { Country } from 'src/app/model/country.model';
-import { nextTick } from 'src/app/testing/util/next-tick';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { L10nService } from 'src/app/services/language/l10n.service';
 
 @Component({
   selector: 'dmep-country-select',
@@ -13,42 +10,43 @@ import { nextTick } from 'src/app/testing/util/next-tick';
 export class CountrySelectComponent implements OnInit, OnDestroy {
   private readonly destroyed$ = new Subject<void>()
 
-  public countries$?: Observable<Country[]>
+  public countries?: string[]
 
-  public countryFormControl = new FormControl<Country | null>(null)
-
-  @Output()
-  public selectionChanged = new EventEmitter<Country | null> 
+  public selectedCountry?: string
 
   constructor(
-    private readonly translocoService: TranslocoService,
+    private readonly l10nService: L10nService,
   ) { }
 
   public ngOnInit(): void {
-    this.countryFormControl.valueChanges
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe({
-      next: (v) => this.selectionChanged.next(v)
+    this.l10nService.getAvailableCountries$().pipe(
+      takeUntil(this.destroyed$),
+    ).subscribe({
+      next: (c) => {
+        this.countries = c
+        // Timeout (0ms) in order to make sure the language options are rendered to HTML before
+        // setting the value of the mat-select input because of rendering issues if this order
+        // is not correct.
+        setTimeout(() => {
+          this.getSelectedCountry()
+        }, 0);
+      }
     })
-
-    this.countries$ = this.translocoService.selectTranslateObject<{ [key: string]: string }>("countries").pipe(
-      map((countries): Country[] =>
-        Object
-          .keys(countries)
-          .map((shortCode): Country => ({ shortCode, name: countries[shortCode] }))
-          .sort((a, b) => a.name.localeCompare(b.name))
-      ),
-      tap(async (countries) => { 
-        // select default country, make dynamic later
-        await nextTick()
-        const defaultCountry = countries.find(c => c.shortCode === "AT")
-        this.countryFormControl.setValue(defaultCountry ?? null)
-      })
-    )
   }
 
   public ngOnDestroy(): void {
     this.destroyed$.next()
     this.destroyed$.complete()
+  }
+
+  public onSelectCountry(country: string) {
+    this.selectedCountry = country
+    this.l10nService.setCountry(country)
+  }
+
+  public getSelectedCountry() {
+    this.l10nService.getCountry$().subscribe({
+      next: (c) => this.selectedCountry = c
+    })
   }
 }

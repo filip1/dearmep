@@ -4,10 +4,11 @@ import { ControlValueAccessor, FormBuilder, FormControl, NgControl, ValidationEr
 import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/material/form-field';
 import { MatSelect } from '@angular/material/select';
 import { TranslocoService } from '@ngneat/transloco';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest, Subject, takeUntil } from 'rxjs';
 import { PhoneNumber } from 'src/app/model/phone-number.model';
 import { AppConfig } from 'src/app/services/config/app-config.model';
 import { ConfigService } from 'src/app/services/config/config.service';
+import { L10nService } from 'src/app/services/language/l10n.service';
 
 interface Country {
   name: string
@@ -16,10 +17,10 @@ interface Country {
 }
 
 /**
- * Custom component to input phone number with international calling code. 
- * 
- * This is a very pragmatic implementation of a MatFormFieldControl. It gets the job 
- * done but does not implement the complete functionality of a FormControl. 
+ * Custom component to input phone number with international calling code.
+ *
+ * This is a very pragmatic implementation of a MatFormFieldControl. It gets the job
+ * done but does not implement the complete functionality of a FormControl.
  */
 @Component({
   selector: 'dmep-phone-number-input',
@@ -29,6 +30,8 @@ interface Country {
 })
 export class PhoneNumberInputComponent implements ControlValueAccessor, MatFormFieldControl<PhoneNumber>, OnInit, OnDestroy {
   static nextId = 0;
+
+  private readonly destroyed$ = new Subject<void>()
 
   @ViewChild('countrySelect')
   public countrySelect?: MatSelect;
@@ -82,6 +85,8 @@ export class PhoneNumberInputComponent implements ControlValueAccessor, MatFormF
   }
   private _placeholder = "";
 
+  private defaultCountry?: string
+
   @Input()
   public get value(): PhoneNumber | null {
     if (this._numberFormGroup.valid && this._numberFormGroup.value.country && this._numberFormGroup.value.number) {
@@ -107,6 +112,7 @@ export class PhoneNumberInputComponent implements ControlValueAccessor, MatFormF
     private _focusMonitor: FocusMonitor,
     private _elementRef: ElementRef<HTMLElement>,
     private readonly configService: ConfigService,
+    private readonly l10nService: L10nService,
     @Optional() @Inject(MAT_FORM_FIELD) public _formField: MatFormField,
     @Optional() @Self() public ngControl: NgControl,
   ) {
@@ -136,6 +142,22 @@ export class PhoneNumberInputComponent implements ControlValueAccessor, MatFormF
         }
       }
     })
+
+    this.l10nService.getCountry$().pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe({
+      next: (country) => {
+        this.defaultCountry = country
+
+        const numberControl = this._numberFormGroup.controls.number
+        if (!numberControl.value || numberControl.value === '') {
+          const countryObj = this._countries?.find(c => c.countryCode === country)
+          if (countryObj) {
+            this._numberFormGroup.controls.country.setValue(countryObj, { emitEvent: false })
+          }
+        }
+      }
+    })
   }
 
   public onFocusIn() {
@@ -157,6 +179,8 @@ export class PhoneNumberInputComponent implements ControlValueAccessor, MatFormF
   public ngOnDestroy() {
     this.stateChanges.complete();
     this._focusMonitor.stopMonitoring(this._elementRef);
+    this.destroyed$.next()
+    this.destroyed$.complete()
   }
 
   public compareCountry(a?: Country, b?: Country): boolean {
