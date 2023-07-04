@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
     Response, status
@@ -7,9 +7,10 @@ from typing_extensions import Annotated
 
 from ..config import Config, Language, all_frontend_strings
 from ..database.connection import Session, get_session
+from ..database.models import DestinationRead
 from ..database import query
 from ..l10n import find_preferred_language, get_country, parse_accept_language
-from ..models import FrontendStringsResponse, LanguageDetection, \
+from ..models import CountryCode, FrontendStringsResponse, LanguageDetection, \
     LocalizationResponse, RateLimitResponse
 from ..util import Limit, client_addr
 
@@ -130,6 +131,25 @@ def get_blob_contents(
     """
     try:
         blob = query.get_blob_by_name(session, name)
-    except KeyError as e:
+    except query.NotFound as e:
         raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
     return Response(blob.data, media_type=blob.mime_type)
+
+
+@router.get(
+    "/destination/suggested",
+    response_model=DestinationRead,
+)
+def get_suggested_destination(
+    session: Annotated[Session, Depends(session)],
+    country: Optional[CountryCode] = None,
+):
+    """
+    Return a suggested destination to contact, possibly limited by country.
+    """
+    try:
+        # TODO: Replace with actually _recommended_, not random.
+        dest = query.get_random_destination(session, country=country)
+    except query.NotFound as e:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+    return dest

@@ -103,12 +103,6 @@ class Blob(SQLModel, ModifiedTimestampMixin, table=True):
 
 class ContactBase(SQLModel):
     """A single contact datum (e.g. website) belonging to a Destination."""
-    id: Optional[ContactID] = Field(
-        None,
-        primary_key=True,
-        description="A (probably auto-generated) ID to uniquely identify this "
-        "Contact.",
-    )
     type: str = Field(
         index=True,
         description="Which type of Contact this is. Can be any string that "
@@ -133,6 +127,12 @@ class ContactBase(SQLModel):
 
 
 class Contact(ContactBase, table=True):
+    id: Optional[ContactID] = Field(
+        None,
+        primary_key=True,
+        description="A (probably auto-generated) ID to uniquely identify this "
+        "Contact.",
+    )
     destination_id: Optional[DestinationID] = Field(
         foreign_key="destinations.id", index=True,
         description="The Destination this Contact belongs to.",
@@ -147,7 +147,7 @@ class ContactDump(ContactBase):
     pass
 
 
-class ContactRead(ContactBase):
+class ContactListItem(ContactBase):
     pass
 
 
@@ -178,14 +178,7 @@ class DestinationBase(SQLModel):
         None,
         index=True,
         description="The country code associated with this Destination.",
-    )
-    name_audio_id: Optional[BlobID] = Field(
-        None,
-        foreign_key="blobs.id",
-        description="The spoken name of this Destination.",
-    )
-    name_audio: Optional[Blob] = Relationship(
-        **_rel_join("Destination.name_audio_id==Blob.id"),
+        **_example("DE"),
     )
 
 
@@ -202,12 +195,24 @@ class Destination(DestinationBase, table=True):
     portrait: Optional[Blob] = Relationship(
         **_rel_join("Destination.portrait_id==Blob.id"),
     )
+    name_audio_id: Optional[BlobID] = Field(
+        None,
+        foreign_key="blobs.id",
+        description="The spoken name of this Destination.",
+    )
+    name_audio: Optional[Blob] = Relationship(
+        **_rel_join("Destination.name_audio_id==Blob.id"),
+    )
 
 
 class DestinationDump(DestinationBase):
     contacts: List[ContactDump] = []
     groups: List[DestinationGroupID] = []
     portrait: Optional[str]
+
+
+class DestinationRead(DestinationBase):
+    contacts: List[ContactListItem] = []
 
 
 class DestinationGroupBase(SQLModel):
