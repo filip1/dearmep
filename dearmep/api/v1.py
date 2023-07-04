@@ -6,8 +6,8 @@ from prometheus_client import Counter
 from typing_extensions import Annotated
 
 from ..config import Config, Language, all_frontend_strings
-from ..database.connection import NoResultFound, Session, get_session, select
-from ..database.models import Blob
+from ..database.connection import Session, get_session
+from ..database import query
 from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import FrontendStringsResponse, LanguageDetection, \
     LocalizationResponse, RateLimitResponse
@@ -129,10 +129,7 @@ def get_blob_contents(
     Returns the contents of a blob, e.g. an image or audio file.
     """
     try:
-        blob = session.exec(select(Blob).where(Blob.name == name)).one()
-    except NoResultFound:
-        raise HTTPException(
-            status.HTTP_404_NOT_FOUND,
-            "no blob with that name",
-        )
+        blob = query.get_blob_by_name(session, name)
+    except KeyError as e:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
     return Response(blob.data, media_type=blob.mime_type)
