@@ -136,6 +136,14 @@ def get_frontend_strings(
 # TODO: Add caching headers.
 @router.get(
     "/blob/{name}",
+    response_class=Response,
+    responses={
+        200: {
+            "content": {"application/octet-stream": {}},
+            "description": "The contents of the named blob, with a matching "
+                           "mimetype set.",
+        },
+    },
 )
 def get_blob_contents(
     name: str,
