@@ -13,6 +13,7 @@ from ..config import APP_NAME
 ADDITIONAL_PACKAGES = (
     "FastAPI",
     "Pydantic",
+    "Pillow",
     "python-geoacumen",
     "countryguess",
 )

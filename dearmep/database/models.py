@@ -42,7 +42,7 @@ CONTACT_TYPES = (
 # These need to be individual lines, else (e.g. A = B = C = str) mypy won't
 # recognize them as type aliases. This is intentional (but not very clever
 # imho), see <https://github.com/python/mypy/issues/11858>.
-BlobID = str
+BlobID = int
 ContactID = int
 DestinationID = str
 DestinationGroupID = str

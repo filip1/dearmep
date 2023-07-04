@@ -1,5 +1,6 @@
 from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -14,8 +15,11 @@ from ..progress import FlexiBytesReader
 def import_destinations(ctx: Context):
     Config.load()
     input: FlexiBytesReader = ctx.args.input
+
     with get_session() as session:
-        importer = db_importing.Importer()
+        importer = db_importing.Importer(
+            fallback_portrait=getattr(ctx.args, "fallback_portrait", None),
+        )
         with ctx.task_factory() as tf:
             with tf.create_task("reading and converting JSON") as task:
                 input.set_task(task)
@@ -43,6 +47,12 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         "into the database.",
     )
     FlexiBytesReader.add_as_argument(destinations)
+    destinations.add_argument(
+        "-P", "--fallback-portrait", metavar="FILE",
+        type=Path,
+        help="path to a file that will be used if the portrait specified in "
+        "the dump cannot be found",
+    )
     destinations.set_defaults(func=import_destinations, raw_stdout=True)
 
     help_if_no_subcommand(parser)

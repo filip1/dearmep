@@ -1,20 +1,31 @@
 from __future__ import annotations
-from typing import Callable, Dict, Iterable, Type
+from pathlib import Path
+from typing import Callable, Dict, Iterable, Optional, Type
 
 from sqlmodel import SQLModel, Session
 
 from ..convert.dump import DumpFormatException
+from ..convert.image import image2blob
 from .models import Contact, Destination, DestinationDump, DestinationGroup, \
     DestinationGroupDump, DumpableModels
 
 
 class Importer:
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        *,
+        fallback_portrait: Optional[Path] = None,
+    ) -> None:
         self._dump2db: Dict[Type[DumpableModels], Callable] = {
             DestinationGroupDump: self._create_destination_group,
             DestinationDump: self._create_destination,
         }
         self._groups: Dict[str, DestinationGroup] = {}
+
+        self._fallback_portrait = image2blob(
+            "portrait", fallback_portrait,
+            description="fallback portrait",
+        ) if fallback_portrait else None
 
     def _create_destination(self, input: DestinationDump) -> Destination:
         contacts = list(
@@ -28,6 +39,8 @@ class Importer:
         dest = Destination.from_orm(input)
         dest.contacts = contacts
         dest.groups = groups
+        if self._fallback_portrait:
+            dest.portrait = self._fallback_portrait
         return dest
 
     def _create_destination_group(
