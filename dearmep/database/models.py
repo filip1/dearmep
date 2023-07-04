@@ -213,6 +213,7 @@ class DestinationDump(DestinationBase):
 
 class DestinationRead(DestinationBase):
     contacts: List[ContactListItem] = []
+    groups: List["DestinationGroupListItem"] = []
     portrait: Optional[str] = Field(
         description="URL path to the portrait image of this Destination, if "
         "any is available.",
@@ -261,6 +262,13 @@ class DestinationGroup(DestinationGroupBase, table=True):
 
 class DestinationGroupDump(DestinationGroupBase):
     pass
+
+
+class DestinationGroupListItem(DestinationGroupBase):
+    pass
+
+
+DestinationRead.update_forward_refs()
 
 
 DumpableModels = Union[DestinationDump, DestinationGroupDump]
