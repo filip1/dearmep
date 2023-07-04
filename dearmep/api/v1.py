@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Callable, Dict, Iterable, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
     Response, status
@@ -7,7 +7,7 @@ from typing_extensions import Annotated
 
 from ..config import Config, Language, all_frontend_strings
 from ..database.connection import Session, get_session
-from ..database.models import DestinationRead
+from ..database.models import Blob, DestinationRead
 from ..database import query
 from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import CountryCode, FrontendStringsResponse, LanguageDetection, \
@@ -36,7 +36,22 @@ rate_limit_response: Dict[int, Dict[str, Any]] = {
 }
 
 
+BlobURLDep = Callable[[Optional[Blob]], Optional[str]]
+
+
+def blob_url() -> Iterable[BlobURLDep]:
+    """Dependency to convert a Blob to a corresponding API request path."""
+    def blob_path(blob: Optional[Blob]) -> Optional[str]:
+        if blob is None:
+            return None
+        # FIXME: This should not be hardcoded.
+        return f"/api/v1/blob/{blob.name}"
+
+    yield blob_path
+
+
 def session():
+    """Dependency to get an SQLAlchemy session."""
     with get_session() as s:
         yield s
 
@@ -142,6 +157,7 @@ def get_blob_contents(
 )
 def get_suggested_destination(
     session: Annotated[Session, Depends(session)],
+    blob_url: Annotated[BlobURLDep, Depends(blob_url)],
     country: Optional[CountryCode] = None,
 ):
     """
@@ -152,4 +168,7 @@ def get_suggested_destination(
         dest = query.get_random_destination(session, country=country)
     except query.NotFound as e:
         raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
-    return dest
+    dest_r = DestinationRead.from_orm(dest, {
+        "portrait": blob_url(dest.portrait),
+    })
+    return dest_r

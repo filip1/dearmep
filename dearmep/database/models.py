@@ -213,6 +213,11 @@ class DestinationDump(DestinationBase):
 
 class DestinationRead(DestinationBase):
     contacts: List[ContactListItem] = []
+    portrait: Optional[str] = Field(
+        description="URL path to the portrait image of this Destination, if "
+        "any is available.",
+        **_example("/api/v1/blob/j.m.mierscheid.jpg"),
+    )
 
 
 class DestinationGroupBase(SQLModel):
