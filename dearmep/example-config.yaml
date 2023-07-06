@@ -15,6 +15,14 @@ campaign:
   name: Stop Scanning Me!
 
 
+# Database configuration.
+database:
+
+  # A SQLAlchemy database URL pointing to the database we will use.
+  # See <https://docs.sqlalchemy.org/en/20/core/engines.html>.
+  url: sqlite:///dearmep.sqlite
+
+
 # User authentication.
 authentication:
 

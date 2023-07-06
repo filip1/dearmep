@@ -4,7 +4,8 @@
 
 1. Install [Poetry](https://python-poetry.org/).
 2. Clone this repository and `cd` into it.
-3. Run `poetry install`.
+3. Run `poetry install --all-extras`.
+  * See below on which extras this will install. Alternatively, you can select individual extras with `--extras NAME` or don’t install any extras at all.
 4. Done.
 
 Poetry takes care of managing a [virtual environment](https://docs.python.org/3/tutorial/venv.html) for you, containing DearMEP and all of its dependencies, without messing with your global installation.
@@ -12,6 +13,15 @@ You can use `poetry shell` to launch a new subshell with your `$PATH` modified t
 Alternatively, you can prefix individual commands with `poetry run` to run just that command inside of the virtual environment.
 
 **In the examples below, commands like `dearmep` or `uvicorn` should either be run inside of a `poetry shell`, or prefixed like `poetry run dearmep`.**
+
+## Extras
+
+Python packages can have optional dependencies, called _extras_.
+These can provide additional, optional features.
+DearMEP defines the following extras:
+
+* `convert`: Additional tools for converting different data formats into each other, or general data manipulation. Can be very helpful for importing & exporting data like MEPs, statistics or swayability scores into and out of DearMEP. Will install [csvkit](https://csvkit.readthedocs.io/) and [VisiData](https://visidata.org/).
+* `specs`: Dependencies for extended specifications & documentation. Right now, this is just [eralchemy2](https://github.com/maurerle/eralchemy2) to generate entity relationship diagrams using `dearmep dump erd`.
 
 ## Providing a Configuration File
 

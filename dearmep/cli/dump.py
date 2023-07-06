@@ -1,14 +1,21 @@
+from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
 import json
+import logging
 from os import environ
 import sys
-from typing import Dict, Optional
+from typing import TYPE_CHECKING, Dict, Optional
 
 from pydantic import ValidationError
 
+if TYPE_CHECKING:
+    from . import Context
 from ..config import APP_NAME, ENV_PREFIX, Config, Settings, included_file, \
     is_config_missing
 from ..main import create_app
+
+
+_logger = logging.getLogger(__name__)
 
 
 def fake_config(patch: Optional[Dict] = None):
@@ -30,21 +37,34 @@ def dump_included_file(name: str):
     print(included_file(name).read_text())
 
 
-def dump_example_config(args):
+def dump_erd(ctx: Context):
+    try:
+        from eralchemy2 import render_er
+        from ..database import get_metadata
+    except ModuleNotFoundError:
+        _logger.exception(
+            f"eralchemy2 not found; have you installed {APP_NAME} with the "
+            "[specs] extra?"
+        )
+        sys.exit(1)
+    render_er(get_metadata(), ctx.args.outfile)
+
+
+def dump_example_config(ctx: Context):
     dump_included_file("example-config.yaml")
 
 
-def dump_log_config(args):
+def dump_log_config(ctx: Context):
     dump_included_file("logging.yaml")
 
 
-def dump_openapi(args):
+def dump_openapi(ctx: Context):
     fake_config()
     app = create_app()
-    print(json.dumps(app.openapi(), indent=None if args.compact else 2))
+    print(json.dumps(app.openapi(), indent=None if ctx.args.compact else 2))
 
 
-def add_parser(subparsers: _SubParsersAction):
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
     parser: ArgumentParser = subparsers.add_parser(
         "dump",
         help="dump example files & specifications",
@@ -52,6 +72,19 @@ def add_parser(subparsers: _SubParsersAction):
         "specifications.",
     )
     subsub = parser.add_subparsers(metavar="ITEM")
+
+    erd = subsub.add_parser(
+        "erd",
+        help="output an entity relationship diagram (requires [specs] extra)",
+        description="Output an entity relationship diagram from the schema.",
+    )
+    erd.add_argument(
+        "outfile",
+        help="output filename; format determined by suffix; all output "
+        "formats supported by eralchemy2 are available, including .png, .svg, "
+        ".er, .dot, .md (Mermaid)",
+    )
+    erd.set_defaults(func=dump_erd)
 
     example_config = subsub.add_parser(
         "example-config",
@@ -90,4 +123,4 @@ def add_parser(subparsers: _SubParsersAction):
     )
     openapi.set_defaults(compact=not sys.stdout.isatty())
 
-    parser.set_defaults(func=lambda args: parser.error("no item selected"))
+    help_if_no_subcommand(parser)

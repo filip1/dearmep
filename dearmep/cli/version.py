@@ -1,7 +1,11 @@
+from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
 from importlib import metadata
 import sys
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from . import Context
 from .. import __version__
 from ..config import APP_NAME
 
@@ -9,11 +13,13 @@ from ..config import APP_NAME
 ADDITIONAL_PACKAGES = (
     "FastAPI",
     "Pydantic",
+    "Pillow",
     "python-geoacumen",
+    "countryguess",
 )
 
 
-def run(args):
+def run(ctx: Context):
     versions = {
         APP_NAME: __version__,
         "Python": sys.version.replace("\n", " "),
@@ -25,7 +31,7 @@ def run(args):
         print(f"{component.ljust(longest_pkg_name_len)} {version}")
 
 
-def add_parser(subparsers: _SubParsersAction):
+def add_parser(subparsers: _SubParsersAction, **kwargs):
     parser: ArgumentParser = subparsers.add_parser(
         "version",
         help="show version information",

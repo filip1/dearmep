@@ -1,7 +1,11 @@
+from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
+from typing import TYPE_CHECKING
 
 import uvicorn
 
+if TYPE_CHECKING:
+    from . import Context
 from ..config import APP_NAME, CMD_NAME, ENV_PREFIX, included_file
 
 
@@ -10,20 +14,20 @@ LOG_LEVELS = ("critical", "error", "warning", "info", "debug")
 DEFAULT_LOG_LEVEL = "info"
 
 
-def serve(args):
+def serve(ctx: Context):
     uvicorn.run(
         "dearmep.main:create_app",
         factory=True,
-        port=args.port,
-        reload=args.reload,
+        port=ctx.args.port,
+        reload=ctx.args.reload,
         reload_excludes=["node_modules"],  # TODO: doesn't seem to be working
-        log_config=args.log_config,
-        log_level=args.log_level,
+        log_config=ctx.args.log_config,
+        log_level=ctx.args.log_level,
         proxy_headers=True,  # Parse headers from a reverse proxy.
     )
 
 
-def add_parser(subparsers: _SubParsersAction):
+def add_parser(subparsers: _SubParsersAction, **kwargs):
     parser: ArgumentParser = subparsers.add_parser(
         "serve",
         help="run an HTTP server",
