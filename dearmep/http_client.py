@@ -62,6 +62,7 @@ class MassDownloader:
         task: Optional[BaseTask] = None,
         overwrite: bool = False,
         skip_existing: bool = False,
+        accept_error_codes: Union[None, Literal[True], Set[int]] = None,
         ignore_error_codes: Union[None, Literal[True], Set[int]] = None,
     ):
         self._jobs = jobs
@@ -70,6 +71,8 @@ class MassDownloader:
         self._task.total = 0
         self._overwrite = overwrite
         self._skip_existing = skip_existing
+        self._accept_codes = set() if accept_error_codes is None \
+            else accept_error_codes
         self._ignore_codes = set() if ignore_error_codes is None \
             else ignore_error_codes
         self._queue: Queue[Tuple[str, Path]] = Queue()
@@ -88,7 +91,9 @@ class MassDownloader:
     def _fetch(self, url: str) -> bytes:
         """Load URL's contents, retrying with backoff."""
         res = self._session.get(url)
-        res.raise_for_status()
+        if self._accept_codes is not True \
+                and res.status_code not in self._accept_codes:
+            res.raise_for_status()
         return res.content
 
     def _download(self, url: str, dest: Path):

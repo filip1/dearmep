@@ -46,7 +46,7 @@ def europarl_portraits(ctx: Context):
             ids, ctx.args.filename_template, ctx.args.jobs,
             skip_existing=ctx.args.existing == "skip",
             overwrite=ctx.args.existing == "overwrite",
-            ignore_not_found=ctx.args.ignore_not_found,
+            not_found=ctx.args.not_found,
             task=task,
         )
 
@@ -104,16 +104,19 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         f"{MEP_PORTRAIT_FILE_PATTERN})",
     )
     mep_portraits.add_argument(
-        "-i", "--ignore-not-found",
-        action="store_true",
-        help="if there is no portrait for a given ID, silently ignore the "
-        "error (instead of aborting the download process)",
-    )
-    mep_portraits.add_argument(
         "-j", "--jobs", metavar="N",
         default=DEFAULT_MASS_DOWNLOAD_JOBS, type=int,
         help="the number of parallel download jobs to run (default: "
         f"{DEFAULT_MASS_DOWNLOAD_JOBS})",
+    )
+    mep_portraits.add_argument(
+        "-n", "--not-found", metavar="ACTION",
+        choices=(portrait.STOP, portrait.IGNORE, portrait.SAVE),
+        default=portrait.STOP,
+        help="what to do if there is no portrait for the given ID: 'stop' the "
+        "whole download process (default), 'ignore' this ID, or 'save' the "
+        "placeholder image that will be returned by the EuroParl server under "
+        "the destination filename",
     )
     mep_portraits.add_argument(
         "-e", "--existing", metavar="ACTION",
