@@ -5,6 +5,7 @@ from threading import Thread
 from typing import List, Literal, Optional, Set, Tuple, Union
 
 import backoff
+from ratelimit import RateLimitException, limits  # type: ignore[import]
 import requests
 
 from . import __version__
@@ -32,6 +33,8 @@ def session_or_new(session: Optional[requests.Session]) -> requests.Session:
 
 def _permanent_download_error(e: Exception) -> bool:
     """Whether a HTTP error is considered permanent & retrying should stop."""
+    if isinstance(e, RateLimitException):
+        return False
     if not isinstance(e, requests.exceptions.HTTPError):
         return True
     req: Optional[requests.Request] = e.request
@@ -76,10 +79,11 @@ class MassDownloader:
 
     @backoff.on_exception(
         backoff.expo,
-        requests.exceptions.HTTPError,
+        (requests.exceptions.HTTPError, RateLimitException),
         giveup=_permanent_download_error,
         max_time=120,
     )
+    @limits(calls=1, period=0.2)  # 5 calls spread over 1 second
     def _fetch(self, url: str) -> bytes:
         """Load URL's contents, retrying with backoff."""
         res = self._session.get(url)

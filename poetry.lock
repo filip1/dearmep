@@ -1441,6 +1441,17 @@ files = [
 ]
 
 [[package]]
+name = "ratelimit"
+version = "2.2.1"
+description = "API rate limit decorator"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "ratelimit-2.2.1.tar.gz", hash = "sha256:af8a9b64b821529aca09ebaf6d8d279100d766f19e90b5059ac6a718ca6dee42"},
+]
+
+[[package]]
 name = "requests"
 version = "2.31.0"
 description = "Python HTTP for Humans."
@@ -2159,4 +2170,4 @@ specs = ["eralchemy2"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "6e5d9bba7fbb2621c3bbf498499c0d993846bb0413b9df1d9bd7482c6504f4b6"
+content-hash = "d938a98f62d9422e30b481c6389e123fb389f90ec6330e51eb2868c76baf8699"
