@@ -62,7 +62,7 @@ class MassDownloader:
         task: Optional[BaseTask] = None,
         overwrite: bool = False,
         skip_existing: bool = False,
-        accept_codes: Union[None, Literal[True], Set[int]] = None,
+        ignore_error_codes: Union[None, Literal[True], Set[int]] = None,
     ):
         self._jobs = jobs
         self._session = session_or_new(session)
@@ -70,7 +70,8 @@ class MassDownloader:
         self._task.total = 0
         self._overwrite = overwrite
         self._skip_existing = skip_existing
-        self._accept_codes = set() if accept_codes is None else accept_codes
+        self._ignore_codes = set() if ignore_error_codes is None \
+            else ignore_error_codes
         self._queue: Queue[Tuple[str, Path]] = Queue()
         self._mgmt_thread: Optional[Thread] = None
         self._should_run: bool = False
@@ -122,8 +123,8 @@ class MassDownloader:
                 self._download(url, dest)
             except requests.exceptions.HTTPError as e:
                 if e.response is not None and (
-                    self._accept_codes is True
-                    or e.response.status_code in self._accept_codes
+                    self._ignore_codes is True
+                    or e.response.status_code in self._ignore_codes
                 ):
                     self.errors.append((url, e.response))
                 else:

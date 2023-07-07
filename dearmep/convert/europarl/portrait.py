@@ -22,7 +22,7 @@ def download_portraits(
         overwrite=overwrite,
         skip_existing=skip_existing,
         task=task,
-        accept_codes={404},
+        ignore_error_codes={404},
     )
     downloader.start()
     for mep_id in mep_ids:
