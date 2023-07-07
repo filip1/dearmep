@@ -1,15 +1,20 @@
 from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
+import logging
 from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
     from . import Context
 from ..config import APP_NAME, CMD_NAME
 from ..convert import dump
-from ..convert.europarl import rollcallvote
+from ..convert.europarl import portrait, rollcallvote
 from ..convert.parltrack import mep
 from ..convert.tabular import CSVStreamTabular, Tabular
+from ..http_client import DEFAULT_MASS_DOWNLOAD_JOBS
 from ..progress import FlexiBytesReader
+
+
+MEP_PORTRAIT_FILE_PATTERN = "{id}.jpg"
 
 
 def tabular_class(ctx: Context):
@@ -30,6 +35,19 @@ def parltrack_meps(ctx: Context):
             lz_compressed=ctx.args.lz,
         )):
             print(output)
+
+
+def europarl_portraits(ctx: Context):
+    logging.basicConfig(level=logging.DEBUG)
+    ids = set(ctx.args.ID)
+    with ctx.task_factory() as tf:
+        task = tf.create_task("downloading portraits", total=len(ids))
+        portrait.download_portraits(
+            ids, ctx.args.filename_template, ctx.args.jobs,
+            skip_existing=ctx.args.existing == "skip",
+            overwrite=ctx.args.existing == "overwrite",
+            task=task,
+        )
 
 
 def rollcallvote_topics(ctx: Context):
@@ -70,6 +88,39 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         description="Convert several data formats into others.",
     )
     subsub = parser.add_subparsers(metavar="CONVERTER")
+
+    mep_portraits = subsub.add_parser(
+        "europarl.portraits",
+        help="portrait images of Members of the European Parliament",
+        description="Download portrait images of Members of the European "
+        "Parliament from the Parliament's server.",
+    )
+    mep_portraits.add_argument(
+        "-f", "--filename-template", metavar="TEMPLATE",
+        default=MEP_PORTRAIT_FILE_PATTERN,
+        help="Python .format() string template to determine target filename, "
+        "{id} will be replaced by the MEP's ID (default: "
+        f"{MEP_PORTRAIT_FILE_PATTERN})",
+    )
+    mep_portraits.add_argument(
+        "-j", "--jobs", metavar="N",
+        default=DEFAULT_MASS_DOWNLOAD_JOBS, type=int,
+        help="the number of parallel download jobs to run (default: "
+        f"{DEFAULT_MASS_DOWNLOAD_JOBS})",
+    )
+    mep_portraits.add_argument(
+        "-e", "--existing", metavar="ACTION",
+        choices=("stop", "skip", "overwrite"), default="stop",
+        help="what to do if the target file already exists: 'stop' the whole "
+        "download process (default), 'skip' downloading this file (keeping "
+        "the existing file as is), or 'overwrite' (download again)",
+    )
+    mep_portraits.add_argument(
+        "ID",
+        help="the numerical MEP ID to download portraits for",
+        nargs="+", type=int,
+    )
+    mep_portraits.set_defaults(func=europarl_portraits)
 
     rcv = subsub.add_parser(
         "europarl.rollcallvote",
