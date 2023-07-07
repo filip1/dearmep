@@ -179,8 +179,16 @@ class MassDownloader:
 
     def stop(self, wait: bool = True):
         """Stop processing downloads, optionally waiting for queue to empty."""
-        if wait:
-            self._queue.join()
-        self._should_run = False
-        if wait and self._mgmt_thread:
-            self._mgmt_thread.join()
+        try:
+            if wait:
+                self._queue.join()
+            self._should_run = False
+            if wait and self._mgmt_thread:
+                self._mgmt_thread.join()
+        except KeyboardInterrupt:
+            self._abort = True
+        except BaseException:
+            self._abort = True
+            raise
+        finally:
+            self._should_run = False
