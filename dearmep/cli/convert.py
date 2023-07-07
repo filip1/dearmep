@@ -1,6 +1,5 @@
 from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
-import logging
 from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
@@ -38,7 +37,7 @@ def parltrack_meps(ctx: Context):
 
 
 def europarl_portraits(ctx: Context):
-    logging.basicConfig(level=logging.DEBUG)
+    ctx.setup_logging()
     ids = set(ctx.args.ID)
     with ctx.task_factory() as tf:
         task = tf.create_task("downloading portraits", total=len(ids))
