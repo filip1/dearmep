@@ -158,8 +158,8 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
 
     meps = subsub.add_parser(
         "parltrack.meps",
-        help="ParlTrack MEP list",
-        description="Convert one of ParlTrack's \"MEPs\" dumps (see "
+        help="Parltrack MEP list",
+        description="Convert one of Parltrack's \"MEPs\" dumps (see "
         f"<https://parltrack.org/dumps>) into {APP_NAME} Destination JSON "
         f"that can then be imported (e.g. using `{CMD_NAME} import "
         "destinations`) as the list of Destinations to contact.",
@@ -169,7 +169,7 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
     meps_lz.add_argument(
         "--lz", action="store_true",
         help="assume the input to be lz compressed, just as you would "
-        "download it from the ParlTrack website (default)",
+        "download it from the Parltrack website (default)",
     )
     meps_lz.add_argument(
         "--no-lz", dest="lz", action="store_false",
