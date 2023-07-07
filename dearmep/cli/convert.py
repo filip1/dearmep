@@ -46,6 +46,7 @@ def europarl_portraits(ctx: Context):
             ids, ctx.args.filename_template, ctx.args.jobs,
             skip_existing=ctx.args.existing == "skip",
             overwrite=ctx.args.existing == "overwrite",
+            ignore_not_found=ctx.args.ignore_not_found,
             task=task,
         )
 
@@ -101,6 +102,12 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         help="Python .format() string template to determine target filename, "
         "{id} will be replaced by the MEP's ID (default: "
         f"{MEP_PORTRAIT_FILE_PATTERN})",
+    )
+    mep_portraits.add_argument(
+        "-i", "--ignore-not-found",
+        action="store_true",
+        help="if there is no portrait for a given ID, silently ignore the "
+        "error (instead of aborting the download process)",
     )
     mep_portraits.add_argument(
         "-j", "--jobs", metavar="N",

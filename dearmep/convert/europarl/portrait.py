@@ -15,14 +15,15 @@ def download_portraits(
     *,
     overwrite: bool = False,
     skip_existing: bool = False,
-    task: Optional[BaseTask] = None
+    ignore_not_found: bool = False,
+    task: Optional[BaseTask] = None,
 ):
     downloader = MassDownloader(
         jobs=jobs,
         overwrite=overwrite,
         skip_existing=skip_existing,
         task=task,
-        ignore_error_codes={404},
+        ignore_error_codes={404} if ignore_not_found else None,
     )
     downloader.start()
     for mep_id in mep_ids:
