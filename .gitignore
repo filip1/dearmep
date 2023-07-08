@@ -14,3 +14,6 @@ openapi.json
 
 # For convenience, if people use their own config.yaml.
 /.config.yaml
+
+# Dotenv files.
+*.env

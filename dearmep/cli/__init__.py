@@ -5,6 +5,7 @@ import logging
 import re
 from sys import exit, stderr
 
+from dotenv import load_dotenv
 from rich.console import Console
 from rich.highlighter import NullHighlighter
 from rich.logging import RichHandler
@@ -61,6 +62,7 @@ def help_if_no_subcommand(parser: ArgumentParser):
 
 
 def run():
+    load_dotenv()
     parser = ArgumentParser(
         prog=CMD_NAME.lower(),
     )
