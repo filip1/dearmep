@@ -6,10 +6,14 @@ if TYPE_CHECKING:
     from . import Context
 from ..config import APP_NAME, CMD_NAME
 from ..convert import dump
-from ..convert.europarl import rollcallvote
+from ..convert.europarl import portrait, rollcallvote
 from ..convert.parltrack import mep
 from ..convert.tabular import CSVStreamTabular, Tabular
+from ..http_client import DEFAULT_MASS_DOWNLOAD_JOBS
 from ..progress import FlexiBytesReader
+
+
+MEP_PORTRAIT_FILE_PATTERN = "{id}.jpg"
 
 
 def tabular_class(ctx: Context):
@@ -30,6 +34,20 @@ def parltrack_meps(ctx: Context):
             lz_compressed=ctx.args.lz,
         )):
             print(output)
+
+
+def europarl_portraits(ctx: Context):
+    ctx.setup_logging()
+    ids = set(ctx.args.ID)
+    with ctx.task_factory() as tf:
+        task = tf.create_task("downloading portraits", total=len(ids))
+        portrait.download_portraits(
+            ids, ctx.args.filename_template, ctx.args.jobs,
+            skip_existing=ctx.args.existing == "skip",
+            overwrite=ctx.args.existing == "overwrite",
+            not_found=ctx.args.not_found,
+            task=task,
+        )
 
 
 def rollcallvote_topics(ctx: Context):
@@ -71,6 +89,48 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
     )
     subsub = parser.add_subparsers(metavar="CONVERTER")
 
+    mep_portraits = subsub.add_parser(
+        "europarl.portraits",
+        help="portrait images of Members of the European Parliament",
+        description="Download portrait images of Members of the European "
+        "Parliament from the Parliament's server.",
+    )
+    mep_portraits.add_argument(
+        "-f", "--filename-template", metavar="TEMPLATE",
+        default=MEP_PORTRAIT_FILE_PATTERN,
+        help="Python .format() string template to determine target filename, "
+        "{id} will be replaced by the MEP's ID (default: "
+        f"{MEP_PORTRAIT_FILE_PATTERN})",
+    )
+    mep_portraits.add_argument(
+        "-j", "--jobs", metavar="N",
+        default=DEFAULT_MASS_DOWNLOAD_JOBS, type=int,
+        help="the number of parallel download jobs to run (default: "
+        f"{DEFAULT_MASS_DOWNLOAD_JOBS})",
+    )
+    mep_portraits.add_argument(
+        "-n", "--not-found", metavar="ACTION",
+        choices=(portrait.STOP, portrait.IGNORE, portrait.SAVE),
+        default=portrait.STOP,
+        help="what to do if there is no portrait for the given ID: 'stop' the "
+        "whole download process (default), 'ignore' this ID, or 'save' the "
+        "placeholder image that will be returned by the EuroParl server under "
+        "the destination filename",
+    )
+    mep_portraits.add_argument(
+        "-e", "--existing", metavar="ACTION",
+        choices=("stop", "skip", "overwrite"), default="stop",
+        help="what to do if the target file already exists: 'stop' the whole "
+        "download process (default), 'skip' downloading this file (keeping "
+        "the existing file as is), or 'overwrite' (download again)",
+    )
+    mep_portraits.add_argument(
+        "ID",
+        help="the numerical MEP ID to download portraits for",
+        nargs="+", type=int,
+    )
+    mep_portraits.set_defaults(func=europarl_portraits)
+
     rcv = subsub.add_parser(
         "europarl.rollcallvote",
         help="European Parliament Roll Call Vote",
@@ -98,8 +158,8 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
 
     meps = subsub.add_parser(
         "parltrack.meps",
-        help="ParlTrack MEP list",
-        description="Convert one of ParlTrack's \"MEPs\" dumps (see "
+        help="Parltrack MEP list",
+        description="Convert one of Parltrack's \"MEPs\" dumps (see "
         f"<https://parltrack.org/dumps>) into {APP_NAME} Destination JSON "
         f"that can then be imported (e.g. using `{CMD_NAME} import "
         "destinations`) as the list of Destinations to contact.",
@@ -109,7 +169,7 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
     meps_lz.add_argument(
         "--lz", action="store_true",
         help="assume the input to be lz compressed, just as you would "
-        "download it from the ParlTrack website (default)",
+        "download it from the Parltrack website (default)",
     )
     meps_lz.add_argument(
         "--no-lz", dest="lz", action="store_false",

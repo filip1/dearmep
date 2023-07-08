@@ -135,7 +135,7 @@ def get_frontend_strings(
 
 # TODO: Add caching headers.
 @router.get(
-    "/blob/{name}",
+    "/blob/{name}", operation_id="getBlob",
     response_class=Response,
     responses={
         200: {
@@ -160,7 +160,7 @@ def get_blob_contents(
 
 
 @router.get(
-    "/destination/suggested",
+    "/destination/suggested", operation_id="getSuggestedDestination",
     response_model=DestinationRead,
 )
 def get_suggested_destination(

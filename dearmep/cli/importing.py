@@ -18,6 +18,7 @@ def import_destinations(ctx: Context):
 
     with get_session() as session:
         importer = db_importing.Importer(
+            portrait_template=getattr(ctx.args, "portrait_template", None),
             fallback_portrait=getattr(ctx.args, "fallback_portrait", None),
         )
         with ctx.task_factory() as tf:
@@ -47,6 +48,14 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         "into the database.",
     )
     FlexiBytesReader.add_as_argument(destinations)
+    destinations.add_argument(
+        "-p", "--portrait-template", metavar="TEMPLATE",
+        help="template string to construct the path to the portrait image of "
+        "the Destination, e.g. `portraits/{filename}`; available placeholders "
+        "are {filename} (the name as given in the `portrait` field in the "
+        "Destination object in the stream) and {id} (the Destination's ID as "
+        "given in the JSON",
+    )
     destinations.add_argument(
         "-P", "--fallback-portrait", metavar="FILE",
         type=Path,

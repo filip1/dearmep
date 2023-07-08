@@ -62,7 +62,7 @@ def get_group(
 def constituency_to_group(const: Dict[str, str]) -> Dict[str, str]:
     return {
         "type": "party",
-        # ParlTrack has some parties in different capitalizations.
+        # Parltrack has some parties in different capitalizations.
         "id": f"P:{const['party'].lower()}",
         "long_name": const["party"],
     }
@@ -78,7 +78,7 @@ def group_to_group(group: Dict[str, str]) -> Dict[str, str]:
 
 
 def convert_contact(type: str, contact: str) -> str:
-    # ParlTrack uses phone/fax numbers starting with `00` instead of `+`.
+    # Parltrack uses phone/fax numbers starting with `00` instead of `+`.
     if type in ("Phone", "Fax") and contact.startswith("00"):
         return f"+{contact[2:]}"
     # No conversion necessary.

@@ -1,9 +1,14 @@
 from __future__ import annotations
 from argparse import ArgumentParser, Namespace
 from contextlib import contextmanager
+import logging
+import re
 from sys import exit, stderr
 
+from dotenv import load_dotenv
 from rich.console import Console
+from rich.highlighter import NullHighlighter
+from rich.logging import RichHandler
 from rich.progress import Progress
 
 from . import convert, db, dump, importing, serve, version
@@ -18,6 +23,24 @@ class Context:
         self.console = Console(stderr=raw_stdout)
         self.raw_stdout = raw_stdout
         self.dummy_factory = DummyTaskFactory()
+
+    def setup_logging(self, level: int = logging.INFO):
+        def ignore_uninteresting(r: logging.LogRecord) -> int:
+            ratelimit_backoff = re.compile(
+                r"^Backing off .+\(ratelimit.exception.RateLimitException")
+            if r.name == "backoff" and ratelimit_backoff.match(r.getMessage()):
+                return 0
+            return 1
+
+        handler = RichHandler(
+            console=self.console,
+            highlighter=NullHighlighter(),
+        )
+        handler.addFilter(ignore_uninteresting)
+        logging.basicConfig(
+            level=level,
+            handlers=(handler,),
+        )
 
     @contextmanager
     def task_factory(self):
@@ -39,6 +62,7 @@ def help_if_no_subcommand(parser: ArgumentParser):
 
 
 def run():
+    load_dotenv()
     parser = ArgumentParser(
         prog=CMD_NAME.lower(),
     )
