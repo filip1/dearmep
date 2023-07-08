@@ -14,6 +14,7 @@ class Importer:
     def __init__(
         self,
         *,
+        portrait_template: Optional[str] = None,
         fallback_portrait: Optional[Path] = None,
     ) -> None:
         self._dump2db: Dict[Type[DumpableModels], Callable] = {
@@ -21,6 +22,7 @@ class Importer:
             DestinationDump: self._create_destination,
         }
         self._groups: Dict[str, DestinationGroup] = {}
+        self._portrait_tpl = portrait_template
 
         self._fallback_portrait = image2blob(
             "portrait", fallback_portrait,
@@ -39,7 +41,15 @@ class Importer:
         dest = Destination.from_orm(input)
         dest.contacts = contacts
         dest.groups = groups
-        if self._fallback_portrait:
+
+        if self._portrait_tpl:
+            portrait_path = Path(self._portrait_tpl.format(id=dest.id))
+            if portrait_path.exists():
+                dest.portrait = image2blob(
+                    "portrait", portrait_path,
+                    description=f"portrait for Destination {dest.id}",
+                )
+        if not dest.portrait and self._fallback_portrait:
             dest.portrait = self._fallback_portrait
         return dest
 
