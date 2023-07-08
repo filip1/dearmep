@@ -43,7 +43,10 @@ class Importer:
         dest.groups = groups
 
         if self._portrait_tpl:
-            portrait_path = Path(self._portrait_tpl.format(id=dest.id))
+            portrait_path = Path(self._portrait_tpl.format(
+                id=dest.id,
+                filename=input.portrait,
+            ))
             if portrait_path.exists():
                 dest.portrait = image2blob(
                     "portrait", portrait_path,

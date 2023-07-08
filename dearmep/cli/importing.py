@@ -51,8 +51,10 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
     destinations.add_argument(
         "-p", "--portrait-template", metavar="TEMPLATE",
         help="template string to construct the path to the portrait image of "
-        "the Destination, e.g. `portraits/{id}.jpg`; {id} will be replaced by "
-        "the Destination's ID",
+        "the Destination, e.g. `portraits/{filename}`; available placeholders "
+        "are {filename} (the name as given in the `portrait` field in the "
+        "Destination object in the stream) and {id} (the Destination's ID as "
+        "given in the JSON",
     )
     destinations.add_argument(
         "-P", "--fallback-portrait", metavar="FILE",
