@@ -7,7 +7,7 @@ from sqlmodel import SQLModel, Session
 from ..convert.dump import DumpFormatException
 from ..convert.image import image2blob
 from .models import Contact, Destination, DestinationDump, DestinationGroup, \
-    DestinationGroupDump, DumpableModels
+    DestinationGroupDump, DumpableModels, SwayabilityImport
 
 
 class Importer:
@@ -90,3 +90,12 @@ class Importer:
                 raise DumpFormatException(f"unknown type: {obj_type}")
             model: SQLModel = self._dump2db[obj_type](obj)
             session.add(model)
+
+
+def import_swayability(session: Session, objs: Iterable[SwayabilityImport]):
+    for obj in objs:
+        dest = session.get(Destination, obj.id)
+        if not dest:
+            raise KeyError(f"no such Destination: {obj.id}")
+        if obj.endorsement is not None:
+            dest.base_endorsement = obj.endorsement

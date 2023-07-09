@@ -8,7 +8,7 @@ from sqlmodel import Column, Enum, Field, Relationship, SQLModel, TIMESTAMP, \
     and_, case, or_, func
 
 from ..config import Config, ConfigNotLoaded
-from ..models import CountryCode
+from ..models import CountryCode, Score
 
 
 class _SchemaExtra(TypedDict):
@@ -256,6 +256,12 @@ class Destination(DestinationBase, table=True):
     name_audio: Optional[Blob] = Relationship(
         **_rel_join("Destination.name_audio_id==Blob.id"),
     )
+    base_endorsement: Score = Field(
+        index=True,
+        default=0.5,
+        description="The manually defined base Endorsement value for this "
+        "Destination.",
+    )
 
 
 class DestinationDump(DestinationBase):
@@ -356,6 +362,16 @@ class DestinationSelectionLogBase(SQLModel):
 class DestinationSelectionLog(DestinationSelectionLogBase, table=True):
     __tablename__ = "dest_select_log"
     destination: Destination = Relationship()
+
+
+class SwayabilityImport(BaseModel):
+    id: DestinationID = Field(
+        description="ID of the Destination to manipulate.",
+    )
+    endorsement: Optional[Score] = Field(
+        None,
+        description="Base Endorsement value to set.",
+    )
 
 
 DumpableModels = Union[DestinationDump, DestinationGroupDump]

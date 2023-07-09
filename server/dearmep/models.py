@@ -1,6 +1,7 @@
 from typing import Any, Dict, Generic, List, Optional, TypeVar
 
-from pydantic import BaseModel, ConstrainedInt, ConstrainedStr, Field
+from pydantic import BaseModel, ConstrainedFloat, ConstrainedInt, \
+    ConstrainedStr, Field
 from pydantic.generics import GenericModel
 
 
@@ -21,6 +22,12 @@ class SearchResultLimit(ConstrainedInt):
     """The number of search results to return."""
     gt = 0
     le = MAX_SEARCH_RESULT_LIMIT
+
+
+class Score(ConstrainedFloat):
+    """A number between 0 and 1, inclusive."""
+    ge = 0.0
+    le = 1.0
 
 
 frontend_strings_field = Field(
