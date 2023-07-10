@@ -5,7 +5,7 @@ from uuid import uuid4
 
 from pydantic import UUID4, BaseModel
 from sqlmodel import Column, Enum, Field, Relationship, SQLModel, TIMESTAMP, \
-    and_, case, or_, func
+    and_, case, or_, func, text
 
 from ..config import Config, ConfigNotLoaded
 from ..models import CountryCode, Score
@@ -82,6 +82,9 @@ BlobID = int
 ContactID = int
 DestinationID = str
 DestinationGroupID = str
+
+
+DEFAULT_BASE_ENDORSEMENT = 0.5
 
 
 def auto_timestamp_column() -> Column:
@@ -258,7 +261,10 @@ class Destination(DestinationBase, table=True):
     )
     base_endorsement: Score = Field(
         index=True,
-        default=0.5,
+        default=DEFAULT_BASE_ENDORSEMENT,
+        sa_column_kwargs={
+            "server_default": text(str(DEFAULT_BASE_ENDORSEMENT)),
+        },
         description="The manually defined base Endorsement value for this "
         "Destination.",
     )
