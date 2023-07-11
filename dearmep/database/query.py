@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional, cast
 
 from sqlalchemy import func
 from sqlalchemy.exc import NoResultFound
@@ -10,6 +10,14 @@ from .models import Blob, Destination
 
 class NotFound(Exception):
     pass
+
+
+def get_available_countries(session: Session) -> List[str]:
+    countries = session.exec(select(Destination.country).distinct()).all()
+    return cast(List[str], countries) \
+        if isinstance(countries, List) and len(countries) \
+        and isinstance(countries[0], str) \
+        else []
 
 
 def get_blob_by_name(session: Session, name: str) -> Blob:
