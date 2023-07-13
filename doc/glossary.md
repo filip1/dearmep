@@ -12,9 +12,16 @@ DearMEP was created with the European Parliament and several national initiative
 
 The process of converting someone who browses the Campaign website to an actual User in the system, i.e. to someone who uses the application to contact Destinations.
 
+## Instance
+
+When the DearMEP Tool is applied for a particular campaign it needs to be centrally hosted and configured. Texts and audio files have to be adapted for that issue. MEPs of the current legislative term have to be uploaded with their sway-ability value. We call such a running version of DearMEP an Instance.
+
+## Campaign
+Every instance can be embedded in multiple campaign websites, which might do further configuration for their particular use case. We call such an embed of an instance a Campaign.
+
 ## Destination
 
-One of the persons that the application is configured to contact in the current Instance, e.g. a member of parliament.
+One of the persons that the application is configured to contact in the current campaign, e.g. a member of (the European) parliament.
 
 Other terms for these persons and why we have decided against them:
 
