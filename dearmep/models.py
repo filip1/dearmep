@@ -1,6 +1,7 @@
 from typing import Any, Dict, Generic, List, Optional, TypeVar
 
 from pydantic import BaseModel, ConstrainedInt, ConstrainedStr, Field
+from pydantic.generics import GenericModel
 
 
 T = TypeVar("T")
@@ -158,7 +159,7 @@ class RateLimitResponse(BaseModel):
     )
 
 
-class SearchResult(BaseModel, Generic[T]):
+class SearchResult(GenericModel, Generic[T]):
     """Result of a search."""
     results: List[T] = Field(
         description="The actual search results.",
