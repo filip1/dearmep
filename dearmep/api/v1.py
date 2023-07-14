@@ -221,7 +221,11 @@ def get_destinations_by_name(
     ),
 ) -> SearchResult[DestinationSearchResult]:
     """Return Destinations by searching for (parts of) their name."""
-    # TODO: Ensure that country is set if all_countries is False.
+    if not all_countries and country is None:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="country is required if all_countries is false",
+        )
     dests = query.get_destinations_by_name(
         session, name,
         all_countries=all_countries,
