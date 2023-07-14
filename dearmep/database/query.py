@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from sqlalchemy import func
 from sqlalchemy.exc import NoResultFound
+from sqlmodel import case
 
 from ..models import CountryCode
 from .connection import Session, select
@@ -58,8 +59,14 @@ def get_destinations_by_name(
         Destination.name.like(  # type: ignore[attr-defined]
             f"%{escape_for_like(name)}%", escape="#",
         )).limit(limit)
-    # TODO: Prioritize `country` if given and `all_countries` is True.
-    if not all_countries:
+    if all_countries:
+        if country is not None:
+            # List countries matching the specified one first.
+            stmt = stmt.order_by(case(
+                (Destination.country == country, 0),
+                else_=1,
+            ))
+    else:
         if country is None:
             raise ValueError("country needs to be set")
         stmt = stmt.where(Destination.country == country)
