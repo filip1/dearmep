@@ -183,6 +183,13 @@ class DestinationBase(SQLModel):
 
 
 class Destination(DestinationBase, table=True):
+    sort_name: str = Field(
+        index=True,
+        description="The Destination’s name, as used for sorting purposes. "
+        "Usually, this will e.g. list the family name first, but the campaign "
+        "is free to handle this as they please.",
+        **_example("MIERSCHEID Jakob Maria"),
+    )
     contacts: List[Contact] = Relationship(back_populates="destination")
     groups: List["DestinationGroup"] = Relationship(
         back_populates="destinations", link_model=DestinationGroupLink,
@@ -206,6 +213,7 @@ class Destination(DestinationBase, table=True):
 
 
 class DestinationDump(DestinationBase):
+    sort_name: str
     contacts: List[ContactDump] = []
     groups: List[DestinationGroupID] = []
     portrait: Optional[str]
