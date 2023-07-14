@@ -11,9 +11,8 @@ from ..database.models import Blob, DestinationID, DestinationRead
 from ..database import query
 from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import MAX_SEARCH_RESULT_LIMIT, CountryCode, \
-    DestinationSearchGroup, DestinationSearchResult, FrontendStringsResponse, \
-    LanguageDetection, LocalizationResponse, RateLimitResponse, SearchResult, \
-    SearchResultLimit
+    DestinationSearchResult, FrontendStringsResponse, LanguageDetection, \
+    LocalizationResponse, RateLimitResponse, SearchResult, SearchResultLimit
 from ..util import Limit, client_addr
 
 
@@ -171,24 +170,7 @@ def get_destinations_by_country(
 ) -> SearchResult[DestinationSearchResult]:
     """Return all destinations in a given country."""
     dests = query.get_destinations_by_country(session, country)
-    return SearchResult(
-        results=[
-            DestinationSearchResult(
-                id=dest.id,
-                name=dest.name,
-                country=dest.country,
-                groups=[
-                    DestinationSearchGroup(
-                        name=group.long_name,
-                        type=group.type,
-                        logo="http://placekitten.com/300/300",  # TODO: replace
-                    )
-                    for group in dest.groups
-                ]
-            )
-            for dest in dests
-        ]
-    )
+    return query.to_destination_search_result(dests)
 
 
 @router.get(
@@ -232,25 +214,7 @@ def get_destinations_by_name(
         country=country,
         limit=limit,
     )
-    # TODO: Refactor into a function or something instead of copy-pasting.
-    return SearchResult(
-        results=[
-            DestinationSearchResult(
-                id=dest.id,
-                name=dest.name,
-                country=dest.country,
-                groups=[
-                    DestinationSearchGroup(
-                        name=group.long_name,
-                        type=group.type,
-                        logo="http://placekitten.com/300/300",  # TODO: replace
-                    )
-                    for group in dest.groups
-                ]
-            )
-            for dest in dests
-        ]
-    )
+    return query.to_destination_search_result(dests)
 
 
 @router.get(

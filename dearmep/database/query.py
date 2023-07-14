@@ -5,7 +5,8 @@ from sqlalchemy import func
 from sqlalchemy.exc import NoResultFound
 from sqlmodel import case
 
-from ..models import CountryCode
+from ..models import CountryCode, DestinationSearchGroup, \
+    DestinationSearchResult, SearchResult
 from .connection import Session, select
 from .models import Blob, Destination, DestinationID
 
@@ -88,3 +89,26 @@ def get_random_destination(
         matching = " matching query" if country else ""
         raise NotFound(f"no destination{matching} found")
     return dest
+
+
+def to_destination_search_result(
+    destinations: List[Destination],
+) -> SearchResult[DestinationSearchResult]:
+    return SearchResult(
+        results=[
+            DestinationSearchResult(
+                id=dest.id,
+                name=dest.name,
+                country=dest.country,
+                groups=[
+                    DestinationSearchGroup(
+                        name=group.long_name,
+                        type=group.type,
+                        logo="http://placekitten.com/300/300",  # TODO: replace
+                    )
+                    for group in dest.groups
+                ]
+            )
+            for dest in destinations
+        ]
+    )
