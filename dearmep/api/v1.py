@@ -68,6 +68,7 @@ router = APIRouter()
     responses=rate_limit_response,  # type: ignore[arg-type]
 )
 def get_localization(
+    session: Annotated[Session, Depends(session)],
     frontend_strings: bool = Query(
         False,
         description="Whether to also include all frontend translation strings "
@@ -94,7 +95,7 @@ def get_localization(
                 fallback=default_language,
             )
 
-    location = get_country(geo_db, client_addr)
+    location = get_country(session, geo_db, client_addr)
 
     # Track localization results in Prometheus.
     l10n_autodetect_total.labels(

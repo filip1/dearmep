@@ -5,7 +5,9 @@ from typing import List, Optional, Sequence, Union
 
 import maxminddb
 from maxminddb import errors as mmdberrors
+from sqlmodel import Session
 
+from .database import query
 from .models import LocationDetection
 
 
@@ -105,9 +107,12 @@ def find_preferred_language(
         "none of the preferred languages are available")
 
 
-def get_country(db_file: Optional[Union[str, Path]], ip_addr: str):
-    # TODO: Generate from MEP list? Make configurable? (see #16)
-    available_countries = ["at", "de"]
+def get_country(
+    session: Session,
+    db_file: Optional[Union[str, Path]],
+    ip_addr: str,
+) -> LocationDetection:
+    available_countries = query.get_available_countries(session)
 
     if db_file is None:
         # Use the bundled one.

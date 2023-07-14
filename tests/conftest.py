@@ -7,8 +7,12 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from pydantic.utils import deep_update
 import pytest
+from sqlmodel import Session, create_engine
+from sqlmodel.pool import StaticPool
 import yaml
 
+from dearmep.database.connection import AutoEngine, create_db, get_session
+from dearmep.database.models import Destination
 from dearmep.main import create_app
 from dearmep.util import Limit
 
@@ -59,6 +63,44 @@ def fastapi_factory_func(
 
     with modified_environ({"DEARMEP_CONFIG": str(config_path)}):
         yield create_app
+
+
+@pytest.fixture(name="engine")
+def engine_fixture():
+    memory_engine = create_engine(
+        "sqlite://",  # in-memory database
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+    prev_engine = AutoEngine.engine
+    AutoEngine.engine = memory_engine
+    create_db()
+    yield memory_engine
+    AutoEngine.engine = prev_engine
+
+
+@pytest.fixture(name="session")
+def session_fixture(engine):
+    with get_session() as session:
+        yield session
+
+
+@pytest.fixture
+def with_example_destinations(session: Session):
+    session.add(Destination(
+        id="36e04ddf-73e7-4af6-a8af-24556d610f6d",
+        name="Jakob Maria MIERSCHEID",
+        sort_name="MIERSCHEID Jakob Maria",
+        country="de",
+    ))
+    session.add(Destination(
+        id="257d8d78-76e2-4391-b542-a1fcdbdf20a9",
+        name="Erika MUSTERFRAU",
+        sort_name="MUSTERFRAU Erika",
+        country="at",
+    ))
+    session.commit()
+    yield session
 
 
 @pytest.fixture
@@ -114,6 +156,6 @@ def fastapi_app(fastapi_factory: FactoryType):
 
 
 @pytest.fixture
-def client(fastapi_app: FastAPI):
+def client(fastapi_app: FastAPI, session: Session):
     Limit.reset_all_limits()
     yield TestClient(fastapi_app)
