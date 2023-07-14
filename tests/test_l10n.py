@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Union
 
 import pytest
+from sqlmodel import Session
 
 from dearmep.config import Config
 from dearmep import l10n
@@ -83,8 +84,13 @@ def test_find_preferred_with_no_available_languages():
         },
     }),
 ])
-def test_get_country(db: str, ip: str, expect: Dict[str, Any]):
-    res = l10n.get_country(db, ip)
+def test_get_country(
+    db: str,
+    ip: str,
+    expect: Dict[str, Any],
+    with_example_destinations: Session,
+):
+    res = l10n.get_country(with_example_destinations, db, ip)
     assert res.ip_address == ip
     for k, v in expect.items():
         assert getattr(res, k) == v

@@ -11,7 +11,11 @@ def override_client_addr(app: FastAPI, ip_addr: str):
     }
 
 
-def test_l10n(fastapi_app: FastAPI, client: TestClient):
+def test_l10n(
+    fastapi_app: FastAPI,
+    client: TestClient,
+    with_example_destinations,
+):
     override_client_addr(fastapi_app, "2a01:4f8::1")
     res = client.get(
         "/api/v1/localization",
