@@ -131,6 +131,7 @@ def convert_person(raw_mep: Dict[str, Any]) -> Iterable[DumpableModels]:
     yield DestinationDump(
         id=raw_mep["UserID"],
         name=raw_mep["Name"]["full"],
+        sort_name=f"{raw_mep['Name']['family']} {raw_mep['Name']['sur']}",
         country=guess_country(constituency["country"], attribute="iso2")
         if constituency else None,
         groups=groups,

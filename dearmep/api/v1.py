@@ -7,11 +7,12 @@ from typing_extensions import Annotated
 
 from ..config import Config, Language, all_frontend_strings
 from ..database.connection import Session, get_session
-from ..database.models import Blob, DestinationRead
+from ..database.models import Blob, DestinationID, DestinationRead
 from ..database import query
 from ..l10n import find_preferred_language, get_country, parse_accept_language
-from ..models import CountryCode, FrontendStringsResponse, LanguageDetection, \
-    LocalizationResponse, RateLimitResponse
+from ..models import MAX_SEARCH_RESULT_LIMIT, CountryCode, \
+    DestinationSearchResult, FrontendStringsResponse, LanguageDetection, \
+    LocalizationResponse, RateLimitResponse, SearchResult, SearchResultLimit
 from ..util import Limit, client_addr
 
 
@@ -158,6 +159,82 @@ def get_blob_contents(
     except query.NotFound as e:
         raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
     return Response(blob.data, media_type=blob.mime_type)
+
+
+@router.get(
+    "/destinations/country/{country}", operation_id="getDestinationsByCountry",
+    response_model=SearchResult[DestinationSearchResult],
+)
+def get_destinations_by_country(
+    session: Annotated[Session, Depends(session)],
+    country: CountryCode,
+) -> SearchResult[DestinationSearchResult]:
+    """Return all destinations in a given country."""
+    dests = query.get_destinations_by_country(session, country)
+    return query.to_destination_search_result(dests)
+
+
+@router.get(
+    "/destinations/name", operation_id="getDestinationsByName",
+    response_model=SearchResult[DestinationSearchResult],
+)
+def get_destinations_by_name(
+    session: Annotated[Session, Depends(session)],
+    name: str = Query(
+        description="The (part of the) name to search for.",
+        example="miers",
+    ),
+    all_countries: bool = Query(
+        True,
+        description="Whether to only search in the country specified by "
+        "`country`, or in all countries. If `true`, and `country` is "
+        "provided, Destinations from that country will be listed first.",
+    ),
+    country: Optional[CountryCode] = Query(
+        None,
+        description="The country to search in (if `all_countries` is false) "
+        "or prefer (if `all_countries` is true). Has to be specified if "
+        "`all_countries` is false.",
+        example="DE",
+    ),
+    limit: SearchResultLimit = Query(
+        MAX_SEARCH_RESULT_LIMIT,
+        description="Maximum number of results to be returned.",
+        example=MAX_SEARCH_RESULT_LIMIT,
+    ),
+) -> SearchResult[DestinationSearchResult]:
+    """Return Destinations by searching for (parts of) their name."""
+    if not all_countries and country is None:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="country is required if all_countries is false",
+        )
+    dests = query.get_destinations_by_name(
+        session, name,
+        all_countries=all_countries,
+        country=country,
+        limit=limit,
+    )
+    return query.to_destination_search_result(dests)
+
+
+@router.get(
+    "/destinations/id/{id}", operation_id="getDestinationByID",
+    response_model=DestinationRead,
+)
+def get_destination_by_id(
+    session: Annotated[Session, Depends(session)],
+    blob_url: Annotated[BlobURLDep, Depends(blob_url)],
+    id: DestinationID,
+) -> DestinationRead:
+    try:
+        dest = query.get_destination_by_id(session, id)
+    except query.NotFound as e:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+    dest_r = DestinationRead.from_orm(dest, {
+        "portrait": blob_url(dest.portrait),
+    })
+    return dest_r
 
 
 @router.get(

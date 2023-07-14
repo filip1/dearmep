@@ -90,11 +90,13 @@ def with_example_destinations(session: Session):
     session.add(Destination(
         id="36e04ddf-73e7-4af6-a8af-24556d610f6d",
         name="Jakob Maria MIERSCHEID",
+        sort_name="MIERSCHEID Jakob Maria",
         country="de",
     ))
     session.add(Destination(
         id="257d8d78-76e2-4391-b542-a1fcdbdf20a9",
         name="Erika MUSTERFRAU",
+        sort_name="MUSTERFRAU Erika",
         country="at",
     ))
     session.commit()
