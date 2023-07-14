@@ -41,7 +41,7 @@ def get_destinations_by_country(
     dests = session.exec(
         select(Destination)
         .where(Destination.country == country)
-        .order_by(Destination.name)
+        .order_by(Destination.sort_name)
     ).all()
     return dests
 
@@ -63,6 +63,7 @@ def get_destinations_by_name(
         if country is None:
             raise ValueError("country needs to be set")
         stmt = stmt.where(Destination.country == country)
+    stmt = stmt.order_by(Destination.sort_name)
     dests = session.exec(stmt).all()
     return dests
 
