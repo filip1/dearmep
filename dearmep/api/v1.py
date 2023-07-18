@@ -238,7 +238,7 @@ def get_destination_by_id(
 
 
 @router.get(
-    "/destination/suggested", operation_id="getSuggestedDestination",
+    "/destinations/suggested", operation_id="getSuggestedDestination",
     response_model=DestinationRead,
 )
 def get_suggested_destination(
