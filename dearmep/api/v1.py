@@ -40,14 +40,13 @@ rate_limit_response: Dict[int, Dict[str, Any]] = {
 BlobURLDep = Callable[[Optional[Blob]], Optional[str]]
 
 
+def blob_path(blob: Optional[Blob]) -> Optional[str]:
+    # FIXME: This should not be hardcoded.
+    return None if blob is None else f"/api/v1/blob/{blob.name}"
+
+
 def blob_url() -> Iterable[BlobURLDep]:
     """Dependency to convert a Blob to a corresponding API request path."""
-    def blob_path(blob: Optional[Blob]) -> Optional[str]:
-        if blob is None:
-            return None
-        # FIXME: This should not be hardcoded.
-        return f"/api/v1/blob/{blob.name}"
-
     yield blob_path
 
 
@@ -171,7 +170,7 @@ def get_destinations_by_country(
 ) -> SearchResult[DestinationSearchResult]:
     """Return all destinations in a given country."""
     dests = query.get_destinations_by_country(session, country)
-    return query.to_destination_search_result(dests)
+    return query.to_destination_search_result(dests, blob_path)
 
 
 @router.get(
@@ -215,7 +214,7 @@ def get_destinations_by_name(
         country=country,
         limit=limit,
     )
-    return query.to_destination_search_result(dests)
+    return query.to_destination_search_result(dests, blob_path)
 
 
 @router.get(

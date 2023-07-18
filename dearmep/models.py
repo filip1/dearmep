@@ -50,7 +50,7 @@ class DestinationSearchGroup(BaseModel):
     logo: Optional[str] = Field(
         None,
         description="URL path to the group's logo, if any.",
-        example="/api/v1/blob/s-and-d.jpg",
+        example="/api/v1/blob/s-and-d.png",
     )
 
 
