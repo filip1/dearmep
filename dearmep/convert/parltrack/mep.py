@@ -1,6 +1,7 @@
 from datetime import date
 from io import BufferedReader
 import json
+import re
 from typing import Any, Dict, Generator, Iterable, List, Union, cast
 
 from countryguess import guess_country  # type: ignore[import]
@@ -27,6 +28,8 @@ LOCATION_MAP = {
     "Brussels": "brussels",
     "Strasbourg": "strasbourg",
 }
+
+NON_FILENAME_SAFE = re.compile(r"[^\w\d _-]")
 
 
 def is_current(item: dict) -> bool:
@@ -65,6 +68,7 @@ def constituency_to_group(const: Dict[str, str]) -> Dict[str, str]:
         # Parltrack has some parties in different capitalizations.
         "id": f"P:{const['party'].lower()}",
         "long_name": const["party"],
+        "logo": f"{NON_FILENAME_SAFE.sub('_', const['party'])}.png",
     }
 
 
@@ -74,6 +78,7 @@ def group_to_group(group: Dict[str, str]) -> Dict[str, str]:
         "id": f"G:{group['groupid']}",
         "short_name": group["groupid"],
         "long_name": group["Organization"],
+        "logo": f"{NON_FILENAME_SAFE.sub('_', group['groupid'])}.png",
     }
 
 

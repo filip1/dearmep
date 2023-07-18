@@ -269,7 +269,7 @@ class DestinationGroup(DestinationGroupBase, table=True):
 
 
 class DestinationGroupDump(DestinationGroupBase):
-    pass
+    logo: Optional[str]
 
 
 class DestinationGroupListItem(DestinationGroupBase):
