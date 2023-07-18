@@ -68,10 +68,10 @@ def test_find_preferred_with_no_available_languages():
     ("", "123.123.123.123", {"country": None, "db_result": None}),
     # Using our test database.
     (TEST_MMDB, "123.123.123.123", {
-        "country": "be", "recommended": None, "db_result": {"country": "be"},
+        "country": "BE", "recommended": None, "db_result": {"country": "be"},
     }),
     (TEST_MMDB, "2a01:4f8:c012:abcd::1", {
-        "country": "de", "recommended": "de", "db_result": {
+        "country": "DE", "recommended": "DE", "db_result": {
             "country": {"iso_code": "de"},
         },
     }),

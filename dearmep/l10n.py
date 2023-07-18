@@ -134,7 +134,7 @@ def get_country(
         _logger.exception(e)
 
     if isinstance(country, str) and 1 < len(country) < 4:
-        country = country.lower()
+        country = country.upper()
     else:
         # Doesn't look right, country should be an ISO-639 code.
         country = None

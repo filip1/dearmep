@@ -14,6 +14,7 @@ class CountryCode(ConstrainedStr):
     """An ISO-639 country code."""
     min_length = 2
     max_length = 3
+    to_upper = True
 
 
 class SearchResultLimit(ConstrainedInt):
