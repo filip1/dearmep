@@ -7,7 +7,8 @@ from typing_extensions import Annotated
 
 from ..config import Config, Language, all_frontend_strings
 from ..database.connection import Session, get_session
-from ..database.models import Blob, DestinationID, DestinationRead
+from ..database.models import Blob, Destination, DestinationGroupListItem, \
+    DestinationID, DestinationRead
 from ..database import query
 from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import MAX_SEARCH_RESULT_LIMIT, CountryCode, \
@@ -54,6 +55,18 @@ def session():
     """Dependency to get an SQLAlchemy session."""
     with get_session() as s:
         yield s
+
+
+def destination_to_destinationread(dest: Destination) -> DestinationRead:
+    return DestinationRead.from_orm(dest, {
+        "portrait": blob_path(dest.portrait),
+        "groups": [
+            DestinationGroupListItem.from_orm(group, {
+                "logo": blob_path(group.logo),
+            })
+            for group in dest.groups
+        ],
+    })
 
 
 router = APIRouter()
@@ -223,17 +236,13 @@ def get_destinations_by_name(
 )
 def get_destination_by_id(
     session: Annotated[Session, Depends(session)],
-    blob_url: Annotated[BlobURLDep, Depends(blob_url)],
     id: DestinationID,
 ) -> DestinationRead:
     try:
         dest = query.get_destination_by_id(session, id)
     except query.NotFound as e:
         raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
-    dest_r = DestinationRead.from_orm(dest, {
-        "portrait": blob_url(dest.portrait),
-    })
-    return dest_r
+    return destination_to_destinationread(dest)
 
 
 @router.get(
@@ -242,7 +251,6 @@ def get_destination_by_id(
 )
 def get_suggested_destination(
     session: Annotated[Session, Depends(session)],
-    blob_url: Annotated[BlobURLDep, Depends(blob_url)],
     country: Optional[CountryCode] = None,
 ):
     """
@@ -253,7 +261,4 @@ def get_suggested_destination(
         dest = query.get_random_destination(session, country=country)
     except query.NotFound as e:
         raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
-    dest_r = DestinationRead.from_orm(dest, {
-        "portrait": blob_url(dest.portrait),
-    })
-    return dest_r
+    return destination_to_destinationread(dest)

@@ -273,7 +273,7 @@ class DestinationGroupDump(DestinationGroupBase):
 
 
 class DestinationGroupListItem(DestinationGroupBase):
-    pass
+    logo: Optional[str]
 
 
 DestinationRead.update_forward_refs()
