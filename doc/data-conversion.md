@@ -235,6 +235,8 @@ $ ls -lh dearmep.sqlite
 * `--fallback-portrait` will be used if the filename that resulted from `--portrait-template` does not exist.
 * `dearmep-destinations.json` points to the Destination Stream to import.
 
+There is also a `--logo-template` option to specify where to find Destination Group logos (e.g. for parties or parliamentary groups), it works similar to the `--portrait-template` option.
+
 And, as you can see, the database is now filled and ready to use.
 You could run `dearmep serve` and then access <http://localhost:8000/api/v1/destination/suggested> to retrieve a Destination that DearMEP is suggesting you to contact.
 
