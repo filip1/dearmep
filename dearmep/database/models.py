@@ -269,11 +269,11 @@ class DestinationGroup(DestinationGroupBase, table=True):
 
 
 class DestinationGroupDump(DestinationGroupBase):
-    pass
+    logo: Optional[str]
 
 
 class DestinationGroupListItem(DestinationGroupBase):
-    pass
+    logo: Optional[str]
 
 
 DestinationRead.update_forward_refs()

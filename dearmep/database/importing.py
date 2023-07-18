@@ -16,6 +16,7 @@ class Importer:
         *,
         portrait_template: Optional[str] = None,
         fallback_portrait: Optional[Path] = None,
+        logo_template: Optional[str] = None,
     ) -> None:
         self._dump2db: Dict[Type[DumpableModels], Callable] = {
             DestinationGroupDump: self._create_destination_group,
@@ -23,6 +24,7 @@ class Importer:
         }
         self._groups: Dict[str, DestinationGroup] = {}
         self._portrait_tpl = portrait_template
+        self._logo_tpl = logo_template
 
         self._fallback_portrait = image2blob(
             "portrait", fallback_portrait,
@@ -63,6 +65,20 @@ class Importer:
         dg = DestinationGroup.from_orm(input)
         if dg.id in self._groups:
             raise DumpFormatException(f"duplicate group: {dg.id}")
+
+        if self._logo_tpl:
+            logo_path = Path(self._logo_tpl.format(
+                id=dg.id,
+                filename=input.logo,
+                short_name=input.short_name,
+                long_name=input.long_name,
+            ))
+            if logo_path.exists():
+                dg.logo = image2blob(
+                    "logo", logo_path,
+                    description=f"logo of Group {dg.long_name}",
+                )
+
         self._groups[dg.id] = dg
         return dg
 

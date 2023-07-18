@@ -1,4 +1,4 @@
-from typing import List, Optional, cast
+from typing import Callable, List, Optional, cast
 import re
 
 from sqlalchemy import func
@@ -101,6 +101,7 @@ def get_random_destination(
 
 def to_destination_search_result(
     destinations: List[Destination],
+    blob_path: Callable[[Optional[Blob]], Optional[str]],
 ) -> SearchResult[DestinationSearchResult]:
     return SearchResult(
         results=[
@@ -112,7 +113,7 @@ def to_destination_search_result(
                     DestinationSearchGroup(
                         name=group.long_name,
                         type=group.type,
-                        logo="http://placekitten.com/300/300",  # TODO: replace
+                        logo=blob_path(group.logo),
                     )
                     for group in dest.groups
                 ]
