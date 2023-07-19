@@ -3,8 +3,10 @@ from typing import Any, Dict, List, Optional, TypedDict, Union
 from uuid import uuid4
 
 from pydantic import UUID4, BaseModel
-from sqlmodel import Column, Field, Relationship, SQLModel, TIMESTAMP, func
+from sqlmodel import Column, Field, Relationship, SQLModel, TIMESTAMP, and_, \
+    case, or_, func
 
+from ..config import Config
 from ..models import CountryCode
 
 
@@ -32,6 +34,34 @@ def _rel_join(join: str) -> _SARelationshipKWArgs:
             "primaryjoin": join,
         },
     }
+
+
+def _contact_filter():
+    predicates = [
+        Contact.destination_id == Destination.id,  # usual join condition
+    ]
+
+    tf = Config.get().contact_timespan_filter
+    if tf:
+        # Convert the timespans to CASE expression tuples.
+        today = func.current_date()
+        cases = (
+            (or_(*(
+                and_(
+                    today >= span.start,
+                    today <= span.end,
+                )
+                for span in spans
+            )), group)
+            for group, spans in tf.timespans.items()
+        )
+        # Add the logic to the join.
+        predicates.append(or_(
+            Contact.type.not_in(tf.types),
+            Contact.group == case(*cases, else_=tf.default),
+        ))
+
+    return and_(*predicates)
 
 
 CONTACT_TYPES = (
@@ -190,7 +220,12 @@ class Destination(DestinationBase, table=True):
         "is free to handle this as they please.",
         **_example("MIERSCHEID Jakob Maria"),
     )
-    contacts: List[Contact] = Relationship(back_populates="destination")
+    contacts: List[Contact] = Relationship(
+        back_populates="destination",
+        sa_relationship_kwargs={
+            "primaryjoin": _contact_filter,
+        }
+    )
     groups: List["DestinationGroup"] = Relationship(
         back_populates="destinations", link_model=DestinationGroupLink,
     )
