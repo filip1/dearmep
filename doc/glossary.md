@@ -1,22 +1,37 @@
 # Glossary
 
+## Campaign
+
+A given website embedding the frontend snippet.
+
+DearMEP was created with the European Parliament and several national initiatives working towards the same goal, and with the same dataset, but each having their own website, in mind.
+
+“Campaign” can also be used to refer to the endeavour to influence political decision-making as a whole, e.g. “the campaign against X”.
+
 ## Conversion
 
-The process of converting someone who browses the campaign website to an actual User in the system, i.e. to someone who uses the application to contact Destinations.
+The process of converting someone who browses the Campaign website to an actual User in the system, i.e. to someone who uses the application to contact Destinations.
 
 ## Destination
 
-One of the persons that the application is configured to contact in the current campaign, e.g. a member of parliament.
+One of the persons that the application is configured to contact in the current Instance, e.g. a member of parliament.
 
 Other terms for these persons and why we have decided against them:
 
 * **Callee** is focused on phone calls only, but there are other ways to contact a Destination. Also, Users are also called by the application, making the term “callee” ambiguous.
-* **Member of Parliament** are the Destinations the application was initially designed to contact, but what if a campaign wants to target another group of people?
+* **Member of Parliament** are the Destinations the application was initially designed to contact, but what if an initiative wants to target another group of people?
 
 ## Direct Call
 
 A call to a Destination, initiated by a User using their own phone.
 The application is not involved in this call at all, other than possibly providing the User with one or more Destination suggestions.
+
+## Instance
+
+One particular server-side deployment of the application.
+Each Instance has its own configuration, database, and Destinations.
+
+One Instance can serve multiple Campaigns.
 
 ## Instant Call
 
