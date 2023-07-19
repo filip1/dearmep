@@ -11,7 +11,7 @@ from rich.highlighter import NullHighlighter
 from rich.logging import RichHandler
 from rich.progress import Progress
 
-from . import convert, db, dump, importing, serve, version
+from . import check, convert, db, dump, importing, serve, version
 from ..config import CMD_NAME
 from ..progress import DummyTaskFactory, RichTaskFactory
 
@@ -69,7 +69,7 @@ def run():
     subparsers = parser.add_subparsers(
         metavar="COMMAND",
     )
-    for module in (version, dump, serve, db, convert, importing):
+    for module in (version, dump, serve, db, convert, importing, check):
         module.add_parser(
             subparsers,
             help_if_no_subcommand=help_if_no_subcommand,
