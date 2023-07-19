@@ -15,6 +15,10 @@ handlers:
     stream: ext://sys.stdout
     formatter: uvicorn
 
+loggers:
+  sqlalchemy.engine:
+    level: WARNING  # set to INFO to log queries; DEBUG to also log results
+
 root:
   level: DEBUG
   handlers: [console]
