@@ -39,6 +39,12 @@ class ContactTimespanFilterTimespan(BaseModel):
     start: date
     end: date
 
+    @validator("end")
+    def end_not_before_start(cls, v: date, values: Dict[str, date]) -> date:
+        if v < values["start"]:
+            raise ValueError("end date cannot be before start date")
+        return v
+
 
 class ContactTimespanFilterConfig(BaseModel):
     types: List[str]
