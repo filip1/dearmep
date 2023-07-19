@@ -27,6 +27,10 @@ if EMBEDDED_STATIC_DIR and not EMBEDDED_STATIC_DIR.is_dir():
     EMBEDDED_STATIC_DIR = None
 
 
+class ConfigNotLoaded(Exception):
+    pass
+
+
 class Language(ConstrainedStr):
     regex = re.compile(r"^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$")
 
@@ -163,8 +167,8 @@ class Config(BaseModel):
     def get(cls) -> "Config":
         """Get the singleton configuration object instance."""
         if cls._instance is None:
-            raise Exception("attempt to access config without loading it "
-                            "first; this is a bug")
+            raise ConfigNotLoaded("attempt to access config without loading "
+                                  "it first; this is a bug")
         return cls._instance
 
     @classmethod

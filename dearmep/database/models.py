@@ -6,7 +6,7 @@ from pydantic import UUID4, BaseModel
 from sqlmodel import Column, Field, Relationship, SQLModel, TIMESTAMP, and_, \
     case, or_, func
 
-from ..config import Config
+from ..config import Config, ConfigNotLoaded
 from ..models import CountryCode
 
 
@@ -41,7 +41,12 @@ def _contact_filter():
         Contact.destination_id == Destination.id,  # usual join condition
     ]
 
-    tf = Config.get().contact_timespan_filter
+    try:
+        config = Config.get()
+        tf = config.contact_timespan_filter
+    except ConfigNotLoaded:
+        tf = None
+
     if tf:
         # Convert the timespans to CASE expression tuples.
         today = func.current_date()
