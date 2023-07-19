@@ -38,10 +38,11 @@ def cmd_translations(ctx: Context):
     cfg = Config.load()
 
     had_error = check_entries("frontend", cfg.l10n.frontend_strings.__root__)
-    had_error = check_entries("backend", {
-        fname: getattr(cfg.l10n.strings, fname)
-        for fname in cfg.l10n.strings.__fields__.keys()
-    }) or had_error
+    # TODO: Re-enable once the backend actually uses translation strings.
+    # had_error = check_entries("backend", {
+    #     fname: getattr(cfg.l10n.strings, fname)
+    #     for fname in cfg.l10n.strings.__fields__.keys()
+    # }) or had_error
 
     if had_error:
         exit(1)
