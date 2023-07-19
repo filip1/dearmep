@@ -138,6 +138,10 @@ downloading portraits ━━━━━━━━━━━━━━━━━━━�
 
 As you can see, one of the MEPs in our dump doesn’t have a portrait right now, but `--not-found ignore` told DearMEP to simply not create a portrait file for that person.
 
+**Please note:**
+The European Parliament requests attribution for using these photos.
+See their [legal notice](https://www.europarl.europa.eu/legal-notice/) for more information.
+
 Our `portraits` directory now contains about 40 MB of MEP faces.
 The next step would be to import all of them into the DearMEP database.
 However, first, let’s download one more image:
