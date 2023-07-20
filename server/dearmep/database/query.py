@@ -8,7 +8,8 @@ from sqlmodel import case
 from ..models import CountryCode, DestinationSearchGroup, \
     DestinationSearchResult, SearchResult
 from .connection import Session, select
-from .models import Blob, Destination, DestinationID
+from .models import Blob, Destination, DestinationID, \
+    DestinationSelectionLog, DestinationSelectionLogPurpose
 
 
 class NotFound(Exception):
@@ -88,6 +89,7 @@ def get_random_destination(
     session: Session,
     *,
     country: Optional[CountryCode] = None,
+    purpose: Optional[DestinationSelectionLogPurpose] = None,
 ) -> Destination:
     stmt = select(Destination)
     if country:
@@ -96,7 +98,21 @@ def get_random_destination(
     if not dest:
         matching = " matching query" if country else ""
         raise NotFound(f"no destination{matching} found")
+    if purpose:
+        log_destination_selection(session, dest, purpose=purpose)
     return dest
+
+
+def log_destination_selection(
+    session: Session,
+    destination: Destination,
+    *,
+    purpose: DestinationSelectionLogPurpose,
+):
+    session.add(DestinationSelectionLog(
+        destination=destination,
+        purpose=purpose,
+    ))
 
 
 def to_destination_search_result(

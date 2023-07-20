@@ -1,10 +1,11 @@
 from datetime import datetime
+import enum
 from typing import Any, Dict, List, Optional, TypedDict, Union
 from uuid import uuid4
 
 from pydantic import UUID4, BaseModel
-from sqlmodel import Column, Field, Relationship, SQLModel, TIMESTAMP, and_, \
-    case, or_, func
+from sqlmodel import Column, Enum, Field, Relationship, SQLModel, TIMESTAMP, \
+    and_, case, or_, func
 
 from ..config import Config, ConfigNotLoaded
 from ..models import CountryCode
@@ -83,13 +84,18 @@ DestinationID = str
 DestinationGroupID = str
 
 
+def auto_timestamp_column() -> Column:
+    """A timestamp column that will default to whenever the row is created."""
+    return Column(
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
+
+
 class ModifiedTimestampMixin(BaseModel):
     modified_at: Optional[datetime] = Field(
-        sa_column=Column(
-            TIMESTAMP(timezone=True),
-            nullable=False,
-            server_default=func.now(),
-        ),
+        sa_column=auto_timestamp_column(),
         description="Timestamp of last modification.",
     )
 
@@ -317,6 +323,39 @@ class DestinationGroupListItem(DestinationGroupBase):
 
 
 DestinationRead.update_forward_refs()
+
+
+class DestinationSelectionLogPurpose(str, enum.Enum):
+    # Suggested to be contacted.
+    SUGGEST = "suggest"
+
+
+class DestinationSelectionLogBase(SQLModel):
+    """Logs every time a destination has been selected for contacting."""
+    id: Optional[int] = Field(
+        primary_key=True,
+        description="Auto-generated ID of this selection log.",
+    )
+    destination_id: DestinationID = Field(
+        index=True,
+        foreign_key="destinations.id",
+        description="ID of the destination that has been selected.",
+    )
+    timestamp: Optional[datetime] = Field(
+        index=True,
+        sa_column=auto_timestamp_column(),
+        description="Timestamp of when the selection took place.",
+    )
+    purpose: DestinationSelectionLogPurpose = Field(
+        index=True,
+        sa_column=Column(Enum(DestinationSelectionLogPurpose)),
+        description="The purpose of the selection.",
+    )
+
+
+class DestinationSelectionLog(DestinationSelectionLogBase, table=True):
+    __tablename__ = "dest_select_log"
+    destination: Destination = Relationship()
 
 
 DumpableModels = Union[DestinationDump, DestinationGroupDump]
