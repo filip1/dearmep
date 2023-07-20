@@ -6,6 +6,9 @@ on:
 jobs:
 
   backend:
+    defaults:
+      run:
+        working-directory: server
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -40,8 +43,8 @@ jobs:
           name: specs
           retention-days: 8
           path: |
-            dearmep-erd.svg
-            openapi.json
+            server/dearmep-erd.svg
+            server/openapi.json
       - name: Collect test results
         if: ${{ always() }}  # Meaning: also if the job fails.
         uses: actions/upload-artifact@v3
@@ -49,14 +52,14 @@ jobs:
           name: test-results-${{ matrix.python-version }}
           retention-days: 15
           path: |
-            coverage.xml
-            report.xml
+            server/coverage.xml
+            server/report.xml
 
   frontend:
     needs: backend  # Because of the OpenAPI spec.
     defaults:
       run:
-        working-directory: dearmep-client
+        working-directory: client
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -86,10 +89,13 @@ jobs:
           name: frontend
           retention-days: 8
           path: |
-            dearmep-client/dist/dear-mep-bundle/
+            client/dist/dear-mep-bundle/
 
   build:
     needs: frontend  # For JS, CSS & assets.
+    defaults:
+      run:
+        working-directory: server
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -115,7 +121,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: frontend
-          path: dearmep/static_files/static
+          path: server/dearmep/static_files/static
       - name: Build Python package
         run: |
           poetry build
@@ -124,8 +130,8 @@ jobs:
         with:
           name: python-package
           path: |
-            dist/*.whl
-            dist/*.tar.gz
+            server/dist/*.whl
+            server/dist/*.tar.gz
       - name: Upload Python package to Nextcloud
         env:
           NEXTCLOUD_HOST: ${{ secrets.NEXTCLOUD_HOST }}
