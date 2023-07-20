@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { L10nService } from 'src/app/services/language/l10n.service';
+import { L10nService } from 'src/app/services/l10n/l10n.service';
 
 @Component({
   selector: 'dmep-country-select',

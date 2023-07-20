@@ -1,20 +1,30 @@
 <div class="mep">
   <div class="mep-image">
-    <img src="https://www.europarl.europa.eu/mepphoto/106936.jpg" alt="Daniel FREUND">
+    <img [src]="mep?.portrait" alt="Daniel FREUND">
   </div>
   <div class="mep-description">
     <h3 class="mep-name">
-      <p class="name">Daniel FREUND</p>
-      <button mat-icon-button class="select-other-btn" *ngIf="allowChangeMEP">
+      <p class="name">{{ mep?.name }}</p>
+      <button mat-icon-button class="select-other-btn" (click)="MEPChangeClick()" *ngIf="allowChangeMEP">
         <mat-icon>autorenew</mat-icon>
       </button>
     </h3>
-    <p class="group-party">Group of the Greens/European Free Alliance</p>
+    <p class="group-party" *ngFor="let group of mep?.groups">
+      {{ group.long_name }}
+    </p>
+    <p class="country" >{{ 'countries.' + mep?.country | transloco  }}</p>
+    <!-- <p class="group-party">Group of the Greens/European Free Alliance</p>
     <p class="country">Germany</p>
-    <p class="national-party">Bündnis 90/Die Grünen</p>
+    <p class="national-party">Bündnis 90/Die Grünen</p> -->
     <div class="socials">
-      <a href="mailto:daniel.freund@europarl.europa.eu"><mat-icon>mail</mat-icon></a>
-      <a href="http://www.danielfreund.eu/" target="_blank"><mat-icon>public</mat-icon></a>
+      <ng-container *ngFor="let contact of mep?.contacts">
+        <a *ngIf="contact.type === 'email'" [href]="'mailto:' + contact.contact" [title]="contact.contact" target="_blank"><mat-icon>mail</mat-icon></a>
+        <a *ngIf="contact.type === 'phone'" [href]="'tel:' + contact.contact" [title]="contact.contact" target="_blank"><mat-icon>call</mat-icon></a>
+        <a *ngIf="contact.type === 'fax'" [href]="'fax:' + contact.contact" [title]="contact.contact" target="_blank"><mat-icon>fax</mat-icon></a>
+        <a *ngIf="contact.type !== 'phone' && contact.type !== 'email' && contact.type !== 'fax'" [href]="contact.contact" [title]="contact.contact" target="_blank"><mat-icon>public</mat-icon></a>
+      </ng-container>
+      <!-- <a href="mailto:daniel.freund@europarl.europa.eu"><mat-icon>mail</mat-icon></a>
+      <a href="http://www.danielfreund.eu/" target="_blank"><mat-icon>public</mat-icon></a> -->
     </div>
   </div>
 </div>
