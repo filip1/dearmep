@@ -6,6 +6,9 @@ on:
 jobs:
 
   backend:
+    defaults:
+      run:
+        working-directory: server
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -56,7 +59,7 @@ jobs:
     needs: backend  # Because of the OpenAPI spec.
     defaults:
       run:
-        working-directory: dearmep-client
+        working-directory: client
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -86,10 +89,13 @@ jobs:
           name: frontend
           retention-days: 8
           path: |
-            dearmep-client/dist/dear-mep-bundle/
+            client/dist/dear-mep-bundle/
 
   build:
     needs: frontend  # For JS, CSS & assets.
+    defaults:
+      run:
+        working-directory: server
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
