@@ -138,6 +138,10 @@ downloading portraits ━━━━━━━━━━━━━━━━━━━�
 
 As you can see, one of the MEPs in our dump doesn’t have a portrait right now, but `--not-found ignore` told DearMEP to simply not create a portrait file for that person.
 
+**Please note:**
+The European Parliament requests attribution for using these photos.
+See their [legal notice](https://www.europarl.europa.eu/legal-notice/) for more information.
+
 Our `portraits` directory now contains about 40 MB of MEP faces.
 The next step would be to import all of them into the DearMEP database.
 However, first, let’s download one more image:
@@ -234,6 +238,8 @@ $ ls -lh dearmep.sqlite
 * `--portrait-template` basically corresponds to the `--filename-template` option of the `dearmep convert europarl.portraits` command: It tells the importer how to derive a portrait filename from the MEP ID.
 * `--fallback-portrait` will be used if the filename that resulted from `--portrait-template` does not exist.
 * `dearmep-destinations.json` points to the Destination Stream to import.
+
+There is also a `--logo-template` option to specify where to find Destination Group logos (e.g. for parties or parliamentary groups), it works similar to the `--portrait-template` option.
 
 And, as you can see, the database is now filled and ready to use.
 You could run `dearmep serve` and then access <http://localhost:8000/api/v1/destination/suggested> to retrieve a Destination that DearMEP is suggesting you to contact.

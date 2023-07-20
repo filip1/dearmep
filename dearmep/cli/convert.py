@@ -1,5 +1,6 @@
 from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
+import logging
 from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
@@ -14,6 +15,9 @@ from ..progress import FlexiBytesReader
 
 
 MEP_PORTRAIT_FILE_PATTERN = "{id}.jpg"
+
+
+_logger = logging.getLogger(__name__)
 
 
 def tabular_class(ctx: Context):
@@ -48,6 +52,10 @@ def europarl_portraits(ctx: Context):
             not_found=ctx.args.not_found,
             task=task,
         )
+    _logger.warning(
+        "The European Parliament requests attribution for using these photos. "
+        "Please see <https://www.europarl.europa.eu/legal-notice/> for more."
+    )
 
 
 def rollcallvote_topics(ctx: Context):

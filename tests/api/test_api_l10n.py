@@ -11,7 +11,11 @@ def override_client_addr(app: FastAPI, ip_addr: str):
     }
 
 
-def test_l10n(fastapi_app: FastAPI, client: TestClient):
+def test_l10n(
+    fastapi_app: FastAPI,
+    client: TestClient,
+    with_example_destinations,
+):
     override_client_addr(fastapi_app, "2a01:4f8::1")
     res = client.get(
         "/api/v1/localization",
@@ -46,11 +50,11 @@ def test_l10n(fastapi_app: FastAPI, client: TestClient):
     assert isinstance(location, dict)
 
     assert "available" in location
-    assert location["available"] == ["at", "de"]
+    assert location["available"] == ["AT", "DE"]
     assert "country" in location
-    assert location["country"] == "de"
+    assert location["country"] == "DE"
     assert "recommended" in location
-    assert location["recommended"] == "de"
+    assert location["recommended"] == "DE"
     assert "ip_address" in location
     assert location["ip_address"] == "2a01:4f8::1"
     assert "db_result" in location

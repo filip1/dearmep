@@ -23,6 +23,40 @@ database:
   url: sqlite:///dearmep.sqlite
 
 
+# Optional filtering of contacts based on timespans. Useful for Members of the
+# European Parliament, which move between Brussels & Strasbourg.
+contact_timespan_filter:
+
+  # The filter will only act on contacts of the following types:
+  types: [ phone, fax ]
+
+  # If these contacts' group column is NULL, they will be returned unfiltered.
+  # Else, they will only be returned if their group either matches this one...:
+  default: brussels
+
+  # ...or if the current date (local system time of the database) falls within
+  # one of these configured timespans. In that case, only those with a group
+  # value of the timespan key (k) of the matching timespan will be returned. In
+  # this example, the strasbourg contacts will be returned if the current date
+  # is between the given days (inclusive, e.g. from 00:00 to 23:59:59).
+  timespans:
+    strasbourg:  # (k)
+      - start: 2023-06-12
+        end:   2023-06-16
+      - start: 2023-07-10
+        end:   2023-07-12
+      - start: 2023-09-11
+        end:   2023-09-13
+      - start: 2023-10-02
+        end:   2023-10-04
+      - start: 2023-10-16
+        end:   2023-10-18
+      - start: 2023-11-20
+        end:   2023-11-22
+      - start: 2023-12-11
+        end:   2023-12-13
+
+
 # User authentication.
 authentication:
 

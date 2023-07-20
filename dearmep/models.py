@@ -1,12 +1,26 @@
-from typing import Any, ClassVar, Dict, List, Optional, Union, cast
+from typing import Any, Dict, Generic, List, Optional, TypeVar
 
-from pydantic import BaseModel, ConstrainedStr, Field
+from pydantic import BaseModel, ConstrainedInt, ConstrainedStr, Field
+from pydantic.generics import GenericModel
+
+
+T = TypeVar("T")
+
+
+MAX_SEARCH_RESULT_LIMIT = 20
 
 
 class CountryCode(ConstrainedStr):
     """An ISO-639 country code."""
     min_length = 2
     max_length = 3
+    to_upper = True
+
+
+class SearchResultLimit(ConstrainedInt):
+    """The number of search results to return."""
+    gt = 0
+    le = MAX_SEARCH_RESULT_LIMIT
 
 
 frontend_strings_field = Field(
@@ -19,6 +33,45 @@ frontend_strings_field = Field(
         "veification.description": "We've sent a code to {{ number }}.",
     }
 )
+
+
+class DestinationSearchGroup(BaseModel):
+    """One of the groups a Destination belongs to, optimized for display in
+    a search result."""
+    name: str = Field(
+        description="The group's long name, e.g. to display as alt text on "
+        "the logo.",
+        example="Group of the Progressive Alliance of Socialists and "
+        "Democrats in the European Parliament",
+    )
+    type: str = Field(
+        description="The group's type.",
+        example="parl_group",
+    )
+    logo: Optional[str] = Field(
+        None,
+        description="URL path to the group's logo, if any.",
+        example="/api/v1/blob/s-and-d.png",
+    )
+
+
+class DestinationSearchResult(BaseModel):
+    """A single Destination returned from a search."""
+    id: str = Field(
+        description="The Destination's ID.",
+        example="36e04ddf-73e7-4af6-a8af-24556d610f6d",
+    )
+    name: str = Field(
+        description="The Destination's name.",
+        example="Jakob Maria MIERSCHEID",
+    )
+    country: Optional[CountryCode] = Field(
+        description="The country code associated with this Destination.",
+        example="DE",
+    )
+    groups: List[DestinationSearchGroup] = Field(
+        description="The groups this Destination is a member of.",
+    )
 
 
 class FrontendStringsResponse(BaseModel):
@@ -94,35 +147,6 @@ class LocalizationResponse(BaseModel):
     frontend_strings: Optional[Dict[str, str]] = frontend_strings_field
 
 
-class PersonContact(BaseModel):
-    WELL_KNOWN_KINDS: ClassVar = (
-        "email", "web", "phone", "fax",
-        "facebook", "instagram", "twitter",
-    )
-
-    kind: str
-    address: str
-
-
-class Person(BaseModel):
-    id: str
-    name: str
-    country: Optional[CountryCode]
-    group: Optional[str]
-    party: Optional[str]
-    contact: List[PersonContact] = []
-
-    def contact_dict(self, *, single: bool = False):
-        res: Dict[str, Union[str, List[str]]] = {}
-        for contact in self.contact:
-            if contact.kind not in res:
-                res[contact.kind] = contact.address if single \
-                    else [contact.address]
-            elif not single:
-                cast(List[str], res[contact.kind]).append(contact.address)
-        return res
-
-
 class RateLimitResponse(BaseModel):
     """
     The request was denied, because the client issued too many requests in a
@@ -133,4 +157,11 @@ class RateLimitResponse(BaseModel):
         ...,
         description="Error message.",
         example="rate limit exceeded, try again in 42 seconds",
+    )
+
+
+class SearchResult(GenericModel, Generic[T]):
+    """Result of a search."""
+    results: List[T] = Field(
+        description="The actual search results.",
     )

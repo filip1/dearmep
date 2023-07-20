@@ -20,6 +20,7 @@ def import_destinations(ctx: Context):
         importer = db_importing.Importer(
             portrait_template=getattr(ctx.args, "portrait_template", None),
             fallback_portrait=getattr(ctx.args, "fallback_portrait", None),
+            logo_template=getattr(ctx.args, "logo_template", None),
         )
         with ctx.task_factory() as tf:
             with tf.create_task("reading and converting JSON") as task:
@@ -61,6 +62,14 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         type=Path,
         help="path to a file that will be used if the portrait specified in "
         "the dump cannot be found",
+    )
+    destinations.add_argument(
+        "-l", "--logo-template", metavar="TEMPLATE",
+        help="template string to construct the path to the logo image of "
+        "Destination groups, e.g. `logos/{filename}`; available placeholders "
+        "are {filename} (the name as given in the `logo` field in the Group "
+        "object in the stream), {id} (the Group's ID as given in the JSON), "
+        "{short_name} and {long_name} (as given in the JSON)",
     )
     destinations.set_defaults(func=import_destinations, raw_stdout=True)
 

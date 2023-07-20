@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Union
 
 import pytest
+from sqlmodel import Session
 
 from dearmep.config import Config
 from dearmep import l10n
@@ -67,10 +68,10 @@ def test_find_preferred_with_no_available_languages():
     ("", "123.123.123.123", {"country": None, "db_result": None}),
     # Using our test database.
     (TEST_MMDB, "123.123.123.123", {
-        "country": "be", "recommended": None, "db_result": {"country": "be"},
+        "country": "BE", "recommended": None, "db_result": {"country": "be"},
     }),
     (TEST_MMDB, "2a01:4f8:c012:abcd::1", {
-        "country": "de", "recommended": "de", "db_result": {
+        "country": "DE", "recommended": "DE", "db_result": {
             "country": {"iso_code": "de"},
         },
     }),
@@ -83,8 +84,13 @@ def test_find_preferred_with_no_available_languages():
         },
     }),
 ])
-def test_get_country(db: str, ip: str, expect: Dict[str, Any]):
-    res = l10n.get_country(db, ip)
+def test_get_country(
+    db: str,
+    ip: str,
+    expect: Dict[str, Any],
+    with_example_destinations: Session,
+):
+    res = l10n.get_country(with_example_destinations, db, ip)
     assert res.ip_address == ip
     for k, v in expect.items():
         assert getattr(res, k) == v

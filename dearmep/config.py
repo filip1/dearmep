@@ -1,3 +1,4 @@
+from datetime import date
 from functools import lru_cache
 import logging
 from pathlib import Path
@@ -26,8 +27,29 @@ if EMBEDDED_STATIC_DIR and not EMBEDDED_STATIC_DIR.is_dir():
     EMBEDDED_STATIC_DIR = None
 
 
+class ConfigNotLoaded(Exception):
+    pass
+
+
 class Language(ConstrainedStr):
     regex = re.compile(r"^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$")
+
+
+class ContactTimespanFilterTimespan(BaseModel):
+    start: date
+    end: date
+
+    @validator("end")
+    def end_not_before_start(cls, v: date, values: Dict[str, date]) -> date:
+        if v < values["start"]:
+            raise ValueError("end date cannot be before start date")
+        return v
+
+
+class ContactTimespanFilterConfig(BaseModel):
+    types: List[str]
+    default: str
+    timespans: Dict[str, List[ContactTimespanFilterTimespan]]
 
 
 class DatabaseConfig(BaseModel):
@@ -140,6 +162,7 @@ class L10nConfig(BaseModel):
 
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""
+    contact_timespan_filter: Optional[ContactTimespanFilterConfig]
     database: DatabaseConfig
     l10n: L10nConfig
 
@@ -150,8 +173,8 @@ class Config(BaseModel):
     def get(cls) -> "Config":
         """Get the singleton configuration object instance."""
         if cls._instance is None:
-            raise Exception("attempt to access config without loading it "
-                            "first; this is a bug")
+            raise ConfigNotLoaded("attempt to access config without loading "
+                                  "it first; this is a bug")
         return cls._instance
 
     @classmethod
