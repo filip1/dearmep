@@ -10,7 +10,7 @@
     <mat-option [value]="country" *ngFor="let country of countries">
       <div class="dmep-country-option">
         <span [classList]="'flag:' + country"></span>
-        <span>{{ 'countries.' + country | transloco }}</span>
+        <span>{{ getCountryTranslationKey(country) | transloco }}</span>
       </div>
     </mat-option>
   </mat-select>
