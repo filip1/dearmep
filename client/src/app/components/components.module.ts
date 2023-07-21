@@ -10,6 +10,7 @@ import { TalkingPointsComponent } from './talking-points/talking-points.componen
 import { FooterComponent } from './footer/footer.component';
 import { CountrySelectComponent } from './country-select/country-select.component';
 import { PhoneNumberInputComponent } from './phone-number-input/phone-number-input.component';
+import { SocialIconComponent } from './social-icon/social-icon.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { PhoneNumberInputComponent } from './phone-number-input/phone-number-inp
     FooterComponent,
     CountrySelectComponent,
     PhoneNumberInputComponent,
+    SocialIconComponent,
   ],
   imports: [
     AppCommonModule,

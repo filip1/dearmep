@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
-import { L10nService } from 'src/app/services/language/l10n.service';
+import { TranslocoService } from '@ngneat/transloco';
+import { Subject, filter, takeUntil } from 'rxjs';
+import { L10nService } from 'src/app/services/l10n/l10n.service';
 
 @Component({
   selector: 'dmep-country-select',
@@ -16,6 +17,7 @@ export class CountrySelectComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly l10nService: L10nService,
+    private readonly translocoService: TranslocoService
   ) { }
 
   public ngOnInit(): void {
@@ -24,13 +26,19 @@ export class CountrySelectComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: (c) => {
         this.countries = c
-        // Timeout (0ms) in order to make sure the language options are rendered to HTML before
-        // setting the value of the mat-select input because of rendering issues if this order
-        // is not correct.
-        setTimeout(() => {
-          this.getSelectedCountry()
-        }, 0);
+        this.sortCountries()
       }
+    })
+
+    this.translocoService.events$.pipe(
+      takeUntil(this.destroyed$),
+      filter(e => e.type === 'langChanged' || e.type === 'translationLoadSuccess'),
+    ).subscribe({
+      next: () => this.sortCountries()
+    })
+
+    this.l10nService.getCountry$().subscribe({
+      next: (c) => this.selectedCountry = c || undefined
     })
   }
 
@@ -44,9 +52,16 @@ export class CountrySelectComponent implements OnInit, OnDestroy {
     this.l10nService.setCountry(country)
   }
 
-  public getSelectedCountry() {
-    this.l10nService.getCountry$().subscribe({
-      next: (c) => this.selectedCountry = c
+  public getCountryTranslationKey(country: string): string {
+    return `countries.${country}`
+  }
+
+  private sortCountries() {
+    this.countries?.sort((a, b) => {
+      const aTrans = this.translocoService.translate(this.getCountryTranslationKey(a))
+      const bTrans = this.translocoService.translate(this.getCountryTranslationKey(b))
+      return aTrans.localeCompare(bTrans)
     })
+
   }
 }

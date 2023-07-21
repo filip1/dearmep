@@ -8,14 +8,16 @@
   --dmep-primary-color: rgba(250, 128, 114, 1);
   --dmep-title-light-text-color: rgba(255, 255, 255, 0.75);
   --dmep-scrollbar-color: rgba(255, 255, 255, 0.8);
+  --dmep-popover-text-color: rgb(255, 255, 255, 0.9);
+  --dmep-popover-background-color: rgba(22, 22, 22, 1);
 
   // Fonts
   --dmep-font-family: Roboto, "Helvetica Neue", sans-serif;
-  --dmep-font-size: 1.25rem;  
+  --dmep-font-size: 1.25rem;
   --dmep-title-font-size: 3.75rem;
   --dmep-sub-title-font-size: 1.5rem;
   --dmep-footer-font-size: 1rem;
-  --dmep-font-size-sm: 1rem;  
+  --dmep-font-size-sm: 1rem;
 
   // Background
   --dmep-bg: linear-gradient(180deg,

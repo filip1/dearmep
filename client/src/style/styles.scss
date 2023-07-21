@@ -108,7 +108,7 @@
     margin: 4px;
     min-width: 250px;
   }
-  
+
   .dmep-btn-primary {
     strong {
       font-weight: 500;
@@ -128,9 +128,14 @@
   .dmep-btn-primary-sm[disabled] {
     background-color: unset;
   }
-  
+
   .dmep-btn-secondary {
     min-height: 3em;
+  }
+
+  .dmep-popover {
+    color: var(--dmep-popover-text-color);
+    background-color: var(--dmep-popover-background-color);
   }
 
   a {

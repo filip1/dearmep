@@ -50,7 +50,7 @@ $app-accent: (
         800: white,
         900: white,
     )
-); 
+);
 
 $app-theme: mat.define-dark-theme((color: (
         primary: mat.define-palette($app-primary, 300),
@@ -71,3 +71,4 @@ $app-theme: mat.define-dark-theme((color: (
 @include mat.checkbox-theme($app-theme);
 @include mat.radio-theme($app-theme);
 @include mat.button-toggle-theme($app-theme);
+@include mat.tooltip-theme($app-theme);

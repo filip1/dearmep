@@ -1,0 +1,7 @@
+.dmep-popover {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  padding: 8px 16px;
+}

@@ -7,7 +7,7 @@ import { addMinutes, format, isBefore, isEqual, set } from 'date-fns/esm';
 import { Subject, takeUntil } from 'rxjs';
 import { StringUtil } from 'src/app/common/util/string.util';
 import { DayOfWeek } from 'src/app/model/day-of-week.enum';
-import { L10nService } from 'src/app/services/language/l10n.service';
+import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { TimeService } from 'src/app/services/time/time.service';
 
 @Component({

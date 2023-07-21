@@ -8,7 +8,7 @@ import { combineLatest, Subject, takeUntil } from 'rxjs';
 import { PhoneNumber } from 'src/app/model/phone-number.model';
 import { AppConfig } from 'src/app/services/config/app-config.model';
 import { ConfigService } from 'src/app/services/config/config.service';
-import { L10nService } from 'src/app/services/language/l10n.service';
+import { L10nService } from 'src/app/services/l10n/l10n.service';
 
 interface Country {
   name: string
