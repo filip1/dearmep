@@ -3,7 +3,6 @@ import { map, Observable } from 'rxjs';
 import { DestinationRead } from 'src/app/api/models';
 import { CallingStep } from 'src/app/model/calling-step.enum';
 import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
-import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { SelectDestinationService } from 'src/app/services/select-destination/select-destination.service';
 
 @Component({

@@ -15,5 +15,5 @@
     </mat-form-field>
     <dmep-country-select></dmep-country-select>
   </div>
-  <dmep-mep-detail [allowChangeMEP]="mepSelectionPossible$ | async" [mep]="selectedMEP$ | async" (onMEPChange)="renewSuggestion()"></dmep-mep-detail>
+  <dmep-mep-detail [allowChangeMEP]="mepSelectionPossible$ | async" [mep]="selectedMEP$ | async" (MEPChange)="renewSuggestion()"></dmep-mep-detail>
 </div>

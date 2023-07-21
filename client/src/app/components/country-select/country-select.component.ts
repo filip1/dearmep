@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslocoService } from '@ngneat/transloco';
-import { Subject, combineLatest, count, filter, takeUntil } from 'rxjs';
+import { Subject, filter, takeUntil } from 'rxjs';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
 
 @Component({

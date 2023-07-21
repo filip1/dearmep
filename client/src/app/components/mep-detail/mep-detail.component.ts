@@ -14,9 +14,9 @@ export class MEPDetailComponent {
   public mep?: DestinationRead | null
 
   @Output()
-  public onMEPChange = new EventEmitter<void>()
+  public MEPChange = new EventEmitter<void>()
 
   public MEPChangeClick() {
-    this.onMEPChange.emit()
+    this.MEPChange.emit()
   }
 }
