@@ -7,10 +7,12 @@
       <input type="text"
         placeholder="Search for another member"
         matInput
-        [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option value="Daniel FREUND">Daniel FREUND</mat-option>
-        <mat-option value="Alexandra GEESE">Alexandra GEESE</mat-option>
+        [matAutocomplete]="auto"
+        [formControl]="searchMEPFormControl">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="getMepName" >
+        <mat-option [value]="mep" *ngFor="let mep of filteredMEPs | async">
+          {{ mep.name }}
+        </mat-option>
       </mat-autocomplete>
     </mat-form-field>
     <dmep-country-select></dmep-country-select>
