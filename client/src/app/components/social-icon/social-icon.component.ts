@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'dmep-social-icon',
@@ -54,8 +54,8 @@ export class SocialIconComponent implements OnInit {
   }
 
   public getTarget(): string {
-    switch (this.target) {
-      case 'mail':
+    switch (this.type) {
+      case 'email':
         return `mailto:${this.target}`
       case 'phone':
         return `tel:${this.target}`

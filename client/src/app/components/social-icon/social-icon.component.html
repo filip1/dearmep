@@ -5,14 +5,16 @@
     </mat-icon>
     <mat-icon *ngIf="useSvgIcon()" [svgIcon]="getIcon()"></mat-icon>
   </a>
-  <!-- <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="popoverIsOpen">
-    <ul class="example-list">
-      <li>Item 1</li>
-      <li>Item 2</li>
-      <li>Item 3</li>
-      <li>Item 4</li>
-    </ul>
-  </ng-template> -->
+  <ng-template cdkConnectedOverlay [cdkConnectedOverlayHasBackdrop]="true" cdkConnectedOverlayBackdropClass="dmep-popover-backdrop" (backdropClick)="popoverIsOpen = false" [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="popoverIsOpen">
+    <div class="dmep-popover">
+      <mat-icon>
+        {{ getIcon() }}
+      </mat-icon>
+      <p>
+        <a [href]="getTarget() | safe: 'url'" [matTooltip]="getText()">{{ getText() }}</a>
+      </p>
+    </div>
+  </ng-template>
 </ng-container>
 <ng-container *ngIf="!usePopover()">
   <a target="_blank" [href]="getTarget()" [matTooltip]="getText()" matTooltipPosition="above" >
