@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DestinationRead } from 'src/app/api/models';
 
 @Component({
   selector: 'dmep-mep-detail',
@@ -8,4 +9,14 @@ import { Component, Input } from '@angular/core';
 export class MEPDetailComponent {
   @Input()
   public allowChangeMEP?: boolean | null
+
+  @Input()
+  public mep?: DestinationRead | null
+
+  @Output()
+  public MEPChange = new EventEmitter<void>()
+
+  public MEPChangeClick() {
+    this.MEPChange.emit()
+  }
 }
