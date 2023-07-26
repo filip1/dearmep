@@ -410,6 +410,10 @@ l10n:
       de: Land
       sv: Land
 
+    # Placeholder for the
+    select-mep.search.placeholder:
+      en: Search for another member
+
   # Translation strings for the talking-points that will be displayed during the call or while scheduling a call
 
     # Title of the talking-points section
