@@ -9,9 +9,15 @@
         matInput
         [matAutocomplete]="auto"
         [formControl]="searchMEPFormControl">
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="getMepName" >
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="getMepName" hideSingleSelectionIndicator="true" >
         <mat-option [value]="mep" *ngFor="let mep of filteredMEPs | async">
-          {{ mep.name }}
+          <div class="mep-search-result">
+            <span [classList]="'flag:' + mep.country"></span>
+            <span class="mep-name">{{ mep.name }}</span>
+            <ng-container *ngFor="let group of mep.groups">
+              <img *ngIf="group.logo" [src]="group.logo" class="dmep-group-icon">
+            </ng-container>
+          </div>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
