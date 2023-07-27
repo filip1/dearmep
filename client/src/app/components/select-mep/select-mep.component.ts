@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { combineLatest, debounceTime, distinctUntilChanged, distinctUntilKeyChanged, filter, map, Observable, shareReplay, startWith, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, Observable, shareReplay, startWith, switchMap } from 'rxjs';
 import { DestinationRead, DestinationSearchResult } from 'src/app/api/models';
 import { CallingStep } from 'src/app/model/calling-step.enum';
 import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
