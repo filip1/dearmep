@@ -7,3 +7,25 @@
   flex-basis: 320px;
   margin-right: 16px;
 }
+
+.dmep-group-icon {
+  height: 1.5em;
+  width: auto;
+  justify-self: end;
+}
+
+.mep-search-result {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.mep-name {
+  margin-right: auto;
+}
+
+::ng-deep
+mat-option .mdc-list-item__primary-text {
+  width: 100%;
+}

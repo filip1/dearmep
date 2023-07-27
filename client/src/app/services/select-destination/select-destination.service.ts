@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/api/services';
 import { L10nService } from '../l10n/l10n.service';
 import { BehaviorSubject, Observable, distinctUntilChanged, filter } from 'rxjs';
-import { DestinationRead, DestinationSearchResult } from 'src/app/api/models';
+import { DestinationRead, DestinationSearchResult, SearchResultDestinationSearchResult } from 'src/app/api/models';
 
 @Injectable({
   providedIn: 'root'
@@ -46,8 +46,17 @@ export class SelectDestinationService {
 
   public selectDestination(destinationID: string) {
     this.apiService.getDestinationById({ id: destinationID }).subscribe({
-      next: (d) => this.selectedDestination.next(d)
+      next: (d) => {
+        if (d.country !== this.selectedCountry && d.country) {
+          this.l10nService.setCountry(d.country)
+        }
+        this.selectedDestination.next(d)
+      }
     })
+  }
+
+  public searchDestination(quary: string): Observable<SearchResultDestinationSearchResult> {
+    return this.apiService.getDestinationsByName({ name: quary, all_countries: true, country: this.selectedCountry })
   }
 
   private loadAvailableDestinations() {
