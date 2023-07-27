@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { combineLatest, filter, map, Observable, startWith } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged, distinctUntilKeyChanged, filter, map, Observable, shareReplay, startWith, switchMap } from 'rxjs';
 import { DestinationRead, DestinationSearchResult } from 'src/app/api/models';
 import { CallingStep } from 'src/app/model/calling-step.enum';
 import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
@@ -16,7 +16,7 @@ export class SelectMEPComponent implements OnInit {
 
   public selectedMEP$?: Observable<DestinationRead | undefined>
   public availableMEPs$?: Observable<DestinationSearchResult[] | undefined>
-  public filteredMEPs?: Observable<DestinationSearchResult[]>
+  public filteredMEPs?: Observable<DestinationSearchResult[] | undefined>
 
   public searchMEPFormControl = new FormControl<DestinationSearchResult | string | undefined>(undefined)
 
@@ -32,14 +32,20 @@ export class SelectMEPComponent implements OnInit {
     this.selectedMEP$ = this.selectDestinationService.getDestination$()
     this.availableMEPs$ = this.selectDestinationService.getAvailableDestinations$()
 
-    // filter search options
-    this.filteredMEPs = combineLatest([
-      this.selectDestinationService.getAvailableDestinations$(),
-      this.searchMEPFormControl.valueChanges.pipe(startWith(undefined)),
-    ]).pipe(
-      map(([availableMEPs, searchFieldValue]) => {
-        return availableMEPs?.filter(m => this.mepMatchesSearchStr(m, searchFieldValue)) || []
-      })
+    const destinationsFromSameCountry$ = this.selectDestinationService.getAvailableDestinations$()
+
+    this.filteredMEPs = this.searchMEPFormControl.valueChanges.pipe(
+      debounceTime(500),
+      startWith(undefined),
+      distinctUntilChanged(),
+      switchMap((query) => {
+        if (!query || typeof query === 'object') {
+          return destinationsFromSameCountry$;
+        } else {
+          return this.selectDestinationService.searchDestination(query).pipe(map(r => r.results))
+        }
+      }),
+      shareReplay()
     )
 
     // set selected mep from serach field
@@ -50,16 +56,10 @@ export class SelectMEPComponent implements OnInit {
       next: (v) => this.selectDestinationService.selectDestination(v.id)
     })
 
-    // reset search field if selected mep is not available anymore
-    this.filteredMEPs.subscribe({
-      next: (availableMEPs) => {
-        const searchFieldValue = this.searchMEPFormControl.value
-        if (searchFieldValue && typeof searchFieldValue === "object") {
-          const found = !!availableMEPs.find((m) => m.id === searchFieldValue?.id)
-          if (!found) {
-            this.searchMEPFormControl.reset()
-          }
-        }
+    // reset search field if selected country changes
+    destinationsFromSameCountry$.subscribe({
+      next: () => {
+        this.searchMEPFormControl.reset()
       }
     })
   }
