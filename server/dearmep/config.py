@@ -245,11 +245,15 @@ class Settings(BaseSettings):
         description="Path to a directory that will be served as static files. "
         "Normally, this is used to let this application serve the front end.",
     )
+    markdown_files_dir: Optional[DirectoryPath] = Field(
+        description="Path to a directory to serve multilingual Markdown "
+        "files.",
+    )
 
     class Config:
         env_prefix = ENV_PREFIX
 
-    @validator("static_files_dir", pre=True)
+    @validator("static_files_dir", "markdown_files_dir", pre=True)
     def empty_string_is_none(cls, v):
         return None if v == "" else v
 
