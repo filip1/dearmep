@@ -1,6 +1,6 @@
 <div class="mep">
-  <img *ngIf="mep" class="mep-image" [src]="mep.portrait" [alt]="mep.name">
-  <div *ngIf="!mep" class="mep-image-loading-placeholder mep-image">
+  <img *ngIf="mep" [hidden]="!imageLoaded()" class="mep-image" [src]="mep.portrait" [alt]="mep.name" (load)="imageLoadedUrl = mep.portrait">
+  <div *ngIf="!mep || !imageLoaded()" class="mep-image-loading-placeholder mep-image">
     <mat-spinner [diameter]="56"></mat-spinner>
   </div>
   <div class="mep-description">

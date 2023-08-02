@@ -7,6 +7,8 @@ import { DestinationRead } from 'src/app/api/models';
   styleUrls: ['./mep-detail.component.scss']
 })
 export class MEPDetailComponent {
+  public imageLoadedUrl?: string
+
   @Input()
   public allowChangeMEP?: boolean | null
 
@@ -18,5 +20,9 @@ export class MEPDetailComponent {
 
   public MEPChangeClick() {
     this.MEPChange.emit()
+  }
+
+  public imageLoaded(): boolean {
+    return !!this.mep?.portrait && this.mep.portrait === this.imageLoadedUrl
   }
 }
