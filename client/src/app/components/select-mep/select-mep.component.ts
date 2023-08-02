@@ -94,10 +94,6 @@ export class SelectMEPComponent implements OnInit {
     })
   }
 
-  public onBlur() {
-    console.log("blur")
-  }
-
   public renewSuggestion() {
     this.searchMEPFormControl.reset()
     this.selectDestinationService.renewSuggestedDestination()
@@ -107,10 +103,12 @@ export class SelectMEPComponent implements OnInit {
     return mep?.name || ''
   }
 
+  // Value of search-field represents a string query to search for matching destinations
   private isSearchQuery(query: string | DestinationSearchResult | null | undefined): boolean {
     return !!query && typeof query === 'string' && query !== ''
   }
 
+  // Value of search-field represents a selected destination object
   private isSelectedDestination(query: string | DestinationSearchResult | null | undefined): boolean {
     return !!query && typeof query === 'object'
   }

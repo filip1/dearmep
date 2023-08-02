@@ -24,8 +24,10 @@ export class SelectDestinationService {
       .subscribe({
         next: (c) => {
           this.selectedCountry = c
-          this.renewSuggestedDestination()
           this.loadAvailableDestinations()
+          if (!this.selectedDestination.value) {
+            this.renewSuggestedDestination()
+          }
         }
       })
   }
@@ -38,8 +40,8 @@ export class SelectDestinationService {
     return this.availableDestinations.asObservable()
   }
 
-  public renewSuggestedDestination() {
-    this.apiService.getSuggestedDestination({ country: this.selectedCountry }).subscribe({
+  public renewSuggestedDestination(country?: string) {
+    this.apiService.getSuggestedDestination({ country: country || this.selectedCountry }).subscribe({
       next: (d) => this.selectedDestination.next(d),
     })
   }
