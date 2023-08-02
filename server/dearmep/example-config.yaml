@@ -414,6 +414,11 @@ l10n:
     select-mep.search.placeholder:
       en: Search for another member
 
+    # Message that shows that no destinations math the entered search-text
+    select-mep.autocomplete-empty:
+      en: Not found
+      de: Nicht gefunden
+
   # Translation strings for the talking-points that will be displayed during the call or while scheduling a call
 
     # Title of the talking-points section

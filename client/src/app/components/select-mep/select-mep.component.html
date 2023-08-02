@@ -19,6 +19,9 @@
             </ng-container>
           </div>
         </mat-option>
+        <mat-option [disabled]="true" *ngIf="(filteredMEPs | async)?.length === 0">
+          {{ 'select-mep.autocomplete-empty' | transloco }}
+        </mat-option>
       </mat-autocomplete>
     </mat-form-field>
     <dmep-country-select></dmep-country-select>
