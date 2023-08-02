@@ -8,8 +8,9 @@
         [placeholder]="'select-mep.search.placeholder' | transloco"
         matInput
         [matAutocomplete]="auto"
-        [formControl]="searchMEPFormControl">
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="getMepName" hideSingleSelectionIndicator="true" >
+        [formControl]="searchMEPFormControl"
+        #destinationSearchInput>
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="getMepName" hideSingleSelectionIndicator="true">
         <mat-option [value]="mep" *ngFor="let mep of filteredMEPs | async">
           <div class="mep-search-result">
             <span [classList]="'flag:' + mep.country"></span>

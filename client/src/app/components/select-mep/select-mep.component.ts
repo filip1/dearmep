@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { combineLatest, debounceTime, distinctUntilChanged, filter, map, Observable, shareReplay, startWith, switchMap } from 'rxjs';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { debounceTime, distinctUntilChanged, filter, map, Observable, shareReplay, startWith, switchMap } from 'rxjs';
 import { DestinationRead, DestinationSearchResult } from 'src/app/api/models';
 import { CallingStep } from 'src/app/model/calling-step.enum';
 import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
@@ -20,6 +21,9 @@ export class SelectMEPComponent implements OnInit {
 
   public searchMEPFormControl = new FormControl<DestinationSearchResult | string | undefined>(undefined)
 
+  @ViewChild('destinationSearchInput', { read: MatAutocompleteTrigger })
+  public autoComplete?: MatAutocompleteTrigger;
+
   constructor(
     private readonly callingStepManagerService: CallingStateManagerService,
     private readonly selectDestinationService: SelectDestinationService,
@@ -32,21 +36,10 @@ export class SelectMEPComponent implements OnInit {
     this.selectedMEP$ = this.selectDestinationService.getDestination$()
     this.availableMEPs$ = this.selectDestinationService.getAvailableDestinations$()
 
-    // filter search options
-    // this.filteredMEPs = combineLatest([
-    //   this.selectDestinationService.getAvailableDestinations$(),
-    //   this.searchMEPFormControl.valueChanges.pipe(startWith(undefined)),
-    // ]).pipe(
-    //   map(([availableMEPs, searchFieldValue]) => {
-    //     return availableMEPs?.filter(m => this.mepMatchesSearchStr(m, searchFieldValue)) || []
-    //   }),
-    //   shareReplay()
-    // )
-
     const destinationsFromSameCountry$ = this.selectDestinationService.getAvailableDestinations$()
 
     this.filteredMEPs = this.searchMEPFormControl.valueChanges.pipe(
-      debounceTime(500),
+      debounceTime(100),
       startWith(undefined),
       distinctUntilChanged(),
       switchMap((query) => {
@@ -67,6 +60,18 @@ export class SelectMEPComponent implements OnInit {
       next: (v) => this.selectDestinationService.selectDestination(v.id)
     })
 
+    // Workaround to make sure autocomplete is opened
+    // when search text changes
+    this.searchMEPFormControl.valueChanges
+      .pipe(filter(v => !!v && typeof v === 'string' && v !== ''))
+      .subscribe({
+        next: () => {
+          if (this.autoComplete && !this.autoComplete.panelOpen) {
+            this.autoComplete.openPanel()
+          }
+        }
+      })
+
     // reset search field if selected mep is not available in selected country
     destinationsFromSameCountry$.subscribe({
       next: (availableMEPs) => {
@@ -79,6 +84,10 @@ export class SelectMEPComponent implements OnInit {
         }
       }
     })
+  }
+
+  public onBlur() {
+    console.log("blur")
   }
 
   public renewSuggestion() {
