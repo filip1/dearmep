@@ -41,12 +41,14 @@ export class SelectDestinationService {
   }
 
   public renewSuggestedDestination(country?: string) {
+    this.selectedDestination.next(undefined)
     this.apiService.getSuggestedDestination({ country: country || this.selectedCountry }).subscribe({
       next: (d) => this.selectedDestination.next(d),
     })
   }
 
   public selectDestination(destinationID: string) {
+    this.selectedDestination.next(undefined)
     this.apiService.getDestinationById({ id: destinationID }).subscribe({
       next: (d) => {
         if (d.country !== this.selectedCountry && d.country) {

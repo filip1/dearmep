@@ -19,13 +19,18 @@
 }
 
 .mep-image {
-  img {
-    object-fit: cover;
-    border-radius: 20px;
-    height: 215px;
-    width: 170px;
-  }
+  background-color: rgba($color: #FFFFFF, $alpha: 0.1);
+  object-fit: cover;
+  border-radius: 20px;
+  height: 215px;
+  width: 170px;
   margin-right: 16px;
+}
+
+.mep-image-loading-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .socials {
