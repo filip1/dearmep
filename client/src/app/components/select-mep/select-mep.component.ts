@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { debounceTime, distinctUntilChanged, filter, map, Observable, shareReplay, startWith, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, Observable, shareReplay, startWith, switchMap, tap } from 'rxjs';
 import { DestinationRead, DestinationSearchResult } from 'src/app/api/models';
 import { CallingStep } from 'src/app/model/calling-step.enum';
 import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
@@ -21,6 +21,8 @@ export class SelectMEPComponent implements OnInit {
 
   public searchMEPFormControl = new FormControl<DestinationSearchResult | string | undefined>(undefined)
 
+  public autocompleteIsLoading = false
+
   @ViewChild('destinationSearchInput', { read: MatAutocompleteTrigger })
   public autoComplete?: MatAutocompleteTrigger;
 
@@ -39,6 +41,11 @@ export class SelectMEPComponent implements OnInit {
     const destinationsFromSameCountry$ = this.selectDestinationService.getAvailableDestinations$()
 
     this.filteredMEPs = this.searchMEPFormControl.valueChanges.pipe(
+      tap((query) => {
+        if (this.isSearchQuery(query)) {
+          this.autocompleteIsLoading = true
+        }
+      }),
       debounceTime(100),
       startWith(undefined),
       distinctUntilChanged(),
@@ -49,12 +56,13 @@ export class SelectMEPComponent implements OnInit {
           return this.selectDestinationService.searchDestination(query).pipe(map(r => r.results))
         }
       }),
-      shareReplay()
+      tap(() => this.autocompleteIsLoading = false),
+      shareReplay(),
     )
 
     // set selected mep from serach field
     this.searchMEPFormControl.valueChanges.pipe(
-      filter(v => !!v && typeof v === 'object'),
+      filter(v => this.isSelectedDestination(v)),
       map(v => v as DestinationSearchResult)
     ).subscribe({
       next: (v) => this.selectDestinationService.selectDestination(v.id)
@@ -63,7 +71,7 @@ export class SelectMEPComponent implements OnInit {
     // Workaround to make sure autocomplete is opened
     // when search text changes
     this.searchMEPFormControl.valueChanges
-      .pipe(filter(v => !!v && typeof v === 'string' && v !== ''))
+      .pipe(filter(q => this.isSearchQuery(q)))
       .subscribe({
         next: () => {
           if (this.autoComplete && !this.autoComplete.panelOpen) {
@@ -99,16 +107,11 @@ export class SelectMEPComponent implements OnInit {
     return mep?.name || ''
   }
 
-  public mepMatchesSearchStr(mep: DestinationSearchResult, searchValue: DestinationSearchResult | string | null | undefined): boolean {
-    if (!searchValue) {
-      return true
-    }
+  private isSearchQuery(query: string | DestinationSearchResult | null | undefined): boolean {
+    return !!query && typeof query === 'string' && query !== ''
+  }
 
-    // match search string
-    if (typeof searchValue === "string") {
-      return mep.name.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1
-    }
-
-    return true
+  private isSelectedDestination(query: string | DestinationSearchResult | null | undefined): boolean {
+    return !!query && typeof query === 'object'
   }
 }

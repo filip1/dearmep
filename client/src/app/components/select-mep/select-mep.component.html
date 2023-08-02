@@ -3,7 +3,8 @@
     <mat-form-field appearance="outline" class="dmep-search-member-field">
       <mat-label>{{ 'select-mep.search.placeholder' | transloco }}</mat-label>
       <mat-icon matPrefix>search</mat-icon>
-      <mat-icon matSuffix>expand_more</mat-icon>
+      <mat-icon matSuffix *ngIf="!autocompleteIsLoading">expand_more</mat-icon>
+      <mat-spinner [diameter]="24" matSuffix *ngIf="autocompleteIsLoading"></mat-spinner>
       <input type="text"
         [placeholder]="'select-mep.search.placeholder' | transloco"
         matInput
