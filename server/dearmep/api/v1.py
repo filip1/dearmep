@@ -38,6 +38,10 @@ rate_limit_response: Dict[int, Dict[str, Any]] = {
 }
 
 
+simple_rate_limit = Depends(Limit("simple"))
+computational_rate_limit = Depends(Limit("computational"))
+
+
 BlobURLDep = Callable[[Optional[Blob]], Optional[str]]
 
 
@@ -75,8 +79,8 @@ router = APIRouter()
 @router.get(
     "/localization", operation_id="getLocalization",
     response_model=LocalizationResponse,
-    dependencies=[Depends(Limit("simple"))],
     responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(computational_rate_limit,),
 )
 def get_localization(
     session: Annotated[Session, Depends(session)],
@@ -130,6 +134,7 @@ def get_localization(
     "/frontend-strings/{language}", operation_id="getFrontendStrings",
     response_model=FrontendStringsResponse,
     responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(simple_rate_limit,),
 )
 def get_frontend_strings(
     language: Language,
@@ -151,12 +156,14 @@ def get_frontend_strings(
     "/blob/{name}", operation_id="getBlob",
     response_class=Response,
     responses={
+        **rate_limit_response,  # type: ignore[arg-type]
         200: {
             "content": {"application/octet-stream": {}},
             "description": "The contents of the named blob, with a matching "
                            "mimetype set.",
         },
     },
+    dependencies=(simple_rate_limit,),
 )
 def get_blob_contents(
     name: str,
@@ -175,12 +182,15 @@ def get_blob_contents(
 @router.get(
     "/destinations/country/{country}", operation_id="getDestinationsByCountry",
     response_model=SearchResult[DestinationSearchResult],
+    responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(simple_rate_limit,),
 )
 def get_destinations_by_country(
     session: Annotated[Session, Depends(session)],
     country: CountryCode,
 ) -> SearchResult[DestinationSearchResult]:
     """Return all destinations in a given country."""
+    # TODO: This query result should be cached.
     dests = query.get_destinations_by_country(session, country)
     return query.to_destination_search_result(dests, blob_path)
 
@@ -188,6 +198,8 @@ def get_destinations_by_country(
 @router.get(
     "/destinations/name", operation_id="getDestinationsByName",
     response_model=SearchResult[DestinationSearchResult],
+    responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(simple_rate_limit,),
 )
 def get_destinations_by_name(
     session: Annotated[Session, Depends(session)],
@@ -232,6 +244,8 @@ def get_destinations_by_name(
 @router.get(
     "/destinations/id/{id}", operation_id="getDestinationByID",
     response_model=DestinationRead,
+    responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(simple_rate_limit,),
 )
 def get_destination_by_id(
     session: Annotated[Session, Depends(session)],
@@ -247,6 +261,8 @@ def get_destination_by_id(
 @router.get(
     "/destinations/suggested", operation_id="getSuggestedDestination",
     response_model=DestinationRead,
+    responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(computational_rate_limit,),
 )
 def get_suggested_destination(
     session: Annotated[Session, Depends(session)],
