@@ -29,4 +29,7 @@
     <dmep-country-select></dmep-country-select>
   </div>
   <dmep-mep-detail [allowChangeMEP]="mepSelectionPossible$ | async" [mep]="selectedMEP$ | async" (MEPChange)="renewSuggestion()"></dmep-mep-detail>
+  <div class="dmep-portrait-credit">
+    <span *ngIf="selectedMEP$ | async" [innerHTML]="'select-mep.portraitCreditHtml' | transloco: { id: (selectedMEP$ | async)?.id }"></span>
+  </div>
 </div>

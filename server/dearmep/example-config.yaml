@@ -419,6 +419,12 @@ l10n:
       en: Not found
       de: Nicht gefunden
 
+    # Credits displayed below the portrait of the MEP
+    # {{ id }} placeholder is replaced with the MEP-ID from the API
+    select-mep.portraitCreditHtml:
+      en: portrait © European Parliament (<a href="https://www.europarl.europa.eu/meps/en/{{id}}/" target="_blank">source</a>)
+      de: Portrait © Europäisches Parlament (<a href="https://www.europarl.europa.eu/meps/en/{{id}}/" target="_blank">source</a>)
+
   # Translation strings for the talking-points that will be displayed during the call or while scheduling a call
 
     # Title of the talking-points section
