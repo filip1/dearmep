@@ -57,6 +57,44 @@ contact_timespan_filter:
         end:   2023-12-13
 
 
+# The HTTP API.
+api:
+
+  # Rate limit configuration. How often can certain actions/requests be
+  # performed before considering it an attack on the service?
+  # As an attacker might use more than a single IP address, each of these limits
+  # actually use three levels of granularity. Every request counts against all
+  # of them. If one of them is exceeded, the rate limiting kicks in and denies
+  # the request.
+  #   * ip: Uses the exact IPv4 or IPv6 address of the client.
+  #   * small_block: Uses the /24 of the IP address for IPv4, or /64 for IPv6.
+  #   * large_block: /16 for IPv4, /48 for IPv6. These can easily block (parts)
+  #     of whole (small) ISPs, be careful and watch the metrics.
+  # In addition to these levels of granularity, there are also multiple
+  # _categories_ of rate limits. For example, accessing a simple image file
+  # should have a more relaxed rate limit than computationally expensive, or
+  # even _financially_ expensive operation. Each API endpoint only falls into
+  # one of these categories, and they don't influence each other. In other
+  # words: If a client exceeds the "computational" rate limit, they are still
+  # able to access "simple" resources, and vice versa. (Until they exceed _that_
+  # category, too.)
+  rate_limits:
+
+    # Simple requests for static data, or data that can be retrieved from the
+    # database using simple and fast queries.
+    simple:
+      ip_limit: 30 per second, 200 per minute
+      small_block_limit: 1000 per minute
+      large_block_limit: 2000 per minute
+
+    # Requests that are a bit heavier on the CPU or network, e.g. because they
+    # involve somewhat sophisticated calculations, and/or database table scans.
+    computational:
+      ip_limit: 5 per second, 30 per minute
+      small_block_limit: 100 per minute
+      large_block_limit: 300 per minute
+
+
 # User authentication.
 authentication:
 

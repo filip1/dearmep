@@ -1,7 +1,7 @@
 from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
 
-from dearmep.util import client_addr
+from dearmep.ratelimit import client_addr
 
 
 def override_client_addr(app: FastAPI, ip_addr: str):
@@ -75,3 +75,21 @@ def test_l10n_ratelimit(fastapi_app: FastAPI, client: TestClient):
         assert res.status_code == status.HTTP_200_OK
     res = client.get("/api/v1/localization")
     assert res.status_code == status.HTTP_429_TOO_MANY_REQUESTS
+
+
+def test_l10n_ratelimit_v6(fastapi_app: FastAPI, client: TestClient):
+    # Default limit is 5 per second, so we'll change IP addresses every 5
+    # requests. However, once we've done 100 in total, we'll be rated-limited
+    # via our /64.
+    for i in range(100):
+        if i % 5 == 0:
+            new_addr = f"2a01:abc::{i // 5 + 1}"
+            override_client_addr(fastapi_app, new_addr)
+        res = client.get("/api/v1/localization")
+        assert res.status_code == status.HTTP_200_OK
+    res = client.get("/api/v1/localization")
+    assert res.status_code == status.HTTP_429_TOO_MANY_REQUESTS
+    # With a different /64 it should still work though.
+    override_client_addr(fastapi_app, "2a01:abc:0:1::1")
+    res = client.get("/api/v1/localization")
+    assert res.status_code == status.HTTP_200_OK

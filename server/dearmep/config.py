@@ -35,6 +35,21 @@ class Language(ConstrainedStr):
     regex = re.compile(r"^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$")
 
 
+class IPRateLimits(BaseModel):
+    ip_limit: str
+    small_block_limit: str
+    large_block_limit: str
+
+
+class APIRateLimitConfig(BaseModel):
+    simple: IPRateLimits
+    computational: IPRateLimits
+
+
+class APIConfig(BaseModel):
+    rate_limits: APIRateLimitConfig
+
+
 class ContactTimespanFilterTimespan(BaseModel):
     start: date
     end: date
@@ -162,6 +177,7 @@ class L10nConfig(BaseModel):
 
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""
+    api: APIConfig
     contact_timespan_filter: Optional[ContactTimespanFilterConfig]
     database: DatabaseConfig
     l10n: L10nConfig
