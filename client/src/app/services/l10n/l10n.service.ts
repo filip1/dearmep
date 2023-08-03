@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, combineLatest, map, take } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, combineLatest, distinctUntilKeyChanged, filter, map, shareReplay, take } from 'rxjs';
 import { ApiService } from 'src/app/api/services';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 import { TranslocoService } from '@ngneat/transloco';
@@ -11,6 +11,8 @@ export class L10nService {
   private readonly languageStorageKey = "language"
   private readonly countryStorageKey = "country"
 
+  private readonly defaultCountry$ = new ReplaySubject<string | undefined>()
+
   private readonly availableLanguages$ = new ReplaySubject<string[]>()
   private readonly detectedLanguage$ = new ReplaySubject<string | undefined>()
   private readonly userSelectedLanguage$: BehaviorSubject<string | undefined>
@@ -18,6 +20,9 @@ export class L10nService {
   private readonly availableCountries$ = new ReplaySubject<string[]>()
   private readonly detectedCountry$ = new ReplaySubject<string | undefined>()
   private readonly userSelectedCountry$: BehaviorSubject<string | undefined>
+
+  private readonly randomCountry$: Observable<string>
+  private readonly country$: Observable<string>
 
   constructor(
     private readonly apiService: ApiService,
@@ -30,6 +35,25 @@ export class L10nService {
     this.getLanguage$().subscribe({
       next(lang) { if (lang) { translocoService.setActiveLang(lang) } }
     })
+
+    this.randomCountry$ = this.availableCountries$.pipe(
+      filter(c => c?.length > 0),
+      distinctUntilKeyChanged("length"),
+      map((c) => c[Math.floor(c.length * Math.random())]),
+      shareReplay(),
+    )
+
+    this.country$ = combineLatest([
+      this.userSelectedCountry$,
+      this.detectedCountry$,
+      this.defaultCountry$,
+      this.randomCountry$,
+    ]).pipe(
+      map(([userSelectedCountry, apiDetectedCountry, defaultCountry, randomCountry]) => {
+        return userSelectedCountry || apiDetectedCountry || defaultCountry || randomCountry
+      }),
+      shareReplay(),
+    )
   }
 
   public getAvailableLanguages$(): Observable<string[]> {
@@ -52,24 +76,21 @@ export class L10nService {
     this.userSelectedLanguage$.next(langCode)
   }
 
-  public getCountry$(): Observable<string | undefined> {
-    return combineLatest([
-      this.userSelectedCountry$,
-      this.detectedCountry$,
-    ]).pipe(
-      map(([userSelectedCountry, apiDetectedCountry]) => {
-        return userSelectedCountry || apiDetectedCountry
-      })
-    )
+  public getCountry$(): Observable<string> {
+    return this.country$;
   }
 
   public getAvailableCountries$(): Observable<string[]> {
     return this.availableCountries$.asObservable()
   }
 
-  public setCountry(countryCode: string) {
-    this.localStorageService.setString(this.countryStorageKey, countryCode)
-    this.userSelectedCountry$.next(countryCode)
+  public setCountry(country: string) {
+    this.localStorageService.setString(this.countryStorageKey, country)
+    this.userSelectedCountry$.next(country)
+  }
+
+  public setDefaultCountry(country: string | undefined) {
+    this.defaultCountry$.next(country)
   }
 
   private getStoredUserSelectedLanguage(): string | undefined {
@@ -88,7 +109,7 @@ export class L10nService {
         this.detectedLanguage$.next(resp.language.recommended || undefined)
         this.detectedCountry$.next(resp.location.recommended || undefined)
         this.availableLanguages$.next(resp.language.available)
-        this.availableCountries$.next(resp.location.available?.map(c => c.toUpperCase()))
+        this.availableCountries$.next(resp.location.available)
         this.translocoService.setAvailableLangs(resp.language.available)
       }
     })
