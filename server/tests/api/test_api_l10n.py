@@ -1,7 +1,7 @@
 from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
 
-from dearmep.util import client_addr
+from dearmep.ratelimit import client_addr
 
 
 def override_client_addr(app: FastAPI, ip_addr: str):

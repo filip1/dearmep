@@ -14,7 +14,7 @@ from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import MAX_SEARCH_RESULT_LIMIT, CountryCode, \
     DestinationSearchResult, FrontendStringsResponse, LanguageDetection, \
     LocalizationResponse, RateLimitResponse, SearchResult, SearchResultLimit
-from ..util import Limit, client_addr
+from ..ratelimit import Limit, client_addr
 
 
 l10n_autodetect_total = Counter(
