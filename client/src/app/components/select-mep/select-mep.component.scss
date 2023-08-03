@@ -29,3 +29,8 @@
 mat-option .mdc-list-item__primary-text {
   width: 100%;
 }
+
+mat-form-field mat-spinner {
+  margin-right: 16px;
+  display: inline-flex;
+}

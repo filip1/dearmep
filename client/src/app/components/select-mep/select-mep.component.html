@@ -3,13 +3,15 @@
     <mat-form-field appearance="outline" class="dmep-search-member-field">
       <mat-label>{{ 'select-mep.search.placeholder' | transloco }}</mat-label>
       <mat-icon matPrefix>search</mat-icon>
-      <mat-icon matSuffix>expand_more</mat-icon>
+      <mat-icon matSuffix *ngIf="!autocompleteIsLoading">expand_more</mat-icon>
+      <mat-spinner [diameter]="24" matSuffix *ngIf="autocompleteIsLoading"></mat-spinner>
       <input type="text"
         [placeholder]="'select-mep.search.placeholder' | transloco"
         matInput
         [matAutocomplete]="auto"
-        [formControl]="searchMEPFormControl">
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="getMepName" hideSingleSelectionIndicator="true" >
+        [formControl]="searchMEPFormControl"
+        #destinationSearchInput>
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="getMepName" hideSingleSelectionIndicator="true">
         <mat-option [value]="mep" *ngFor="let mep of filteredMEPs | async">
           <div class="mep-search-result">
             <span [classList]="'flag:' + mep.country"></span>
@@ -18,6 +20,9 @@
               <img *ngIf="group.logo" [src]="group.logo" class="dmep-group-icon">
             </ng-container>
           </div>
+        </mat-option>
+        <mat-option [disabled]="true" *ngIf="(filteredMEPs | async)?.length === 0">
+          {{ 'select-mep.autocomplete-empty' | transloco }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>

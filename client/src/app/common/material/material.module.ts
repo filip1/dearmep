@@ -12,6 +12,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [],
@@ -27,6 +28,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     MatButtonToggleModule,
     MatTooltipModule,
     OverlayModule,
+    MatProgressSpinnerModule,
   ],
   providers: [
     { provide: OverlayContainer, useClass: ShadowRootOverlayContainer },
@@ -44,6 +46,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     MatButtonToggleModule,
     MatTooltipModule,
     OverlayModule,
+    MatProgressSpinnerModule,
   ]
 })
 export class MaterialModule { }
