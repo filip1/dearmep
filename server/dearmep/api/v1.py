@@ -75,8 +75,7 @@ router = APIRouter()
 @router.get(
     "/localization", operation_id="getLocalization",
     response_model=LocalizationResponse,
-    # TODO: This explicit limit here makes little sense, it's more of a demo.
-    dependencies=[Depends(Limit("5/minute"))],
+    dependencies=[Depends(Limit("simple"))],
     responses=rate_limit_response,  # type: ignore[arg-type]
 )
 def get_localization(
