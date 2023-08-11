@@ -11,7 +11,6 @@ import { createCustomElement } from '@angular/elements';
 import { AppCommonModule } from './common/app-common.module';
 import { BaseUrlInterceptor } from './common/interceptors/base-url.interceptor';
 import { ComponentsModule } from './components/components.module';
-import { LayoutModule } from './layout/layout.module';
 import { CallingModule } from './calling/calling.module';
 
 @NgModule({
@@ -26,7 +25,6 @@ import { CallingModule } from './calling/calling.module';
     ApiModule.forRoot({ rootUrl: '' }),
     AppCommonModule,
     ComponentsModule,
-    LayoutModule,
     CallingModule,
   ],
   providers: [
