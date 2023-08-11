@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, Subject } from 'rxjs';
 import { BaseUrlService } from './common/services/base-url.service';
 import { CallingStep } from './model/calling-step.enum';
 import { CallingStateManagerService } from './services/calling/calling-state-manager.service';
@@ -18,6 +18,8 @@ export class AppComponent implements OnInit, OnChanges {
   public shouldDisplayTalkingPoints$?: Observable<boolean>
   public shouldDisplayTitle$?: Observable<boolean>
   public shouldDisplayMEP$?: Observable<boolean>
+
+  public smallScreen = false
 
   /**
    * 'hostUrl' defines the url of the DearMEP-Backend.

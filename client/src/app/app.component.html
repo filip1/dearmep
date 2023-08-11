@@ -2,24 +2,22 @@
   Optimization: This style is loaded quite late, might make sens to add <link rel="preload" ... /> to the host page.
 -->
 <link *ngIf="styleUrl$ | async" rel="stylesheet" [href]="styleUrl$ | async | safe: 'resourceUrl'" type="text/css">
-<link *ngIf="flagsStyleUrl$ | async" rel="stylesheet" [href]="flagsStyleUrl$ | async | safe: 'resourceUrl'" type="text/css">
-<div class="dmep-app-container">
-  <dmep-two-column-layout *ngIf="!disableCalling">
-    <dmep-title left class="grow" *ngIf="shouldDisplayTitle$ | async"></dmep-title>
-    <dmep-select-mep left *ngIf="shouldDisplayMEP$ | async"></dmep-select-mep>
-    <dmep-talking-points left *ngIf="shouldDisplayTalkingPoints$ | async"></dmep-talking-points>
-    <dmep-language-switch right></dmep-language-switch>
-    <dmep-calling right class="grow"></dmep-calling>
-  </dmep-two-column-layout>
+<link *ngIf="flagsStyleUrl$ | async" rel="stylesheet" [href]="flagsStyleUrl$ | async | safe: 'resourceUrl'"
+  type="text/css">
 
-  <!-- Just a test to see how it would look when calling is disabled -->
-  <div class="" *ngIf="disableCalling">
-    <div style="display: flex; align-items: start; justify-content: space-between; gap: 40px;">
-      <dmep-title></dmep-title>
-      <dmep-language-switch></dmep-language-switch>
-    </div>
-    <dmep-select-mep></dmep-select-mep>
+<div class="dmep-app-container" dmepResponsive responsiveClassName="dmep-display-sm" [breakpointPx]="768"
+  (breakpointReached)="smallScreen = $event">
+
+  <div class="dmep-app-layout">
+    <dmep-title class="dmep-layout-left" *ngIf="shouldDisplayTitle$ | async"></dmep-title>
+    <dmep-select-mep class="dmep-layout-left" *ngIf="shouldDisplayMEP$ | async"></dmep-select-mep>
+    <dmep-talking-points class="dmep-layout-left" *ngIf="shouldDisplayTalkingPoints$ | async"></dmep-talking-points>
+
+    <dmep-language-switch class="dmep-layout-right"></dmep-language-switch>
+    <dmep-calling class="dmep-layout-right"></dmep-calling>
+
   </div>
 
-  <dmep-footer></dmep-footer>
+  <dmep-footer class="dmep-layout-full-width"></dmep-footer>
 </div>
+

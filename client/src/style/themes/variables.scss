@@ -14,7 +14,8 @@
   // Fonts
   --dmep-font-family: Roboto, "Helvetica Neue", sans-serif;
   --dmep-font-size: 1.25rem;
-  --dmep-title-font-size: 3.75rem;
+  --dmep-title-font-size: 3.5rem;
+  --dmep-title-font-size-sm: calc(var(--dmep-title-font-size)* 0.75);
   --dmep-sub-title-font-size: 1.5rem;
   --dmep-footer-font-size: 1rem;
   --dmep-font-size-sm: 1rem;

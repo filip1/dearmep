@@ -1,0 +1,63 @@
+.dmep-app-layout {
+  display: grid;
+  column-gap: 40px;
+  row-gap: 20px;
+  grid-template-columns: [left] 60fr [center] 40fr [right];
+  //grid-template-rows: [first] auto [first] auto [second] auto [third] auto [last];
+}
+
+.dmep-layout-left {
+  grid-column: left / center;
+}
+
+.dmep-layout-right {
+  grid-column: center / right;
+}
+
+.dmep-layout-full-width {
+  grid-column:  left / right;
+  justify-items: end;
+}
+
+dmep-language-switch {
+  grid-row: 1;
+  justify-items: end;
+  align-items: start;
+}
+
+dmep-title {
+  grid-row: 1 / 3;
+}
+
+dmep-calling {
+  grid-row: 2 / 4;
+}
+
+dmep-select-mep {
+  grid-row: 3;
+}
+
+.dmep-display-sm {
+  .dmep-layout-left {
+    grid-column: left / right;
+  }
+  .dmep-layout-right {
+    grid-column: left / right;
+  }
+
+  dmep-language-switch {
+    grid-row: 1;
+  }
+
+  dmep-title {
+    grid-row: 2;
+  }
+
+  dmep-select-mep {
+    grid-row: 3;
+  }
+
+  dmep-calling {
+    grid-row: 4;
+  }
+}

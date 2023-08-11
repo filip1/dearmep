@@ -31,9 +31,6 @@
   // Define min-height to avoid jumping
   //min-height: var(--dmep-min-height);
 
-  display: flex;
-  flex-direction: column;
-
   h1 {
     font-size: var(--dmep-title-font-size);
   }
@@ -157,5 +154,12 @@
 
   .mb-0 {
     margin-bottom: 0;
+  }
+}
+
+// Overrides for small screen
+.dmep-app-container.dmep-display-sm {
+  h1 {
+    font-size: var(--dmep-title-font-size-sm) !important;
   }
 }
