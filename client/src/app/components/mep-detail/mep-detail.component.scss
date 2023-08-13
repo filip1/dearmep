@@ -1,7 +1,8 @@
 .mep {
   display: flex;
-  align-items: top;
+  align-items: center;
   justify-content: flex-start;
+  gap: 16px;
 }
 .mep-name {
   display: flex;
@@ -25,7 +26,6 @@
   height: 215px;
   width: 170px;
   min-width: 170px;
-  margin-right: 16px;
 }
 
 .mep-image-loading-placeholder {
@@ -52,4 +52,14 @@
   gap: 8px;
   align-items: center;
   margin: 4px 0;
+}
+
+::ng-deep
+.dmep-display-xs dmep-mep-detail {
+  .mep {
+    flex-direction: column;
+    align-items: center;
+  }
+  .mep-image {
+  }
 }

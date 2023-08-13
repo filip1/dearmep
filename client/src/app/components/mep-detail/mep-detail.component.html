@@ -12,8 +12,8 @@
       </button>
     </h3>
     <div class="group-party" *ngFor="let group of mep?.groups">
-      <span>{{ group.long_name }}</span>
       <img *ngIf="group.logo" [src]="group.logo" class="mep-group-icon">
+      <span>{{ group.long_name }}</span>
     </div>
     <p class="country" *ngIf="mep">{{ 'countries.' + mep.country | transloco  }}</p>
     <div class="socials">

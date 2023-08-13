@@ -7,7 +7,7 @@
 
 <div class="dmep-app-container" dmepResponsive [breakpoints]="{ 'dmep-display-xs': 575, 'dmep-display-md': 991 }">
 
-  <div class="dmep-app-layout">
+  <div class="dmep-app-layout" [ngClass]="{ 'dmep-talking-points-visible': shouldDisplayTalkingPoints$ | async }">
     <dmep-title class="dmep-layout-left" *ngIf="shouldDisplayTitle$ | async"></dmep-title>
     <dmep-select-mep class="dmep-layout-left" *ngIf="shouldDisplayMEP$ | async"></dmep-select-mep>
     <dmep-talking-points class="dmep-layout-left" *ngIf="shouldDisplayTalkingPoints$ | async"></dmep-talking-points>
