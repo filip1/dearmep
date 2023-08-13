@@ -6,9 +6,7 @@ import {
   HttpInterceptor,
   HttpErrorResponse
 } from '@angular/common/http';
-import { Observable, TimeoutError, delay, of, retry, tap, throwError } from 'rxjs';
-import { CircuitBreakerService } from '../services/circuit-breaker.service';
-import { CircuitBreakerStatus } from '../services/circuit-breaker-status.enum';
+import { Observable, TimeoutError, delay, of, retry, throwError } from 'rxjs';
 
 @Injectable()
 export class RetryInterceptor implements HttpInterceptor {
@@ -20,8 +18,6 @@ export class RetryInterceptor implements HttpInterceptor {
 
   private readonly timeoutRetryInterval = 0
   private readonly timeoutMaxRetries = 3
-
-  constructor() {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
@@ -83,11 +79,11 @@ export class RetryInterceptor implements HttpInterceptor {
     return this.reatryAfter(this.timeoutRetryInterval)
   }
 
-  private reatryAfter(timeout: number): Observable<any> {
+  private reatryAfter(timeout: number) {
     return of(undefined).pipe(delay(timeout))
   }
 
-  private fail(error: any): Observable<any> {
+  private fail(error: any) {
     return throwError(() => error)
   }
 }

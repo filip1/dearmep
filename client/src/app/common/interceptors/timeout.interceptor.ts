@@ -5,13 +5,11 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { Observable, throwError, timeout } from 'rxjs';
+import { Observable, timeout } from 'rxjs';
 
 @Injectable()
 export class TimeoutInterceptor implements HttpInterceptor {
   private readonly requstTimeout = 10000
-
-  constructor() {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
