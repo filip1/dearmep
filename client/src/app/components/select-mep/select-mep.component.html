@@ -1,6 +1,6 @@
 <div class="dmep-card-container">
-  <div class="filter" *ngIf="mepSelectionPossible$ | async">
-    <mat-form-field appearance="outline" class="dmep-search-member-field">
+  <div class="dmep-destination-filter" *ngIf="mepSelectionPossible$ | async">
+    <mat-form-field appearance="outline" class="dmep-search-member-field" subscriptSizing="dynamic">
       <mat-label>{{ 'select-mep.search.placeholder' | transloco }}</mat-label>
       <mat-icon matPrefix>search</mat-icon>
       <mat-icon matSuffix *ngIf="!autocompleteIsLoading">expand_more</mat-icon>

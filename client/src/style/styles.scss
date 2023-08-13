@@ -59,6 +59,7 @@
     background: var(--dmep-card-bg);
     border-radius: var(--dmep-card-border-radius);
     padding: 32px;
+    overflow: hidden;
   }
 
   .dmep-inner-card-container {
@@ -160,5 +161,8 @@
 .dmep-app-container.dmep-display-xs {
   h1 {
     font-size: var(--dmep-title-font-size-xs);
+  }
+  .dmep-card-container {
+    padding: 24px;
   }
 }
