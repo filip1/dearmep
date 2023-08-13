@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Directive, ElementRef, Input, OnInit } from '@angular/core';
 
 /**
  * Watches width of dom-element that this decorator is applied to.
@@ -43,7 +43,7 @@ export class ResponsiveDirective implements OnInit {
     const width = entries[0].borderBoxSize[0].inlineSize
     let domChanged = false;
 
-    for (let className in this.breakpoints) {
+    for (const className in this.breakpoints) {
       const bpReached = width <= this.breakpoints[className];
       const changesWereMade = this.applyClass(className, bpReached);
       domChanged = domChanged || changesWereMade

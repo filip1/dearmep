@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { map, Observable, Subject } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { BaseUrlService } from './common/services/base-url.service';
 import { CallingStep } from './model/calling-step.enum';
 import { CallingStateManagerService } from './services/calling/calling-state-manager.service';
