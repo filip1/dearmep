@@ -1,11 +1,12 @@
-.filter {
+.dmep-destination-filter {
   display: flex;
   justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
 .dmep-search-member-field {
   flex-basis: 320px;
-  margin-right: 16px;
 }
 
 .dmep-group-icon {
@@ -34,9 +35,21 @@ mat-option .mdc-list-item__primary-text {
   font-size: 0.65em;
   height: 32px;
   margin-bottom: -32px;
+  padding-top: 5px;
 }
 
 mat-form-field mat-spinner {
   margin-right: 16px;
   display: inline-flex;
+}
+
+::ng-deep
+.dmep-display-xs dmep-select-mep {
+  .dmep-destination-filter {
+    flex-direction: column-reverse;
+  }
+  .dmep-search-member-field {
+    flex-basis: unset;
+    margin-right: unset;
+  }
 }

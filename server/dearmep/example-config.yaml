@@ -450,7 +450,7 @@ l10n:
 
     # Placeholder for the
     select-mep.search.placeholder:
-      en: Search for another member
+      en: Search
 
     # Message that shows that no destinations math the entered search-text
     select-mep.autocomplete-empty:

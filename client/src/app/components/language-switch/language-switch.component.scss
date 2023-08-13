@@ -6,3 +6,8 @@
 .dmep-lang-select {
   min-width: 250px;
 }
+
+::ng-deep
+.dmep-display-xs dmep-language-switch .dmep-lang-select {
+  width: 100%;
+}
