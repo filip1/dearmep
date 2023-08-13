@@ -5,8 +5,7 @@
 <link *ngIf="flagsStyleUrl$ | async" rel="stylesheet" [href]="flagsStyleUrl$ | async | safe: 'resourceUrl'"
   type="text/css">
 
-<div class="dmep-app-container" dmepResponsive responsiveClassName="dmep-display-sm" [breakpointPx]="768"
-  (breakpointReached)="smallScreen = $event">
+<div class="dmep-app-container" dmepResponsive [breakpoints]="{ 'dmep-display-xs': 575, 'dmep-display-md': 991 }">
 
   <div class="dmep-app-layout">
     <dmep-title class="dmep-layout-left" *ngIf="shouldDisplayTitle$ | async"></dmep-title>

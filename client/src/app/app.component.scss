@@ -1,6 +1,13 @@
+.dmep-app-container {
+  padding: var(--dmep-layout-gap);
+}
+.dmep-app-container.dmep-display-xs {
+  padding: var(--dmep-layout-gap-xs);
+}
+
 .dmep-app-layout {
   display: grid;
-  column-gap: 40px;
+  gap: var(--dmep-layout-gap);
   row-gap: 20px;
   grid-template-columns: [left] 60fr [center] 40fr [right];
   //grid-template-rows: [first] auto [first] auto [second] auto [third] auto [last];
@@ -37,7 +44,16 @@ dmep-select-mep {
   grid-row: 3;
 }
 
-.dmep-display-sm {
+dmep-footer {
+  margin-bottom: calc(var(--dmep-layout-gap) * -1);
+  height: var(--dmep-layout-gap);
+  margin-top: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.dmep-display-md {
   .dmep-layout-left {
     grid-column: left / right;
   }
@@ -59,5 +75,15 @@ dmep-select-mep {
 
   dmep-calling {
     grid-row: 4;
+  }
+}
+
+.dmep-display-xs {
+  .dmep-app-layout {
+    column-gap: var(--dmep-layout-gap-xs);
+  }
+  dmep-footer {
+    margin-bottom: calc(var(--dmep-layout-gap-xs) * -1);
+    height: var(--dmep-layout-gap-xs);
   }
 }

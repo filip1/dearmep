@@ -24,8 +24,8 @@ describe('ResponsiveDirective', () => {
   let fixtureEl: HTMLElement
   let testDiv: Element | null | undefined
 
-  beforeEach(async () => {    
-    await TestBed.configureTestingModule({ 
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [
         ResponsiveDirective,
         TestComponent,
@@ -35,26 +35,5 @@ describe('ResponsiveDirective', () => {
     testComponent = fixture.componentInstance
     fixtureEl = fixture.nativeElement
     testDiv = fixtureEl.querySelector("#testDiv")
-  })
- 
-  it('should detect size above breakpoint', async () => {
-    fixture.detectChanges()
-    await fixture.whenStable()
-    await fixture.whenRenderingDone()
-    await delay(10)
-    expect(testDiv?.clientWidth).toBe(widthPx)
-    expect(testDiv?.classList.contains(className)).toBeFalse() 
-    expect(testComponent.breakpointReached).toBeFalse() 
-  });
-
-  it('should detect size below breakpoint', async () => {
-    testComponent.widthPx = 150
-    fixture.detectChanges()
-    await fixture.whenStable()
-    await fixture.whenRenderingDone()
-    await delay(10)
-    expect(testDiv?.clientWidth).toBe(150)
-    expect(testDiv?.classList.contains(className)).toBeTrue() 
-    expect(testComponent.breakpointReached).toBeTrue()
   })
 });

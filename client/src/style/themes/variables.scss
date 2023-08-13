@@ -14,8 +14,9 @@
   // Fonts
   --dmep-font-family: Roboto, "Helvetica Neue", sans-serif;
   --dmep-font-size: 1.25rem;
-  --dmep-title-font-size: 3.5rem;
-  --dmep-title-font-size-sm: calc(var(--dmep-title-font-size)* 0.75);
+  --dmep-title-font-size: 3.2rem;
+  --dmep-title-font-size-md: calc(var(--dmep-title-font-size)* 0.75);
+  --dmep-title-font-size-xs: calc(var(--dmep-title-font-size)* 0.65);
   --dmep-sub-title-font-size: 1.5rem;
   --dmep-footer-font-size: 1rem;
   --dmep-font-size-sm: 1rem;
@@ -32,4 +33,8 @@
 
   // Buttons
   --dmep-btn-primary-bg-color: rgb(255, 255, 255);
+
+  // Gaps
+  --dmep-layout-gap: 40px;
+  --dmep-layout-gap-xs: 20px;
 }

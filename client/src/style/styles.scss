@@ -28,6 +28,9 @@
 }
 
 .dmep-app-container {
+  background: var(--dmep-bg);
+  border-radius: var(--dmep-bg-border-radius);
+  overflow: hidden;
   // Define min-height to avoid jumping
   //min-height: var(--dmep-min-height);
 
@@ -52,11 +55,6 @@
     font-weight: 400;
   }
 
-  background: var(--dmep-bg);
-  border-radius: var(--dmep-bg-border-radius);
-  padding: 40px;
-  overflow: hidden;
-
   .dmep-card-container {
     background: var(--dmep-card-bg);
     border-radius: var(--dmep-card-border-radius);
@@ -73,13 +71,7 @@
     font-size: var(--dmep-font-size-sm);
   }
 
-  .dmep-footer {
-    margin-bottom: -40px;
-    height: 40px;
-    margin-top: 0;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+  dmep-footer {
     font-size: var(--dmep-footer-font-size);
     color: var(--dmep-footer-text-color);
     a {
@@ -157,9 +149,16 @@
   }
 }
 
-// Overrides for small screen
-.dmep-app-container.dmep-display-sm {
+// Overrides for medium screen
+.dmep-app-container.dmep-display-md {
   h1 {
-    font-size: var(--dmep-title-font-size-sm) !important;
+    font-size: var(--dmep-title-font-size-md);
+  }
+}
+
+// Overrides for small screen
+.dmep-app-container.dmep-display-xs {
+  h1 {
+    font-size: var(--dmep-title-font-size-xs);
   }
 }

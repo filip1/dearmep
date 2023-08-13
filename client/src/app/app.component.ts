@@ -19,8 +19,6 @@ export class AppComponent implements OnInit, OnChanges {
   public shouldDisplayTitle$?: Observable<boolean>
   public shouldDisplayMEP$?: Observable<boolean>
 
-  public smallScreen = false
-
   /**
    * 'hostUrl' defines the url of the DearMEP-Backend.
    * This option is required.
