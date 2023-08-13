@@ -12,6 +12,7 @@ import { AppCommonModule } from './common/app-common.module';
 import { BaseUrlInterceptor } from './common/interceptors/base-url.interceptor';
 import { ComponentsModule } from './components/components.module';
 import { CallingModule } from './calling/calling.module';
+import { RetryInterceptor } from './common/interceptors/retry.interceptor';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { CallingModule } from './calling/calling.module';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BaseUrlInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: RetryInterceptor, multi: true },
   ],
   bootstrap: [],
 })

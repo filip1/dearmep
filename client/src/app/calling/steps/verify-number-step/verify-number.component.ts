@@ -5,7 +5,6 @@ import { VerificationStep } from './verification-step.enum';
 import { PhoneNumber } from 'src/app/model/phone-number.model';
 import { TranslocoService } from '@ngneat/transloco';
 import { BaseUrlService } from 'src/app/common/services/base-url.service';
-import { UrlUtil } from 'src/app/common/util/url.util';
 
 @Component({
   selector: 'dmep-verify-number',
