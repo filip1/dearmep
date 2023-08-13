@@ -10,7 +10,6 @@
   gap: var(--dmep-layout-gap);
   row-gap: 20px;
   grid-template-columns: [left] 60fr [center] 40fr [right];
-  //grid-template-rows: [first] auto [first] auto [second] auto [third] auto [last];
 }
 
 .dmep-layout-left {
@@ -87,6 +86,9 @@ dmep-footer {
   }
 
   .dmep-talking-points-visible {
+    dmep-select-mep {
+      grid-row: 2 / 4;
+    }
     dmep-talking-points {
       grid-row: 5;
     }

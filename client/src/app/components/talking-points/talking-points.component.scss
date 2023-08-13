@@ -18,3 +18,10 @@
 .dmep-talking-point {
   flex-basis: calc(50% - var(--gap) / 2);
 }
+
+::ng-deep
+.dmep-display-xs dmep-talking-points {
+  .dmep-talking-point {
+    flex-basis: 100%
+  }
+}
