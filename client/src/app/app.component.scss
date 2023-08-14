@@ -61,6 +61,13 @@ dmep-footer {
   }
 }
 
+.dmep-calling-disabled.dmep-app-layout {
+  grid-template-columns: [left] auto [center] auto [right];
+  dmep-select-mep {
+    grid-column: left / right;
+  }
+}
+
 .dmep-display-md {
   .dmep-layout-left {
     grid-column: left / right;
