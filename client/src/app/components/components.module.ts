@@ -11,6 +11,7 @@ import { FooterComponent } from './footer/footer.component';
 import { CountrySelectComponent } from './country-select/country-select.component';
 import { PhoneNumberInputComponent } from './phone-number-input/phone-number-input.component';
 import { SocialIconComponent } from './social-icon/social-icon.component';
+import { LoadingIndicatorComponent } from './loading-indicator/loading-indicator.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { SocialIconComponent } from './social-icon/social-icon.component';
     CountrySelectComponent,
     PhoneNumberInputComponent,
     SocialIconComponent,
+    LoadingIndicatorComponent,
   ],
   imports: [
     AppCommonModule,
@@ -38,6 +40,7 @@ import { SocialIconComponent } from './social-icon/social-icon.component';
     TalkingPointsComponent,
     CountrySelectComponent,
     PhoneNumberInputComponent,
+    LoadingIndicatorComponent,
   ]
 })
 export class ComponentsModule { }

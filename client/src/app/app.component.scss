@@ -43,6 +43,16 @@ dmep-select-mep {
   grid-row: 3;
 }
 
+dmep-loading-indicator {
+  margin-bottom: calc(var(--dmep-layout-gap) * -1);
+  margin-left: calc(var(--dmep-layout-gap) * -1);
+  height: var(--dmep-layout-gap);
+  width: var(--dmep-layout-gap);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 dmep-footer {
   margin-bottom: calc(var(--dmep-layout-gap) * -1);
   height: var(--dmep-layout-gap);
