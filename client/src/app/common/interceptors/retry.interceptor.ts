@@ -19,6 +19,9 @@ export class RetryInterceptor implements HttpInterceptor {
   private readonly timeoutRetryInterval = 0
   private readonly timeoutMaxRetries = 3
 
+  private readonly connectionErrorInterval = 1000
+  private readonly connectionErrorMaxRetries = 5
+
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       retry({
@@ -36,8 +39,10 @@ export class RetryInterceptor implements HttpInterceptor {
       return this.shouldRetryServerError(error, retryCount)
     } else if (error.name === "TimeoutError") {
       return this.shouldRetryTimeout(error, retryCount)
+    } else if (typeof status === 'number' && !isNaN(status) && status !== 0) {
+      return this.fail(error) // all response errors, such as 4xx => fail without retry
     } else {
-      return this.fail(error) // all other errors, such as 4xx => fail without retry
+      return this.shouldRetryConnectionError(error, retryCount)
     }
   }
 
@@ -77,6 +82,16 @@ export class RetryInterceptor implements HttpInterceptor {
 
     console.error(`Timeout-Error encountered. Retrying after ${this.timeoutRetryInterval / 1000.0}s.`)
     return this.reatryAfter(this.timeoutRetryInterval)
+  }
+
+  private shouldRetryConnectionError(error: TimeoutError, retryCount: number): Observable<any> {
+    if (retryCount > this.connectionErrorMaxRetries) {
+      console.error(`Connection-Error encountered. Reached max retreis. Failing!`)
+      return this.fail(error)
+    }
+
+    console.error(`Connection-Error encountered. Retrying after ${this.connectionErrorInterval / 1000.0}s.`)
+    return this.reatryAfter(this.connectionErrorInterval)
   }
 
   private reatryAfter(timeout: number) {
