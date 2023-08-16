@@ -1,0 +1,15 @@
+<div class="dmep-loading-spinner" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+  <mat-spinner color="primary" *ngIf="isLoading$ | async"></mat-spinner>
+</div>
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="true"
+>
+  <div class="dmep-popover dmep-popover-error">
+    <mat-icon>error</mat-icon>
+    <p>
+      Error connecting to the server!
+    </p>
+  </div>
+</ng-template>
