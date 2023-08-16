@@ -32,7 +32,7 @@ export class TranslocoHttpLoader implements TranslocoLoader {
     {
       provide: TRANSLOCO_CONFIG,
       useValue: translocoConfig({
-        failedRetries: 3,
+        failedRetries: 0,
         reRenderOnLangChange: true,
         prodMode: !isDevMode(),
         missingHandler: {
