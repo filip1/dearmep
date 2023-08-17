@@ -1,7 +1,7 @@
 <div class="container" *transloco="let t">
   <h2 transloco="call.home.title" class="calling-title"></h2>
 
-  <p *ngFor="let description of t('call.home.descriptions')" class="description">
+  <p *ngFor="let description of descriptions$ | async" class="description">
     {{ description.text }}
   </p>
 
