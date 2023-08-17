@@ -7,6 +7,7 @@ import { addMinutes, format, isBefore, isEqual, set } from 'date-fns/esm';
 import { Subject, takeUntil } from 'rxjs';
 import { StringUtil } from 'src/app/common/util/string.util';
 import { DayOfWeek } from 'src/app/model/day-of-week.enum';
+import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { TimeService } from 'src/app/services/time/time.service';
 
@@ -44,6 +45,7 @@ export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
     private readonly translocoService: TranslocoService,
     private readonly timeSerivce: TimeService,
     private readonly l10nService: L10nService,
+    private readonly callingStateManager: CallingStateManagerService,
   ) { }
 
   public ngOnInit(): void {
@@ -106,6 +108,10 @@ export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
   public removeSelectedTime() {
     const control = this.getSelectTimeFormControl()
     control.reset(null)
+  }
+
+  public onScheduleClick() {
+    this.callingStateManager.goHome()
   }
 
   private getNameOfDay(day: DayOfWeek): string {

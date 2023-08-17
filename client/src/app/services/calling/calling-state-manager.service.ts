@@ -26,4 +26,8 @@ export class CallingStateManagerService {
       this.step$.next(CallingStep.Feedback)
     }, 5000);
   }
+
+  public goHome() {
+    this.step$.next(CallingStep.Home)
+  }
 }

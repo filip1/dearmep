@@ -8,6 +8,7 @@ import { DestinationRead, DestinationSearchResult, SearchResultDestinationSearch
   providedIn: 'root'
 })
 export class SelectDestinationService {
+  private initializedSuggestedDestination = false
   private selectedCountry?: string
   private readonly selectedDestination = new BehaviorSubject<DestinationRead | undefined>(undefined)
   private readonly availableDestinations = new BehaviorSubject<DestinationSearchResult[] | undefined>(undefined)
@@ -25,8 +26,9 @@ export class SelectDestinationService {
         next: (c) => {
           this.selectedCountry = c
           this.loadAvailableDestinations()
-          if (!this.selectedDestination.value) {
+          if (!this.initializedSuggestedDestination) {
             this.renewSuggestedDestination()
+            this.initializedSuggestedDestination = true
           }
         }
       })
