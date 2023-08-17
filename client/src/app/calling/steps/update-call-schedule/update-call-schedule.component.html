@@ -33,7 +33,7 @@
 <p class="dmep-schedule-as-text dmep-description-sm" [innerHtml]="getSelectedTimesAsText()"></p>
 
 <div class="dmep-btn-container">
-  <button mat-stroked-button color="primary" class="dmep-schedule-call-btn dmep-btn dmep-btn-primary">
+  <button mat-stroked-button color="primary" class="dmep-schedule-call-btn dmep-btn dmep-btn-primary" (click)="onScheduleClick()">
     <span class="btn-content">
       <strong>{{ 'schedule.schedule-btn.title' | transloco }}</strong>
       <br>
