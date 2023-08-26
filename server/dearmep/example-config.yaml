@@ -542,8 +542,7 @@ l10n:
       en: There is no filter technology in the world that can accurately detect these types of illegal content. With the billions of messages Europeans send every day, hundreds of millions of legal messages would end up with the police. Legal speech would be suppressed on a massive scale.
       de: Keine Filtertechnologie der Welt kann diese Art illegaler Inhalte zuverlässig detektieren. Selbst bei optimistischen Fehlerraten im einstelligen Prozentbereich würden in Anbetracht von Milliarden täglicher Nachrichten hunderte Millionen harmloser Nachrichten bei der Polizei landen. In unerhörtem Umfang würde freie Rede behindert.
       sv: Det finns ingen filterteknologi som på ett pålitligt sätt identifierar den här typen av olagligt innehåll. Det skickas miljarder meddelanden varje dag, så polisen skulle översvämmas med hundramiljontals helt oskyldiga meddelanden. Yttrandefriheten skulle begränsas kolossalt.
-      fr: Il n'y a pas une technique de filtrage dans tout le monde qui est capable de trouver fiablement ce type de contenu illégal. 
-En Europe, ce sont quelques milliards de messages qui sont partagés tous les jours. Ce seront quelque cent millions des messages légaux qui seront envoyés à la police due à des détections erronées. Par conséquent, le discours juridique serait supprimé sur une échelle massive.
+      fr: Il n'y a pas une technique de filtrage dans tout le monde qui est capable de trouver fiablement ce type de contenu illégal. En Europe, ce sont quelques milliards de messages qui sont partagés tous les jours. Ce seront quelque cent millions des messages légaux qui seront envoyés à la police due à des détections erronées. Par conséquent, le discours juridique serait supprimé sur une échelle massive.
     talkingPoints.points.2.title:
       en: Chat control does not protect children
       de: Chatkontrolle schützt Kinder nicht
@@ -636,7 +635,7 @@ En Europe, ce sont quelques milliards de messages qui sont partagés tous les jo
     languages.en: English
     languages.de: Deutsch
     languages.sv: Svenska
-    language.fr: Français
+    languages.fr: Français
 
   # Footer text of the app.
   # Html formatting is allowed in this string.
@@ -662,7 +661,7 @@ En Europe, ce sont quelques milliards de messages qui sont partagés tous les jo
       en: 'Plan now to talk to a politican later! Select a day and time:'
       de: 'Wähle jetzt Tag und Uhrzeit für dein Gespräch mit einem Politiker:'
       sv: 'Välj dag och tid för ditt samtal med en Europaparlamentariker:'
-      fr: 'Quand voudrais-tu appeler un membre du Parlement européen? Ajoute un jour et temps, s'il te plaît.
+      fr: "Quand voudrais-tu appeler un membre du Parlement européen? Ajoute un jour et temps, s'il te plaît."
     schedule.scheduleAsText:
       en: We will give you a ring every {{ timeSlots }} at your number to connect you
         with a politician from {{ country }}.
