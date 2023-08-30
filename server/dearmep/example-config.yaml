@@ -307,7 +307,7 @@ l10n:
       en: I have read and accept the {{ policyLink }}.
       de: Ich habe die {{ policyLink }} gelesen und akzeptiere sie.
       sv: Jag har läst {{ policyLink }} och godkänner dem.
-      fr: J'ai lu le {{ policylink}} et je l'accepte. 
+      fr: J'ai lu le {{ policylink }} et je l'accepte. 
 
     # Link-Text of the privacy-policy link which replaces the {{ policyLink }} placeholder of
     # the translation key "verification.enterNumber.policy"
