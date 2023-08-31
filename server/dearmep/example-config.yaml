@@ -187,6 +187,7 @@ l10n:
       de: "{code} ist dein Verifikationscode für {campaign}. Wenn du glaubst, diese Nachricht irrtümlicherweise erhalten zu haben, ignoriere sie bitte."
       da: "{code} er din verifikationskode for {campaign}. Hvis du tror at du ikke er den rigtige modtager af beskeden, ignorer den bare."
       sv: "{code} är din verifikationkod för {campaign}. Ignorera detta meddelande ifall du tror att du har fått det av misstag."
+      fr: "Voici, ton code de vérification pour {campaign}: {code}. Si tu penses avoir reçu ce code par erreur, ignore-le."
 
   frontend_strings:
     # Main title of the campaign.
