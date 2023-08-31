@@ -186,6 +186,7 @@ l10n:
       en: "{code} is your {campaign} verification code. If you think you have received this message in error, simply ignore it."
       de: "{code} ist dein Verifikationscode für {campaign}. Wenn du glaubst, diese Nachricht irrtümlicherweise erhalten zu haben, ignoriere sie bitte."
       da: "{code} er din verifikationskode for {campaign}. Hvis du tror at du ikke er den rigtige modtager af beskeden, ignorer den bare."
+      sv: "{code} är din verifikationkod för {campaign}. Ignorera detta meddelande ifall du tror att du har fått det av misstag."
 
   frontend_strings:
     # Main title of the campaign.
@@ -302,7 +303,7 @@ l10n:
         to verify your number.
       de: Gib bitte deine eigene Telefonnummer an, damit wir dir einen Code zur Bestätigung deiner Nummer schicken können.
       sv: Fyll i ditt telefonnummer så vi kan skicka en bekräftelsekod.
-      fr: Entre ton propre numéro de téléphone, s'il te plaît, afin que nous puissions le vérifier en t'envoyant un mot de passe. 
+      fr: Entre ton propre numéro de téléphone, s'il te plaît, afin que nous puissions le vérifier en t'envoyant un mot de passe.
       da: Venligst indtast din telefonnummer så at vi kan sende dig en engangskode for at bekræfte din nummer.
 
     # Label that describes the number-input of the first step of the phone number verification
@@ -320,7 +321,7 @@ l10n:
       en: I have read and accept the {{ policyLink }}.
       de: Ich habe die {{ policyLink }} gelesen und akzeptiere sie.
       sv: Jag har läst {{ policyLink }} och godkänner dem.
-      fr: J'ai lu le {{ policylink }} et je l'accepte. 
+      fr: J'ai lu le {{ policylink }} et je l'accepte.
       da: Jeg har læst {{ policyLink }} og accepteret den.
 
     # Link-Text of the privacy-policy link which replaces the {{ policyLink }} placeholder of
@@ -622,7 +623,7 @@ l10n:
       en: There are already documented cases in which voluntary chat control by companies has led to suspicion reports against innocent people. For example, several people have pursued court cases in the EU because they were permanently locked out of all their digital accounts following an accusation of sharing abuse material - despite the subsequent investigation clearing them of any wrongdoing. With chat control, such false suspicions would happen every day.
       de: Es gibt bereits bekannte Fälle in denen freiwillige Chatkontrolle durch Unternehmen zu Anzeigen gegen unschuldige Nutzer geführt hat. So haben beispielsweise mehrere Personen in der EU vor Gericht geklagt, weil sie nach einer Beschuldigung, Missbrauchsmaterial geteilt zu haben, dauerhaft aus allen ihren digitalen Konten ausgesperrt wurden - obwohl die anschließende Untersuchung sie von jeglichem Fehlverhalten freisprach. Mit verpflichtender Chatkontrolle würden derartige Fehlalarme ständig passieren.
       sv: Redan idag finns det kända fall där oskyldiga användare pekas ut som kriminella av företag som använder frivillig chatkontroll. Till exempel behövde flera personer driva domstolsprocesser i EU efter att de permanent låsts ut från alla sina digitala konton i samband med en anklagelse om att ha delat övergreppsmaterial - trots att den efterföljande utredningen friade dem från alla felaktigheter. Med chatkontroll, vi kan vänta oss den typen av falska larm hela tiden.
-      fr: Chez quelques entreprises l'implementation d'un contrôle du chat volontaire a mené aux rapports de soupçon des personnes innocentes. Par exemple, y avait-il des procédures judiciaires nombreuses dans l'UE où les personnes étaient refuser l'accès à leurs comptes numériques car ils étaient soupçonnés d'avoir partagé du contenu d'abus. Malgré que les investigations révélaient qu'ils étaient innocents dans le cas. Avec le contrôle du chat mis en place, ces accusations seraient le quotidien. 
+      fr: Chez quelques entreprises l'implementation d'un contrôle du chat volontaire a mené aux rapports de soupçon des personnes innocentes. Par exemple, y avait-il des procédures judiciaires nombreuses dans l'UE où les personnes étaient refuser l'accès à leurs comptes numériques car ils étaient soupçonnés d'avoir partagé du contenu d'abus. Malgré que les investigations révélaient qu'ils étaient innocents dans le cas. Avec le contrôle du chat mis en place, ces accusations seraient le quotidien.
       da: Der findes allerede tilfælde hvor frivilig chatcontrol har medført at uskyldige blev sigtet. Disse uskyldige har tabt adgangen til deres digitale kontoer på grund af fejlidentifikationen. Selvom de blev erklæret uskyldige, var de nødt til at føre en retssag på EU niveauet mod virksomheder for at får adgangen til deres digitale kontoer tilbage. Den forpligtende chatcontrolle vil føre til at det vil ske endnu hyppigere.
     talkingPoints.points.5.title:
       en: Encryption is the precondition for privacy, security and trust online
