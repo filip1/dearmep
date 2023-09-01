@@ -48,7 +48,7 @@ Das System ist so konstruiert, dass wir in vielen Fällen Ihre Telefonnummer gar
 
 Damit im Falle einer Kompromittierung unseres Servers das Risiko für die Privatsphäre der Nutzer begrenzt ist, speichern wir bis auf vier Ausnahmen die Telefonnummern lediglich als Hashwerte (<https://de.wikipedia.org/wiki/Hashfunktion>).
 Nicht gehashte Telefonnummern werden nur behalten, bis sie per SMS bestätigt sind wenn
-1) Sie sich für einen Anruf registriert haben und diese Registrierung nicht gelöscht haben,
+1) Sie die Nummer für zukünftige Anrufe registriert haben und diese Registrierung nicht gelöscht haben,
 2) ein individueller Anruf über die Webseite gestartet wurde und noch läuft,
 3) eine SMS mit Feedbackumfrage nicht geschickt wurde (s.u.), oder
 4) es starke Gründe für die Annahme gibt, dass eine Nummer zum Missbrauch unseres Systems genutzt wird.
