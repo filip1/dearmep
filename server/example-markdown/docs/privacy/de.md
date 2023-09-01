@@ -51,7 +51,7 @@ Nicht gehashte Telefonnummern werden nur behalten, bis sie per SMS bestätigt si
 1) Sie die Nummer für zukünftige Anrufe registriert haben und diese Registrierung nicht gelöscht haben,
 2) ein individueller Anruf über die Webseite gestartet wurde und noch läuft,
 3) eine SMS mit Feedbackumfrage nicht geschickt wurde (s.u.), oder
-4) es starke Gründe für die Annahme gibt, dass eine Nummer zum Missbrauch unseres Systems genutzt wird.
+4) es einen begründeten Verdacht gibt, dass eine Nummer zum Missbrauch unseres Systems genutzt wird.
 
 Wir verarbeiten Telefonnummern, wenn einzelne Anrufe mit unserem System zu einem ausgewählten Politiker getätigt werden oder wenn eine aktive Registrierung besteht, bei dem der Nutzer wünscht, dass unser System ihn zu einem bestimmten Wochentag und einer bestimmten Uhrzeit anruft und mit einem Politiker seines Landes verbindet.
 Anrufabonnements können vom Nutzer jederzeit über die Weboberfläche oder direkt im registrierten Telefonat mit einem Knopfdruck gekündigt werden.
