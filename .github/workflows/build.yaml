@@ -63,7 +63,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ["16.x", "18.x", "20.x"]
+        # Temporarily removed Node 20 from the list, should be added back in once the fix for this (https://github.com/nodejs/node/issues/49497) issue in node is rolled out.
+        node-version: ["16.x", "18.x" ] # "20.x"
     steps:
       - uses: actions/checkout@v3
       - name: Set up Node.js ${{ matrix.node-version }}
