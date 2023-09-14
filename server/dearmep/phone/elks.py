@@ -6,6 +6,8 @@ from typing import Literal, Tuple, Union
 from fastapi import APIRouter, Depends, FastAPI, Form, HTTPException, \
                     Request, status
 
+from ..types import PhoneNumber
+
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +18,6 @@ Cost = int
 DateTime = datetime
 Duration = int
 FinalState = Literal["success", "failed", "busy"]
-PhoneNumber = str
 
 
 def include_router(

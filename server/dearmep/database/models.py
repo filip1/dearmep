@@ -8,6 +8,7 @@ from sqlmodel import Column, Field, Relationship, SQLModel, TIMESTAMP, and_, \
 
 from ..config import Config, ConfigNotLoaded
 from ..models import CountryCode
+from ..types import LanguageCode
 
 
 class _SchemaExtra(TypedDict):
@@ -81,6 +82,8 @@ BlobID = int
 ContactID = int
 DestinationID = str
 DestinationGroupID = str
+HashedPhoneNumber = str
+Weekday = int  # 0=monday, 6=sunday
 
 
 class ModifiedTimestampMixin(BaseModel):
@@ -314,6 +317,24 @@ class DestinationGroupDump(DestinationGroupBase):
 
 class DestinationGroupListItem(DestinationGroupBase):
     logo: Optional[str]
+
+
+class PhoneNumberConfirmation(SQLModel, table=True):
+    __tablename__ = "phone_number_confirmation"
+    hashed_phone_number: HashedPhoneNumber = Field(
+        primary_key=True,
+        description="Phone number hashed with application-wide pepper")
+    dpp_acceepted_at: Optional[datetime] = Field(
+        description="time of acceptance of the DPP")
+    language: LanguageCode = Field(description="Language of the DPP")
+    code: str = Field(description="verification code that is sent out via SMS")
+    verified: bool = Field(
+        description="Flag indicating phone verification number status")
+    requested_verification: int = Field(
+        description="Number of times a verification code was requested for "
+                    "this phone number")
+    contry_code: Optional[str]
+    leading_digits: Optional[int]
 
 
 DestinationRead.update_forward_refs()

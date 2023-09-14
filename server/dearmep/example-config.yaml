@@ -114,9 +114,18 @@ authentication:
     # days or even months.
     authentication_timeout: 86400
 
+  # Various secret values that are used by the server
+  # Keep these hidden from the public!
+  secret:
+    # Application-wide pepper value for hashes
+    pepper: "some non-obvious pepper string to spice up your hashes"
+
 
 # Options regarding phone calls and SMS.
 telephony:
+  # If set to true, do not actually send out SMS and make calls.
+  # This is useful for developing the application.
+  dry_run: true
 
   # Verifying phone numbers by sending an SMS to that number.
   sms_verification:

@@ -175,12 +175,26 @@ class L10nConfig(BaseModel):
         return v
 
 
+class SecretConfig(BaseModel):
+    pepper: str
+
+
+class AuthenticationConfig(BaseModel):
+    secret: SecretConfig
+
+
+class TelephonyConfig(BaseModel):
+    dry_run: bool
+
+
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""
     api: APIConfig
     contact_timespan_filter: Optional[ContactTimespanFilterConfig]
     database: DatabaseConfig
     l10n: L10nConfig
+    authentication: AuthenticationConfig
+    telephony: TelephonyConfig
 
     _instance: ClassVar[Optional["Config"]] = None
     _patch: ClassVar[Optional[Dict]] = None
