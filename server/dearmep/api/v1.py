@@ -341,5 +341,5 @@ def verify_number(
 
 def hash_string(text: str, salt: str) -> str:
     hasher = sha256()
-    hasher.update(bytes(f'{text}{salt}', 'utf-8'))
+    hasher.update(bytes(f'{text}{salt}', "utf-8"))
     return hasher.hexdigest()
