@@ -285,7 +285,7 @@ def get_suggested_destination(
 def request_number_verification(
     phone_number: PhoneNumber,
     language: LanguageCode,
-    accepted_dpp: Literal['true'],
+    accepted_dpp: Literal["true"],
 ):
     config = Config.get()
     pepper = config.authentication.secret.pepper
@@ -299,7 +299,7 @@ def request_number_verification(
             confirmation.requested_verification += 1
             code = confirmation.code
         else:
-            code = f'{randint(0, 999999):06}'
+            code = f"{randint(0, 999999):06}"
             confirmation = PNC(
                 hashed_phone_number=hash,
                 dpp_accepted_at=datetime.now(),
@@ -336,7 +336,7 @@ def verify_number(
         else:
             # TODO rate limiting
             raise HTTPException(status_code=403,
-                                detail='incorrect phone number of code')
+                                detail="incorrect phone number of code")
 
 
 def hash_string(text: str, salt: str) -> str:
