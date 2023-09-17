@@ -265,8 +265,7 @@ def get_suggested_destination(
     """
     with get_session() as session:
         try:
-            # TODO: Replace with actually _recommended_, not random.
-            dest = query.get_random_destination(session, country=country)
+            dest = query.get_recommended_destination_1(session, country=country)
         except query.NotFound as e:
             raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
         return destination_to_destinationread(dest)
