@@ -98,6 +98,7 @@ def get_random_destination(
         raise NotFound(f"no destination{matching} found")
     return dest
 
+
 def get_recommended_destination_1(
     session: Session,
     *,
@@ -115,7 +116,7 @@ def get_recommended_destination_1(
     stmt = stmt.where(Destination.country == country)
     stmt = stmt.where(Destination.base_endorsement <= max_endorsement_cutoff)
     stmt = stmt.where(Destination.base_endorsement >= min_endorsement_cutoff)
-    dest = session.exec(  stmt.order_by(func.random())).first()
+    dest = session.exec(stmt.order_by(func.random())).first()
     return dest
 
 
