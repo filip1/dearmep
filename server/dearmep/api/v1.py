@@ -258,7 +258,7 @@ def get_destination_by_id(
     dependencies=(computational_rate_limit,),
 )
 def get_suggested_destination(
-    country: Optional[CountryCode] = None,
+    country: CountryCode
 ):
     """
     Return a suggested destination to contact, possibly limited by country.
