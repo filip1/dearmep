@@ -10,7 +10,6 @@ T = TypeVar("T")
 
 HashedPhoneNumber = str
 PhoneNumber = str
-LanguageCode = str
 
 MAX_SEARCH_RESULT_LIMIT = 20
 

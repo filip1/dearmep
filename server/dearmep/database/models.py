@@ -6,8 +6,8 @@ from pydantic import UUID4, BaseModel
 from sqlmodel import Column, Field, Relationship, SQLModel, TIMESTAMP, and_, \
     case, or_, func
 
-from ..config import Config, ConfigNotLoaded
-from ..models import CountryCode, HashedPhoneNumber, LanguageCode
+from ..config import Config, ConfigNotLoaded, Language
+from ..models import CountryCode, HashedPhoneNumber
 
 
 class _SchemaExtra(TypedDict):
@@ -323,7 +323,7 @@ class PhoneNumberConfirmation(SQLModel, table=True):
         description="Phone number hashed with application-wide pepper")
     dpp_acceepted_at: Optional[datetime] = Field(
         description="time of acceptance of the DPP")
-    language: LanguageCode = Field(description="Language of the DPP")
+    language: Language = Field(description="Language of the DPP")
     code: str = Field(description="verification code that is sent out via SMS")
     verified: bool = Field(
         description="Flag indicating phone verification number status")

@@ -9,10 +9,10 @@ from sqlmodel import case
 
 from ..models import CountryCode, DestinationSearchGroup, \
     DestinationSearchResult, SearchResult
-from ..config import Config
+from ..config import Config, Language
 from .connection import Session, select
 from .models import Blob, Destination, DestinationID
-from ..models import LanguageCode, PhoneNumber, hash_string
+from ..models import PhoneNumber, hash_string
 from ..database.models import PhoneNumberConfirmation
 from ..database.connection import get_session
 
@@ -129,7 +129,7 @@ def to_destination_search_result(
     )
 
 
-def get_new_sms_auth_code(phone_number_hash: str, language: LanguageCode) -> \
+def get_new_sms_auth_code(phone_number_hash: str, language: Language) -> \
         str:
 
     code = f"{randbelow(1000000):06}"

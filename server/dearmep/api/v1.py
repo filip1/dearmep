@@ -13,7 +13,7 @@ from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import MAX_SEARCH_RESULT_LIMIT, CountryCode, \
     DestinationSearchResult, FrontendStringsResponse, LanguageDetection, \
     LocalizationResponse, RateLimitResponse, SearchResult, SearchResultLimit, \
-    hash_string, PhoneNumber, LanguageCode
+    hash_string, PhoneNumber
 from ..ratelimit import Limit, client_addr
 from ..phone.abstract import get_phone_service
 from ..database.query import get_new_sms_auth_code, verify_sms_auth_code
@@ -280,7 +280,7 @@ def get_suggested_destination(
             status_code=204)
 def request_number_verification(
     phone_number: PhoneNumber,
-    language: LanguageCode,
+    language: Language,
     accepted_dpp: Literal["true"],
 ):
     config = Config.get()
