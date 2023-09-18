@@ -114,6 +114,15 @@ authentication:
     # days or even months.
     authentication_timeout: 86400
 
+  # Various secret values that are used by the server
+  # Keep these hidden from the public!
+  secret:
+    # Application-wide pepper value for hashes
+    pepper: "some non-obvious pepper string to spice up your hashes"
+    jwt:
+      allowed_algorithms: ["HS512"]
+      symmetric_encryption_key: "a very secret key that should be infeasible to guess"
+
 
 # Options regarding phone calls and SMS.
 telephony:

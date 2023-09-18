@@ -175,12 +175,27 @@ class L10nConfig(BaseModel):
         return v
 
 
+class JWTConfig(BaseModel):
+    allowed_algorithms: List[str]
+    symmetric_encryption_key: str
+
+
+class SecretConfig(BaseModel):
+    pepper: str
+    jwt: JWTConfig
+
+
+class AuthenticationConfig(BaseModel):
+    secret: SecretConfig
+
+
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""
     api: APIConfig
     contact_timespan_filter: Optional[ContactTimespanFilterConfig]
     database: DatabaseConfig
     l10n: L10nConfig
+    authentication: AuthenticationConfig
 
     _instance: ClassVar[Optional["Config"]] = None
     _patch: ClassVar[Optional[Dict]] = None
