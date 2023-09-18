@@ -103,7 +103,7 @@ def get_recommended_destination_1(
     session: Session,
     *,
     country: CountryCode,
-) -> Destination:
+) -> Optional[Destination]:
     """Recommend a destination by
     1. cutting off destinations using min and max endorsement
     2. randomly select a destination from rest

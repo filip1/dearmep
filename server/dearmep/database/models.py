@@ -250,7 +250,7 @@ class Destination(DestinationBase, table=True):
     name_audio: Optional[Blob] = Relationship(
         **_rel_join("Destination.name_audio_id==Blob.id"),
     )
-    base_endorsement: Optional[float] = Field(
+    base_endorsement: float = Field(
         description="Base endorsement of this Destination.",
         **_example(0.5),
     )
