@@ -1,4 +1,6 @@
+from datetime import datetime
 from typing import Callable, List, Optional, cast
+from secrets import randbelow
 import re
 
 from sqlalchemy import func
@@ -7,8 +9,12 @@ from sqlmodel import case
 
 from ..models import CountryCode, DestinationSearchGroup, \
     DestinationSearchResult, SearchResult
+from ..config import Config
 from .connection import Session, select
 from .models import Blob, Destination, DestinationID
+from ..models import LanguageCode, PhoneNumber, hash_string
+from ..database.models import PhoneNumberConfirmation
+from ..database.connection import get_session
 
 
 class NotFound(Exception):
@@ -121,3 +127,46 @@ def to_destination_search_result(
             for dest in destinations
         ]
     )
+
+
+def get_new_sms_auth_code(phone_number_hash: str, language: LanguageCode) -> \
+        str:
+
+    code = f"{randbelow(1000000):06}"
+
+    PNC = PhoneNumberConfirmation
+    with get_session() as session:
+        statement = select(PNC)\
+            .where(PNC.hashed_phone_number == phone_number_hash).limit(1)
+        if confirmation := session.exec(statement).first():
+            confirmation.requested_verification += 1
+            confirmation.code = code
+        else:
+            confirmation = PNC(
+                hashed_phone_number=hash,
+                dpp_accepted_at=datetime.now(),
+                language=language,
+                code=code,
+                verified=False,
+                requested_verification=1,
+            )
+        session.add(confirmation)
+        session.commit()
+    return code
+
+
+def verify_sms_auth_code(phone_number: PhoneNumber, code: str) -> bool:
+    config = Config.get()
+    pepper = config.authentication.secret.pepper
+    hash = hash_string(phone_number, pepper)
+
+    PNC = PhoneNumberConfirmation
+    statement = select(PNC).where(PNC.hashed_phone_number == hash,
+                                  PNC.code == code).limit(1)
+    with get_session() as session:
+        if confirmation := session.exec(statement).first():
+            confirmation.verified = True
+            session.add(confirmation)
+            session.commit()
+            return True
+        return False

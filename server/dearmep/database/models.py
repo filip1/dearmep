@@ -7,8 +7,7 @@ from sqlmodel import Column, Field, Relationship, SQLModel, TIMESTAMP, and_, \
     case, or_, func
 
 from ..config import Config, ConfigNotLoaded
-from ..models import CountryCode
-from ..types import LanguageCode
+from ..models import CountryCode, HashedPhoneNumber, LanguageCode
 
 
 class _SchemaExtra(TypedDict):
@@ -82,8 +81,6 @@ BlobID = int
 ContactID = int
 DestinationID = str
 DestinationGroupID = str
-HashedPhoneNumber = str
-Weekday = int  # 0=monday, 6=sunday
 
 
 class ModifiedTimestampMixin(BaseModel):
@@ -333,8 +330,6 @@ class PhoneNumberConfirmation(SQLModel, table=True):
     requested_verification: int = Field(
         description="Number of times a verification code was requested for "
                     "this phone number")
-    contry_code: Optional[str]
-    leading_digits: Optional[int]
 
 
 DestinationRead.update_forward_refs()

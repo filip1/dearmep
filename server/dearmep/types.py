@@ -1,2 +1,0 @@
-PhoneNumber = str
-LanguageCode = str

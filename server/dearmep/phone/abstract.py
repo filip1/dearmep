@@ -1,7 +1,7 @@
 from abc import ABCMeta
 
-from ..types import PhoneNumber
 from ..config import Config
+from ..models import PhoneNumber
 
 
 class AbstractPhoneService(metaclass=ABCMeta):

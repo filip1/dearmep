@@ -1,26 +1,22 @@
-from datetime import datetime
 from typing import Any, Callable, Dict, Iterable, Optional, Literal
-from random import randint
-from hashlib import sha256
 
 from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
     Response, status
 from prometheus_client import Counter
-from sqlmodel import select
 
 from ..config import Config, Language, all_frontend_strings
 from ..database.connection import get_session
 from ..database.models import Blob, Destination, DestinationGroupListItem, \
     DestinationID, DestinationRead
 from ..database import query
-from ..database.models import PhoneNumberConfirmation
 from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import MAX_SEARCH_RESULT_LIMIT, CountryCode, \
     DestinationSearchResult, FrontendStringsResponse, LanguageDetection, \
-    LocalizationResponse, RateLimitResponse, SearchResult, SearchResultLimit
+    LocalizationResponse, RateLimitResponse, SearchResult, SearchResultLimit, \
+    hash_string, PhoneNumber, LanguageCode
 from ..ratelimit import Limit, client_addr
-from ..types import PhoneNumber, LanguageCode
 from ..phone.abstract import get_phone_service
+from ..database.query import get_new_sms_auth_code, verify_sms_auth_code
 
 
 l10n_autodetect_total = Counter(
@@ -280,7 +276,7 @@ def get_suggested_destination(
 
 
 @router.get("/number-verification/request-verification",
-            operation_id="request_number_verification",
+            operation_id="requestNumberVerification",
             status_code=204)
 def request_number_verification(
     phone_number: PhoneNumber,
@@ -290,56 +286,23 @@ def request_number_verification(
     config = Config.get()
     pepper = config.authentication.secret.pepper
     hash = hash_string(phone_number, pepper)
+    code = get_new_sms_auth_code(hash, language)
 
-    PNC = PhoneNumberConfirmation
-    with get_session() as session:
-        statement = select(PNC).where(PNC.hashed_phone_number == hash).limit(1)
-
-        if confirmation := session.exec(statement).first():
-            confirmation.requested_verification += 1
-            code = confirmation.code
-        else:
-            code = f"{randint(0, 999999):06}"
-            confirmation = PNC(
-                hashed_phone_number=hash,
-                dpp_accepted_at=datetime.now(),
-                language=language,
-                code=code,
-                verified=False,
-                requested_verification=1,
-            )
-        session.add(confirmation)
-        session.commit()
-
-    message = f"Your code is {code}"
+    message = f"Your code is {code}"  # TODO translation
     service = get_phone_service(config)
     service.send_sms(phone_number, message)
 
 
 @router.get("/number-verification/verify-number",
-            operation_id="verify_number",
+            operation_id="verifyNumber",
             status_code=204)
 def verify_number(
     phone_number: PhoneNumber,
     code: str,
 ):
-    config = Config.get()
-    pepper = config.authentication.secret.pepper
-    hash = hash_string(phone_number, pepper)
-
-    PNC = PhoneNumberConfirmation
-    statement = select(PNC).where(PNC.hashed_phone_number == hash,
-                                  PNC.code == code).limit(1)
-    with get_session() as session:
-        if confirmation := session.exec(statement).first():
-            confirmation.verified = True
-        else:
-            # TODO rate limiting
-            raise HTTPException(status_code=403,
-                                detail="incorrect phone number of code")
-
-
-def hash_string(text: str, salt: str) -> str:
-    hasher = sha256()
-    hasher.update(bytes(f"{text}{salt}", "utf-8"))
-    return hasher.hexdigest()
+    if verify_sms_auth_code(phone_number, code):
+        pass  # TODO return auth token and remove 204 status
+    else:
+        # TODO rate limiting
+        raise HTTPException(status_code=403,
+                            detail="incorrect phone number of code")

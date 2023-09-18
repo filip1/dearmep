@@ -1,11 +1,16 @@
 from typing import Any, Dict, Generic, List, Optional, TypeVar
 
+from hashlib import sha256
+
 from pydantic import BaseModel, ConstrainedInt, ConstrainedStr, Field
 from pydantic.generics import GenericModel
 
 
 T = TypeVar("T")
 
+HashedPhoneNumber = str
+PhoneNumber = str
+LanguageCode = str
 
 MAX_SEARCH_RESULT_LIMIT = 20
 
@@ -165,3 +170,9 @@ class SearchResult(GenericModel, Generic[T]):
     results: List[T] = Field(
         description="The actual search results.",
     )
+
+
+def hash_string(text: str, salt: str) -> str:
+    hasher = sha256()
+    hasher.update(bytes(f"{text}{salt}", "utf-8"))
+    return hasher.hexdigest()

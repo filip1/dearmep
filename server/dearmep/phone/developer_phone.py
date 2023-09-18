@@ -1,7 +1,7 @@
 from logging import getLogger
 
 from .abstract import AbstractPhoneService
-from ..types import PhoneNumber
+from ..models import PhoneNumber
 
 _logger = getLogger(__name__)
 

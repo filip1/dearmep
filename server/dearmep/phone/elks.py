@@ -6,7 +6,7 @@ from typing import Literal, Tuple, Union
 from fastapi import APIRouter, Depends, FastAPI, Form, HTTPException, \
                     Request, status
 
-from ..types import PhoneNumber
+from ..models import PhoneNumber
 
 
 logger = logging.getLogger(__name__)
