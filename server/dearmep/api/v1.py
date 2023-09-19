@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Iterable, Optional, Literal
+from typing import Any, Callable, Dict, Iterable, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
     Response, status
@@ -13,10 +13,9 @@ from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import MAX_SEARCH_RESULT_LIMIT, CountryCode, \
     DestinationSearchResult, FrontendStringsResponse, LanguageDetection, \
     LocalizationResponse, RateLimitResponse, SearchResult, SearchResultLimit, \
-    hash_string, PhoneNumber
-from ..ratelimit import Limit, client_addr
+    hash_string, PhoneNumberVerificationRequest, SMSCodeVerificationRequest
 from ..phone.abstract import get_phone_service
-from ..database.query import get_new_sms_auth_code, verify_sms_auth_code
+from ..ratelimit import Limit, client_addr
 
 
 l10n_autodetect_total = Counter(
@@ -275,32 +274,25 @@ def get_suggested_destination(
         return destination_to_destinationread(dest)
 
 
-@router.get("/number-verification/request-verification",
-            operation_id="requestNumberVerification",
-            status_code=204)
-def request_number_verification(
-    phone_number: PhoneNumber,
-    language: Language,
-    accepted_dpp: Literal["true"],
-):
+@router.post("/number-verification/request-verification",
+             operation_id="requestNumberVerification",
+             status_code=204)
+def request_number_verification(request: PhoneNumberVerificationRequest):
     config = Config.get()
     pepper = config.authentication.secret.pepper
-    hash = hash_string(phone_number, pepper)
-    code = get_new_sms_auth_code(hash, language)
+    hash = hash_string(request.phone_number, pepper)
+    code = query.get_new_sms_auth_code(hash, request.language)
 
     message = f"Your code is {code}"  # TODO translation
     service = get_phone_service(config)
-    service.send_sms(phone_number, message)
+    service.send_sms(request.phone_number, message)
 
 
-@router.get("/number-verification/verify-number",
-            operation_id="verifyNumber",
-            status_code=204)
-def verify_number(
-    phone_number: PhoneNumber,
-    code: str,
-):
-    if verify_sms_auth_code(phone_number, code):
+@router.post("/number-verification/verify-number",
+             operation_id="verifyNumber",
+             status_code=204)
+def verify_number(request: SMSCodeVerificationRequest):
+    if query.verify_sms_auth_code(request.phone_number, request.code):
         pass  # TODO return auth token and remove 204 status
     else:
         # TODO rate limiting

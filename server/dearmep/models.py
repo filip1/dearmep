@@ -1,14 +1,16 @@
-from typing import Any, Dict, Generic, List, Optional, TypeVar
+from typing import Any, Dict, Generic, List, Optional, TypeVar, Literal
 
 from hashlib import sha256
 
 from pydantic import BaseModel, ConstrainedInt, ConstrainedStr, Field
 from pydantic.generics import GenericModel
 
+from .config import Language
+
 
 T = TypeVar("T")
 
-HashedPhoneNumber = str
+HashedPhoneNumber = str  # TODO: Use https://pypi.org/project/phonenumbers/
 PhoneNumber = str
 
 MAX_SEARCH_RESULT_LIMIT = 20
@@ -169,6 +171,17 @@ class SearchResult(GenericModel, Generic[T]):
     results: List[T] = Field(
         description="The actual search results.",
     )
+
+
+class PhoneNumberVerificationRequest(BaseModel):
+    phone_number: PhoneNumber
+    language: Language
+    accepted_dpp: Literal[True]
+
+
+class SMSCodeVerificationRequest(BaseModel):
+    phone_number: PhoneNumber
+    code: str
 
 
 def hash_string(text: str, salt: str) -> str:
