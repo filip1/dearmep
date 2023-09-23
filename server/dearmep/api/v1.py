@@ -1,11 +1,13 @@
-from datetime import datetime
 from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 from typing_extensions import Annotated
+from datetime import datetime, timedelta
+
 from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
-    Response, status
+    Request, Response, status
 from fastapi.responses import JSONResponse
 
 from prometheus_client import Counter
+
 from pydantic import BaseModel
 import pytz
 from sqlmodel import col
@@ -86,6 +88,19 @@ def destination_to_destinationread(dest: Destination) -> DestinationRead:
 
 def error_model(status_code: int, instance: BaseModel) -> JSONResponse:
     return JSONResponse(instance.dict(), status_code=status_code)
+
+
+def browser_cache_headers(ttl: timedelta,
+                          etag: Optional[str] = None) -> Dict[str, str]:
+    """
+    Generate a dictionary that contains header fields to control the caching of
+    assets in the web browser.
+    This dictionary can be used with a `Response.headers` object.
+    """
+    result = {"Cache-Control": f"max-age={int(ttl.total_seconds())}"}
+    if tag := etag:
+        result["ETag"] = tag
+    return result
 
 
 router = APIRouter()
@@ -182,16 +197,29 @@ def get_frontend_strings(
 )
 def get_blob_contents(
     name: str,
+    request: Request,
+    response: Response,
 ):
     """
     Returns the contents of a blob, e.g. an image or audio file.
     """
+    cache_duration = timedelta(days=1)
     with get_session() as session:
         try:
             blob = query.get_blob_by_name(session, name)
         except query.NotFound as e:
             raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
-    return Response(blob.data, media_type=blob.mime_type)
+
+    # see https://web.dev/http-cache/#unversioned-urls
+    if etag := request.headers.get("If-None-Match"):
+        if etag == str(blob.etag):
+            return Response(status_code=304,
+                            headers=browser_cache_headers(cache_duration,
+                                                          etag))
+    return Response(blob.data,
+                    media_type=blob.mime_type,
+                    headers=browser_cache_headers(cache_duration,
+                                                  str(blob.etag)))
 
 
 @router.get(
