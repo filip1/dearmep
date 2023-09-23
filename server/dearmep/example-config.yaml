@@ -59,6 +59,10 @@ contact_timespan_filter:
 
 # The HTTP API.
 api:
+  # cross origin request configuration
+  cors:
+    origins:
+      - http://localhost:4200
 
   # Rate limit configuration. How often can certain actions/requests be
   # performed before considering it an attack on the service?

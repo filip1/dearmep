@@ -5,8 +5,8 @@ from pathlib import Path
 import re
 from typing import Any, ClassVar, Dict, List, Optional, Union
 
-from pydantic import BaseModel, BaseSettings, ConstrainedStr, DirectoryPath, \
-    Field, FilePath, ValidationError, validator
+from pydantic import AnyUrl, BaseModel, BaseSettings, ConstrainedStr, \
+    DirectoryPath, Field, FilePath, ValidationError, validator
 from pydantic.fields import ModelField
 from pydantic.utils import deep_update
 import yaml
@@ -41,12 +41,18 @@ class IPRateLimits(BaseModel):
     large_block_limit: str
 
 
+class CorsConfig(BaseModel):
+    """Allowed access for other web hosts to this backend via Ajax"""
+    origins: List[AnyUrl]
+
+
 class APIRateLimitConfig(BaseModel):
     simple: IPRateLimits
     computational: IPRateLimits
 
 
 class APIConfig(BaseModel):
+    cors: CorsConfig
     rate_limits: APIRateLimitConfig
 
 
