@@ -797,7 +797,7 @@ l10n:
       sv: Vi kommer att ringa dig varje {{ timeSlots }} på ditt nummer för att koppla dig till en Europaparlamentariker från {{ country }}.
       fr: Nous t'appelerons tous les {{ timeSlots }} à ton numéro pour te mettre en contact avec un membre du Parlement européen du / de la {{ country }}.
       da: Vi vil ringe til dig hver {{ timeSlots }} med dit nummer for at forbinde dig med en politiker fra {{ country }}
-      pt: Vamos ligar para o teu número a cada {{ timeSlots }} para te por em contacto com um membro do Parlamento de {{ country }}.
+      pt: Vamos ligar para o teu número a cada {{ timeSlots }} para te por em contacto com um membro do Parlamento Europeu de {{ country }}.
     schedule.timeSlot:
       en: "{{ dayOfWeek }} around {{ time }}"
       de: "{{ dayOfWeek }} um {{ time }}"
