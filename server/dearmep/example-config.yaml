@@ -563,6 +563,7 @@ l10n:
     # Placeholder for the
     select-mep.search.placeholder:
       en: Search
+      de: Suche
       fr: Rechercher
       da: Søg
       pt: Pesquisar
