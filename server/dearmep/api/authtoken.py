@@ -10,7 +10,9 @@ from pydantic import BaseModel
 
 from ..config import Config
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="")  # bearer is a jwt token
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/api/v1/number-verification/request-verification"
+)  # bearer is a jwt token
 
 
 class AuthToken(BaseModel):
