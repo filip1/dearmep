@@ -9,6 +9,7 @@ from ..models import CountryCode, DestinationSearchGroup, \
     DestinationSearchResult, SearchResult
 from .connection import Session, select
 from .models import Blob, Destination, DestinationID
+from ..config import Config
 
 
 class NotFound(Exception):
@@ -109,8 +110,14 @@ def get_recommended_destination_1(
     2. randomly select a destination from rest
     """
 
-    max_endorsement_cutoff = 0.9
-    min_endorsement_cutoff = 0.2
+    max_endorsement_cutoff = (
+        Config.get()
+        .database.destination_recommender.max_endorsement_cutoff
+    )
+    min_endorsement_cutoff = (
+        Config.get()
+        .database.destination_recommender.min_endorsement_cutoff
+    )
 
     stmt = select(Destination)
     if country:
