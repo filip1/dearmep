@@ -113,6 +113,7 @@ router = APIRouter()
     dependencies=(computational_rate_limit,),
 )
 def get_localization(
+    response: Response,
     frontend_strings: bool = Query(
         False,
         description="Whether to also include all frontend translation strings "
@@ -147,6 +148,7 @@ def get_localization(
         recommended_lang, str(location.country)
     ).inc()
 
+    response.headers.update(browser_cache_headers(timedelta(days=1)))
     return LocalizationResponse(
         language=LanguageDetection(
             available=available_languages,
@@ -159,7 +161,6 @@ def get_localization(
     )
 
 
-# TODO: Add caching headers, this is pretty static data.
 @router.get(
     "/frontend-strings/{language}", operation_id="getFrontendStrings",
     response_model=FrontendStringsResponse,
@@ -168,6 +169,7 @@ def get_localization(
 )
 def get_frontend_strings(
     language: Language,
+    response: Response,
 ):
     """
     Returns a list of translation strings, for the given language, to be used
@@ -176,12 +178,12 @@ def get_frontend_strings(
     in the config's `frontend_strings` section are guaranteed to be available
     at least in the default language.
     """
+    response.headers.update(browser_cache_headers(timedelta(days=1)))
     return FrontendStringsResponse(
         frontend_strings=all_frontend_strings(language),
     )
 
 
-# TODO: Add caching headers.
 @router.get(
     "/blob/{name}", operation_id="getBlob",
     response_class=Response,
@@ -198,7 +200,6 @@ def get_frontend_strings(
 def get_blob_contents(
     name: str,
     request: Request,
-    response: Response,
 ):
     """
     Returns the contents of a blob, e.g. an image or audio file.
@@ -230,10 +231,11 @@ def get_blob_contents(
 )
 def get_destinations_by_country(
     country: CountryCode,
+    response: Response,
 ) -> SearchResult[DestinationSearchResult]:
     """Return all destinations in a given country."""
+    response.headers.update(browser_cache_headers(timedelta(days=1)))
     with get_session() as session:
-        # TODO: This query result should be cached.
         dests = query.get_destinations_by_country(session, country)
         return query.to_destination_search_result(dests, blob_path)
 
