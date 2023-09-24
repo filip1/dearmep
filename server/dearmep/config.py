@@ -46,6 +46,11 @@ class APIRateLimitConfig(BaseModel):
     computational: IPRateLimits
 
 
+class DestinationRecommenderConfig(BaseModel):
+    max_endorsement_cutoff: float = Field(ge=0, le=1)
+    min_endorsement_cutoff: float = Field(ge=0, le=1)
+
+
 class APIConfig(BaseModel):
     rate_limits: APIRateLimitConfig
 
@@ -69,6 +74,7 @@ class ContactTimespanFilterConfig(BaseModel):
 
 class DatabaseConfig(BaseModel):
     url: str  # AnyUrl requires a host, which doesn't apply for SQLite.
+    destination_recommender: DestinationRecommenderConfig
 
 
 class L10nEntry(BaseModel):
