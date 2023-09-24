@@ -103,7 +103,7 @@ def get_recommended_destination_1(
     session: Session,
     *,
     country: Optional[CountryCode],
-) -> Optional[Destination]:
+) -> Destination:
     """Recommend a destination by
     1. cutting off destinations using min and max endorsement
     2. randomly select a destination from rest
@@ -118,6 +118,9 @@ def get_recommended_destination_1(
     stmt = stmt.where(Destination.base_endorsement <= max_endorsement_cutoff)
     stmt = stmt.where(Destination.base_endorsement >= min_endorsement_cutoff)
     dest = session.exec(stmt.order_by(func.random())).first()
+
+    if not dest:
+        raise ValueError("no destination found that could be recommended.")
     return dest
 
 
