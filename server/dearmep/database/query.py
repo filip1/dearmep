@@ -120,7 +120,7 @@ def get_recommended_destination_1(
     dest = session.exec(stmt.order_by(func.random())).first()
 
     if not dest:
-        raise ValueError("no destination found that could be recommended.")
+        raise NotFound("no destination found that could be recommended.")
     return dest
 
 
