@@ -3,9 +3,9 @@ from functools import lru_cache
 import logging
 from pathlib import Path
 import re
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Literal, Optional, Union
 
-from pydantic import AnyUrl, BaseModel, BaseSettings, ConstrainedStr, \
+from pydantic import AnyHttpUrl, BaseModel, BaseSettings, ConstrainedStr, \
     DirectoryPath, Field, FilePath, ValidationError, validator
 from pydantic.fields import ModelField
 from pydantic.utils import deep_update
@@ -43,7 +43,7 @@ class IPRateLimits(BaseModel):
 
 class CorsConfig(BaseModel):
     """Allowed access for other web hosts to this backend via Ajax"""
-    origins: List[AnyUrl]
+    origins: List[Union[Literal["*"], AnyHttpUrl]]
 
 
 class APIRateLimitConfig(BaseModel):
