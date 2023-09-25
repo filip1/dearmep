@@ -30,26 +30,28 @@ def require_operation_id(app: FastAPI):
             )
 
 
-def setup_cors(app, config):
+def setup_cors(app: FastAPI, config: Config):
     allowed_origins = config.api.cors.origins
-    app.add_middleware(CORSMiddleware,
-                       allow_origins=allowed_origins,
-                       allow_credentials=True,
-                       allow_methods=["*"],
-                       allow_headers=["*"])
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=allowed_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 
 def create_app(config_dict: Optional[dict] = None) -> FastAPI:
     if config_dict is None:
-        Config.load()
+        config = Config.load()
     else:
-        Config.load_dict(config_dict)
+        config = Config.load_dict(config_dict)
 
     app = FastAPI(
         title=APP_NAME,
         version=__version__,
     )
-    setup_cors(app, Config.get())
+    setup_cors(app, config)
 
     app.include_router(api_v1.router, prefix="/api/v1")
     static_files.mount_if_configured(app, "/static")
