@@ -59,10 +59,17 @@ contact_timespan_filter:
 
 # The HTTP API.
 api:
-  # cross origin request configuration
+  # Configuration for Cross-Origin Resource Sharing, see
+  # <https://en.wikipedia.org/wiki/Cross-origin_resource_sharing>. Enter a list
+  # of HTTP and/or HTTPS URLs (without any paths or trailing slashes). You may
+  # also add "*" if you prefer to live dangerously. These are the URLs that are
+  # allowed to access the API via a browser. Each campaign that embeds the
+  # DearMEP snippet should have its URL listed here.
   cors:
     origins:
-      - http://localhost:4200
+      - http://localhost:8000
+      - https://staging.chatcontrol.dearmep.eu
+      - https://chatcontrol.dearmep.eu
 
   # Rate limit configuration. How often can certain actions/requests be
   # performed before considering it an attack on the service?
