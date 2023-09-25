@@ -353,7 +353,10 @@ l10n:
 
     verification.enterNumber.policyLinkUrl:
       en: /pages/privacy/en/
-      # fr: TBD
+      de: /pages/privacy/de/
+      sv: /pages/privacy/sv/
+      fr: /pages/privacy/fr/
+      pt: /pages/privacy/pt/
 
     # Button text of the button that lets the user send a verification code to the specified phone number
     verification.enterNumber.sendCode:
