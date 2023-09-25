@@ -575,6 +575,7 @@ l10n:
     select-mep.search.placeholder:
       en: Search
       de: Suche
+      sv: Sök
       fr: Rechercher
       da: Søg
       pt: Pesquisar
@@ -583,6 +584,7 @@ l10n:
     select-mep.autocomplete-empty:
       en: Not found
       de: Nicht gefunden
+      sv: Hittades inte
       fr: Aucun résultat n'a été trouvé
       da: Ikke fundet
       pt: Sem resultados
@@ -591,9 +593,10 @@ l10n:
     # {{ id }} placeholder is replaced with the MEP-ID from the API
     select-mep.portraitCreditHtml:
       en: portrait © European Parliament (<a href="https://www.europarl.europa.eu/meps/en/{{id}}/" target="_blank">source</a>)
-      de: Portrait © Europäisches Parlament (<a href="https://www.europarl.europa.eu/meps/en/{{id}}/" target="_blank">source</a>)
+      de: Portrait © Europäisches Parlament (<a href="https://www.europarl.europa.eu/meps/de/{{id}}/" target="_blank">source</a>)
+      sv: Porträtt © Europaparlamentet (<a href="https://www.europarl.europa.eu/meps/sv/{{id}}/" target="_blank">source</a>)
       fr: portait © Parlement européen (<a href="https://www.europarl.europa.eu/meps/fr/{{id}}/" target="_blank">source</a>)
-      da: Portræt © Europäisches Parlament (<a href="https://www.europarl.europa.eu/meps/en/{{id}}/" target="_blank">kilde</a>)
+      da: Portræt © Europa-Parlamentet (<a href="https://www.europarl.europa.eu/meps/da/{{id}}/" target="_blank">kilde</a>)
       pt: retrato © Parlamento Europeu (<a href="https://www.europarl.europa.eu/meps/pt/{{id}}/" target="_blank">fonte</a>)
 
   # Translation strings for the talking-points that will be displayed during the call or while scheduling a call
