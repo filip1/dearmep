@@ -201,6 +201,10 @@ l10n:
       fr: "Voici, ton code de vérification pour {campaign}: {code}. Si tu penses avoir reçu ce code par erreur, ignore-le."
       pt: "O teu código de verificação para a campanha {campaign}: {code}. Se não solicitaste este código, podes ignorá-lo."
 
+  feedback_survey_sms:
+      en: "How was your phone call with the {campaign} campaign? Your experience help us improve the tool and always pick politicians that are most likely to be convinced by citizens. Click here, it only takes a minute: {URL}"
+      de: "Wie war dein Anruf bei der {campaign} Kampagne? Deine Erfahrung hilft uns das Tool zu verbessern und die Abgeordneten auszuwählen, die am ehesten überzeugt werden können. Klick hier, es dauert nur eine Minute: {URL}"
+
   frontend_strings:
     # Main title of the campaign.
     # Ideally this should be short, concise and no more than two lines.
