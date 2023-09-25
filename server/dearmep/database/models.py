@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from pydantic import UUID4, BaseModel
 from sqlmodel import Column, Field, Relationship, SQLModel, TIMESTAMP, and_, \
-    case, or_, func
+    case, or_, func, text
 
 from ..config import Config, ConfigNotLoaded
 from ..models import CountryCode
@@ -81,6 +81,9 @@ BlobID = int
 ContactID = int
 DestinationID = str
 DestinationGroupID = str
+
+
+DEFAULT_BASE_ENDORSEMENT = 0.5
 
 
 class ModifiedTimestampMixin(BaseModel):
@@ -251,6 +254,11 @@ class Destination(DestinationBase, table=True):
         **_rel_join("Destination.name_audio_id==Blob.id"),
     )
     base_endorsement: float = Field(
+        index=True,
+        default=DEFAULT_BASE_ENDORSEMENT,
+        sa_column_kwargs={
+            "server_default": text(str(DEFAULT_BASE_ENDORSEMENT)),
+        },
         description="Base endorsement of this Destination.",
         **_example(0.5),
     )
