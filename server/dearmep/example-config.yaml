@@ -583,9 +583,9 @@ l10n:
     select-mep.portraitCreditHtml:
       en: portrait © European Parliament (<a href="https://www.europarl.europa.eu/meps/en/{{id}}/" target="_blank">source</a>)
       de: Portrait © Europäisches Parlament (<a href="https://www.europarl.europa.eu/meps/en/{{id}}/" target="_blank">source</a>)
-      sv: Porträtt © Europäisches Parlament (<a href="https://www.europarl.europa.eu/meps/en/{{id}}/" target="_blank">source</a>)
+      sv: Porträtt © Europaparlamentet (<a href="https://www.europarl.europa.eu/meps/en/{{id}}/" target="_blank">source</a>)
       fr: portait © Parlement européen (<a href="https://www.europarl.europa.eu/meps/fr/{{id}}/" target="_blank">source</a>)
-      da: Portræt © Europäisches Parlament (<a href="https://www.europarl.europa.eu/meps/en/{{id}}/" target="_blank">kilde</a>)
+      da: Portræt © Europa-Parlamentet (<a href="https://www.europarl.europa.eu/meps/en/{{id}}/" target="_blank">kilde</a>)
       pt: retrato © Parlamento Europeu (<a href="https://www.europarl.europa.eu/meps/pt/{{id}}/" target="_blank">fonte</a>)
 
   # Translation strings for the talking-points that will be displayed during the call or while scheduling a call
