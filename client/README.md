@@ -6,7 +6,7 @@
 
     <link rel="stylesheet" href="https://dear-mep-server.org/static/dear-mep.css" />
     <dear-mep host="https://dear-mep-server.org/"></dear-mep>
-    <script src="https://dear-mep-server.org/static/dear-mep.js"></script>
+    <script src="https://dear-mep-server.org/static/dear-mep.js" async></script>
 
 ## Installing dependencies
 
