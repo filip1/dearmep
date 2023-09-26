@@ -101,10 +101,10 @@ export class AppComponent implements OnInit, OnChanges {
   public defaultCountry?: string
 
   constructor(
-    private readonly assetsBaseUrlService: BaseUrlService,
+    private readonly baseUrlService: BaseUrlService,
     private readonly callingStateManagerService: CallingStateManagerService,
     private readonly l10nService: L10nService,
-  ) {}
+  ) { }
 
   public ngOnInit() {
     if (!this.hostUrl) {
@@ -113,8 +113,9 @@ export class AppComponent implements OnInit, OnChanges {
       console.error(`DearMEP: Invalid attirbute 'host'. Only absolute URLs are allowed for this option.`)
     }
 
-    this.styleUrl$ = this.assetsBaseUrlService.toAbsoluteUrl$("./dear-mep-inner.css")
-    this.flagsStyleUrl$ = this.assetsBaseUrlService.toAbsoluteUrl$("./flags.css")
+    this.styleUrl$ = this.baseUrlService.toAbsoluteAssetUrl$("./dear-mep-inner.css")
+    this.flagsStyleUrl$ = this.baseUrlService.toAbsoluteAssetUrl$("./flags.css")
+
     this.shouldDisplayTalkingPoints$ = this.callingStateManagerService.getStep$().pipe(
       map(step => step !== CallingStep.Home && step !== CallingStep.HomeAuthenticated)
     );
@@ -129,20 +130,22 @@ export class AppComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if ((changes["hostUrl"] && this.hostUrl) ||
-        (changes["assetsUrl"] && this.assetsUrl)) {
-      const assetsUrl = this.getAssetsUrl()
-      this.assetsBaseUrlService.setBaseUrl(assetsUrl)
+    if (changes["hostUrl"] || changes["assetsUrl"]) {
+      const assetsUrl = UrlUtil.toAbsolute(
+        this.assetsUrl,
+        this.hostUrl
+      )
+      this.baseUrlService.setAssetsUrl(assetsUrl)
+    }
+    if (changes["hostUrl"] || changes["apiUrl"]) {
+      const apiUrl = UrlUtil.toAbsolute(
+        this.apiUrl,
+        this.hostUrl
+      )
+      this.baseUrlService.setAPIUrl(apiUrl)
     }
     if (changes["defaultCountry"]) {
       this.l10nService.setDefaultCountry(this.defaultCountry?.toUpperCase())
     }
-  }
-
-  private getAssetsUrl(): string {
-    return UrlUtil.toAbsolute(
-      this.assetsUrl,
-      this.hostUrl
-    )
   }
 }

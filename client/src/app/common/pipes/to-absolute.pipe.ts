@@ -9,10 +9,14 @@ export class ToAbsolutePipe implements PipeTransform {
     private readonly baseUrlService: BaseUrlService,
   ) { }
 
-  transform(url: string | undefined): string | undefined {
+  transform(url: string | undefined, type: "asset" | "api"): string | undefined {
     if (!url) {
       return url
     }
-    return this.baseUrlService.toAbsoluteUrl(url)
+    if (type === "asset") {
+      return this.baseUrlService.toAbsoluteAssetUrl(url)
+    } else {
+      return this.baseUrlService.toAbsoluteAPIUrl(url)
+    }
   }
 }
