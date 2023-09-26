@@ -36,6 +36,15 @@ Zusätzlich zu den Texten in den Kästen brauchen wir als Audio
   * Die Linke im Europäischen Parlament
   * fraktionslos
 
+Sprecher\*innen sollten folgende Hinweise beachten:
+
+* Aufnahmen in 44,1 kHz 16 bit oder höher, in mono
+* Audio nach der Aufzeichnung normalisieren
+* Anlieferung der Dateien in unkomprimierter oder verlustfrei komprimierter Fassung, also z.B. als WAV oder FLAC
+* die einzelnen Fragmente als einzelne Dateien anliefern, aber auch bitte als ungeschnittene Gesamtdatei (falls wir selbst noch Schnittarbeiten vornehmen möchten)
+* Dateien bitte nicht in das Repository committen, da sie zu viel Platz brauchen; ein Nextcloud-Uploadordner kann bei Bedarf gestellt werden
+* **zu vergebende Dateinamen werden in diesem Dokument noch ergänzt**
+
 ## Hauptmenü
 
 ```mermaid
