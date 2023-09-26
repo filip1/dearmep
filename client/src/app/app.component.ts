@@ -49,9 +49,41 @@ export class AppComponent implements OnInit, OnChanges {
   @Input("api")
   public apiUrl = "./"
 
-  // eslint-disable-next-line @angular-eslint/no-input-rename
-  @Input("disable-calling")
-  public disableCalling = false
+  /**
+   * This parameter hides the call-scheduling functionality. By default scheduling is enabled.
+   *
+   * NOTE: Sceduling is currently disabled by default as the backend does not yet support the functionality.
+   *
+   * It can be applied in the HTML code by simply specifying the attribute-name:
+   *
+   *  <dear-mep disable-scheduling></dear-mep>
+   *
+   * If the attribute is present, the value of this property is '' otherwise it is undefined.
+   * The getter 'disableScheduling' converts this value into a boolean accordinly.
+   */
+  @Input()
+  public 'disable-scheduling': '' | undefined = '' // NOTE: This default will be changed to false as soon as scheduling is implemented in the backend.
+
+  public get disableScheduling(): boolean {
+    return this['disable-scheduling'] !== undefined
+  }
+
+  /**
+   * This parameter hides the calling functionality. By default calling is enabled.
+   *
+   * It can be applied in the HTML code by simply specifying the attribute-name:
+   *
+   *  <dear-mep disable-calling></dear-mep>
+   *
+   * If the attribute is present, the value of this property is '' otherwise it is undefined.
+   * The getter 'disableCalling' converts this value into a boolean accordinly.
+   */
+  @Input()
+  public 'disable-calling': '' | undefined = undefined
+
+  public get disableCalling(): boolean {
+    return this['disable-calling'] !== undefined
+  }
 
   /**
    * If the country the user is in cannot be detected by the backend or
