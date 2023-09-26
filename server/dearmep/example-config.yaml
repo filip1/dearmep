@@ -389,7 +389,7 @@ l10n:
       en: Please check you phone. We've sent a code to {{ number }}.
       de: Wir haben einen Code an {{ number }} geschickt. Bitte schau auf deinem Telefon nach.
       sv: Vi har skickat en kod till {{ number }}. Kolla din telefon.
-      fr: Nous t'avons envoyé le code de vérification à {{number}}. Merci de confirmer que le code est bien arrivé.
+      fr: Nous t'avons envoyé le code de vérification à {{ number }}. Merci de confirmer que le code est bien arrivé.
       da: Venligst tjek din telefon. Vi har sendt koden til {{ number }}.
       pt: Verifica o teu telefone. Enviámos um código para {{ number }}.
 
@@ -431,7 +431,7 @@ l10n:
       en: 'Succesfully verified with the number: {{ number }}'
       de: '{{ number }} wurde erfolgreich verifiziert'
       sv: 'Ditt nummer {{ number }} är nu verifierat'
-      fr: 'Nous avons réussi à vérifier ton numéro de téléphone: { number }}'
+      fr: 'Nous avons réussi à vérifier ton numéro de téléphone: {{ number }}'
       da: Din nummer {{ number }} er verificeret nu
       pt: 'Número verificado com sucesso: {{ number }}'
 
