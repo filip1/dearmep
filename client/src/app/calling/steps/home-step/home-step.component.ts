@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslocoService } from '@ngneat/transloco';
-import { Observable, filter } from 'rxjs';
+import { filter } from 'rxjs';
 import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
 
 @Component({
