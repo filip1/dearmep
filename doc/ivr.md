@@ -165,12 +165,13 @@ flowchart TD
     otherPrompt["
         Wenn wir uns erst wie geplant am
         [Wochentag] wieder melden sollen,
-        drücke die 2.
+        drücke die 2 oder lege einfach auf.
     "] --> deletePrompt
 
     nextWeekPrompt["
         Wenn wir uns einfach nächste Woche
-        wieder melden sollen, drücke die 2.
+        wieder melden sollen, drücke die 2
+        oder lege einfach auf.
     "] --> deletePrompt
 
     deletePrompt["
