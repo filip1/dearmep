@@ -4,6 +4,7 @@ import { CallingStateManagerService } from 'src/app/services/calling/calling-sta
 import { VerificationStep } from './verification-step.enum';
 import { PhoneNumber } from 'src/app/model/phone-number.model';
 import { TranslocoService } from '@ngneat/transloco';
+import { BaseUrlService } from 'src/app/common/services/base-url.service';
 
 @Component({
   selector: 'dmep-verify-number',
@@ -35,7 +36,8 @@ export class VerifyNumberComponent {
   constructor(
     private readonly callingStateManager: CallingStateManagerService,
     private readonly translocoService: TranslocoService,
-  ) { 
+    private readonly baseUrlService: BaseUrlService,
+  ) {
   }
 
   public numberFormControl = new FormControl<PhoneNumber>({ callingCode: "+43", number: "" }, {
@@ -75,6 +77,21 @@ export class VerifyNumberComponent {
   }
 
   public getPolicyLinkHtml(): string {
-    return `<a href="#" target="_blank">${this.translocoService.translate('verification.enterNumber.policyLinkText')}</a>`
+    const policyUrlKey = 'verification.enterNumber.policyLinkUrl'
+    const policyUrl = this.translocoService.translate(policyUrlKey)
+    const linkText = this.translocoService.translate('verification.enterNumber.policyLinkText')
+
+    if (policyUrl === policyUrlKey) {
+      console.error("Missing privacy policy url!")
+    }
+
+    let absPolicyUrl = policyUrl
+    try {
+      absPolicyUrl = this.baseUrlService.toAbsoluteUrl(policyUrl)
+    } catch (err) {
+      console.error("failed to convert url to absolute", err)
+    }
+
+    return `<a href="${ absPolicyUrl }" target="_blank">${ linkText }</a>`
   }
 }

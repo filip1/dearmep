@@ -3,10 +3,9 @@ from typing import Any, Callable, Dict, Iterable, Optional
 from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
     Response, status
 from prometheus_client import Counter
-from typing_extensions import Annotated
 
 from ..config import Config, Language, all_frontend_strings
-from ..database.connection import Session, get_session
+from ..database.connection import get_session
 from ..database.models import Blob, Destination, DestinationGroupListItem, \
     DestinationID, DestinationRead, DestinationSelectionLogPurpose
 from ..database import query
@@ -14,7 +13,7 @@ from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import MAX_SEARCH_RESULT_LIMIT, CountryCode, \
     DestinationSearchResult, FrontendStringsResponse, LanguageDetection, \
     LocalizationResponse, RateLimitResponse, SearchResult, SearchResultLimit
-from ..util import Limit, client_addr
+from ..ratelimit import Limit, client_addr
 
 
 l10n_autodetect_total = Counter(
@@ -38,6 +37,10 @@ rate_limit_response: Dict[int, Dict[str, Any]] = {
 }
 
 
+simple_rate_limit = Depends(Limit("simple"))
+computational_rate_limit = Depends(Limit("computational"))
+
+
 BlobURLDep = Callable[[Optional[Blob]], Optional[str]]
 
 
@@ -49,12 +52,6 @@ def blob_path(blob: Optional[Blob]) -> Optional[str]:
 def blob_url() -> Iterable[BlobURLDep]:
     """Dependency to convert a Blob to a corresponding API request path."""
     yield blob_path
-
-
-def session():
-    """Dependency to get an SQLAlchemy session."""
-    with get_session() as s:
-        yield s
 
 
 def destination_to_destinationread(dest: Destination) -> DestinationRead:
@@ -75,12 +72,10 @@ router = APIRouter()
 @router.get(
     "/localization", operation_id="getLocalization",
     response_model=LocalizationResponse,
-    # TODO: This explicit limit here makes little sense, it's more of a demo.
-    dependencies=[Depends(Limit("5/minute"))],
     responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(computational_rate_limit,),
 )
 def get_localization(
-    session: Annotated[Session, Depends(session)],
     frontend_strings: bool = Query(
         False,
         description="Whether to also include all frontend translation strings "
@@ -107,7 +102,8 @@ def get_localization(
                 fallback=default_language,
             )
 
-    location = get_country(session, geo_db, client_addr)
+    with get_session() as session:
+        location = get_country(session, geo_db, client_addr)
 
     # Track localization results in Prometheus.
     l10n_autodetect_total.labels(
@@ -131,6 +127,7 @@ def get_localization(
     "/frontend-strings/{language}", operation_id="getFrontendStrings",
     response_model=FrontendStringsResponse,
     responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(simple_rate_limit,),
 )
 def get_frontend_strings(
     language: Language,
@@ -152,46 +149,52 @@ def get_frontend_strings(
     "/blob/{name}", operation_id="getBlob",
     response_class=Response,
     responses={
+        **rate_limit_response,  # type: ignore[arg-type]
         200: {
             "content": {"application/octet-stream": {}},
             "description": "The contents of the named blob, with a matching "
                            "mimetype set.",
         },
     },
+    dependencies=(simple_rate_limit,),
 )
 def get_blob_contents(
     name: str,
-    session: Annotated[Session, Depends(session)],
 ):
     """
     Returns the contents of a blob, e.g. an image or audio file.
     """
-    try:
-        blob = query.get_blob_by_name(session, name)
-    except query.NotFound as e:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+    with get_session() as session:
+        try:
+            blob = query.get_blob_by_name(session, name)
+        except query.NotFound as e:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
     return Response(blob.data, media_type=blob.mime_type)
 
 
 @router.get(
     "/destinations/country/{country}", operation_id="getDestinationsByCountry",
     response_model=SearchResult[DestinationSearchResult],
+    responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(simple_rate_limit,),
 )
 def get_destinations_by_country(
-    session: Annotated[Session, Depends(session)],
     country: CountryCode,
 ) -> SearchResult[DestinationSearchResult]:
     """Return all destinations in a given country."""
-    dests = query.get_destinations_by_country(session, country)
-    return query.to_destination_search_result(dests, blob_path)
+    with get_session() as session:
+        # TODO: This query result should be cached.
+        dests = query.get_destinations_by_country(session, country)
+        return query.to_destination_search_result(dests, blob_path)
 
 
 @router.get(
     "/destinations/name", operation_id="getDestinationsByName",
     response_model=SearchResult[DestinationSearchResult],
+    responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(simple_rate_limit,),
 )
 def get_destinations_by_name(
-    session: Annotated[Session, Depends(session)],
     name: str = Query(
         description="The (part of the) name to search for.",
         example="miers",
@@ -221,50 +224,54 @@ def get_destinations_by_name(
             status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="country is required if all_countries is false",
         )
-    dests = query.get_destinations_by_name(
-        session, name,
-        all_countries=all_countries,
-        country=country,
-        limit=limit,
-    )
-    return query.to_destination_search_result(dests, blob_path)
+    with get_session() as session:
+        dests = query.get_destinations_by_name(
+            session, name,
+            all_countries=all_countries,
+            country=country,
+            limit=limit,
+        )
+        return query.to_destination_search_result(dests, blob_path)
 
 
 @router.get(
     "/destinations/id/{id}", operation_id="getDestinationByID",
     response_model=DestinationRead,
+    responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(simple_rate_limit,),
 )
 def get_destination_by_id(
-    session: Annotated[Session, Depends(session)],
     id: DestinationID,
 ) -> DestinationRead:
-    try:
-        dest = query.get_destination_by_id(session, id)
-    except query.NotFound as e:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
-    return destination_to_destinationread(dest)
+    with get_session() as session:
+        try:
+            dest = query.get_destination_by_id(session, id)
+        except query.NotFound as e:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+        return destination_to_destinationread(dest)
 
 
 @router.get(
     "/destinations/suggested", operation_id="getSuggestedDestination",
     response_model=DestinationRead,
+    responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(computational_rate_limit,),
 )
 def get_suggested_destination(
-    session: Annotated[Session, Depends(session)],
     country: Optional[CountryCode] = None,
 ):
     """
     Return a suggested destination to contact, possibly limited by country.
     """
-    try:
-        # TODO: Replace with actually _recommended_, not random.
-        dest = query.get_random_destination(
-            session,
-            country=country,
-            purpose=DestinationSelectionLogPurpose.SUGGEST,
-        )
-    except query.NotFound as e:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
-    dest_r = destination_to_destinationread(dest)
-    session.commit()  # to log the selection
-    return dest_r
+    with get_session() as session:
+        try:
+            # TODO: Replace with actually _recommended_, not random.
+            dest = query.get_random_destination(
+                session,
+                country=country,
+                purpose=DestinationSelectionLogPurpose.SUGGEST,
+            )
+        except query.NotFound as e:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+        session.commit()
+        return destination_to_destinationread(dest)

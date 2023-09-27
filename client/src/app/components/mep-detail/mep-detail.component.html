@@ -1,18 +1,21 @@
 <div class="mep">
-  <div class="mep-image">
-    <img [src]="mep?.portrait" alt="Daniel FREUND">
+  <img *ngIf="mep" [hidden]="!imageLoaded()" class="mep-image" [src]="mep.portrait" [alt]="mep.name" (load)="imageLoadedUrl = mep.portrait">
+  <div *ngIf="!mep || !imageLoaded()" class="mep-image-loading-placeholder mep-image">
+    <mat-spinner [diameter]="56"></mat-spinner>
   </div>
   <div class="mep-description">
-    <h3 class="mep-name">
-      <p class="name">{{ mep?.name }}</p>
+    <h3 class="mep-name" *ngIf="mep">
+      <span [classList]="'flag:' + mep.country"></span>
+      <p class="name">{{ mep.name }}</p>
       <button mat-icon-button class="select-other-btn" (click)="MEPChangeClick()" *ngIf="allowChangeMEP">
         <mat-icon>autorenew</mat-icon>
       </button>
     </h3>
-    <p class="group-party" *ngFor="let group of mep?.groups">
-      {{ group.long_name }}
-    </p>
-    <p class="country" >{{ 'countries.' + mep?.country | transloco  }}</p>
+    <div class="group-party" *ngFor="let group of mep?.groups">
+      <img *ngIf="group.logo" [src]="group.logo" class="mep-group-icon">
+      <span>{{ group.long_name }}</span>
+    </div>
+    <p class="country" *ngIf="mep">{{ 'countries.' + mep.country | transloco  }}</p>
     <div class="socials">
       <dmep-social-icon *ngFor="let contact of mep?.contacts" [type]="contact.type" [target]="contact.contact"></dmep-social-icon>
     </div>

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { TranslocoService } from '@ngneat/transloco';
+import { filter } from 'rxjs';
 import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
 
 @Component({
@@ -6,10 +8,17 @@ import { CallingStateManagerService } from 'src/app/services/calling/calling-sta
   templateUrl: './home-step.component.html',
   styleUrls: ['./home-step.component.scss']
 })
-export class HomeStepComponent { 
+export class HomeStepComponent {
+  public descriptions$
+
   constructor(
     private readonly callingStateManager: CallingStateManagerService,
-  ) {}
+    private readonly translocoService: TranslocoService,
+  ) {
+    this.descriptions$ = this.translocoService.selectTranslate('call.home.descriptions').pipe(
+      filter(d => Array.isArray(d))
+    )
+  }
 
   public onCallNowClick() {
     this.callingStateManager.goToVerify()

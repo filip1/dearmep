@@ -1,28 +1,65 @@
 .mep {
   display: flex;
-  align-items: top;
+  align-items: center;
   justify-content: flex-start;
+  gap: 16px;
 }
 .mep-name {
   display: flex;
   align-items: center;
-  p {
-    margin: 0;
+  .name {
+    margin-left: 12px;
+    margin-right: 0;
   }
+}
+
+.mep-description {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .mep-image {
-  img {
-    object-fit: cover;
-    border-radius: 20px;
-    height: 215px;
-    width: 170px;
-  }
-  margin-right: 16px;
+  background-color: rgba($color: #FFFFFF, $alpha: 0.1);
+  object-fit: cover;
+  border-radius: 20px;
+  height: 215px;
+  width: 170px;
+  min-width: 170px;
+}
+
+.mep-image-loading-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .socials {
-  margin-top: 24px;
+  //margin-top: 24px;
+  margin-bottom: 8px;
   display: flex;
   gap: 8px;
+}
+
+.mep-group-icon {
+  height: 1.2em;
+  width: auto;
+}
+
+.group-party {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  margin: 4px 0;
+}
+
+::ng-deep
+.dmep-display-xs dmep-mep-detail {
+  .mep {
+    flex-direction: column;
+    align-items: center;
+  }
+  .mep-image {
+  }
 }

@@ -3,10 +3,10 @@ from functools import lru_cache
 import logging
 from pathlib import Path
 import re
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Literal, Optional, Union
 
-from pydantic import BaseModel, BaseSettings, ConstrainedStr, DirectoryPath, \
-    Field, FilePath, ValidationError, validator
+from pydantic import AnyHttpUrl, BaseModel, BaseSettings, ConstrainedStr, \
+    DirectoryPath, Field, FilePath, ValidationError, validator
 from pydantic.fields import ModelField
 from pydantic.utils import deep_update
 import yaml
@@ -33,6 +33,27 @@ class ConfigNotLoaded(Exception):
 
 class Language(ConstrainedStr):
     regex = re.compile(r"^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$")
+
+
+class IPRateLimits(BaseModel):
+    ip_limit: str
+    small_block_limit: str
+    large_block_limit: str
+
+
+class CorsConfig(BaseModel):
+    """Allowed access for other web hosts to this backend via Ajax"""
+    origins: List[Union[Literal["*"], AnyHttpUrl]]
+
+
+class APIRateLimitConfig(BaseModel):
+    simple: IPRateLimits
+    computational: IPRateLimits
+
+
+class APIConfig(BaseModel):
+    cors: CorsConfig
+    rate_limits: APIRateLimitConfig
 
 
 class ContactTimespanFilterTimespan(BaseModel):
@@ -162,6 +183,7 @@ class L10nConfig(BaseModel):
 
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""
+    api: APIConfig
     contact_timespan_filter: Optional[ContactTimespanFilterConfig]
     database: DatabaseConfig
     l10n: L10nConfig
@@ -245,11 +267,15 @@ class Settings(BaseSettings):
         description="Path to a directory that will be served as static files. "
         "Normally, this is used to let this application serve the front end.",
     )
+    markdown_files_dir: Optional[DirectoryPath] = Field(
+        description="Path to a directory to serve multilingual Markdown "
+        "files.",
+    )
 
     class Config:
         env_prefix = ENV_PREFIX
 
-    @validator("static_files_dir", pre=True)
+    @validator("static_files_dir", "markdown_files_dir", pre=True)
     def empty_string_is_none(cls, v):
         return None if v == "" else v
 

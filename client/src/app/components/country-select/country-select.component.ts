@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslocoService } from '@ngneat/transloco';
 import { Subject, filter, takeUntil } from 'rxjs';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
+import { SelectDestinationService } from 'src/app/services/select-destination/select-destination.service';
 
 @Component({
   selector: 'dmep-country-select',
@@ -17,7 +18,8 @@ export class CountrySelectComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly l10nService: L10nService,
-    private readonly translocoService: TranslocoService
+    private readonly translocoService: TranslocoService,
+    private readonly selectDestinationService: SelectDestinationService,
   ) { }
 
   public ngOnInit(): void {
@@ -48,8 +50,11 @@ export class CountrySelectComponent implements OnInit, OnDestroy {
   }
 
   public onSelectCountry(country: string) {
-    this.selectedCountry = country
-    this.l10nService.setCountry(country)
+    if (this.selectedCountry !== country) {
+      this.l10nService.setCountry(country)
+      this.selectDestinationService.renewSuggestedDestination(country)
+      this.selectedCountry = country
+    }
   }
 
   public getCountryTranslationKey(country: string): string {

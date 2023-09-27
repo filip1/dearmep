@@ -11,8 +11,9 @@ import { createCustomElement } from '@angular/elements';
 import { AppCommonModule } from './common/app-common.module';
 import { BaseUrlInterceptor } from './common/interceptors/base-url.interceptor';
 import { ComponentsModule } from './components/components.module';
-import { LayoutModule } from './layout/layout.module';
 import { CallingModule } from './calling/calling.module';
+import { RetryInterceptor } from './common/interceptors/retry.interceptor';
+import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 
 @NgModule({
   declarations: [
@@ -26,11 +27,12 @@ import { CallingModule } from './calling/calling.module';
     ApiModule.forRoot({ rootUrl: '' }),
     AppCommonModule,
     ComponentsModule,
-    LayoutModule,
     CallingModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BaseUrlInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: RetryInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: TimeoutInterceptor, multi: true },
   ],
   bootstrap: [],
 })

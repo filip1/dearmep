@@ -52,6 +52,50 @@ Also, while the static files will be served with `Last-Modified` and `ETag` head
 If you set `DEARMEP_DEMO_PAGE=y`, a basic demo HTML page will be returned at the HTTP root.
 This option only has an effect if you have also configured `DEARMEP_STATIC_FILES_DIR` (or you are using a bundled snippet).
 
+## Serving Markdown Files
+
+In addition to static files, as described in the previous section, DearMEP can also render and serve Markdown files, in multiple languages, with simple templating support.
+This can for example be used to serve a privacy policy or other simple documents.
+
+To use this feature, set the environment variable `DEARMEP_MARKDOWN_FILES_DIR` to a directory path.
+This directory will need to contain the following structure:
+
+```
+docs
+| `- privacy  (1)
+|    | `- en.md
+|    |    de.md
+|    |    …
+|    another_folder  (1)
+|      `- en.md
+|         de.md
+|         …
+static
+| `- styles.css
+|    …
+templates
+  `- default.html.jinja
+```
+
+The folders marked `(1)` can have any name.
+However, they have to contain Markdown files named `{language}.md`, where `{language}` is one of the configured languages of the instance.
+These documents will then be served at `/pages/{folder_name}/{language}/` (including the trailing slash).
+
+The files in the `static` directory will be available at `/pages/{path}`, e.g. `/pages/styles.css`.
+Subdirectories below `static` will be ignored, in order to prevent ambiguousness with Markdown documents.
+
+The `templates` directory needs to contain a file named `default.html.jinja` with a [Jinja2](https://jinja.palletsprojects.com/) HTML template.
+The Markdown documents will be passed to this document in a `content` variable.
+Additional available variables are:
+
+* `title`: The first level-1 heading of the Markdown document, useful for placing in an HTML `<title>` element.
+* `base_path`: Usually `/pages/`. Should be used as a prefix to refer to files in `static`, e.g. the stylesheet.
+* `language`: The `{language}` part of the URL, can be used for setting `<html lang="…">`.
+
+**Note:**
+The generated HTML is cached in memory.
+If you modify the document or the Jinja template after its initial render, these modifications will not show up in the HTML output until DearMEP is restarted.
+
 ## Retrieving the OpenAPI specification
 
 A running DearMEP server will provide its OpenAPI specification at `/openapi.json` and GUIs for it at `/docs` and `/redoc`.

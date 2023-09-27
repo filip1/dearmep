@@ -14,7 +14,7 @@ import yaml
 from dearmep.database.connection import AutoEngine, create_db, get_session
 from dearmep.database.models import Destination
 from dearmep.main import create_app
-from dearmep.util import Limit
+from dearmep.ratelimit import Limit
 
 
 FactoryType = Callable[[Optional[dict]], FastAPI]
@@ -72,11 +72,12 @@ def engine_fixture():
         connect_args={"check_same_thread": False},
         poolclass=StaticPool,
     )
-    prev_engine = AutoEngine.engine
-    AutoEngine.engine = memory_engine
+    prev_engine = AutoEngine.engines.get(0, None)
+    AutoEngine.engines[0] = memory_engine
     create_db()
     yield memory_engine
-    AutoEngine.engine = prev_engine
+    if prev_engine:
+        AutoEngine.engines[0] = prev_engine
 
 
 @pytest.fixture(name="session")

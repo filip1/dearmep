@@ -1,18 +1,26 @@
 # DearMEP
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.5.
-
 ## Embeding
 
 **DearMEP** is embeded into arbitrary html pages using the following code snippet:
 
-    <link rel="stylesheet" href="http://localhost:4200/fonts.css" type="text/css">
+    <link rel="stylesheet" href="https://dear-mep-server.org/static/dear-mep.css" />
     <dear-mep host="https://dear-mep-server.org/"></dear-mep>
-    <script src="https://dear-mep-server.org/dear-mep.js"></script>
+    <script src="https://dear-mep-server.org/static/dear-mep.js"></script>
 
-## Installing dependencies 
+## Installing dependencies
 
 Run `npm install` to install dependencies for loal development.
+
+## Generating the API Client
+
+Before the frontend can be built it is neccessary to generate the the API-Client.
+
+To do so, first get the current OpenAPI specification from the backend using one of the methods described [here](../server/README.md#retrieving-the-openapi-specification). Store the content in a file named `openapi.json` in the root of the repository.
+
+After that the API client can simpy be generated using the command `npm run generate-client`.
+
+> **_NOTE:_** it is necessary to repeat these steps whenever API changes occur, you will run into build errors otherwise.
 
 ## Development server
 
@@ -28,9 +36,9 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/dear-mep-bundle/` directory.
 
-## Lint 
+## Lint
 
 Run `npm run lint` or `npm run lint:fix` to lint (and fix) the code.
 
