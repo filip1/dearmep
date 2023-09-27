@@ -7,7 +7,7 @@ from prometheus_client import Counter
 from ..config import Config, Language, all_frontend_strings
 from ..database.connection import get_session
 from ..database.models import Blob, Destination, DestinationGroupListItem, \
-    DestinationID, DestinationRead, DestinationSelectionLogPurpose
+    DestinationID, DestinationRead, DestinationSelectionLogEvent
 from ..database import query
 from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import MAX_SEARCH_RESULT_LIMIT, CountryCode, \
@@ -269,7 +269,7 @@ def get_suggested_destination(
             dest = query.get_random_destination(
                 session,
                 country=country,
-                purpose=DestinationSelectionLogPurpose.SUGGEST,
+                purpose=DestinationSelectionLogEvent.WEB_SUGGESTED,
             )
         except query.NotFound as e:
             raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))

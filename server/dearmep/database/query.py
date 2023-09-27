@@ -9,7 +9,7 @@ from ..models import CountryCode, DestinationSearchGroup, \
     DestinationSearchResult, SearchResult
 from .connection import Session, select
 from .models import Blob, Destination, DestinationID, \
-    DestinationSelectionLog, DestinationSelectionLogPurpose
+    DestinationSelectionLog, DestinationSelectionLogEvent
 
 
 class NotFound(Exception):
@@ -89,7 +89,7 @@ def get_random_destination(
     session: Session,
     *,
     country: Optional[CountryCode] = None,
-    purpose: Optional[DestinationSelectionLogPurpose] = None,
+    purpose: Optional[DestinationSelectionLogEvent] = None,
 ) -> Destination:
     stmt = select(Destination)
     if country:
@@ -107,11 +107,11 @@ def log_destination_selection(
     session: Session,
     destination: Destination,
     *,
-    purpose: DestinationSelectionLogPurpose,
+    purpose: DestinationSelectionLogEvent,
 ):
     session.add(DestinationSelectionLog(
         destination=destination,
-        purpose=purpose,
+        event=purpose,
     ))
 
 
