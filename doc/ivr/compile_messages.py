@@ -5,6 +5,7 @@ from pathlib import Path
 import re
 from typing import Dict, Optional, Sequence
 
+import xlsxwriter
 import yaml
 
 
@@ -71,6 +72,22 @@ def write_csv(path: Path, rows):
             writer.writerow({ "ID": id, **vals })
 
 
+def write_xlsx(path: Path, rows):
+    fields = ("ID",) + tuple(next(iter(rows.values())).keys())
+    with xlsxwriter.Workbook(path) as workbook:
+        bold = workbook.add_format({"bold": True})
+        sheet = workbook.add_worksheet("DearMEP IVR")
+        for pos, field in enumerate(fields):
+            sheet.write_string(0, pos, field, bold)
+        for rownum, (id, row) in enumerate(rows.items(), 1):
+            sheet.write_string(rownum, 0, id, bold)
+            for field, text in row.items():
+                if len(text):
+                    sheet.write_string(rownum, fields.index(field), text)
+        sheet.freeze_panes(1, 1)
+        sheet.autofit()
+
+
 def run(repo_root: Optional[Path] = None):
     if not repo_root:
         repo_root = Path(__file__).parent.parent.parent
@@ -83,6 +100,7 @@ def run(repo_root: Optional[Path] = None):
     combined = { **msgs, **args }
 
     write_csv(ivr_dir / "combined.csv", combined)
+    write_xlsx(ivr_dir / "combined.xlsx", combined)
 
 
 if __name__ == "__main__":
