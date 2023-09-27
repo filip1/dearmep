@@ -10,8 +10,8 @@
     </mat-form-field>
 
     <section class="dmep-policy-section">
-      <mat-checkbox color="primary" 
-        [checked]="acceptPolicy" 
+      <mat-checkbox color="primary"
+        [checked]="acceptPolicy"
         (change)="acceptPolicy = $event.checked">
         <div [innerHTML]="'verification.enterNumber.policy' | transloco: { policyLink: getPolicyLinkHtml() }"></div>
       </mat-checkbox>
@@ -28,12 +28,12 @@
   </ng-container>
   <ng-container *ngSwitchCase="StepEnterCode">
 
-    <p class="enter-code-description">{{ 'verification.enterCode.description' | transloco: { number: getSelectedNumber() } }}</p>
+    <p class="enter-code-description">{{ 'verification.enterCode.description' | transloco: { number: validatedPhoneNumber } }}</p>
 
     <p class="not-your-number description">
       <a (click)="onEditNumberClick(); $event.preventDefault()" href="#">{{ 'verification.enterCode.notYourNumber' | transloco }}</a>
     </p>
-    
+
     <mat-form-field class="enter-code-form-field" appearance="outline" subscriptSizing="dynamic">
       <mat-label transloco="verification.enterCode.codeFieldLabel"></mat-label>
       <input type="text" matInput [formControl]="codeFormControl">
@@ -53,7 +53,7 @@
       <mat-icon class="success-icon" [inline]="false">check_circle</mat-icon>
     </div>
 
-    <p class="success-description">{{ 'verification.success.message' | transloco: { number: getSelectedNumber() } }}</p>
+    <p class="success-description">{{ 'verification.success.message' | transloco: { number: validatedPhoneNumber } }}</p>
 
   </ng-container>
 </ng-container>

@@ -1,17 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
 import { VerificationStep } from './verification-step.enum';
 import { PhoneNumber } from 'src/app/model/phone-number.model';
 import { TranslocoService } from '@ngneat/transloco';
 import { BaseUrlService } from 'src/app/common/services/base-url.service';
+import { ApiService } from 'src/app/api/services';
+import { L10nService } from 'src/app/services/l10n/l10n.service';
+import { Subject } from 'rxjs/internal/Subject';
+import { takeUntil } from 'rxjs';
+import { HttpValidationError, PhoneNumberNotAllowedResponse, PhoneNumberVerificationResponse, SmsCodeVerificationFailedResponse } from 'src/app/api/models';
 
 @Component({
   selector: 'dmep-verify-number',
   templateUrl: './verify-number.component.html',
   styleUrls: ['./verify-number.component.scss']
 })
-export class VerifyNumberComponent {
+export class VerifyNumberComponent implements OnInit, OnDestroy {
+  private destroyed$ = new Subject<void>()
+
   private readonly numberValidator: ValidatorFn = (control): ValidationErrors | null => {
     const number: PhoneNumber | null | undefined = control.value
     if (number && number.callingCode && number.number) {
@@ -27,6 +34,8 @@ export class VerifyNumberComponent {
     return { numberError: "invalid-code" }
   }
 
+  private currentLanguage?: string
+
   public readonly StepEnterNumber = VerificationStep.EnterNumber
   public readonly StepEnterCode = VerificationStep.EnterCode
   public readonly StepSuccess = VerificationStep.Success
@@ -37,7 +46,22 @@ export class VerifyNumberComponent {
     private readonly callingStateManager: CallingStateManagerService,
     private readonly translocoService: TranslocoService,
     private readonly baseUrlService: BaseUrlService,
+    private readonly apiService: ApiService,
+    private readonly l10nService: L10nService,
   ) {
+  }
+
+  public ngOnInit(): void {
+    this.l10nService.getLanguage$().pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe({
+      next: (l) => this.currentLanguage = l
+    })
+  }
+
+  public ngOnDestroy(): void {
+    this.destroyed$.next()
+    this.destroyed$.complete()
   }
 
   public numberFormControl = new FormControl<PhoneNumber>({ callingCode: "+43", number: "" }, {
@@ -51,29 +75,65 @@ export class VerifyNumberComponent {
     updateOn: 'change',
   })
 
+  public validatedPhoneNumber?: string;
+
   public onEditNumberClick() {
     this.step = VerificationStep.EnterNumber
   }
 
   public onSendCodeClick() {
-    this.step = VerificationStep.EnterCode
+    if (!this.acceptPolicy || !this.currentLanguage) {
+      return
+    }
+
+    this.apiService.requestNumberVerification({
+      body: {
+        phone_number: this.phoneNumberToString(this.numberFormControl.value),
+        language: this.currentLanguage,
+        accepted_dpp: this.acceptPolicy,
+      }
+    }).subscribe({
+      next: (response: PhoneNumberVerificationResponse) => {
+        this.validatedPhoneNumber = response.phone_number;
+        this.step = VerificationStep.EnterCode
+      },
+      error: (err: PhoneNumberNotAllowedResponse | HttpValidationError | unknown) => {
+        // TODO: Show message / update form validation
+        console.error(err)
+      }
+    })
   }
 
   public onVerifyCodeClick() {
-    this.step = VerificationStep.Success
+    if (!this.codeFormControl.value || !this.validatedPhoneNumber) {
+      return
+    }
+
+    this.apiService.verifyNumber({
+      body: {
+        code: this.codeFormControl.value,
+        phone_number: this.validatedPhoneNumber,
+      }
+    }).subscribe({
+      next: (response) => {
+        // TODO: store jwt
+        this.step = VerificationStep.Success
+      },
+      error: (err: SmsCodeVerificationFailedResponse | HttpValidationError | unknown) => {
+        // TODO: Show message / update form validation
+        console.error(err)
+      }
+    })
   }
 
   public onCallNowClick() {
+
+
     this.callingStateManager.setUpCall()
   }
 
   public onCallLaterClick() {
     this.callingStateManager.goToSchedule()
-  }
-
-  public getSelectedNumber(): string | undefined {
-    const number = this.numberFormControl.value
-    return number ? `${number.callingCode} ${number.number}` : undefined
   }
 
   public getPolicyLinkHtml(): string {
@@ -96,5 +156,12 @@ export class VerifyNumberComponent {
     }
 
     return `<a href="${ absPolicyUrl }" target="_blank">${ linkText }</a>`
+  }
+
+  private phoneNumberToString(number: PhoneNumber | null): string {
+    if (!number  || !number.callingCode || !number.number) {
+      return ''
+    }
+    return `${number.callingCode} ${number.number}`
   }
 }
