@@ -1,6 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, Optional, Self, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormControl, NgControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, FormControl, NgControl } from '@angular/forms';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/material/form-field';
 import { MatSelect } from '@angular/material/select';
 import { TranslocoService } from '@ngneat/transloco';
@@ -60,17 +61,10 @@ export class PhoneNumberInputComponent implements ControlValueAccessor, MatFormF
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
   public onChange = (_: PhoneNumber | null | undefined) => { };
 
-  private readonly numberValidator: ValidatorFn = (control): ValidationErrors | null => {
-    if (control.value?.length > 0) {
-      return null
-    }
-    return { numberError: "invalid-number" }
-  }
-
   public _countries?: Country[]
   public _numberFormGroup = this.formBuilder.group({
     country: new FormControl<Country | null>(null),
-    number: new FormControl<string | null>(null, { validators: this.numberValidator }),
+    number: new FormControl<string | null>(null),
   }, {
     updateOn: "change",
   })

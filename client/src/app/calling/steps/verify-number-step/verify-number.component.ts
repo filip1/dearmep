@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
 import { VerificationStep } from './verification-step.enum';
 import { PhoneNumber } from 'src/app/model/phone-number.model';
@@ -10,6 +10,7 @@ import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { takeUntil } from 'rxjs';
 import { HttpValidationError, PhoneNumberNotAllowedResponse, PhoneNumberVerificationResponse, SmsCodeVerificationFailedResponse } from 'src/app/api/models';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'dmep-verify-number',
@@ -18,21 +19,6 @@ import { HttpValidationError, PhoneNumberNotAllowedResponse, PhoneNumberVerifica
 })
 export class VerifyNumberComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>()
-
-  private readonly numberValidator: ValidatorFn = (control): ValidationErrors | null => {
-    const number: PhoneNumber | null | undefined = control.value
-    if (number && number.callingCode && number.number) {
-      return null
-    }
-    return { numberError: "invalid-number" }
-  }
-
-  private readonly codeValidator: ValidatorFn = (control): ValidationErrors | null => {
-    if (control.value?.length > 0) {
-      return null
-    }
-    return { numberError: "invalid-code" }
-  }
 
   private currentLanguage?: string
 
@@ -71,7 +57,7 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
   public acceptPolicy = false
 
   public codeFormControl = new FormControl<string | null>(null, {
-    validators: this.codeValidator,
+    validators: [ Validators.required ],
     updateOn: 'change',
   })
 
@@ -94,12 +80,21 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
       }
     }).subscribe({
       next: (response: PhoneNumberVerificationResponse) => {
+        this.numberFormControl.setErrors(null)
         this.validatedPhoneNumber = response.phone_number;
         this.step = VerificationStep.EnterCode
       },
-      error: (err: PhoneNumberNotAllowedResponse | HttpValidationError | unknown) => {
-        // TODO: Show message / update form validation
-        console.error(err)
+      error: (err: HttpErrorResponse | unknown) => {
+        if (err instanceof HttpErrorResponse && err.status === 422) {
+          console.log("invalid number")
+          this.numberFormControl.setErrors({ numberValidationError: true })
+        } else if (err instanceof HttpErrorResponse && err.error.error === 'NUMBER_NOT_ALLOWED') {
+          console.log("number not allowed")
+          this.numberFormControl.setErrors({ numberNotAllowed: true })
+        } else {
+          console.log("other error")
+          this.numberFormControl.setErrors({ numberValidationError: true })
+        }
       }
     })
   }
@@ -119,9 +114,12 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
         // TODO: store jwt
         this.step = VerificationStep.Success
       },
-      error: (err: SmsCodeVerificationFailedResponse | HttpValidationError | unknown) => {
-        // TODO: Show message / update form validation
-        console.error(err)
+      error: (err: HttpErrorResponse | unknown) => {
+        if (err instanceof HttpErrorResponse && (err.status === 400 || err.status === 422)) {
+          this.codeFormControl.setErrors({ invalidCode: true })
+        } else {
+          console.error(err)
+        }
       }
     })
   }

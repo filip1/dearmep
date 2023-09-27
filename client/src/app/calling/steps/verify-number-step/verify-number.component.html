@@ -4,7 +4,7 @@
   <ng-container *ngSwitchCase="StepEnterNumber">
     <p transloco="verification.enterNumber.description" class="enter-number-description description"></p>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" subscriptSizing="fixed">
       <mat-label transloco="verification.enterNumber.numberFieldLabel"></mat-label>
       <dmep-phone-number-input [formControl]="numberFormControl"></dmep-phone-number-input>
     </mat-form-field>
@@ -34,9 +34,10 @@
       <a (click)="onEditNumberClick(); $event.preventDefault()" href="#">{{ 'verification.enterCode.notYourNumber' | transloco }}</a>
     </p>
 
-    <mat-form-field class="enter-code-form-field" appearance="outline" subscriptSizing="dynamic">
+    <mat-form-field class="enter-code-form-field" appearance="outline" subscriptSizing="dynamic" [hideRequiredMarker]="true">
       <mat-label transloco="verification.enterCode.codeFieldLabel"></mat-label>
       <input type="text" matInput [formControl]="codeFormControl">
+      <mat-error *ngIf="codeFormControl.errors" transloco="verification.enterCode.invalidCode"></mat-error>
     </mat-form-field>
 
     <div class="dmep-btn-container">

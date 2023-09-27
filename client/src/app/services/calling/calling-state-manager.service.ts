@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { ApiService } from 'src/app/api/services';
 import { CallingStep } from 'src/app/model/calling-step.enum';
 
 @Injectable({
@@ -7,6 +8,10 @@ import { CallingStep } from 'src/app/model/calling-step.enum';
 })
 export class CallingStateManagerService {
   private readonly step$ = new BehaviorSubject<CallingStep>(CallingStep.Home)
+
+  public constructor(
+    private readonly apiService: ApiService,
+  ) { }
 
   public getStep$() {
     return this.step$.asObservable()
