@@ -81,7 +81,7 @@ export class AppComponent implements OnInit, OnChanges {
       console.error(`DearMEP: Invalid attirbute 'host'. Only absolute URLs are allowed for this option.`)
     }
 
-    this.styleUrl$ = this.assetsBaseUrlService.toAbsoluteUrl$("./styles.css")
+    this.styleUrl$ = this.assetsBaseUrlService.toAbsoluteUrl$("./dear-mep-inner.css")
     this.flagsStyleUrl$ = this.assetsBaseUrlService.toAbsoluteUrl$("./flags.css")
     this.shouldDisplayTalkingPoints$ = this.callingStateManagerService.getStep$().pipe(
       map(step => step !== CallingStep.Home && step !== CallingStep.HomeAuthenticated)
