@@ -5,6 +5,12 @@ Der Fokus liegt darauf, alle erforderlichen Messages zusammenzutragen, damit die
 Es handelt sich hier explizit _nicht_ um eine vollständig ausgearbeitete technische Spezifikation zur Implementierung.
 Allerdings sind auch die meisten technischen Aspekte schon berücksichtigt, z.B. in Fußnoten.
 
+**Achtung – minimal veraltet:**
+Auf Basis dieses Dokumentes wurde eine CSV-Datei mit allen hier enthaltenen Texten verfasst, [`messages.csv`](ivr/messages.csv).
+Diese Datei wurde außerdem um einige wenige zusätzliche Texte erweitert, die hier nicht aufgeführt sind.
+**Maßgeblich ist die CSV-Datei.**
+Mittels [`compile_messages.py`](ivr/compile_messages.py) können außerdem eine abgeleitete CSV-Datei, die zusätzlich die Talking Points aus der `example-config.yaml` enthält, sowie eine Excel-Datei mit dem gleichen Inhalt, erstellt werden.
+
 Um möglichst frei formulieren zu können, wurde dieses Dokument in der Muttersprache des Autors verfasst.
 Es soll noch übersetzt werden, sobald Einigkeit über die Texte besteht.
 
@@ -36,6 +42,8 @@ Zusätzlich zu den Texten in den Kästen brauchen wir als Audio
   * Die Linke im Europäischen Parlament
   * fraktionslos
 
+_Wie oben vermerkt finden sich in der maßgeblichen Datei mit Textfragmenten, [`messages.csv`](ivr/messages.csv), ein paar weitere Texte._
+
 Sprecher\*innen sollten folgende Hinweise beachten:
 
 * Aufnahmen in 44,1 kHz 16 bit oder höher, in mono
@@ -43,7 +51,7 @@ Sprecher\*innen sollten folgende Hinweise beachten:
 * Anlieferung der Dateien in unkomprimierter oder verlustfrei komprimierter Fassung, also z.B. als WAV oder FLAC
 * die einzelnen Fragmente als einzelne Dateien anliefern, aber auch bitte als ungeschnittene Gesamtdatei (falls wir selbst noch Schnittarbeiten vornehmen möchten)
 * Dateien bitte nicht in das Repository committen, da sie zu viel Platz brauchen; ein Nextcloud-Uploadordner kann bei Bedarf gestellt werden
-* **zu vergebende Dateinamen werden in diesem Dokument noch ergänzt**
+* als Dateinamen für die geschnittenen Dateien bitte die „ID“ aus der Liste der Texte (CSV oder Excel) verwenden
 
 ## Hauptmenü
 
