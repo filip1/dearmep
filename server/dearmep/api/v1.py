@@ -269,7 +269,7 @@ def get_suggested_destination(
             dest = query.get_random_destination(
                 session,
                 country=country,
-                purpose=DestinationSelectionLogEvent.WEB_SUGGESTED,
+                event=DestinationSelectionLogEvent.WEB_SUGGESTED,
             )
         except query.NotFound as e:
             raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))

@@ -89,7 +89,7 @@ def get_random_destination(
     session: Session,
     *,
     country: Optional[CountryCode] = None,
-    purpose: Optional[DestinationSelectionLogEvent] = None,
+    event: Optional[DestinationSelectionLogEvent] = None,
 ) -> Destination:
     stmt = select(Destination)
     if country:
@@ -98,8 +98,8 @@ def get_random_destination(
     if not dest:
         matching = " matching query" if country else ""
         raise NotFound(f"no destination{matching} found")
-    if purpose:
-        log_destination_selection(session, dest, purpose=purpose)
+    if event:
+        log_destination_selection(session, dest, event=event)
     return dest
 
 
@@ -107,11 +107,11 @@ def log_destination_selection(
     session: Session,
     destination: Destination,
     *,
-    purpose: DestinationSelectionLogEvent,
+    event: DestinationSelectionLogEvent,
 ):
     session.add(DestinationSelectionLog(
         destination=destination,
-        event=purpose,
+        event=event,
     ))
 
 
