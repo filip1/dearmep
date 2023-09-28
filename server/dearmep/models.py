@@ -30,6 +30,11 @@ class Score(ConstrainedFloat):
     le = 1.0
 
 
+# TODO: Replace with an actual class that can handle hashed/peppered phone
+# numbers, provide additional information about them, etc.
+UserPhone = str
+
+
 frontend_strings_field = Field(
     description="A key-value mapping of translation keys to translation "
     "template strings. The template strings can contain placeholders, but "

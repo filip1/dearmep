@@ -8,7 +8,7 @@ from sqlmodel import Column, Enum, Field, Relationship, SQLModel, TIMESTAMP, \
     and_, case, or_, func, text
 
 from ..config import Config, ConfigNotLoaded
-from ..models import CountryCode, Score
+from ..models import CountryCode, Score, UserPhone
 
 
 class _SchemaExtra(TypedDict):
@@ -410,7 +410,7 @@ class DestinationSelectionLogBase(SQLModel):
         foreign_key="destinations.id",
         description="ID of the destination that has been selected.",
     )
-    user_id: Optional[str] = Field(
+    user_id: Optional[UserPhone] = Field(
         index=True,
         description="ID (i.e. hashed phone number) of User that relates to "
         "this log, if any.",
