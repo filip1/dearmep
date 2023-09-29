@@ -1,7 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, NgControl } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/material/form-field';
 import { MatSelect } from '@angular/material/select';
 import { TranslocoService } from '@ngneat/transloco';
@@ -181,8 +180,8 @@ export class PhoneNumberInputComponent implements ControlValueAccessor, MatFormF
     return a?.callingCode === b?.callingCode
   }
 
-  get errorState(): boolean {
-    return this._numberFormGroup.invalid && this.touched;
+  get errorState() {
+    return this.ngControl.errors !== null && !!this.ngControl.touched;
   }
 
   get empty() {

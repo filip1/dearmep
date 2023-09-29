@@ -7,6 +7,9 @@
     <mat-form-field appearance="outline" subscriptSizing="fixed">
       <mat-label transloco="verification.enterNumber.numberFieldLabel"></mat-label>
       <dmep-phone-number-input [formControl]="numberFormControl"></dmep-phone-number-input>
+      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isEmptyError']" transloco="verification.enterNumber.numberIsRequired"></mat-error>
+      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isInvalidError']" transloco="verification.enterNumber.invalidNumber"></mat-error>
+      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isNotAllowedError']" transloco="verification.enterNumber.numberNotAllowed"></mat-error>
     </mat-form-field>
 
     <section class="dmep-policy-section">
@@ -28,7 +31,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="StepEnterCode">
 
-    <p class="enter-code-description">{{ 'verification.enterCode.description' | transloco: { number: validatedPhoneNumber } }}</p>
+    <p class="enter-code-description">{{ 'verification.enterCode.description' | transloco: { number: serverValidatedPhoneNumber } }}</p>
 
     <p class="not-your-number description">
       <a (click)="onEditNumberClick(); $event.preventDefault()" href="#">{{ 'verification.enterCode.notYourNumber' | transloco }}</a>
@@ -54,7 +57,7 @@
       <mat-icon class="success-icon" [inline]="false">check_circle</mat-icon>
     </div>
 
-    <p class="success-description">{{ 'verification.success.message' | transloco: { number: validatedPhoneNumber } }}</p>
+    <p class="success-description">{{ 'verification.success.message' | transloco: { number: serverValidatedPhoneNumber } }}</p>
 
   </ng-container>
 </ng-container>
