@@ -18,7 +18,7 @@ export class CallingComponent {
   public readonly step$
 
   @Input()
-  public disableScheduling: boolean = false
+  public disableScheduling = false
 
   constructor(
     private readonly callingStateManager: CallingStateManagerService,

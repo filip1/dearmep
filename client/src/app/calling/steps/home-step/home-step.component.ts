@@ -12,7 +12,7 @@ export class HomeStepComponent {
   public descriptions$
 
   @Input()
-  public disableScheduling: boolean = false
+  public disableScheduling = false
 
   constructor(
     private readonly callingStateManager: CallingStateManagerService,
