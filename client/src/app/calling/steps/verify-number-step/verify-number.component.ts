@@ -12,6 +12,7 @@ import { takeUntil } from 'rxjs';
 import { PhoneNumberVerificationResponse } from 'src/app/api/models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PhoneNumberValidationErrors } from 'src/app/components/phone-number-input/phone-number-validation-errors';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
   selector: 'dmep-verify-number',
@@ -63,6 +64,7 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
     private readonly baseUrlService: BaseUrlService,
     private readonly apiService: ApiService,
     private readonly l10nService: L10nService,
+    private readonly authenticationService: AuthenticationService,
   ) {
   }
 
@@ -130,8 +132,7 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
       }
     }).subscribe({
       next: (response) => {
-        console.log(response)
-        // TODO: store jwt
+        this.authenticationService.setToken(response)
         this.step = VerificationStep.Success
       },
       error: (err: HttpErrorResponse | unknown) => {
@@ -145,8 +146,6 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
   }
 
   public onCallNowClick() {
-
-
     this.callingStateManager.setUpCall()
   }
 
