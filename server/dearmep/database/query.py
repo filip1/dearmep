@@ -6,9 +6,10 @@ from sqlalchemy.exc import NoResultFound
 from sqlmodel import case
 
 from ..models import CountryCode, DestinationSearchGroup, \
-    DestinationSearchResult, SearchResult
+    DestinationSearchResult, SearchResult, UserPhone
 from .connection import Session, select
-from .models import Blob, Destination, DestinationID
+from .models import Blob, Destination, DestinationID, \
+    DestinationSelectionLog, DestinationSelectionLogEvent
 
 
 class NotFound(Exception):
@@ -88,6 +89,9 @@ def get_random_destination(
     session: Session,
     *,
     country: Optional[CountryCode] = None,
+    event: Optional[DestinationSelectionLogEvent] = None,
+    user_id: Optional[UserPhone] = None,
+    call_id: Optional[str] = None,
 ) -> Destination:
     stmt = select(Destination)
     if country:
@@ -96,7 +100,31 @@ def get_random_destination(
     if not dest:
         matching = " matching query" if country else ""
         raise NotFound(f"no destination{matching} found")
+    if event:
+        log_destination_selection(
+            session,
+            dest,
+            event=event,
+            user_id=user_id,
+            call_id=call_id,
+        )
     return dest
+
+
+def log_destination_selection(
+    session: Session,
+    destination: Destination,
+    *,
+    event: DestinationSelectionLogEvent,
+    user_id: Optional[UserPhone] = None,
+    call_id: Optional[str] = None,
+):
+    session.add(DestinationSelectionLog(
+        destination=destination,
+        event=event,
+        user_id=user_id,
+        call_id=call_id,
+    ))
 
 
 def to_destination_search_result(
