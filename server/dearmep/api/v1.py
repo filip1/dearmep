@@ -103,6 +103,22 @@ def browser_cache_headers(ttl: timedelta,
     return result
 
 
+def not_modified(request: Request, etag: str, cache_duration: timedelta) \
+        -> Optional[Response]:
+    """
+    Create a HTTP 304 Not-Modified response if the `etag` matches the
+    `If-None-Match` parameter in the `Request`
+    """
+
+    # see https://web.dev/http-cache/#unversioned-urls
+    if header_etag := request.headers.get("If-None-Match"):
+        if header_etag.strip('"') == etag:
+            return Response(status_code=304,
+                            headers=browser_cache_headers(cache_duration,
+                                                          etag))
+    return None
+
+
 router = APIRouter()
 
 
@@ -113,6 +129,7 @@ router = APIRouter()
     dependencies=(computational_rate_limit,),
 )
 def get_localization(
+    request: Request,
     response: Response,
     frontend_strings: bool = Query(
         False,
@@ -148,7 +165,17 @@ def get_localization(
         recommended_lang, str(location.country)
     ).inc()
 
-    response.headers.update(browser_cache_headers(timedelta(days=1)))
+    if frontend_strings:
+        strings = all_frontend_strings(recommended_lang)
+        etag = str(id(strings))
+        cache_duration = timedelta(days=1)
+        if nm_response := not_modified(request, etag, cache_duration):
+            return nm_response
+        # only send a cache header if we actually send the frontend strings
+        response.headers.update(browser_cache_headers(cache_duration, etag))
+    else:
+        strings = None
+
     return LocalizationResponse(
         language=LanguageDetection(
             available=available_languages,
@@ -156,8 +183,7 @@ def get_localization(
             user_preferences=preferences,
         ),
         location=location,
-        frontend_strings=all_frontend_strings(recommended_lang)
-        if frontend_strings else None,
+        frontend_strings=strings,
     )
 
 
@@ -169,6 +195,7 @@ def get_localization(
 )
 def get_frontend_strings(
     language: Language,
+    request: Request,
     response: Response,
 ):
     """
@@ -178,9 +205,16 @@ def get_frontend_strings(
     in the config's `frontend_strings` section are guaranteed to be available
     at least in the default language.
     """
-    response.headers.update(browser_cache_headers(timedelta(days=1)))
+    strings = all_frontend_strings(language)
+    cache_duration = timedelta(days=1)
+    etag = str(id(strings))
+
+    if not_modified_response := not_modified(request, etag, cache_duration):
+        return not_modified_response
+
+    response.headers.update(browser_cache_headers(timedelta(days=1), etag))
     return FrontendStringsResponse(
-        frontend_strings=all_frontend_strings(language),
+        frontend_strings=strings,
     )
 
 
@@ -211,16 +245,13 @@ def get_blob_contents(
         except query.NotFound as e:
             raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
 
-    # see https://web.dev/http-cache/#unversioned-urls
-    if etag := request.headers.get("If-None-Match"):
-        if etag == str(blob.etag):
-            return Response(status_code=304,
-                            headers=browser_cache_headers(cache_duration,
-                                                          etag))
+    etag = str(blob.etag)
+    if not_modified_response := not_modified(request, etag, cache_duration):
+        return not_modified_response
     return Response(blob.data,
                     media_type=blob.mime_type,
                     headers=browser_cache_headers(cache_duration,
-                                                  str(blob.etag)))
+                                                  etag))
 
 
 @router.get(
