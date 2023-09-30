@@ -13,8 +13,6 @@ from pydantic import BaseModel, ConstrainedFloat, ConstrainedInt, \
     ConstrainedStr, Field
 from pydantic.generics import GenericModel
 
-from .config import Config
-
 
 T = TypeVar("T")
 
@@ -181,6 +179,8 @@ class UserPhone(str):
         It is up to the caller to bring this number into a canonical format
         before computing the hash, e.g. using `UserPhone.format_number()`.
         """
+        from .config import Config
+
         hash = sha256(
             f"{Config.get().authentication.secrets.pepper}{number}".encode(),
         )
@@ -240,6 +240,8 @@ class UserPhone(str):
         only then can additional checks be performed (e.g. whether it is a
         mobile number, whether it might actually exist, etc.).
         """
+        from .config import Config
+
         config = Config.get().telephony
         reasons: Set[PhoneRejectReason] = set()
 
