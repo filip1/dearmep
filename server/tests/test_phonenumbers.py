@@ -60,6 +60,8 @@ def test_original_number_is_lost(fastapi_app):
     ("+1-202-501-4444", {Reason.BLOCKED, Reason.DISALLOWED_COUNTRY}),
     # hash-blocked in example config
     ("+491701111111", {Reason.BLOCKED}),
+    # hash-approved in example config
+    ("+496215555555", set()),
 ))
 def test_number_allowed(number: str, reasons: Set[Reason], fastapi_app):
     up = UserPhone(number)

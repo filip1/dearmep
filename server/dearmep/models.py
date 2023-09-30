@@ -241,7 +241,11 @@ class UserPhone(str):
         mobile number, whether it might actually exist, etc.).
         """
         config = Config.get().telephony
-        reasons = set()
+        reasons: Set[PhoneRejectReason] = set()
+
+        # Allow if it's been manually approved.
+        if self.matches_filter(config.approved_numbers):
+            return reasons
 
         # Fail if it's been manually blocked.
         if self.matches_filter(config.blocked_numbers):
@@ -276,6 +280,7 @@ class UserPhone(str):
     def matches_filter(self, filter: List[str]) -> bool:
         orig = self.format_number(self.original_number) \
             if self.original_number else None
+
         for pattern in filter:
             if self.hash == pattern:
                 return True
@@ -292,6 +297,8 @@ class UserPhone(str):
                 pass
             if prefix and orig.startswith(self.format_number(prefix)):
                 return True
+
+        return False
 
 
 frontend_strings_field = Field(

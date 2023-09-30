@@ -190,6 +190,17 @@ telephony:
     # is recommended, too.
     - "7p+gxtb2W3Fgw7cAm/fmHMcb8GogN2D8m4B+Xc1ZRTw="
 
+  # A list of numbers/prefixes to be explicitly allowed, even if they are not
+  # from an allowed country, not of an allowed type or even match an entry on
+  # the `blocked_numbers` list. In other words, this list has precedence over
+  # everything else.
+  approved_numbers:
+    # As in `blocked_numbers`, you can provide a E.164 prefix. All numbers with
+    # a canonical form that starts like this will be allowed.
+    - "+491751234567"  # would've been allowed anyway as it's a mobile number
+    # And, as before, you can also use a hash to specify a singular number.
+    - "bxsT9xkkRFk1Kl4sO8pGl2nCgYuDManlCzKkRGTGE1U="
+
   # Verifying phone numbers by sending an SMS to that number.
   sms_verification:
 
