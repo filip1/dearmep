@@ -55,8 +55,11 @@ def test_original_number_is_lost(fastapi_app):
     ("+49621123456", {Reason.DISALLOWED_TYPE}),  # landline
     ("+499001774442", {Reason.DISALLOWED_TYPE}),  # service number
     ("+491751234567", set()),
-    ("+1-202-501-4444", {Reason.DISALLOWED_COUNTRY}),  # country not allowed
     ("+43 680 1234567", set()),
+    # from disallowed country, but also prefix-blocked in example config
+    ("+1-202-501-4444", {Reason.BLOCKED, Reason.DISALLOWED_COUNTRY}),
+    # hash-blocked in example config
+    ("+491701111111", {Reason.BLOCKED}),
 ))
 def test_number_allowed(number: str, reasons: Set[Reason], fastapi_app):
     up = UserPhone(number)

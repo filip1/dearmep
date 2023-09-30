@@ -173,6 +173,23 @@ telephony:
     - 48   # Poland
     - 49   # Germany
 
+  # A list of numbers/prefixes to be explicitly blocked, even if they are from
+  # an allowed country and an allowed type.
+  blocked_numbers:
+    # By providing an internationally formatted phone number, you are blocking
+    # all numbers that start with these digits. The number is converted to
+    # E.164 format, removing characters like `-`, `(`, `)`, `.`, ` `. Instead
+    # of listing single numbers here, you can also provide whole prefixes like
+    # `+49175`. Note that you should wrap the number in quotes, else YAML could
+    # iterpret it as an integer.
+    - "+1 202-501-4444"
+    # Alternatively, you can block the hash of a number as it appears in the
+    # database. This is useful if you identified someone abusing the system,
+    # but you do not know their phone number (since the database stores it in
+    # hashed format only for privacy reasons). Wrapping these hashes in quotes
+    # is recommended, too.
+    - "7p+gxtb2W3Fgw7cAm/fmHMcb8GogN2D8m4B+Xc1ZRTw="
+
   # Verifying phone numbers by sending an SMS to that number.
   sms_verification:
 

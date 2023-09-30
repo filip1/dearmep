@@ -191,6 +191,7 @@ class L10nConfig(BaseModel):
 
 class TelephonyConfig(BaseModel):
     allowed_calling_codes: List[int]
+    blocked_numbers: List[str]
 
 
 class Config(BaseModel):

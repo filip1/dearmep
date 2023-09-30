@@ -51,10 +51,13 @@ class PhoneRejectReason(str, enum.Enum):
       enabled as being one of the allowed ones.
     * `DISALLOWED_TYPE`: The number is of a type that we do not support, for
       example a landline, pager, or paid service number.
+    * `BLOCKED`: This number or some prefix of it has been manually blocked by
+      the administrator.
     """
     INVALID_PATTERN = "INVALID_PATTERN"
     DISALLOWED_COUNTRY = "DISALLOWED_COUNTRY"
     DISALLOWED_TYPE = "DISALLOWED_TYPE"
+    BLOCKED = "BLOCKED"
 
 
 class UserPhone(str):
@@ -240,6 +243,10 @@ class UserPhone(str):
         config = Config.get().telephony
         reasons = set()
 
+        # Fail if it's been manually blocked.
+        if self.matches_filter(config.blocked_numbers):
+            reasons.add(PhoneRejectReason.BLOCKED)
+
         # Fail if it's not in our list of allowed countries.
         if self.calling_code not in config.allowed_calling_codes:
             reasons.add(PhoneRejectReason.DISALLOWED_COUNTRY)
@@ -265,6 +272,26 @@ class UserPhone(str):
         See that method for usage hints.
         """
         return len(self.check_allowed()) == 0
+
+    def matches_filter(self, filter: List[str]) -> bool:
+        orig = self.format_number(self.original_number) \
+            if self.original_number else None
+        for pattern in filter:
+            if self.hash == pattern:
+                return True
+
+            # Following checks require original phone number.
+            if not orig:
+                continue
+
+            # If pattern is a phone number prefix, convert it to E.164 first.
+            prefix = None
+            try:
+                prefix = self.parse_number(pattern)
+            except ValueError:
+                pass
+            if prefix and orig.startswith(self.format_number(prefix)):
+                return True
 
 
 frontend_strings_field = Field(
