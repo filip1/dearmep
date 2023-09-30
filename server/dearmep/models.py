@@ -88,9 +88,14 @@ class UserPhone(str):
         class Config:
             allow_mutation = False
             allow_population_by_field_name = True
+            arbitrary_types_allowed = True  # for original_number
+
         version: Literal[1] = Field(1, alias="v")
         hash: str = Field(alias="h")
         calling_code: int = Field(alias="c")
+        original_number: Optional[phonenumbers.PhoneNumber] = Field(
+            exclude=True,
+        )
 
     NUMBER_REGEX = re.compile(r"^[+0-9./ ()-]+$")
 
@@ -115,6 +120,7 @@ class UserPhone(str):
             struct = cls.Structured(
                 hash=cls.compute_hash(cls.format_number(number)),
                 calling_code=number.country_code,
+                original_number=number,
             )
 
         value = encode_canonical_json(struct.dict(by_alias=True)).decode()
@@ -189,6 +195,17 @@ class UserPhone(str):
     def hash(self) -> str:
         """Return the peppered hash of the original phone number."""
         return self.structured.hash
+
+    @property
+    def original_number(self) -> Optional[phonenumbers.PhoneNumber]:
+        """Return the original phone number as parsed.
+
+        The original phone number is only available if this instance has been
+        created by supplying an unhashed phone number. If it has instead been
+        created from a JSON representation, the original number is no longer
+        known due to the hashing.
+        """
+        return self.structured.original_number
 
 
 frontend_strings_field = Field(
