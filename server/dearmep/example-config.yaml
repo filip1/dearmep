@@ -126,6 +126,13 @@ authentication:
     # days or even months.
     authentication_timeout: 86400
 
+  # Various secrets used by the server. Customize these for your installation,
+  # and keep them hidden from the public!
+  secrets:
+
+    # Application-wide pepper value for hashes.
+    pepper: CHANGE THIS
+
 
 # Options regarding phone calls and SMS.
 telephony:

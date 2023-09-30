@@ -56,6 +56,14 @@ class APIConfig(BaseModel):
     rate_limits: APIRateLimitConfig
 
 
+class SecretsConfig(BaseModel):
+    pepper: str
+
+
+class AuthenticationConfig(BaseModel):
+    secrets: SecretsConfig
+
+
 class ContactTimespanFilterTimespan(BaseModel):
     start: date
     end: date
@@ -184,6 +192,7 @@ class L10nConfig(BaseModel):
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""
     api: APIConfig
+    authentication: AuthenticationConfig
     contact_timespan_filter: Optional[ContactTimespanFilterConfig]
     database: DatabaseConfig
     l10n: L10nConfig
