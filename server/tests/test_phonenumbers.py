@@ -1,8 +1,8 @@
-from typing import Tuple
+from typing import Set, Tuple
 
 import pytest
 
-from dearmep.models import UserPhone
+from dearmep.models import PhoneRejectReason as Reason, UserPhone
 
 
 @pytest.mark.parametrize("number", (
@@ -28,6 +28,7 @@ def test_invalid_format(number: str):
 def test_valid_format(number: str, e164: str, hash: str, fastapi_app):
     up = UserPhone(number)
     assert up.hash == hash
+    assert up.original_number is not None
     assert up.format_number(up.original_number) == e164
 
 
@@ -43,6 +44,21 @@ def test_country(number: str, prefix: int, countries: Tuple[str], fastapi_app):
 
 def test_original_number_is_lost(fastapi_app):
     up = UserPhone("+49 (0621) 1234-56")
+    assert up.original_number is not None
     assert UserPhone.format_number(up.original_number) == "+49621123456"
     from_json = UserPhone(up)
     assert from_json.original_number is None
+
+
+@pytest.mark.parametrize("number,reasons", (
+    ("+4917567", {Reason.INVALID_PATTERN}),  # too short
+    ("+49621123456", {Reason.DISALLOWED_TYPE}),  # landline
+    ("+499001774442", {Reason.DISALLOWED_TYPE}),  # service number
+    ("+491751234567", set()),
+    ("+1-202-501-4444", {Reason.DISALLOWED_COUNTRY}),  # country not allowed
+    ("+43 680 1234567", set()),
+))
+def test_number_allowed(number: str, reasons: Set[Reason], fastapi_app):
+    up = UserPhone(number)
+    assert up.check_allowed() == reasons
+    assert not up.is_allowed() if reasons else up.is_allowed()

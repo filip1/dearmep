@@ -189,6 +189,10 @@ class L10nConfig(BaseModel):
         return v
 
 
+class TelephonyConfig(BaseModel):
+    allowed_calling_codes: List[int]
+
+
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""
     api: APIConfig
@@ -196,6 +200,7 @@ class Config(BaseModel):
     contact_timespan_filter: Optional[ContactTimespanFilterConfig]
     database: DatabaseConfig
     l10n: L10nConfig
+    telephony: TelephonyConfig
 
     _instance: ClassVar[Optional["Config"]] = None
     _patch: ClassVar[Optional[Dict]] = None

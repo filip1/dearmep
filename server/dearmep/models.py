@@ -1,9 +1,11 @@
 from __future__ import annotations
 from base64 import b64encode
+import enum
 from hashlib import sha256
 import json
 import re
-from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar
+from typing import Any, Dict, Generic, List, Literal, Optional, Set, Tuple, \
+    TypeVar
 
 from canonicaljson import encode_canonical_json
 import phonenumbers
@@ -37,6 +39,22 @@ class Score(ConstrainedFloat):
     """A number between 0 and 1, inclusive."""
     ge = 0.0
     le = 1.0
+
+
+class PhoneRejectReason(str, enum.Enum):
+    """Reasons why a phone number is rejected by the system.
+
+    * `INVALID_PATTERN`: It does not match the validation rules for a number of
+      that country. For example, there might be too many or too few digits for
+      the given area code.
+    * `DISALLOWED_COUNTRY`: The number belongs to a country that has not been
+      enabled as being one of the allowed ones.
+    * `DISALLOWED_TYPE`: The number is of a type that we do not support, for
+      example a landline, pager, or paid service number.
+    """
+    INVALID_PATTERN = "INVALID_PATTERN"
+    DISALLOWED_COUNTRY = "DISALLOWED_COUNTRY"
+    DISALLOWED_TYPE = "DISALLOWED_TYPE"
 
 
 class UserPhone(str):
@@ -97,12 +115,16 @@ class UserPhone(str):
             exclude=True,
         )
 
+    ALLOWED_TYPES = {
+        phonenumbers.PhoneNumberType.FIXED_LINE_OR_MOBILE,
+        phonenumbers.PhoneNumberType.MOBILE,
+    }
     NUMBER_REGEX = re.compile(r"^[+0-9./ ()-]+$")
 
     country_codes: Tuple[CountryCode, ...]
     structured: Structured
 
-    def __new__(cls, value):
+    def __new__(cls, value) -> UserPhone:
         # Ensure that we're being initialized from a string.
         if not isinstance(value, str):
             value = str(value)
@@ -206,6 +228,43 @@ class UserPhone(str):
         known due to the hashing.
         """
         return self.structured.original_number
+
+    def check_allowed(self) -> Set[PhoneRejectReason]:
+        """Return reasons why this phone number may not use the application.
+
+        Note that this method is best used on a `UserPhone` instance created
+        from an unhashed phone number, not from the JSON representation, since
+        only then can additional checks be performed (e.g. whether it is a
+        mobile number, whether it might actually exist, etc.).
+        """
+        config = Config.get().telephony
+        reasons = set()
+
+        # Fail if it's not in our list of allowed countries.
+        if self.calling_code not in config.allowed_calling_codes:
+            reasons.add(PhoneRejectReason.DISALLOWED_COUNTRY)
+
+        # Checks that we can only do if the original number is available.
+        if number := self.original_number:
+            # Fail if it's an invalid number.
+            if not phonenumbers.is_valid_number(number):
+                reasons.add(PhoneRejectReason.INVALID_PATTERN)
+            # Else check the type of the number.
+            else:
+                type = phonenumbers.number_type(number)
+                if type not in self.ALLOWED_TYPES:
+                    reasons.add(PhoneRejectReason.DISALLOWED_TYPE)
+
+        return reasons
+
+    def is_allowed(self) -> bool:
+        """Check whether this phone number may use the application.
+
+        This is a convenience method that checks whether `check_allowed()`
+        returned no reasons for disallowing the phone number, i.e. is empty.
+        See that method for usage hints.
+        """
+        return len(self.check_allowed()) == 0
 
 
 frontend_strings_field = Field(

@@ -137,6 +137,42 @@ authentication:
 # Options regarding phone calls and SMS.
 telephony:
 
+  # Calling codes that we allow Users to have. This corresponds to the "country
+  # code" part of an international phone number. For example, the number
+  # +491751234567 has a country code of 49. Note that these are not simply
+  # treated as being prefixes of the phone number; we actually know the codes
+  # of all of the world's countries and extract these. Therefore, a value of 4
+  # 4 will not match all country codes that start with 4, but actually match no
+  # country at all, because none of them has a country code of 4.
+  allowed_calling_codes:
+    - 30   # Greece
+    - 31   # Netherlands
+    - 32   # Belgium
+    - 33   # France
+    - 34   # Spain
+    - 351  # Portugal
+    - 352  # Luxembourg
+    - 353  # Republic of Ireland
+    - 356  # Malta
+    - 357  # Cyprus
+    - 358  # Finland
+    - 359  # Bulgaria
+    - 36   # Hungary
+    - 370  # Lithuania
+    - 371  # Latvia
+    - 372  # Estonia
+    - 385  # Croatia
+    - 386  # Slovenia
+    - 39   # Italy
+    - 40   # Romania
+    - 420  # Czech Republic
+    - 421  # Slovakia
+    - 43   # Austria
+    - 45   # Denmark
+    - 46   # Sweden
+    - 48   # Poland
+    - 49   # Germany
+
   # Verifying phone numbers by sending an SMS to that number.
   sms_verification:
 
