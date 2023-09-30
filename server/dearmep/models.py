@@ -280,6 +280,16 @@ class UserPhone(str):
         return len(self.check_allowed()) == 0
 
     def matches_filter(self, filter: List[str]) -> bool:
+        """Check whether this phone number matches an entry in the list.
+
+        List items may either be raw hashes (not the whole JSON), or a phone
+        number prefix like `+49123`. Using a whole number instead of just a
+        prefix is fine, too. Phone number entries in the list will be
+        normalized to E.164, it's not a simple string comparison.
+
+        However, this instance can only check itself against prefixes if its
+        own `original_number` is available. Hash matching will always work.
+        """
         orig = self.format_number(self.original_number) \
             if self.original_number else None
 
