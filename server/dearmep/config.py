@@ -46,6 +46,7 @@ class CorsConfig(BaseModel):
 class APIRateLimitConfig(BaseModel):
     simple: IPRateLimits
     computational: IPRateLimits
+    sms: IPRateLimits
 
 
 class APIConfig(BaseModel):

@@ -106,6 +106,13 @@ api:
       small_block_limit: 100 per minute
       large_block_limit: 300 per minute
 
+    # Requests that send SMS messages. This is basically just the phone number
+    # verification.
+    sms:
+      ip_limit: 3 per second, 25 per 8 hours
+      small_block_limit: 100 per 8 hours
+      large_block_limit: 300 per 8 hours
+
 
 # User authentication.
 authentication:
@@ -215,13 +222,6 @@ telephony:
     # It cannot be used again before being manually unlocked by an admin. This
     # is to prevent spamming a victim with codes, incurring costs.
     max_unused: 3
-
-    # How many verifications may be requested (possibly for different phone
-    # numbers, think call party behind a NAT) per IP address?
-    per_ip_limit: 3 per second, 10 per 6 hours
-
-    # How many SMS messages may the system send overall?
-    send_limit: 5 per second, 100 per hour
 
 
 # Localization options.

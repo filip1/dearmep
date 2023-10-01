@@ -45,6 +45,7 @@ rate_limit_response: Dict[int, Dict[str, Any]] = {
 
 simple_rate_limit = Depends(Limit("simple"))
 computational_rate_limit = Depends(Limit("computational"))
+sms_rate_limit = Depends(Limit("sms"))
 
 
 BlobURLDep = Callable[[Optional[Blob]], Optional[str]]
@@ -289,9 +290,10 @@ def get_suggested_destination(
 
 @router.post(
     "/number-verification/request", operation_id="requestNumberVerification",
-    # TODO: rate limit & rate limit response
+    responses=rate_limit_response,  # type: ignore[arg-type]
     # TODO: error response
     response_model=PhoneNumberVerificationResponse,
+    dependencies=(sms_rate_limit,),
 )
 def request_number_verification(
     request: PhoneNumberVerificationRequest,
@@ -320,9 +322,10 @@ def request_number_verification(
 
 @router.post(
     "/number-verification/verify", operation_id="verifyNumber",
-    # TODO: rate limit & rate limit response
+    responses=rate_limit_response,  # type: ignore[arg-type]
     # TODO: error response
     response_model=JWTResponse,
+    dependencies=(simple_rate_limit,),
 )
 def verify_number(
     request: SMSCodeVerificationRequest,
