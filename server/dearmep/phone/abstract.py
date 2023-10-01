@@ -18,8 +18,8 @@ class AbstractPhoneService(metaclass=ABCMeta):
         pass
 
 
-def get_phone_service(config: Config) -> AbstractPhoneService:
-    if config.telephony.dry_run:
+def get_phone_service() -> AbstractPhoneService:
+    if Config.get().telephony.dry_run:
         from .developer_phone import DeveloperPhoneService
         return DeveloperPhoneService()
     else:

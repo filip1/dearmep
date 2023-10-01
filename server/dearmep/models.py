@@ -13,13 +13,8 @@ from pydantic import BaseModel, ConstrainedFloat, ConstrainedInt, \
     ConstrainedStr, Field
 from pydantic.generics import GenericModel
 
-from .config import Language
-
 
 T = TypeVar("T")
-
-HashedPhoneNumber = str  # TODO: Use https://pypi.org/project/phonenumbers/
-PhoneNumber = str
 
 MAX_SEARCH_RESULT_LIMIT = 20
 
@@ -29,6 +24,17 @@ class CountryCode(ConstrainedStr):
     min_length = 2
     max_length = 3
     to_upper = True
+
+
+class Language(ConstrainedStr):
+    regex = re.compile(r"^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$")
+
+
+class LanguageMixin(BaseModel):
+    language: Language = Field(
+        description="The language to use for interactions with the User.",
+        example="de",
+    )
 
 
 class SearchResultLimit(ConstrainedInt):
@@ -41,6 +47,26 @@ class Score(ConstrainedFloat):
     """A number between 0 and 1, inclusive."""
     ge = 0.0
     le = 1.0
+
+
+INPUT_NUMBER_REGEX = re.compile(r"^[+0-9./ ()-]+$")
+
+
+class InputPhoneNumber(ConstrainedStr):
+    """An international phone number, as input by a User.
+
+    This class is somewhat lenient regarding the format it accepts, but still
+    strict enough to allow converting the number into a (canonicalized, E.164)
+    `PhoneNumber`.
+    """
+    max_length = 32  # should allow enough superfluous characters
+    regex = INPUT_NUMBER_REGEX
+
+
+class PhoneNumber(ConstrainedStr):
+    """An E.164-canonicalized international phone number."""
+    max_length = 16
+    regex = re.compile(r"^\+[1-9][0-9]{1,14}$")
 
 
 class PhoneRejectReason(str, enum.Enum):
@@ -124,7 +150,6 @@ class UserPhone(str):
         phonenumbers.PhoneNumberType.FIXED_LINE_OR_MOBILE,
         phonenumbers.PhoneNumberType.MOBILE,
     }
-    NUMBER_REGEX = re.compile(r"^[+0-9./ ()-]+$")
 
     country_codes: Tuple[CountryCode, ...]
     structured: Structured
@@ -172,6 +197,9 @@ class UserPhone(str):
         # All other things are not equal to us.
         return False
 
+    # Needs to be set explicitly since we define __eq__.
+    __hash__ = str.__hash__
+
     def __setattr__(self, __name: str, __value: Any) -> None:
         raise TypeError(
             "UserPhone is immutable and does not allow item assignment")
@@ -191,14 +219,14 @@ class UserPhone(str):
         return b64encode(hash.digest()).decode()
 
     @staticmethod
-    def format_number(number: phonenumbers.PhoneNumber) -> str:
+    def format_number(number: phonenumbers.PhoneNumber) -> PhoneNumber:
         """Format a phone number into canonical E.164 form.
 
         You should use `UserPhone.parse_number()` to convert a phone number
-        string into a PhoneNumber object.
+        string into a `phonenumbers.PhoneNumber` object.
         """
-        return phonenumbers.format_number(
-            number, phonenumbers.PhoneNumberFormat.E164)
+        return PhoneNumber(phonenumbers.format_number(
+            number, phonenumbers.PhoneNumberFormat.E164))
 
     @classmethod
     def parse_number(cls, number: str) -> phonenumbers.PhoneNumber:
@@ -207,7 +235,7 @@ class UserPhone(str):
         As `phonenumbers.parse()` is quite lenient, this method employs some
         additional checks.
         """
-        if not cls.NUMBER_REGEX.fullmatch(number):
+        if not INPUT_NUMBER_REGEX.fullmatch(number):
             raise ValueError(f"'{number}' does not look like a phone number")
         try:
             parsed = phonenumbers.parse(number, region=None)
@@ -461,18 +489,60 @@ class SearchResult(GenericModel, Generic[T]):
     )
 
 
-class PhoneNumberVerificationRequest(BaseModel):
-    phone_number: PhoneNumber
-    language: Language
-    accepted_dpp: Literal[True]
+class PhoneNumberVerificationRequest(LanguageMixin):
+    phone_number: InputPhoneNumber = Field(
+        description="The User’s phone number. Some additional characters like "
+        "spaces, braces, dashes, slashes and periods are allowed and will be "
+        "ignored.",
+        example="+49 175 1234567",
+    )
+    accepted_dpp: Literal[True] = Field(
+        title="Accepted DPP",
+        description="Whether the User has accepted the data protection "
+        "policy. Must be `true` for the request to succeed.",
+    )
+
+
+class PhoneNumberVerificationResponse(BaseModel):
+    phone_number: PhoneNumber = Field(
+        description="The canocial form of the phone number that has been "
+        "input. Should be used for display purposes in the frontend.",
+        example="+491751234567",
+    )
+
+
+class VerificationCode(ConstrainedStr):
+    min_length = 6
+    max_length = 6
 
 
 class SMSCodeVerificationRequest(BaseModel):
     phone_number: PhoneNumber
-    code: str
+    code: VerificationCode
 
 
-def hash_string(text: str, salt: str) -> str:
-    hasher = sha256()
-    hasher.update(bytes(f"{text}{salt}", "utf-8"))
-    return hasher.hexdigest()
+class SMSCodeVerificationFailedResponse(BaseModel):
+    error: Literal["CODE_VERIFICATION_FAILED"] = Field(
+        "CODE_VERIFICATION_FAILED",
+        description="Either the code did not match the one from the challenge "
+        "SMS message, or there is no challenge running for the supplied phone "
+        "number at all. (For security reasons, it’s not disclosed which one "
+        "of the reasons actually applies.)",
+    )
+
+
+class JWTResponse(BaseModel):
+    access_token: str = Field(
+        description="The JWT that proves ownership over a specific phone "
+        "number. Clients should treat this as an opaque string and not try to "
+        "extract information from it.",
+        example="TW9vcHN5IQo=",
+    )
+    token_type: Literal["Bearer"] = Field(
+        "Bearer",
+        description="Type of the token as specified by OAuth2.",
+    )
+    expires_in: int = Field(
+        description="Number of seconds after which this JWT will expire.",
+        example=3600,
+    )

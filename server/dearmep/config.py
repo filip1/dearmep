@@ -2,15 +2,16 @@ from datetime import date
 from functools import lru_cache
 import logging
 from pathlib import Path
-import re
 from typing import Any, ClassVar, Dict, List, Literal, Optional, Union
 
-from pydantic import AnyHttpUrl, BaseModel, BaseSettings, ConstrainedStr, \
-    DirectoryPath, Field, FilePath, ValidationError, validator
+from pydantic import AnyHttpUrl, BaseModel, BaseSettings, DirectoryPath, \
+    Field, FilePath, ValidationError, validator
 from pydantic.fields import ModelField
 from pydantic.utils import deep_update
 import yaml
 from yaml.parser import ParserError
+
+from .models import Language
 
 
 _logger = logging.getLogger(__name__)
@@ -29,10 +30,6 @@ if EMBEDDED_STATIC_DIR and not EMBEDDED_STATIC_DIR.is_dir():
 
 class ConfigNotLoaded(Exception):
     pass
-
-
-class Language(ConstrainedStr):
-    regex = re.compile(r"^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$")
 
 
 class IPRateLimits(BaseModel):

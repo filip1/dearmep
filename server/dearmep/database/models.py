@@ -8,7 +8,7 @@ from sqlmodel import Column, Enum, Field, Relationship, SQLModel, TIMESTAMP, \
     and_, case, or_, func, text
 
 from ..config import Config, ConfigNotLoaded, Language
-from ..models import CountryCode, HashedPhoneNumber, Score, UserPhone
+from ..models import CountryCode, Score, UserPhone, VerificationCode
 
 
 class _SchemaExtra(TypedDict):
@@ -349,23 +349,54 @@ class DestinationGroupListItem(DestinationGroupBase):
     logo: Optional[str]
 
 
-class PhoneNumberConfirmation(SQLModel, table=True):
-    __tablename__ = "phone_number_confirmation"
-    hashed_phone_number: HashedPhoneNumber = Field(
+DestinationRead.update_forward_refs()  # after DestinationGroupListItem
+
+
+class NumberVerificationRequest(SQLModel, table=True):
+    __tablename__ = "number_verification_requests"
+    user: UserPhone = Field(
         primary_key=True,
-        description="Phone number hashed with application-wide pepper")
-    dpp_acceepted_at: Optional[datetime] = Field(
-        description="time of acceptance of the DPP")
-    language: Language = Field(description="Language of the DPP")
-    code: str = Field(description="verification code that is sent out via SMS")
-    verified: bool = Field(
-        description="Flag indicating phone verification number status")
-    requested_verification: int = Field(
-        description="Number of times a verification code was requested for "
-                    "this phone number")
+        description="User requesting the verification.",
+    )
+    code: VerificationCode = Field(
+        primary_key=True,
+        description="Verification code sent out via SMS.",
+    )
+    # Not an auto_timestamp_column because it relates to expires_at, the caller
+    # should calculate both and set them explicitly.
+    requested_at: datetime = Field(
+        index=True,
+        description="Timestamp of when the User requested the code.",
+    )
+    expires_at: datetime = Field(
+        index=True,
+        description="Timestamp of when the code will expire.",
+    )
+    language: Language = Field(
+        description="UI language in use when the code was requested.",
+    )
 
 
-DestinationRead.update_forward_refs()
+class UserSignIn(SQLModel, table=True):
+    __tablename__ = "user_signin"
+    id: Optional[int] = Field(
+        primary_key=True,
+        description="Auto-generated ID.",
+    )
+    user: UserPhone = Field(
+        index=True,
+        description="User associated with this sign-in.",
+    )
+    completed_at: Optional[datetime] = Field(
+        sa_column_kwargs=auto_timestamp_column_kwargs(),
+        description="Timestamp of when the User completed the sign-in.",
+    )
+    initiated_at: datetime = Field(
+        description="Timestamp of when the User requested the sign-in.",
+    )
+    language: Language = Field(
+        description="UI language in use when the sign-in was initiated.",
+    )
 
 
 class DestinationSelectionLogEvent(str, enum.Enum):

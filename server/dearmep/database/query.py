@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Callable, List, Optional, cast
 from secrets import randbelow
 import re
@@ -8,14 +8,12 @@ from sqlalchemy.exc import NoResultFound
 from sqlmodel import case
 
 from ..models import CountryCode, DestinationSearchGroup, \
-    DestinationSearchResult, SearchResult, UserPhone
-from ..config import Config, Language
+    DestinationSearchResult, Language, SearchResult, UserPhone, \
+    VerificationCode
 from .connection import Session, select
 from .models import Blob, Destination, DestinationID, \
-    DestinationSelectionLog, DestinationSelectionLogEvent
-from ..models import PhoneNumber, hash_string
-from ..database.models import PhoneNumberConfirmation
-from ..database.connection import get_session
+    DestinationSelectionLog, DestinationSelectionLogEvent, \
+    NumberVerificationRequest, UserSignIn
 
 
 class NotFound(Exception):
@@ -157,44 +155,47 @@ def to_destination_search_result(
     )
 
 
-def get_new_sms_auth_code(phone_number_hash: str, language: Language) -> \
-        str:
+def get_new_sms_auth_code(
+    session: Session,
+    *,
+    user: UserPhone,
+    language: Language,
+) -> VerificationCode:
+    # TODO: Limit number of open requests.
+    now = datetime.now()
+    code = VerificationCode(f"{randbelow(1_000_000):06}")
 
-    code = f"{randbelow(1000000):06}"
+    # TODO: Handle index violation due to duplicate codes.
+    session.add(NumberVerificationRequest(
+        user=user,
+        code=code,
+        requested_at=now,
+        expires_at=now + timedelta(minutes=10),  # TODO: make configurable
+        language=language,
+    ))
 
-    PNC = PhoneNumberConfirmation
-    with get_session() as session:
-        statement = select(PNC)\
-            .where(PNC.hashed_phone_number == phone_number_hash).limit(1)
-        if confirmation := session.exec(statement).first():
-            confirmation.requested_verification += 1
-            confirmation.code = code
-        else:
-            confirmation = PNC(
-                hashed_phone_number=hash,
-                dpp_accepted_at=datetime.now(),
-                language=language,
-                code=code,
-                verified=False,
-                requested_verification=1,
-            )
-        session.add(confirmation)
-        session.commit()
     return code
 
 
-def verify_sms_auth_code(phone_number: PhoneNumber, code: str) -> bool:
-    config = Config.get()
-    pepper = config.authentication.secrets.pepper
-    hash = hash_string(phone_number, pepper)
-
-    PNC = PhoneNumberConfirmation
-    statement = select(PNC).where(PNC.hashed_phone_number == hash,
-                                  PNC.code == code).limit(1)
-    with get_session() as session:
-        if confirmation := session.exec(statement).first():
-            confirmation.verified = True
-            session.add(confirmation)
-            session.commit()
-            return True
-        return False
+def verify_sms_auth_code(
+    session: Session,
+    *,
+    user: UserPhone,
+    code: VerificationCode,
+) -> bool:
+    if confirmation := session.exec(
+        select(NumberVerificationRequest)
+        .where(
+            NumberVerificationRequest.user == user,
+            NumberVerificationRequest.code == code,
+            NumberVerificationRequest.expires_at > datetime.now(),
+        )
+    ).first():
+        session.add(UserSignIn(
+            user=user,
+            initiated_at=confirmation.requested_at,
+            language=confirmation.language,
+        ))
+        session.delete(confirmation)
+        return True
+    return False

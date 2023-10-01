@@ -1,8 +1,10 @@
-from typing import Any, Callable, Dict, Iterable, Optional
+from typing import Any, Callable, Dict, Iterable, Optional, Union
 
 from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
     Response, status
+from fastapi.responses import JSONResponse
 from prometheus_client import Counter
+from pydantic import BaseModel
 
 from ..config import Config, Language, all_frontend_strings
 from ..database.connection import get_session
@@ -11,9 +13,11 @@ from ..database.models import Blob, Destination, DestinationGroupListItem, \
 from ..database import query
 from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import MAX_SEARCH_RESULT_LIMIT, CountryCode, \
-    DestinationSearchResult, FrontendStringsResponse, LanguageDetection, \
-    LocalizationResponse, RateLimitResponse, SearchResult, SearchResultLimit, \
-    hash_string, PhoneNumberVerificationRequest, SMSCodeVerificationRequest
+    DestinationSearchResult, FrontendStringsResponse, JWTResponse, \
+    LanguageDetection, LocalizationResponse, PhoneNumberVerificationResponse, \
+    RateLimitResponse, SMSCodeVerificationFailedResponse, SearchResult, \
+    SearchResultLimit, UserPhone, PhoneNumberVerificationRequest, \
+    SMSCodeVerificationRequest
 from ..phone.abstract import get_phone_service
 from ..ratelimit import Limit, client_addr
 
@@ -66,6 +70,10 @@ def destination_to_destinationread(dest: Destination) -> DestinationRead:
             for group in dest.groups
         ],
     })
+
+
+def error_model(status_code: int, instance: BaseModel) -> JSONResponse:
+    return JSONResponse(instance.dict(), status_code=status_code)
 
 
 router = APIRouter()
@@ -279,27 +287,63 @@ def get_suggested_destination(
         return destination_to_destinationread(dest)
 
 
-@router.post("/number-verification/request-verification",
-             operation_id="requestNumberVerification",
-             status_code=204)
-def request_number_verification(request: PhoneNumberVerificationRequest):
-    config = Config.get()
-    pepper = config.authentication.secrets.pepper
-    hash = hash_string(request.phone_number, pepper)
-    code = query.get_new_sms_auth_code(hash, request.language)
+@router.post(
+    "/number-verification/request", operation_id="requestNumberVerification",
+    # TODO: rate limit & rate limit response
+    # TODO: error response
+    response_model=PhoneNumberVerificationResponse,
+)
+def request_number_verification(
+    request: PhoneNumberVerificationRequest,
+) -> PhoneNumberVerificationResponse:
+    """Request ownership verification of a phone number.
 
-    message = f"Your code is {code}"  # TODO translation
-    service = get_phone_service(config)
-    service.send_sms(request.phone_number, message)
+    This will send an SMS text message with a random code to the given phone
+    number. Provide this code to the _Verify Number_ endpoint to receive a JWT
+    proving that you have access to that number.
+    """
+    user = UserPhone(request.phone_number)  # TODO: error handling
+    assert user.original_number
+    number = user.format_number(user.original_number)
+    with get_session() as session:
+        code = query.get_new_sms_auth_code(
+            session, user=user, language=request.language)
+        message = f"Your code is {code}"  # TODO translation
+        get_phone_service().send_sms(number, message)
+        response = PhoneNumberVerificationResponse(
+            phone_number=number,
+        )
+        # Only commit after sending the code successfully.
+        session.commit()
+    return response
 
 
-@router.post("/number-verification/verify-number",
-             operation_id="verifyNumber",
-             status_code=204)
-def verify_number(request: SMSCodeVerificationRequest):
-    if query.verify_sms_auth_code(request.phone_number, request.code):
-        pass  # TODO return auth token and remove 204 status
-    else:
-        # TODO rate limiting
-        raise HTTPException(status_code=403,
-                            detail="incorrect phone number of code")
+@router.post(
+    "/number-verification/verify", operation_id="verifyNumber",
+    # TODO: rate limit & rate limit response
+    # TODO: error response
+    response_model=JWTResponse,
+)
+def verify_number(
+    request: SMSCodeVerificationRequest,
+) -> Union[JWTResponse, JSONResponse]:
+    """Prove ownership of a phone number.
+
+    Provide the random code that has been sent using the _Request Number
+    Verification_ endpoint to receive a JWT proving that you have access to
+    that number.
+    """
+    with get_session() as session:
+        user = UserPhone(request.phone_number)  # TODO: error handling
+        if not query.verify_sms_auth_code(
+            session, user=user, code=request.code,
+        ):
+            return error_model(
+                status.HTTP_400_BAD_REQUEST,
+                SMSCodeVerificationFailedResponse())
+        response = JWTResponse(
+            access_token="TODO",  # TODO
+            expires_in=3600,  # TODO
+        )
+        session.commit()
+    return response
