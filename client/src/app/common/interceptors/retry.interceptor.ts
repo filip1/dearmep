@@ -4,9 +4,16 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpErrorResponse
+  HttpErrorResponse,
+  HttpContextToken,
+  HttpContext
 } from '@angular/common/http';
 import { Observable, TimeoutError, delay, of, retry, throwError } from 'rxjs';
+
+/**
+ * Pass one or more status codes that should not be retried
+ */
+export const SKIP_RETRY_STATUS_CODES = new HttpContextToken<number[]>(() => []);
 
 @Injectable()
 export class RetryInterceptor implements HttpInterceptor {
@@ -23,16 +30,22 @@ export class RetryInterceptor implements HttpInterceptor {
   private readonly connectionErrorMaxRetries = 5
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    const skipRetryStatusCodes = request.context.get(SKIP_RETRY_STATUS_CODES)
+
     return next.handle(request).pipe(
       retry({
-        delay: (error: HttpErrorResponse | TimeoutError | unknown, retryCount: number) => this.shouldRetry(error, retryCount)
+        delay: (error: HttpErrorResponse | TimeoutError | unknown, retryCount: number) => this.shouldRetry(error, retryCount, skipRetryStatusCodes)
       })
     );
   }
 
-  private shouldRetry(error: HttpErrorResponse | TimeoutError | unknown, retryCount: number) {
+  private shouldRetry(error: HttpErrorResponse | TimeoutError | unknown, retryCount: number, skipRetryStatusCodes: number[]) {
     if (error instanceof HttpErrorResponse) {
       const httpError: HttpErrorResponse = error
+
+      if (skipRetryStatusCodes.indexOf(httpError.status) !== -1) {
+        return this.fail(error)
+      }
 
       if (httpError.status === 429) {
         const retryDelay = this.getRetryAfter(httpError, this.rateLimitMinRetryInterval)

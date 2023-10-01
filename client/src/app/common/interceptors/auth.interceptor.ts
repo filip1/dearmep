@@ -9,6 +9,9 @@ import {
 import { Observable } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
+/**
+ * Pass this token for requests that should be authenticated
+ */
 export const AUTH_TOKEN_REQUIRED = new HttpContextToken<boolean>(() => false);
 
 @Injectable()
