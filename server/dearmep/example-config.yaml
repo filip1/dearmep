@@ -126,11 +126,12 @@ authentication:
     # days or even months.
     authentication_timeout: 86400
 
-  # Various secret values that are used by the server
-  # Keep these hidden from the public!
-  secret:
-    # Application-wide pepper value for hashes
-    pepper: "some non-obvious pepper string to spice up your hashes"
+  # Various secrets used by the server. Customize these for your installation,
+  # and keep them hidden from the public!
+  secrets:
+
+    # Application-wide pepper value for hashes.
+    pepper: CHANGE THIS
 
 
 # Options regarding phone calls and SMS.
@@ -138,6 +139,70 @@ telephony:
   # If set to true, do not actually send out SMS and make calls.
   # This is useful for developing the application.
   dry_run: true
+
+  # Calling codes that we allow Users to have. This corresponds to the "country
+  # code" part of an international phone number. For example, the number
+  # +491751234567 has a country code of 49. Note that these are not simply
+  # treated as being prefixes of the phone number; we actually know the codes
+  # of all of the world's countries and extract these. Therefore, a value of 4
+  # 4 will not match all country codes that start with 4, but actually match no
+  # country at all, because none of them has a country code of 4.
+  allowed_calling_codes:
+    - 30   # Greece
+    - 31   # Netherlands
+    - 32   # Belgium
+    - 33   # France
+    - 34   # Spain
+    - 351  # Portugal
+    - 352  # Luxembourg
+    - 353  # Republic of Ireland
+    - 356  # Malta
+    - 357  # Cyprus
+    - 358  # Finland
+    - 359  # Bulgaria
+    - 36   # Hungary
+    - 370  # Lithuania
+    - 371  # Latvia
+    - 372  # Estonia
+    - 385  # Croatia
+    - 386  # Slovenia
+    - 39   # Italy
+    - 40   # Romania
+    - 420  # Czech Republic
+    - 421  # Slovakia
+    - 43   # Austria
+    - 45   # Denmark
+    - 46   # Sweden
+    - 48   # Poland
+    - 49   # Germany
+
+  # A list of numbers/prefixes to be explicitly blocked, even if they are from
+  # an allowed country and an allowed type.
+  blocked_numbers:
+    # By providing an internationally formatted phone number, you are blocking
+    # all numbers that start with these digits. The number is converted to
+    # E.164 format, removing characters like `-`, `(`, `)`, `.`, ` `. Instead
+    # of listing single numbers here, you can also provide whole prefixes like
+    # `+49175`. Note that you should wrap the number in quotes, else YAML could
+    # iterpret it as an integer.
+    - "+1 202-501-4444"
+    # Alternatively, you can block the hash of a number as it appears in the
+    # database. This is useful if you identified someone abusing the system,
+    # but you do not know their phone number (since the database stores it in
+    # hashed format only for privacy reasons). Wrapping these hashes in quotes
+    # is recommended, too.
+    - "7p+gxtb2W3Fgw7cAm/fmHMcb8GogN2D8m4B+Xc1ZRTw="
+
+  # A list of numbers/prefixes to be explicitly allowed, even if they are not
+  # from an allowed country, not of an allowed type or even match an entry on
+  # the `blocked_numbers` list. In other words, this list has precedence over
+  # everything else.
+  approved_numbers:
+    # As in `blocked_numbers`, you can provide a E.164 prefix. All numbers with
+    # a canonical form that starts like this will be allowed.
+    - "+491751234567"  # would've been allowed anyway as it's a mobile number
+    # And, as before, you can also use a hash to specify a singular number.
+    - "bxsT9xkkRFk1Kl4sO8pGl2nCgYuDManlCzKkRGTGE1U="
 
   # Verifying phone numbers by sending an SMS to that number.
   sms_verification:

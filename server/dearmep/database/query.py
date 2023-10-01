@@ -185,7 +185,7 @@ def get_new_sms_auth_code(phone_number_hash: str, language: Language) -> \
 
 def verify_sms_auth_code(phone_number: PhoneNumber, code: str) -> bool:
     config = Config.get()
-    pepper = config.authentication.secret.pepper
+    pepper = config.authentication.secrets.pepper
     hash = hash_string(phone_number, pepper)
 
     PNC = PhoneNumberConfirmation

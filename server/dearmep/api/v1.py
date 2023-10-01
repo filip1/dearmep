@@ -284,7 +284,7 @@ def get_suggested_destination(
              status_code=204)
 def request_number_verification(request: PhoneNumberVerificationRequest):
     config = Config.get()
-    pepper = config.authentication.secret.pepper
+    pepper = config.authentication.secrets.pepper
     hash = hash_string(request.phone_number, pepper)
     code = query.get_new_sms_auth_code(hash, request.language)
 

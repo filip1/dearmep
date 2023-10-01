@@ -56,6 +56,14 @@ class APIConfig(BaseModel):
     rate_limits: APIRateLimitConfig
 
 
+class SecretsConfig(BaseModel):
+    pepper: str
+
+
+class AuthenticationConfig(BaseModel):
+    secrets: SecretsConfig
+
+
 class ContactTimespanFilterTimespan(BaseModel):
     start: date
     end: date
@@ -181,25 +189,20 @@ class L10nConfig(BaseModel):
         return v
 
 
-class SecretConfig(BaseModel):
-    pepper: str
-
-
-class AuthenticationConfig(BaseModel):
-    secret: SecretConfig
-
-
 class TelephonyConfig(BaseModel):
-    dry_run: bool
+    allowed_calling_codes: List[int]
+    blocked_numbers: List[str] = []
+    approved_numbers: List[str] = []
+    dry_run: bool = False
 
 
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""
     api: APIConfig
+    authentication: AuthenticationConfig
     contact_timespan_filter: Optional[ContactTimespanFilterConfig]
     database: DatabaseConfig
     l10n: L10nConfig
-    authentication: AuthenticationConfig
     telephony: TelephonyConfig
 
     _instance: ClassVar[Optional["Config"]] = None
