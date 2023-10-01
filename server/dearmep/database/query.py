@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Callable, List, Optional, cast
+from typing import Callable, List, Optional, Union, cast
 from secrets import randbelow
 import re
 
@@ -7,9 +7,10 @@ from sqlalchemy import func
 from sqlalchemy.exc import NoResultFound
 from sqlmodel import case
 
+from ..config import Config
 from ..models import CountryCode, DestinationSearchGroup, \
-    DestinationSearchResult, Language, SearchResult, UserPhone, \
-    VerificationCode
+    DestinationSearchResult, Language, PhoneRejectReason, SearchResult, \
+    UserPhone, VerificationCode
 from .connection import Session, select
 from .models import Blob, Destination, DestinationID, \
     DestinationSelectionLog, DestinationSelectionLogEvent, \
@@ -160,8 +161,16 @@ def get_new_sms_auth_code(
     *,
     user: UserPhone,
     language: Language,
-) -> VerificationCode:
-    # TODO: Limit number of open requests.
+) -> Union[PhoneRejectReason, VerificationCode]:
+    # TODO: Add to a permanent block list.
+    config = Config.get()
+    open_requests = session.scalar(
+        select(func.count())  # type: ignore[call-overload]
+        .where(NumberVerificationRequest.user == user)
+    )
+    if open_requests >= config.authentication.session.max_unused_codes:
+        return PhoneRejectReason.TOO_MANY_VERIFICATION_REQUESTS
+
     now = datetime.now()
     code = VerificationCode(f"{randbelow(1_000_000):06}")
 

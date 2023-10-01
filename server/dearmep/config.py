@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, ClassVar, Dict, List, Literal, Optional, Union
 
 from pydantic import AnyHttpUrl, BaseModel, BaseSettings, DirectoryPath, \
-    Field, FilePath, ValidationError, validator
+    Field, FilePath, PositiveInt, ValidationError, validator
 from pydantic.fields import ModelField
 from pydantic.utils import deep_update
 import yaml
@@ -58,8 +58,13 @@ class SecretsConfig(BaseModel):
     pepper: str
 
 
+class SessionConfig(BaseModel):
+    max_unused_codes: PositiveInt
+
+
 class AuthenticationConfig(BaseModel):
     secrets: SecretsConfig
+    session: SessionConfig
 
 
 class ContactTimespanFilterTimespan(BaseModel):

@@ -14,10 +14,11 @@ from ..database import query
 from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import MAX_SEARCH_RESULT_LIMIT, CountryCode, \
     DestinationSearchResult, FrontendStringsResponse, JWTResponse, \
-    LanguageDetection, LocalizationResponse, PhoneNumberVerificationResponse, \
-    RateLimitResponse, SMSCodeVerificationFailedResponse, SearchResult, \
-    SearchResultLimit, UserPhone, PhoneNumberVerificationRequest, \
-    SMSCodeVerificationRequest
+    LanguageDetection, LocalizationResponse, \
+    PhoneNumberVerificationRejectedResponse, PhoneNumberVerificationResponse, \
+    PhoneRejectReason, RateLimitResponse, SMSCodeVerificationFailedResponse, \
+    SearchResult, SearchResultLimit, UserPhone, \
+    PhoneNumberVerificationRequest, SMSCodeVerificationRequest
 from ..phone.abstract import get_phone_service
 from ..ratelimit import Limit, client_addr
 
@@ -290,14 +291,16 @@ def get_suggested_destination(
 
 @router.post(
     "/number-verification/request", operation_id="requestNumberVerification",
-    responses=rate_limit_response,  # type: ignore[arg-type]
-    # TODO: error response
+    responses={
+        **rate_limit_response,  # type: ignore[arg-type]
+        400: {"model": PhoneNumberVerificationRejectedResponse},
+    },
     response_model=PhoneNumberVerificationResponse,
     dependencies=(sms_rate_limit,),
 )
 def request_number_verification(
     request: PhoneNumberVerificationRequest,
-) -> PhoneNumberVerificationResponse:
+) -> Union[JSONResponse, PhoneNumberVerificationResponse]:
     """Request ownership verification of a phone number.
 
     This will send an SMS text message with a random code to the given phone
@@ -308,9 +311,13 @@ def request_number_verification(
     assert user.original_number
     number = user.format_number(user.original_number)
     with get_session() as session:
-        code = query.get_new_sms_auth_code(
+        result = query.get_new_sms_auth_code(
             session, user=user, language=request.language)
-        message = f"Your code is {code}"  # TODO translation
+        if isinstance(result, PhoneRejectReason):
+            return error_model(
+                status.HTTP_400_BAD_REQUEST,
+                PhoneNumberVerificationRejectedResponse(error=result))
+        message = f"Your code is {result}"  # TODO translation
         get_phone_service().send_sms(number, message)
         response = PhoneNumberVerificationResponse(
             phone_number=number,

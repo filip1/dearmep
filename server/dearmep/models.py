@@ -81,11 +81,15 @@ class PhoneRejectReason(str, enum.Enum):
       example a landline, pager, or paid service number.
     * `BLOCKED`: This number or some prefix of it has been manually blocked by
       the administrator.
+    * `TOO_MANY_VERIFICATION_REQUESTS`: This number has issued too many
+      verification requests (each resulting in an SMS message being sent)
+      without confirming them.
     """
     INVALID_PATTERN = "INVALID_PATTERN"
     DISALLOWED_COUNTRY = "DISALLOWED_COUNTRY"
     DISALLOWED_TYPE = "DISALLOWED_TYPE"
     BLOCKED = "BLOCKED"
+    TOO_MANY_VERIFICATION_REQUESTS = "TOO_MANY_VERIFICATION_REQUESTS"
 
 
 class UserPhone(str):
@@ -509,6 +513,10 @@ class PhoneNumberVerificationResponse(BaseModel):
         "input. Should be used for display purposes in the frontend.",
         example="+491751234567",
     )
+
+
+class PhoneNumberVerificationRejectedResponse(BaseModel):
+    error: PhoneRejectReason
 
 
 class VerificationCode(ConstrainedStr):

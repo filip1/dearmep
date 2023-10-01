@@ -122,6 +122,16 @@ authentication:
   # once the user closes their browser window or logs out manually.
   session:
 
+    # How many incomplete SMS verifications may be open for a single number at
+    # the same time? This limits the number of SMS that can be requested for a
+    # number
+    # After this many SMS verification codes have been sent to a certain number
+    # without any of them being converted into a Session Token (i.e. without
+    # successfully completing the verification), forbid sending more SMS to
+    # that number. This is designed to prevent spamming a victim with codes,
+    # which also means incurring costs for us.
+    max_unused_codes: 3
+
     # How long until the session times out due to inactivity. Any API request
     # with a valid token will reset this timeout.
     inactivity_timeout: 7200
