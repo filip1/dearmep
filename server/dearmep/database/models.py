@@ -399,6 +399,31 @@ class UserSignIn(SQLModel, table=True):
     )
 
 
+class BlockReason(str, enum.Enum):
+    """Reason why a User was blocked.
+
+    * `TOO_MANY_VERIFICATION_REQUESTS`: This number has issued too many
+      verification requests (each resulting in an SMS message being sent)
+      without confirming them.
+    """
+    TOO_MANY_VERIFICATION_REQUESTS = "TOO_MANY_VERIFICATION_REQUESTS"
+
+
+class UserBlock(SQLModel, table=True):
+    __tablename__ = "user_blocks"
+    user: UserPhone = Field(
+        primary_key=True,
+        description="The blocked user.",
+    )
+    blocked_at: Optional[datetime] = Field(
+        sa_column=auto_timestamp_column(),
+        description="When the user was blocked.",
+    )
+    reason: BlockReason = Field(
+        description="Reason for blocking the User.",
+    )
+
+
 class DestinationSelectionLogEvent(str, enum.Enum):
     """
     Destinations may be "selected" for different reasons, and depending on the

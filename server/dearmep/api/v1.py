@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Iterable, Optional, Union
+from typing import Any, Callable, Dict, Iterable, Optional, Set, Union
 
 from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
     Response, status
@@ -307,16 +307,26 @@ def request_number_verification(
     number. Provide this code to the _Verify Number_ endpoint to receive a JWT
     proving that you have access to that number.
     """
-    user = UserPhone(request.phone_number)  # TODO: error handling
-    assert user.original_number
+    def reject(errors: Set[PhoneRejectReason]) -> JSONResponse:
+        return error_model(
+            status.HTTP_400_BAD_REQUEST,
+            PhoneNumberVerificationRejectedResponse(errors=errors))
+
+    user = UserPhone(request.phone_number)
+    assert user.original_number  # sure, we just created it from one
     number = user.format_number(user.original_number)
+
     with get_session() as session:
+        # Check if the number is forbidden by policy.
+        if reject_reasons := user.check_allowed(session):
+            return reject(reject_reasons)
+
         result = query.get_new_sms_auth_code(
             session, user=user, language=request.language)
+        # Number could be rejected because of too many requests.
         if isinstance(result, PhoneRejectReason):
-            return error_model(
-                status.HTTP_400_BAD_REQUEST,
-                PhoneNumberVerificationRejectedResponse(error=result))
+            return reject({result})
+
         message = f"Your code is {result}"  # TODO translation
         get_phone_service().send_sms(number, message)
         response = PhoneNumberVerificationResponse(
@@ -344,7 +354,7 @@ def verify_number(
     that number.
     """
     with get_session() as session:
-        user = UserPhone(request.phone_number)  # TODO: error handling
+        user = UserPhone(request.phone_number)
         if not query.verify_sms_auth_code(
             session, user=user, code=request.code,
         ):

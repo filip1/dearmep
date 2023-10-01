@@ -12,9 +12,9 @@ from ..models import CountryCode, DestinationSearchGroup, \
     DestinationSearchResult, Language, PhoneRejectReason, SearchResult, \
     UserPhone, VerificationCode
 from .connection import Session, select
-from .models import Blob, Destination, DestinationID, \
+from .models import Blob, BlockReason, Destination, DestinationID, \
     DestinationSelectionLog, DestinationSelectionLogEvent, \
-    NumberVerificationRequest, UserSignIn
+    NumberVerificationRequest, UserBlock, UserSignIn
 
 
 class NotFound(Exception):
@@ -162,16 +162,23 @@ def get_new_sms_auth_code(
     user: UserPhone,
     language: Language,
 ) -> Union[PhoneRejectReason, VerificationCode]:
-    # TODO: Add to a permanent block list.
     config = Config.get()
+    now = datetime.now()
+
+    # Block the user if they have too many open verification requests.
     open_requests = session.scalar(
         select(func.count())  # type: ignore[call-overload]
-        .where(NumberVerificationRequest.user == user)
+        .where(
+            NumberVerificationRequest.user == user,
+            NumberVerificationRequest.expires_at > now,
+        )
     )
     if open_requests >= config.authentication.session.max_unused_codes:
+        session.add(UserBlock(
+            user=user, reason=BlockReason.TOO_MANY_VERIFICATION_REQUESTS))
+        session.commit()
         return PhoneRejectReason.TOO_MANY_VERIFICATION_REQUESTS
 
-    now = datetime.now()
     code = VerificationCode(f"{randbelow(1_000_000):06}")
 
     # TODO: Handle index violation due to duplicate codes.
@@ -208,3 +215,14 @@ def verify_sms_auth_code(
         session.delete(confirmation)
         return True
     return False
+
+
+def get_block_reason(
+    session: Session,
+    user: UserPhone,
+) -> Optional[BlockReason]:
+    if entry := session.exec(
+        select(UserBlock).where(UserBlock.user == user)
+    ).first():
+        return entry.reason
+    return None
