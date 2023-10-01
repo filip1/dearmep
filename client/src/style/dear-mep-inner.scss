@@ -128,6 +128,23 @@
     background-color: var(--dmep-popover-background-color);
   }
 
+  .cdk-overlay-container {
+    position: unset;
+    grid-column: 1;
+    grid-row: 1;
+    display: grid;
+    .cdk-overlay-backdrop {
+      position: unset;
+      grid-row: 1;
+      grid-column: 1;
+    }
+    .cdk-global-overlay-wrapper {
+      position: unset;
+      grid-row: 1;
+      grid-column: 1;
+    }
+  }
+
   a {
     color: var(--dmep-text-color);
     text-decoration: underline;

@@ -1,11 +1,14 @@
 .dmep-app-container {
   padding: var(--dmep-layout-gap);
+  display: grid;
 }
 .dmep-app-container.dmep-display-xs {
   padding: var(--dmep-layout-gap-xs);
 }
 
 .dmep-app-layout {
+  grid-row: 1;
+  grid-column: 1;
   display: grid;
   gap: var(--dmep-layout-gap);
   row-gap: 20px;
@@ -44,6 +47,8 @@ dmep-select-mep {
 }
 
 dmep-footer {
+  grid-row: 2;
+  grid-column: 1;
   margin-bottom: calc(var(--dmep-layout-gap) * -1);
   height: var(--dmep-layout-gap);
   margin-top: 0;

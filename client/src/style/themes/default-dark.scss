@@ -72,4 +72,7 @@ $app-theme: mat.define-dark-theme((color: (
 @include mat.radio-theme($app-theme);
 @include mat.button-toggle-theme($app-theme);
 @include mat.tooltip-theme($app-theme);
-@include mat.progress-spinner-theme($app-theme)
+@include mat.progress-spinner-theme($app-theme);
+@include mat.dialog-theme($app-theme);
+@include mat.snack-bar-theme($app-theme);
+
