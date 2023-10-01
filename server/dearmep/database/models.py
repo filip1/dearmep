@@ -87,12 +87,27 @@ DestinationGroupID = str
 DEFAULT_BASE_ENDORSEMENT = 0.5
 
 
-def auto_timestamp_column() -> Column:
-    """A timestamp column that will default to whenever the row is created."""
+def auto_timestamp_column_kwargs() -> Dict[str, Any]:
+    return {
+        "nullable": False,
+        "server_default": func.now(),
+    }
+
+
+def auto_timestamp_column(**kwargs) -> Column:
+    """A timestamp column that will default to whenever the row is created.
+
+    Note that this returns a `Column`, which will cause the field to be
+    prioritized higher than normal SQLModel fields in table creation. It will
+    probably be come right after the primary key. Worse yet, if it is part of
+    the primary key, it will be ordered before any non-`Column` fields. If this
+    breaks your ordering, use `sa_column_kwargs=auto_timestamp_column_kwargs()`
+    instead. See <https://github.com/tiangolo/sqlmodel/issues/542> for details.
+    """
     return Column(
         TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=func.now(),
+        **auto_timestamp_column_kwargs(),
+        **kwargs,
     )
 
 
