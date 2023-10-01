@@ -1,7 +1,7 @@
 import { HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, interval, mergeMap } from 'rxjs';
-import { CallState, DestinationInCallResponse, OutsideHoursResponse, UserInCallResponse } from 'src/app/api/models';
+import { CallState, CallStateResponse, DestinationInCallResponse, OutsideHoursResponse, UserInCallResponse } from 'src/app/api/models';
 import { ApiService } from 'src/app/api/services';
 import { AUTH_TOKEN_REQUIRED } from 'src/app/common/interceptors/auth.interceptor';
 import { SKIP_RETRY_STATUS_CODES } from 'src/app/common/interceptors/retry.interceptor';
@@ -43,8 +43,11 @@ export class CallingStateManagerService {
       .set(AUTH_TOKEN_REQUIRED, true)
       .set(SKIP_RETRY_STATUS_CODES, [ 503 ])
     ).subscribe({
-      next: (response) => {
-        this.monitorCallState()
+      next: (callState) => {
+        const result = this.handleCallState(callState)
+        if (result.keepPolling) {
+          this.watchCallState()
+        }
       },
       error: (err: DestinationInCallResponse | UserInCallResponse | OutsideHoursResponse | unknown) => {
         // TODO: Handle error
@@ -54,31 +57,23 @@ export class CallingStateManagerService {
     })
   }
 
+  public goToFeedback() {
+    this.step$.next(CallingStep.Home)
+  }
+
   public goHome() {
     this.step$.next(CallingStep.Home)
   }
 
-  private monitorCallState() {
+  private watchCallState() {
     const subscription = interval(this.callStatePollInterval).pipe(
       mergeMap(() =>
         this.apiService.getCallState(undefined, new HttpContext().set(AUTH_TOKEN_REQUIRED, true))),
     ).subscribe({
       next: (callState) => {
-        // Go to feedback if user has made it at least to the menu or further
-        if (callState.state === CallState.InMenu ||
-          callState.state === CallState.CallingDestination ||
-          callState.state === CallState.DestinationConnected ||
-          callState.state === CallState.FinishedCall ||
-          callState.state === CallState.FinishedShortCall) {
-            this.step$.next(CallingStep.Feedback)
-            subscription.unsubscribe()
-        } else if (callState.state === CallState.CallingUserFailed || // Go home otherwise
-          callState.state === CallState.CallingDestinationFailed ||
-          callState.state === CallState.CallAborted ||
-          callState.state === CallState.NoCall) {
-            // TODO: display error message
-            this.step$.next(CallingStep.Home)
-            subscription.unsubscribe()
+        const result = this.handleCallState(callState)
+        if (!result.keepPolling) {
+          subscription.unsubscribe()
         }
       },
       error: (err) => {
@@ -87,5 +82,29 @@ export class CallingStateManagerService {
         subscription.unsubscribe()
       }
     })
+  }
+
+  private handleCallState(callState: CallStateResponse): { keepPolling: boolean } {
+    // NOTE: Explicitly listing all possible Enum-Values here and NOT adding default case or return statement after the switch!
+    //  => This way the compiler fill force us to handle all enum values including any newly added status code that might pop up in the future
+    // If any status code is not handled correctly this could easily lead to a bug where the polling goes on forever and the user
+    // is never prompted for feedback.
+    switch (callState.state) {
+      case CallState.InMenu:
+      case CallState.CallingDestination:
+      case CallState.DestinationConnected:
+      case CallState.FinishedCall:
+      case CallState.FinishedShortCall:
+        this.goToFeedback()
+        return { keepPolling: false };
+      case CallState.CallingUserFailed:
+      case CallState.CallingDestinationFailed:
+      case CallState.CallAborted:
+      case CallState.NoCall:
+        this.goHome()
+        return { keepPolling: false };
+      case CallState.CallingUser:
+        return { keepPolling: true };
+    }
   }
 }
