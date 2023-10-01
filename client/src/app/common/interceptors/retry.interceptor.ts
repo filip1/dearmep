@@ -6,7 +6,6 @@ import {
   HttpInterceptor,
   HttpErrorResponse,
   HttpContextToken,
-  HttpContext
 } from '@angular/common/http';
 import { Observable, TimeoutError, delay, of, retry, throwError } from 'rxjs';
 

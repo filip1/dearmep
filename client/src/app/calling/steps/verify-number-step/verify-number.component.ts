@@ -13,6 +13,7 @@ import { PhoneNumberVerificationResponse } from 'src/app/api/models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PhoneNumberValidationErrors } from 'src/app/components/phone-number-input/phone-number-validation-errors';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { SelectDestinationService } from 'src/app/services/select-destination/select-destination.service';
 
 @Component({
   selector: 'dmep-verify-number',
@@ -37,6 +38,7 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>()
 
   private currentLanguage?: string
+  private selectedDestinationID?: string
 
   public readonly StepEnterNumber = VerificationStep.EnterNumber
   public readonly StepEnterCode = VerificationStep.EnterCode
@@ -65,6 +67,7 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
     private readonly apiService: ApiService,
     private readonly l10nService: L10nService,
     private readonly authenticationService: AuthenticationService,
+    private readonly selectDestinationService: SelectDestinationService,
   ) {
   }
 
@@ -73,6 +76,11 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyed$)
     ).subscribe({
       next: (l) => this.currentLanguage = l
+    })
+    this.selectDestinationService.getDestination$().pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe({
+      next: (d) => this.selectedDestinationID = d?.id
     })
   }
 
@@ -146,7 +154,11 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
   }
 
   public onCallNowClick() {
-    this.callingStateManager.setUpCall()
+    if (!this.currentLanguage || !this.selectedDestinationID) {
+      return
+    }
+
+    this.callingStateManager.setUpCall(this.selectedDestinationID, this.currentLanguage)
   }
 
   public onCallLaterClick() {
