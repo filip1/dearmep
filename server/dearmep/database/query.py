@@ -207,9 +207,10 @@ def get_new_sms_auth_code(
     # Reject the user if they have too many open verification requests.
     counts = get_number_verification_count(session, user=user)
 
-    if counts.incomplete >= config.authentication.session.max_unused_codes:
+    if (counts.incomplete >= config.authentication.session.max_unused_codes
+        or counts.complete >= config.authentication.session.max_logins
+    ):
         return PhoneRejectReason.TOO_MANY_VERIFICATION_REQUESTS
-    # TODO: Also check completed logins.
 
     code = VerificationCode(f"{randbelow(1_000_000):06}")
 
