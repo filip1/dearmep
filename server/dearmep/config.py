@@ -60,6 +60,7 @@ class SecretsConfig(BaseModel):
 
 class SessionConfig(BaseModel):
     max_logins: PositiveInt
+    max_logins_cutoff_days: PositiveInt
     max_unused_codes: PositiveInt
 
 

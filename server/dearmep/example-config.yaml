@@ -140,7 +140,12 @@ authentication:
     # phone they indeed control to log in hundreds of times. Therefore, we also
     # limit the number of _successful_ logins that can be performed per phone
     # number.
-    max_logins: 20
+    max_logins: 10
+
+    # The `max_logins` number above will only consider logins that took place
+    # (to be exact: were requested) in the last `max_logins_cutoff_days` days.
+    # In other words, in this example you could log in 10 times every 5 days.
+    max_logins_cutoff_days: 5
 
     # How long until the session times out due to inactivity. Any API request
     # with a valid token will reset this timeout.

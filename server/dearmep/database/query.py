@@ -168,6 +168,7 @@ def get_number_verification_count(
     *,
     user: UserPhone,
     reset_incomplete_on_successful_login: bool = True,
+    cutoff_completed_older_than_s: Optional[int] = None,
 ) -> NumberVerificationRequestCount:
     """Get the number of completed & incomplete phone number verifications.
 
@@ -195,8 +196,16 @@ def get_number_verification_count(
                 datetime(2000, 1, 1),
             ))
 
-    # All complete attempts will be considered.
     complete_filter = [column("completed").is_(True)]
+    if cutoff_completed_older_than_s:
+        # Only completed attempts in the last n seconds will be counted. This
+        # effectively limits the "complete" counter to that timespan. Note that
+        # this limit has no effect on how far back the "reset incomplete on
+        # successful login" logic will look.
+        complete_filter.append(
+            col(NumberVerificationRequest.requested_at) >=
+            datetime.now() - timedelta(seconds=cutoff_completed_older_than_s)
+        )
 
     request_counts: Dict[bool, int] = dict(session.exec(
         select(  # type: ignore[call-overload]
@@ -235,7 +244,9 @@ def get_new_sms_auth_code(
     now = datetime.now()
 
     # Reject the user if they have too many open verification requests.
-    counts = get_number_verification_count(session, user=user)
+    cutoff_s = config.authentication.session.max_logins_cutoff_days * 86_400
+    counts = get_number_verification_count(
+        session, user=user, cutoff_completed_older_than_s=cutoff_s)
 
     if (
         counts.incomplete >= config.authentication.session.max_unused_codes
