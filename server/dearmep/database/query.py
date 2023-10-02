@@ -6,7 +6,7 @@ import re
 from sqlalchemy import func
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.sql import label
-from sqlmodel import case, col
+from sqlmodel import and_, case, col, column, or_
 
 from ..config import Config
 from ..models import CountryCode, DestinationSearchGroup, \
@@ -167,6 +167,7 @@ def get_number_verification_count(
     session: Session,
     *,
     user: UserPhone,
+    reset_incomplete_on_successful_login: bool = True,
 ) -> NumberVerificationRequestCount:
     """Get the number of completed & incomplete phone number verifications.
 
@@ -174,6 +175,29 @@ def get_number_verification_count(
     someone spamming a victim's number with codes by simply doing it _slowly_,
     or to prevent people from logging in 100 times during the course of a day.
     """
+    # Subquery for the timestamp of the last successful login of that user.
+    last_successful = select(  # type: ignore[call-overload]
+        func.max(NumberVerificationRequest.completed_at)
+    ).where(
+        NumberVerificationRequest.user == user,
+        col(NumberVerificationRequest.ignore).is_(False),
+    ).scalar_subquery()
+
+    incomplete_filter = [column("completed").is_(False)]
+    if reset_incomplete_on_successful_login:
+        # Only incomplete attempts since the last successful one will be
+        # considered. This effectively resets the "incomplete" counter once
+        # there has been a successful login. If there was no last successful
+        # one, consider all since Jan 1 2000.
+        incomplete_filter.append(
+            NumberVerificationRequest.requested_at > func.coalesce(
+                last_successful,
+                datetime(2000, 1, 1),
+            ))
+
+    # All complete attempts will be considered.
+    complete_filter = [column("completed").is_(True)]
+
     request_counts: Dict[bool, int] = dict(session.exec(
         select(  # type: ignore[call-overload]
             label("completed", case(
@@ -185,6 +209,12 @@ def get_number_verification_count(
         .where(
             NumberVerificationRequest.user == user,
             col(NumberVerificationRequest.ignore).is_(False),
+            # Use different filtering depending on whether the attempt was
+            # completed or not.
+            or_(
+                and_(*incomplete_filter),
+                and_(*complete_filter),
+            ),
         )
     ).all())
 
@@ -207,7 +237,8 @@ def get_new_sms_auth_code(
     # Reject the user if they have too many open verification requests.
     counts = get_number_verification_count(session, user=user)
 
-    if (counts.incomplete >= config.authentication.session.max_unused_codes
+    if (
+        counts.incomplete >= config.authentication.session.max_unused_codes
         or counts.complete >= config.authentication.session.max_logins
     ):
         return PhoneRejectReason.TOO_MANY_VERIFICATION_REQUESTS

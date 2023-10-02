@@ -131,7 +131,9 @@ authentication:
     # reached, no more verification SMS will be sent to that number,
     # effectively disallowing them from logging in again. This restriction does
     # not time out on its own, to ensure that we never sent more than this
-    # number of codes to someone who might not even know who we are.
+    # number of codes to someone who might not even know who we are. However,
+    # a successful login _will_ reset this number: Only unused codes _after_
+    # the last successful login (if any) will be counted.
     max_unused_codes: 3
 
     # Additionally, an attacker might try to incur costs for us by using a

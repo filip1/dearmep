@@ -375,6 +375,7 @@ class NumberVerificationRequest(SQLModel, table=True):
         description="Timestamp of when the code will expire.",
     )
     completed_at: Optional[datetime] = Field(
+        index=True,
         description="Timestamp of when the request has been completed "
         "successfully (if at all) by entering the correct code.",
     )
