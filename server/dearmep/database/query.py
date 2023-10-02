@@ -165,13 +165,12 @@ def get_new_sms_auth_code(
     config = Config.get()
     now = datetime.now()
 
-    # Block the user if they have too many open verification requests.
+    # Block the user if they have too many open verification requests. We are
+    # deliberately also considering expired requests here, to prevent someone
+    # spamming a victim's number with codes by simply doing it _slowly_.
     open_requests = session.scalar(
         select(func.count())  # type: ignore[call-overload]
-        .where(
-            NumberVerificationRequest.user == user,
-            NumberVerificationRequest.expires_at > now,
-        )
+        .where(NumberVerificationRequest.user == user)
     )
     if open_requests >= config.authentication.session.max_unused_codes:
         session.add(UserBlock(
