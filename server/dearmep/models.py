@@ -4,17 +4,14 @@ import enum
 from hashlib import sha256
 import json
 import re
-from typing import TYPE_CHECKING, Any, Dict, Generic, List, Literal, \
-    Optional, Set, Tuple, TypeVar
+from typing import Any, Dict, Generic, List, Literal, Optional, Set, Tuple, \
+    TypeVar
 
 from canonicaljson import encode_canonical_json
 import phonenumbers
 from pydantic import BaseModel, ConstrainedFloat, ConstrainedInt, \
     ConstrainedStr, Field
 from pydantic.generics import GenericModel
-
-if TYPE_CHECKING:
-    from .database.connection import Session
 
 
 T = TypeVar("T")
@@ -273,7 +270,6 @@ class UserPhone(str):
 
     def check_allowed(
         self,
-        session: Optional[Session] = None,
     ) -> Set[PhoneRejectReason]:
         """Return reasons why this phone number may not use the application.
 
@@ -283,8 +279,6 @@ class UserPhone(str):
         mobile number, whether it might actually exist, etc.).
         """
         from .config import Config
-        from .database import query
-        from .database.models import BlockReason
 
         config = Config.get().telephony
         reasons: Set[PhoneRejectReason] = set()
@@ -296,13 +290,6 @@ class UserPhone(str):
         # Fail if it's been manually blocked.
         if self.matches_filter(config.blocked_numbers):
             reasons.add(PhoneRejectReason.BLOCKED)
-
-        # If we can access the database, check if it's blocked there.
-        if session:
-            if db_reason := query.get_block_reason(session, self):
-                if db_reason == BlockReason.TOO_MANY_VERIFICATION_REQUESTS:
-                    reasons.add(
-                        PhoneRejectReason.TOO_MANY_VERIFICATION_REQUESTS)
 
         # Fail if it's not in our list of allowed countries.
         if self.calling_code not in config.allowed_calling_codes:
@@ -321,14 +308,14 @@ class UserPhone(str):
 
         return reasons
 
-    def is_allowed(self, session: Optional[Session] = None) -> bool:
+    def is_allowed(self) -> bool:
         """Check whether this phone number may use the application.
 
         This is a convenience method that checks whether `check_allowed()`
         returned no reasons for disallowing the phone number, i.e. is empty.
         See that method for usage hints.
         """
-        return len(self.check_allowed(session)) == 0
+        return len(self.check_allowed()) == 0
 
     def matches_filter(self, filter: List[str]) -> bool:
         """Check whether this phone number matches an entry in the list.

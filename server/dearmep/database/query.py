@@ -1,25 +1,31 @@
 from datetime import datetime, timedelta
-from typing import Callable, List, Optional, Union, cast
+from typing import Callable, Dict, List, NamedTuple, Optional, Union, cast
 from secrets import randbelow
 import re
-import backoff
 
 from sqlalchemy import func
-from sqlalchemy.exc import IntegrityError, NoResultFound
-from sqlmodel import case
+from sqlalchemy.exc import NoResultFound
+from sqlalchemy.sql import label
+from sqlmodel import case, col
 
 from ..config import Config
 from ..models import CountryCode, DestinationSearchGroup, \
     DestinationSearchResult, Language, PhoneRejectReason, SearchResult, \
     UserPhone, VerificationCode
 from .connection import Session, select
-from .models import Blob, BlockReason, Destination, DestinationID, \
+from .models import Blob, Destination, DestinationID, \
     DestinationSelectionLog, DestinationSelectionLogEvent, \
-    NumberVerificationRequest, UserBlock, UserSignIn
+    NumberVerificationRequest
 
 
 class NotFound(Exception):
     pass
+
+
+class NumberVerificationRequestCount(NamedTuple):
+    """The number of incomplete & completed number verification requests."""
+    incomplete: int = 0
+    complete: int = 0
 
 
 def escape_for_like(value: str) -> str:
@@ -157,54 +163,65 @@ def to_destination_search_result(
     )
 
 
+def get_number_verification_count(
+    session: Session,
+    *,
+    user: UserPhone,
+) -> NumberVerificationRequestCount:
+    """Get the number of completed & incomplete phone number verifications.
+
+    We are deliberately also considering expired requests here, to prevent
+    someone spamming a victim's number with codes by simply doing it _slowly_,
+    or to prevent people from logging in 100 times during the course of a day.
+    """
+    request_counts: Dict[bool, int] = dict(session.exec(
+        select(  # type: ignore[call-overload]
+            label("completed", case(
+                (col(NumberVerificationRequest.completed_at).is_(None), False),
+                else_=True,
+            )),
+            label("count", func.count()),
+        ).group_by("completed")
+        .where(
+            NumberVerificationRequest.user == user,
+            col(NumberVerificationRequest.ignore).is_(False),
+        )
+    ).all())
+
+    return NumberVerificationRequestCount(**{
+        "complete" if k else "incomplete": v
+        for k, v in request_counts.items()
+    })
+
+
 def get_new_sms_auth_code(
     session: Session,
     *,
     user: UserPhone,
     language: Language,
 ) -> Union[PhoneRejectReason, VerificationCode]:
+    """Generate SMS verification code & store it in the database."""
     config = Config.get()
     now = datetime.now()
 
-    # Block the user if they have too many open verification requests. We are
-    # deliberately also considering expired requests here, to prevent someone
-    # spamming a victim's number with codes by simply doing it _slowly_.
-    open_requests = session.scalar(
-        select(func.count())  # type: ignore[call-overload]
-        .where(NumberVerificationRequest.user == user)
-    )
-    if open_requests >= config.authentication.session.max_unused_codes:
-        session.add(UserBlock(
-            user=user, reason=BlockReason.TOO_MANY_VERIFICATION_REQUESTS))
-        session.commit()
+    # Reject the user if they have too many open verification requests.
+    counts = get_number_verification_count(session, user=user)
+
+    if counts.incomplete >= config.authentication.session.max_unused_codes:
         return PhoneRejectReason.TOO_MANY_VERIFICATION_REQUESTS
+    # TODO: Also check completed logins.
 
-    @backoff.on_exception(
-        backoff.constant,
-        exception=IntegrityError,
-        max_tries=50,
-        interval=0.01,
-        on_backoff=lambda details: session.rollback(),
-        logger=None,
-    )
-    def insert_new_code():
-        """Create a new verification code and insert it into the database.
+    code = VerificationCode(f"{randbelow(1_000_000):06}")
 
-        This function will automatically choose a new code and retry if there
-        already is an entry with the same code.
-        """
-        code = VerificationCode(f"{randbelow(1_000_000):06}")
-        session.add(NumberVerificationRequest(
-            user=user,
-            code=code,
-            requested_at=now,
-            expires_at=now + timedelta(minutes=10),  # TODO: make configurable
-            language=language,
-        ))
-        session.commit()  # else there's no integrity check being done
-        return code
+    session.add(NumberVerificationRequest(
+        user=user,
+        code=code,
+        requested_at=now,
+        expires_at=now + timedelta(minutes=10),  # TODO: make configurable
+        language=language,
+    ))
 
-    return insert_new_code()
+    return code
 
 
 def verify_sms_auth_code(
@@ -213,30 +230,17 @@ def verify_sms_auth_code(
     user: UserPhone,
     code: VerificationCode,
 ) -> bool:
-    if confirmation := session.exec(
+    """Check SMS verification code validity & mark as used."""
+    if request := session.exec(
         select(NumberVerificationRequest)
         .where(
             NumberVerificationRequest.user == user,
             NumberVerificationRequest.code == code,
+            col(NumberVerificationRequest.ignore).is_(False),
+            col(NumberVerificationRequest.completed_at).is_(None),
             NumberVerificationRequest.expires_at > datetime.now(),
-        )
+        ).order_by(col(NumberVerificationRequest.requested_at).desc())
     ).first():
-        session.add(UserSignIn(
-            user=user,
-            initiated_at=confirmation.requested_at,
-            language=confirmation.language,
-        ))
-        session.delete(confirmation)
+        request.completed_at = datetime.now()
         return True
     return False
-
-
-def get_block_reason(
-    session: Session,
-    user: UserPhone,
-) -> Optional[BlockReason]:
-    if entry := session.exec(
-        select(UserBlock).where(UserBlock.user == user)
-    ).first():
-        return entry.reason
-    return None

@@ -354,12 +354,15 @@ DestinationRead.update_forward_refs()  # after DestinationGroupListItem
 
 class NumberVerificationRequest(SQLModel, table=True):
     __tablename__ = "number_verification_requests"
-    user: UserPhone = Field(
+    id: Optional[int] = Field(
         primary_key=True,
+        description="Auto-generated ID.",
+    )
+    user: UserPhone = Field(
+        index=True,
         description="User requesting the verification.",
     )
     code: VerificationCode = Field(
-        primary_key=True,
         description="Verification code sent out via SMS.",
     )
     # Not an auto_timestamp_column because it relates to expires_at, the caller
@@ -369,58 +372,20 @@ class NumberVerificationRequest(SQLModel, table=True):
         description="Timestamp of when the User requested the code.",
     )
     expires_at: datetime = Field(
-        index=True,
         description="Timestamp of when the code will expire.",
+    )
+    completed_at: Optional[datetime] = Field(
+        description="Timestamp of when the request has been completed "
+        "successfully (if at all) by entering the correct code.",
     )
     language: Language = Field(
         description="UI language in use when the code was requested.",
     )
-
-
-class UserSignIn(SQLModel, table=True):
-    __tablename__ = "user_signin"
-    id: Optional[int] = Field(
-        primary_key=True,
-        description="Auto-generated ID.",
-    )
-    user: UserPhone = Field(
-        index=True,
-        description="User associated with this sign-in.",
-    )
-    completed_at: Optional[datetime] = Field(
-        sa_column_kwargs=auto_timestamp_column_kwargs(),
-        description="Timestamp of when the User completed the sign-in.",
-    )
-    initiated_at: datetime = Field(
-        description="Timestamp of when the User requested the sign-in.",
-    )
-    language: Language = Field(
-        description="UI language in use when the sign-in was initiated.",
-    )
-
-
-class BlockReason(str, enum.Enum):
-    """Reason why a User was blocked.
-
-    * `TOO_MANY_VERIFICATION_REQUESTS`: This number has issued too many
-      verification requests (each resulting in an SMS message being sent)
-      without confirming them.
-    """
-    TOO_MANY_VERIFICATION_REQUESTS = "TOO_MANY_VERIFICATION_REQUESTS"
-
-
-class UserBlock(SQLModel, table=True):
-    __tablename__ = "user_blocks"
-    user: UserPhone = Field(
-        primary_key=True,
-        description="The blocked user.",
-    )
-    blocked_at: Optional[datetime] = Field(
-        sa_column=auto_timestamp_column(),
-        description="When the user was blocked.",
-    )
-    reason: BlockReason = Field(
-        description="Reason for blocking the User.",
+    ignore: bool = Field(
+        False,
+        description="Whether to ignore this entry, e.g. from counting the "
+        "number of verification requests. To be set manually by the "
+        "administrator."
     )
 
 

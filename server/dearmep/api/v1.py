@@ -316,11 +316,11 @@ def request_number_verification(
     assert user.original_number  # sure, we just created it from one
     number = user.format_number(user.original_number)
 
-    with get_session() as session:
-        # Check if the number is forbidden by policy.
-        if reject_reasons := user.check_allowed(session):
-            return reject(reject_reasons)
+    # Check if the number is forbidden by policy.
+    if reject_reasons := user.check_allowed():
+        return reject(reject_reasons)
 
+    with get_session() as session:
         result = query.get_new_sms_auth_code(
             session, user=user, language=request.language)
         # Number could be rejected because of too many requests.
