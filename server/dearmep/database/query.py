@@ -2,9 +2,10 @@ from datetime import datetime, timedelta
 from typing import Callable, List, Optional, Union, cast
 from secrets import randbelow
 import re
+import backoff
 
 from sqlalchemy import func
-from sqlalchemy.exc import NoResultFound
+from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlmodel import case
 
 from ..config import Config
@@ -178,18 +179,32 @@ def get_new_sms_auth_code(
         session.commit()
         return PhoneRejectReason.TOO_MANY_VERIFICATION_REQUESTS
 
-    code = VerificationCode(f"{randbelow(1_000_000):06}")
+    @backoff.on_exception(
+        backoff.constant,
+        exception=IntegrityError,
+        max_tries=50,
+        interval=0.01,
+        on_backoff=lambda details: session.rollback(),
+        logger=None,
+    )
+    def insert_new_code():
+        """Create a new verification code and insert it into the database.
 
-    # TODO: Handle index violation due to duplicate codes.
-    session.add(NumberVerificationRequest(
-        user=user,
-        code=code,
-        requested_at=now,
-        expires_at=now + timedelta(minutes=10),  # TODO: make configurable
-        language=language,
-    ))
+        This function will automatically choose a new code and retry if there
+        already is an entry with the same code.
+        """
+        code = VerificationCode(f"{randbelow(1_000_000):06}")
+        session.add(NumberVerificationRequest(
+            user=user,
+            code=code,
+            requested_at=now,
+            expires_at=now + timedelta(minutes=10),  # TODO: make configurable
+            language=language,
+        ))
+        session.commit()  # else there's no integrity check being done
+        return code
 
-    return code
+    return insert_new_code()
 
 
 def verify_sms_auth_code(
