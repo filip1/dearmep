@@ -106,6 +106,13 @@ api:
       small_block_limit: 100 per minute
       large_block_limit: 300 per minute
 
+    # Requests that send SMS messages. This is basically just the phone number
+    # verification.
+    sms:
+      ip_limit: 3 per second, 25 per 8 hours
+      small_block_limit: 100 per 8 hours
+      large_block_limit: 300 per 8 hours
+
 
 # User authentication.
 authentication:
@@ -114,6 +121,31 @@ authentication:
   # are managed via a non-permanent JWT session cookie that will get deleted
   # once the user closes their browser window or logs out manually.
   session:
+
+    # To log a User in, an SMS verification code is sent to their phone and
+    # needs to be entered into the application to prove their ownership over
+    # that phone number. If the correct code is entered, it will be marked as
+    # used. However, a malicious person might try to spam a victim's phone by
+    # sending verification codes to it. Therefore, we limit the number of codes
+    # that can be in "unused" state for a given phone number. If this amount is
+    # reached, no more verification SMS will be sent to that number,
+    # effectively disallowing them from logging in again. This restriction does
+    # not time out on its own, to ensure that we never sent more than this
+    # number of codes to someone who might not even know who we are. However,
+    # a successful login _will_ reset this number: Only unused codes _after_
+    # the last successful login (if any) will be counted.
+    max_unused_codes: 3
+
+    # Additionally, an attacker might try to incur costs for us by using a
+    # phone they indeed control to log in hundreds of times. Therefore, we also
+    # limit the number of _successful_ logins that can be performed per phone
+    # number.
+    max_logins: 10
+
+    # The `max_logins` number above will only consider logins that took place
+    # (to be exact: were requested) in the last `max_logins_cutoff_days` days.
+    # In other words, in this example you could log in 10 times every 5 days.
+    max_logins_cutoff_days: 5
 
     # How long until the session times out due to inactivity. Any API request
     # with a valid token will reset this timeout.
@@ -136,6 +168,9 @@ authentication:
 
 # Options regarding phone calls and SMS.
 telephony:
+  # If set to true, do not actually send out SMS and make calls.
+  # This is useful for developing the application.
+  dry_run: true
 
   # Calling codes that we allow Users to have. This corresponds to the "country
   # code" part of an international phone number. For example, the number
@@ -212,13 +247,6 @@ telephony:
     # It cannot be used again before being manually unlocked by an admin. This
     # is to prevent spamming a victim with codes, incurring costs.
     max_unused: 3
-
-    # How many verifications may be requested (possibly for different phone
-    # numbers, think call party behind a NAT) per IP address?
-    per_ip_limit: 3 per second, 10 per 6 hours
-
-    # How many SMS messages may the system send overall?
-    send_limit: 5 per second, 100 per hour
 
 
 # Localization options.

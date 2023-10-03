@@ -2,15 +2,16 @@ from datetime import date
 from functools import lru_cache
 import logging
 from pathlib import Path
-import re
 from typing import Any, ClassVar, Dict, List, Literal, Optional, Union
 
-from pydantic import AnyHttpUrl, BaseModel, BaseSettings, ConstrainedStr, \
-    DirectoryPath, Field, FilePath, ValidationError, validator
+from pydantic import AnyHttpUrl, BaseModel, BaseSettings, DirectoryPath, \
+    Field, FilePath, PositiveInt, ValidationError, validator
 from pydantic.fields import ModelField
 from pydantic.utils import deep_update
 import yaml
 from yaml.parser import ParserError
+
+from .models import Language
 
 
 _logger = logging.getLogger(__name__)
@@ -31,10 +32,6 @@ class ConfigNotLoaded(Exception):
     pass
 
 
-class Language(ConstrainedStr):
-    regex = re.compile(r"^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$")
-
-
 class IPRateLimits(BaseModel):
     ip_limit: str
     small_block_limit: str
@@ -49,6 +46,7 @@ class CorsConfig(BaseModel):
 class APIRateLimitConfig(BaseModel):
     simple: IPRateLimits
     computational: IPRateLimits
+    sms: IPRateLimits
 
 
 class APIConfig(BaseModel):
@@ -60,8 +58,15 @@ class SecretsConfig(BaseModel):
     pepper: str
 
 
+class SessionConfig(BaseModel):
+    max_logins: PositiveInt
+    max_logins_cutoff_days: PositiveInt
+    max_unused_codes: PositiveInt
+
+
 class AuthenticationConfig(BaseModel):
     secrets: SecretsConfig
+    session: SessionConfig
 
 
 class ContactTimespanFilterTimespan(BaseModel):
@@ -193,6 +198,7 @@ class TelephonyConfig(BaseModel):
     allowed_calling_codes: List[int]
     blocked_numbers: List[str] = []
     approved_numbers: List[str] = []
+    dry_run: bool = False
 
 
 class Config(BaseModel):

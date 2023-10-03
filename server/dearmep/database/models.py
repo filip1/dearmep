@@ -7,8 +7,8 @@ from pydantic import UUID4, BaseModel
 from sqlmodel import Column, Enum, Field, Relationship, SQLModel, TIMESTAMP, \
     and_, case, or_, func, text
 
-from ..config import Config, ConfigNotLoaded
-from ..models import CountryCode, Score, UserPhone
+from ..config import Config, ConfigNotLoaded, Language
+from ..models import CountryCode, Score, UserPhone, VerificationCode
 
 
 class _SchemaExtra(TypedDict):
@@ -87,12 +87,27 @@ DestinationGroupID = str
 DEFAULT_BASE_ENDORSEMENT = 0.5
 
 
-def auto_timestamp_column() -> Column:
-    """A timestamp column that will default to whenever the row is created."""
+def auto_timestamp_column_kwargs() -> Dict[str, Any]:
+    return {
+        "nullable": False,
+        "server_default": func.now(),
+    }
+
+
+def auto_timestamp_column(**kwargs) -> Column:
+    """A timestamp column that will default to whenever the row is created.
+
+    Note that this returns a `Column`, which will cause the field to be
+    prioritized higher than normal SQLModel fields in table creation. It will
+    probably be come right after the primary key. Worse yet, if it is part of
+    the primary key, it will be ordered before any non-`Column` fields. If this
+    breaks your ordering, use `sa_column_kwargs=auto_timestamp_column_kwargs()`
+    instead. See <https://github.com/tiangolo/sqlmodel/issues/542> for details.
+    """
     return Column(
         TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=func.now(),
+        **auto_timestamp_column_kwargs(),
+        **kwargs,
     )
 
 
@@ -334,7 +349,45 @@ class DestinationGroupListItem(DestinationGroupBase):
     logo: Optional[str]
 
 
-DestinationRead.update_forward_refs()
+DestinationRead.update_forward_refs()  # after DestinationGroupListItem
+
+
+class NumberVerificationRequest(SQLModel, table=True):
+    __tablename__ = "number_verification_requests"
+    id: Optional[int] = Field(
+        primary_key=True,
+        description="Auto-generated ID.",
+    )
+    user: UserPhone = Field(
+        index=True,
+        description="User requesting the verification.",
+    )
+    code: VerificationCode = Field(
+        description="Verification code sent out via SMS.",
+    )
+    # Not an auto_timestamp_column because it relates to expires_at, the caller
+    # should calculate both and set them explicitly.
+    requested_at: datetime = Field(
+        index=True,
+        description="Timestamp of when the User requested the code.",
+    )
+    expires_at: datetime = Field(
+        description="Timestamp of when the code will expire.",
+    )
+    completed_at: Optional[datetime] = Field(
+        index=True,
+        description="Timestamp of when the request has been completed "
+        "successfully (if at all) by entering the correct code.",
+    )
+    language: Language = Field(
+        description="UI language in use when the code was requested.",
+    )
+    ignore: bool = Field(
+        False,
+        description="Whether to ignore this entry, e.g. from counting the "
+        "number of verification requests. To be set manually by the "
+        "administrator."
+    )
 
 
 class DestinationSelectionLogEvent(str, enum.Enum):

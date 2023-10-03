@@ -4,8 +4,7 @@ import enum
 from hashlib import sha256
 import json
 import re
-from typing import Any, Dict, Generic, List, Literal, Optional, Set, Tuple, \
-    TypeVar
+from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar
 
 from canonicaljson import encode_canonical_json
 import phonenumbers
@@ -16,7 +15,6 @@ from pydantic.generics import GenericModel
 
 T = TypeVar("T")
 
-
 MAX_SEARCH_RESULT_LIMIT = 20
 
 
@@ -25,6 +23,17 @@ class CountryCode(ConstrainedStr):
     min_length = 2
     max_length = 3
     to_upper = True
+
+
+class Language(ConstrainedStr):
+    regex = re.compile(r"^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$")
+
+
+class LanguageMixin(BaseModel):
+    language: Language = Field(
+        description="The language to use for interactions with the User.",
+        example="de",
+    )
 
 
 class SearchResultLimit(ConstrainedInt):
@@ -39,6 +48,26 @@ class Score(ConstrainedFloat):
     le = 1.0
 
 
+INPUT_NUMBER_REGEX = re.compile(r"^[+0-9./ ()-]+$")
+
+
+class InputPhoneNumber(ConstrainedStr):
+    """An international phone number, as input by a User.
+
+    This class is somewhat lenient regarding the format it accepts, but still
+    strict enough to allow converting the number into a (canonicalized, E.164)
+    `PhoneNumber`.
+    """
+    max_length = 32  # should allow enough superfluous characters
+    regex = INPUT_NUMBER_REGEX
+
+
+class PhoneNumber(ConstrainedStr):
+    """An E.164-canonicalized international phone number."""
+    max_length = 16
+    regex = re.compile(r"^\+[1-9][0-9]{1,14}$")
+
+
 class PhoneRejectReason(str, enum.Enum):
     """Reasons why a phone number is rejected by the system.
 
@@ -51,11 +80,15 @@ class PhoneRejectReason(str, enum.Enum):
       example a landline, pager, or paid service number.
     * `BLOCKED`: This number or some prefix of it has been manually blocked by
       the administrator.
+    * `TOO_MANY_VERIFICATION_REQUESTS`: This number has issued too many
+      verification requests (each resulting in an SMS message being sent)
+      without confirming them.
     """
     INVALID_PATTERN = "INVALID_PATTERN"
     DISALLOWED_COUNTRY = "DISALLOWED_COUNTRY"
     DISALLOWED_TYPE = "DISALLOWED_TYPE"
     BLOCKED = "BLOCKED"
+    TOO_MANY_VERIFICATION_REQUESTS = "TOO_MANY_VERIFICATION_REQUESTS"
 
 
 class UserPhone(str):
@@ -120,7 +153,6 @@ class UserPhone(str):
         phonenumbers.PhoneNumberType.FIXED_LINE_OR_MOBILE,
         phonenumbers.PhoneNumberType.MOBILE,
     }
-    NUMBER_REGEX = re.compile(r"^[+0-9./ ()-]+$")
 
     country_codes: Tuple[CountryCode, ...]
     structured: Structured
@@ -168,6 +200,9 @@ class UserPhone(str):
         # All other things are not equal to us.
         return False
 
+    # Needs to be set explicitly since we define __eq__.
+    __hash__ = str.__hash__
+
     def __setattr__(self, __name: str, __value: Any) -> None:
         raise TypeError(
             "UserPhone is immutable and does not allow item assignment")
@@ -187,14 +222,14 @@ class UserPhone(str):
         return b64encode(hash.digest()).decode()
 
     @staticmethod
-    def format_number(number: phonenumbers.PhoneNumber) -> str:
+    def format_number(number: phonenumbers.PhoneNumber) -> PhoneNumber:
         """Format a phone number into canonical E.164 form.
 
         You should use `UserPhone.parse_number()` to convert a phone number
-        string into a PhoneNumber object.
+        string into a `phonenumbers.PhoneNumber` object.
         """
-        return phonenumbers.format_number(
-            number, phonenumbers.PhoneNumberFormat.E164)
+        return PhoneNumber(phonenumbers.format_number(
+            number, phonenumbers.PhoneNumberFormat.E164))
 
     @classmethod
     def parse_number(cls, number: str) -> phonenumbers.PhoneNumber:
@@ -203,7 +238,7 @@ class UserPhone(str):
         As `phonenumbers.parse()` is quite lenient, this method employs some
         additional checks.
         """
-        if not cls.NUMBER_REGEX.fullmatch(number):
+        if not INPUT_NUMBER_REGEX.fullmatch(number):
             raise ValueError(f"'{number}' does not look like a phone number")
         try:
             parsed = phonenumbers.parse(number, region=None)
@@ -232,8 +267,15 @@ class UserPhone(str):
         """
         return self.structured.original_number
 
-    def check_allowed(self) -> Set[PhoneRejectReason]:
+    def check_allowed(self) -> List[PhoneRejectReason]:
         """Return reasons why this phone number may not use the application.
+
+        The reasons are sorted by priority. If for example the user interface
+        calling this method does not support showing multiple error messages
+        (or simply does not want to), you can use only the first reason.
+
+        If there are no reasons why the number should be rejected, this returns
+        an empty list.
 
         Note that this method is best used on a `UserPhone` instance created
         from an unhashed phone number, not from the JSON representation, since
@@ -243,7 +285,7 @@ class UserPhone(str):
         from .config import Config
 
         config = Config.get().telephony
-        reasons: Set[PhoneRejectReason] = set()
+        reasons: List[PhoneRejectReason] = []
 
         # Allow if it's been manually approved.
         if self.matches_filter(config.approved_numbers):
@@ -251,22 +293,22 @@ class UserPhone(str):
 
         # Fail if it's been manually blocked.
         if self.matches_filter(config.blocked_numbers):
-            reasons.add(PhoneRejectReason.BLOCKED)
+            reasons.append(PhoneRejectReason.BLOCKED)
 
         # Fail if it's not in our list of allowed countries.
         if self.calling_code not in config.allowed_calling_codes:
-            reasons.add(PhoneRejectReason.DISALLOWED_COUNTRY)
+            reasons.append(PhoneRejectReason.DISALLOWED_COUNTRY)
 
         # Checks that we can only do if the original number is available.
         if number := self.original_number:
             # Fail if it's an invalid number.
             if not phonenumbers.is_valid_number(number):
-                reasons.add(PhoneRejectReason.INVALID_PATTERN)
+                reasons.append(PhoneRejectReason.INVALID_PATTERN)
             # Else check the type of the number.
             else:
                 type = phonenumbers.number_type(number)
                 if type not in self.ALLOWED_TYPES:
-                    reasons.add(PhoneRejectReason.DISALLOWED_TYPE)
+                    reasons.append(PhoneRejectReason.DISALLOWED_TYPE)
 
         return reasons
 
@@ -454,4 +496,68 @@ class SearchResult(GenericModel, Generic[T]):
     """Result of a search."""
     results: List[T] = Field(
         description="The actual search results.",
+    )
+
+
+class PhoneNumberVerificationRequest(LanguageMixin):
+    phone_number: InputPhoneNumber = Field(
+        description="The User’s phone number. Some additional characters like "
+        "spaces, braces, dashes, slashes and periods are allowed and will be "
+        "ignored.",
+        example="+49 175 1234567",
+    )
+    accepted_dpp: Literal[True] = Field(
+        title="Accepted DPP",
+        description="Whether the User has accepted the data protection "
+        "policy. Must be `true` for the request to succeed.",
+    )
+
+
+class PhoneNumberVerificationResponse(BaseModel):
+    phone_number: PhoneNumber = Field(
+        description="The canocial form of the phone number that has been "
+        "input. Should be used for display purposes in the frontend.",
+        example="+491751234567",
+    )
+
+
+class PhoneNumberVerificationRejectedResponse(BaseModel):
+    """The phone number was rejected for one or more reasons."""
+    errors: List[PhoneRejectReason]
+
+
+class VerificationCode(ConstrainedStr):
+    min_length = 6
+    max_length = 6
+
+
+class SMSCodeVerificationRequest(BaseModel):
+    phone_number: PhoneNumber
+    code: VerificationCode
+
+
+class SMSCodeVerificationFailedResponse(BaseModel):
+    error: Literal["CODE_VERIFICATION_FAILED"] = Field(
+        "CODE_VERIFICATION_FAILED",
+        description="Either the code did not match the one from the challenge "
+        "SMS message, or there is no challenge running for the supplied phone "
+        "number at all. (For security reasons, it’s not disclosed which one "
+        "of the reasons actually applies.)",
+    )
+
+
+class JWTResponse(BaseModel):
+    access_token: str = Field(
+        description="The JWT that proves ownership over a specific phone "
+        "number. Clients should treat this as an opaque string and not try to "
+        "extract information from it.",
+        example="TW9vcHN5IQo=",
+    )
+    token_type: Literal["Bearer"] = Field(
+        "Bearer",
+        description="Type of the token as specified by OAuth2.",
+    )
+    expires_in: int = Field(
+        description="Number of seconds after which this JWT will expire.",
+        example=3600,
     )
