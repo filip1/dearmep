@@ -140,7 +140,7 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
       }
     }).subscribe({
       next: (response) => {
-        this.authenticationService.setToken(response)
+        this.authenticationService.setToken(response, this.serverValidatedPhoneNumber as string)
         this.step = VerificationStep.Success
       },
       error: (err: HttpErrorResponse | unknown) => {

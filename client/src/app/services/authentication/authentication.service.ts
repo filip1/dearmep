@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 import { JwtResponse } from 'src/app/api/models';
 import { addSeconds, differenceInMilliseconds, isAfter, subMilliseconds } from 'date-fns';
-import { BehaviorSubject, Observable, ReplaySubject, combineLatest, map } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, combineLatest, filter, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +11,14 @@ export class AuthenticationService {
   private readonly tokenStorageKey = "auth-token"
   private readonly tokenTypeStorageKey = "auth-token-type"
   private readonly tokenExpiryTimeStorageKey = "auth-token-expiry-time"
+  private readonly authenticatedNumberStorageKey = "auth-phone-number"
 
   private readonly tokenExpiryMargin = 1000 // Token is treated as expired a short time before actual expiry
 
   private readonly token$ = new BehaviorSubject<string | undefined>(undefined)
   private readonly tokenExpiryTime$ = new BehaviorSubject<Date | undefined>(undefined)
-  private readonly tokenExpiryTick$ = new ReplaySubject<void>()
+  private readonly tokenExpiryTick$ = new BehaviorSubject<void>(undefined)
+  private readonly authenticatedNumber$ = new BehaviorSubject<string | undefined>(undefined)
 
   constructor(
     private readonly localStorageService: LocalStorageService,
@@ -24,15 +26,17 @@ export class AuthenticationService {
     this.loadTokens()
   }
 
-  public setToken(jwtResponse: JwtResponse) {
+  public setToken(jwtResponse: JwtResponse, authenticatedNumber: string) {
     const expiryTime = addSeconds(new Date(), jwtResponse.expires_in)
 
     this.token$.next(jwtResponse.access_token)
     this.tokenExpiryTime$.next(expiryTime)
+    this.authenticatedNumber$.next(authenticatedNumber)
 
     this.localStorageService.setString(this.tokenStorageKey, jwtResponse.access_token)
     this.localStorageService.setString(this.tokenTypeStorageKey, jwtResponse.token_type)
     this.localStorageService.setString(this.tokenExpiryTimeStorageKey, expiryTime.toISOString())
+    this.localStorageService.setString(this.authenticatedNumberStorageKey, authenticatedNumber)
 
     this.setExpiryTick(expiryTime)
   }
@@ -46,13 +50,19 @@ export class AuthenticationService {
     return this.token$.value
   }
 
+  public getAuthenticatedNumber$(): Observable<string> {
+    return this.authenticatedNumber$.pipe(
+      filter(n => !!n),
+    ) as Observable<string>
+  }
+
   public isAuthenticated$(): Observable<boolean> {
     return combineLatest([
       this.token$,
       this.tokenExpiryTime$,
       this.tokenExpiryTick$,
     ]).pipe(
-      map(([ token, tokenExpiryTime ]) => !!token && !!tokenExpiryTime && !this.isExpired(tokenExpiryTime))
+      map(([ token, tokenExpiryTime ]) => !!token && !!tokenExpiryTime && !this.isExpired(tokenExpiryTime)),
     )
   }
 
@@ -63,8 +73,9 @@ export class AuthenticationService {
   private loadTokens() {
     const token = this.localStorageService.getString(this.tokenStorageKey)
     const expiryTimeStr = this.localStorageService.getString(this.tokenExpiryTimeStorageKey)
+    const authenticatedNumber = this.localStorageService.getString(this.authenticatedNumberStorageKey)
 
-    if (!token || !expiryTimeStr) {
+    if (!token || !expiryTimeStr || !authenticatedNumber) {
       return
     }
 
@@ -76,6 +87,7 @@ export class AuthenticationService {
 
     this.token$.next(token)
     this.tokenExpiryTime$.next(expiryTime)
+    this.authenticatedNumber$.next(authenticatedNumber)
 
     this.setExpiryTick(expiryTime)
   }
@@ -87,6 +99,7 @@ export class AuthenticationService {
     this.localStorageService.setString(this.tokenStorageKey, undefined)
     this.localStorageService.setString(this.tokenTypeStorageKey, undefined)
     this.localStorageService.setString(this.tokenExpiryTimeStorageKey, undefined)
+    this.localStorageService.setString(this.authenticatedNumberStorageKey, undefined)
   }
 
   private checkExpired() {
@@ -97,13 +110,12 @@ export class AuthenticationService {
 
   private setExpiryTick(expiryTime: Date) {
     const timeUntilExpiry = differenceInMilliseconds(expiryTime, new Date())
-    console.log("diff", timeUntilExpiry)
     setTimeout(() => {
       this.tokenExpiryTick$.next()
     }, timeUntilExpiry);
   }
 
   private isExpired(expiryTime: Date): boolean {
-    return isAfter(subMilliseconds(expiryTime, this.tokenExpiryMargin), new Date())
+    return isAfter(new Date(), subMilliseconds(expiryTime, this.tokenExpiryMargin))
   }
 }

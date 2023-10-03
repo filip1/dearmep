@@ -1,9 +1,22 @@
-<div class="container" *transloco="let t">
-  <h2 transloco="call.home.title" class="calling-title"></h2>
+<div class="container">
 
-  <p *ngFor="let description of descriptions$ | async" class="description">
-    {{ description.text }}
-  </p>
+  <ng-container *ngIf="!(isAuthenticated$ | async)" >
+    <h2 transloco="call.home.title" class="calling-title"></h2>
+
+    <p *ngFor="let description of descriptions$ | async" class="description">
+      {{ description.text }}
+    </p>
+  </ng-container>
+
+  <ng-container *ngIf="isAuthenticated$ | async" >
+    <h2 transloco="call.home.titleAuthenticated" class="calling-title"></h2>
+
+    <p class="description" transloco="call.home.youHaveAlreadySignedIn" [translocoParams]="{ number: authenticatedNumber$ | async }"></p>
+
+    <p class="not-your-number description" >
+      <a (click)="onReauthenticateClick(); $event.preventDefault()" href="#">{{ 'call.home.notYourNumber' | transloco }}</a>
+    </p>
+  </ng-container>
 
   <div class="dmep-btn-container">
     <button mat-stroked-button color="primary" class="dmep-call-now-btn dmep-btn dmep-btn-primary" (click)="onCallNowClick()">
