@@ -4,8 +4,7 @@ import enum
 from hashlib import sha256
 import json
 import re
-from typing import Any, Dict, Generic, List, Literal, Optional, Set, Tuple, \
-    TypeVar
+from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar
 
 from canonicaljson import encode_canonical_json
 import phonenumbers
@@ -270,8 +269,15 @@ class UserPhone(str):
 
     def check_allowed(
         self,
-    ) -> Set[PhoneRejectReason]:
+    ) -> List[PhoneRejectReason]:
         """Return reasons why this phone number may not use the application.
+
+        The reasons are sorted by priority. If for example the user interface
+        calling this method does not support showing multiple error messages
+        (or simply does not want to), you can use only the first reason.
+
+        If there are no reasons why the number should be rejected, this returns
+        an empty list.
 
         Note that this method is best used on a `UserPhone` instance created
         from an unhashed phone number, not from the JSON representation, since
@@ -281,7 +287,7 @@ class UserPhone(str):
         from .config import Config
 
         config = Config.get().telephony
-        reasons: Set[PhoneRejectReason] = set()
+        reasons: List[PhoneRejectReason] = []
 
         # Allow if it's been manually approved.
         if self.matches_filter(config.approved_numbers):
@@ -289,22 +295,22 @@ class UserPhone(str):
 
         # Fail if it's been manually blocked.
         if self.matches_filter(config.blocked_numbers):
-            reasons.add(PhoneRejectReason.BLOCKED)
+            reasons.append(PhoneRejectReason.BLOCKED)
 
         # Fail if it's not in our list of allowed countries.
         if self.calling_code not in config.allowed_calling_codes:
-            reasons.add(PhoneRejectReason.DISALLOWED_COUNTRY)
+            reasons.append(PhoneRejectReason.DISALLOWED_COUNTRY)
 
         # Checks that we can only do if the original number is available.
         if number := self.original_number:
             # Fail if it's an invalid number.
             if not phonenumbers.is_valid_number(number):
-                reasons.add(PhoneRejectReason.INVALID_PATTERN)
+                reasons.append(PhoneRejectReason.INVALID_PATTERN)
             # Else check the type of the number.
             else:
                 type = phonenumbers.number_type(number)
                 if type not in self.ALLOWED_TYPES:
-                    reasons.add(PhoneRejectReason.DISALLOWED_TYPE)
+                    reasons.append(PhoneRejectReason.DISALLOWED_TYPE)
 
         return reasons
 

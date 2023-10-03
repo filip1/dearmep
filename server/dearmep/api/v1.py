@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Iterable, Optional, Set, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 
 from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
     Response, status
@@ -307,7 +307,7 @@ def request_number_verification(
     number. Provide this code to the _Verify Number_ endpoint to receive a JWT
     proving that you have access to that number.
     """
-    def reject(errors: Set[PhoneRejectReason]) -> JSONResponse:
+    def reject(errors: List[PhoneRejectReason]) -> JSONResponse:
         return error_model(
             status.HTTP_400_BAD_REQUEST,
             PhoneNumberVerificationRejectedResponse(errors=errors))
@@ -325,7 +325,7 @@ def request_number_verification(
             session, user=user, language=request.language)
         # Number could be rejected because of too many requests.
         if isinstance(result, PhoneRejectReason):
-            return reject({result})
+            return reject([result])
 
         message = f"Your code is {result}"  # TODO translation
         get_phone_service().send_sms(number, message)

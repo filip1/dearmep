@@ -1,4 +1,4 @@
-from typing import Set, Tuple
+from typing import List, Tuple
 
 import pytest
 
@@ -51,19 +51,19 @@ def test_original_number_is_lost(fastapi_app):
 
 
 @pytest.mark.parametrize("number,reasons", (
-    ("+4917567", {Reason.INVALID_PATTERN}),  # too short
-    ("+49621123456", {Reason.DISALLOWED_TYPE}),  # landline
-    ("+499001774442", {Reason.DISALLOWED_TYPE}),  # service number
-    ("+491751234567", set()),
-    ("+43 680 1234567", set()),
+    ("+4917567", [Reason.INVALID_PATTERN]),  # too short
+    ("+49621123456", [Reason.DISALLOWED_TYPE]),  # landline
+    ("+499001774442", [Reason.DISALLOWED_TYPE]),  # service number
+    ("+491751234567", []),
+    ("+43 680 1234567", []),
     # from disallowed country, but also prefix-blocked in example config
-    ("+1-202-501-4444", {Reason.BLOCKED, Reason.DISALLOWED_COUNTRY}),
+    ("+1-202-501-4444", [Reason.BLOCKED, Reason.DISALLOWED_COUNTRY]),
     # hash-blocked in example config
-    ("+491701111111", {Reason.BLOCKED}),
+    ("+491701111111", [Reason.BLOCKED]),
     # hash-approved in example config
-    ("+496215555555", set()),
+    ("+496215555555", []),
 ))
-def test_number_allowed(number: str, reasons: Set[Reason], fastapi_app):
+def test_number_allowed(number: str, reasons: List[Reason], fastapi_app):
     up = UserPhone(number)
     assert up.check_allowed() == reasons
     assert not up.is_allowed() if reasons else up.is_allowed()
