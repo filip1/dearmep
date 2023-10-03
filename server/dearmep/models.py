@@ -267,9 +267,7 @@ class UserPhone(str):
         """
         return self.structured.original_number
 
-    def check_allowed(
-        self,
-    ) -> List[PhoneRejectReason]:
+    def check_allowed(self) -> List[PhoneRejectReason]:
         """Return reasons why this phone number may not use the application.
 
         The reasons are sorted by priority. If for example the user interface
