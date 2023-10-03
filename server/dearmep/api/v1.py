@@ -339,8 +339,10 @@ def request_number_verification(
 
 @router.post(
     "/number-verification/verify", operation_id="verifyNumber",
-    responses=rate_limit_response,  # type: ignore[arg-type]
-    # TODO: error response
+    responses={
+        **rate_limit_response,  # type: ignore[arg-type]
+        400: {"model": SMSCodeVerificationFailedResponse},
+    },
     response_model=JWTResponse,
     dependencies=(simple_rate_limit,),
 )
