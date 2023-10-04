@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 
 from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
@@ -9,16 +10,17 @@ from pydantic import BaseModel
 from ..config import Config, Language, all_frontend_strings
 from ..database.connection import get_session
 from ..database.models import Blob, Destination, DestinationGroupListItem, \
-    DestinationID, DestinationRead, DestinationSelectionLogEvent
+    DestinationID, DestinationRead, DestinationSelectionLogEvent, \
+    FeedbackContext
 from ..database import query
 from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import MAX_SEARCH_RESULT_LIMIT, CountryCode, \
-    DestinationSearchResult, FrontendStringsResponse, JWTResponse, \
-    LanguageDetection, LocalizationResponse, \
-    PhoneNumberVerificationRejectedResponse, PhoneNumberVerificationResponse, \
-    PhoneRejectReason, RateLimitResponse, SMSCodeVerificationFailedResponse, \
-    SearchResult, SearchResultLimit, UserPhone, \
-    PhoneNumberVerificationRequest, SMSCodeVerificationRequest
+    DestinationSearchResult, FeedbackSubmission, FeedbackToken, \
+    FrontendStringsResponse, JWTResponse, LanguageDetection, \
+    LocalizationResponse, PhoneNumberVerificationRejectedResponse, \
+    PhoneNumberVerificationResponse, PhoneRejectReason, RateLimitResponse, \
+    SMSCodeVerificationFailedResponse, SearchResult, SearchResultLimit, \
+    UserPhone, PhoneNumberVerificationRequest, SMSCodeVerificationRequest
 from ..phone.abstract import get_phone_service
 from ..ratelimit import Limit, client_addr
 
@@ -369,3 +371,58 @@ def verify_number(
         )
         session.commit()
     return response
+
+
+@router.get(
+    "/call/feedback/{token}", operation_id="getFeedbackContext",
+    response_model=FeedbackContext,
+    responses={
+        **rate_limit_response,  # type: ignore[arg-type]
+        404: {"description": "Token Not Found"},
+    },
+    dependencies=(simple_rate_limit,),
+)
+def get_feedback_context(
+    token: FeedbackToken,
+) -> FeedbackContext:
+    with get_session() as session:
+        try:
+            feedback = query.get_user_feedback_by_token(session, token=token)
+        except query.NotFound as e:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+        return FeedbackContext(
+            expired=feedback.expires_at <= datetime.now(),
+            used=feedback.feedback_entered_at is not None,
+            destination=destination_to_destinationread(feedback.destination),
+        )
+
+
+@router.post(
+    "/call/feedback/{token}", operation_id="submitCallFeedback",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        **rate_limit_response,  # type: ignore[arg-type]
+        403: {"description": "Token Already Used"},
+        404: {"description": "Token Not Found"},
+    },
+    dependencies=(simple_rate_limit,),
+)
+def submit_call_feedback(
+    token: FeedbackToken,
+    submission: FeedbackSubmission,
+):
+    with get_session() as session:
+        try:
+            feedback = query.get_user_feedback_by_token(session, token=token)
+        except query.NotFound as e:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+        if feedback.feedback_entered_at is not None:
+            raise HTTPException(
+                status.HTTP_403_FORBIDDEN, "token has already been used")
+
+        feedback.feedback_entered_at = datetime.now()
+        feedback.convinced = submission.convinced
+        feedback.technical_problems = submission.technical_problems
+        feedback.additional = submission.additional
+        session.add(feedback)
+        session.commit()

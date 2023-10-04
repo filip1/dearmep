@@ -69,6 +69,10 @@ class AuthenticationConfig(BaseModel):
     session: SessionConfig
 
 
+class FeedbackConfig(BaseModel):
+    token_timeout: PositiveInt
+
+
 class ContactTimespanFilterTimespan(BaseModel):
     start: date
     end: date
@@ -207,6 +211,7 @@ class Config(BaseModel):
     authentication: AuthenticationConfig
     contact_timespan_filter: Optional[ContactTimespanFilterConfig]
     database: DatabaseConfig
+    feedback: FeedbackConfig
     l10n: L10nConfig
     telephony: TelephonyConfig
 

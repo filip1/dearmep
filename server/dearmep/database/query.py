@@ -2,20 +2,21 @@ from datetime import datetime, timedelta
 from typing import Callable, Dict, List, NamedTuple, Optional, Union, cast
 from secrets import randbelow
 import re
+import backoff
 
 from sqlalchemy import func
-from sqlalchemy.exc import NoResultFound
+from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.sql import label
 from sqlmodel import and_, case, col, column, or_
 
 from ..config import Config
 from ..models import CountryCode, DestinationSearchGroup, \
-    DestinationSearchResult, Language, PhoneRejectReason, SearchResult, \
-    UserPhone, VerificationCode
+    DestinationSearchResult, FeedbackToken, Language, PhoneRejectReason, \
+    SearchResult, UserPhone, VerificationCode
 from .connection import Session, select
 from .models import Blob, Destination, DestinationID, \
     DestinationSelectionLog, DestinationSelectionLogEvent, \
-    NumberVerificationRequest
+    NumberVerificationRequest, UserFeedback
 
 
 class NotFound(Exception):
@@ -287,3 +288,57 @@ def verify_sms_auth_code(
         request.completed_at = datetime.now()
         return True
     return False
+
+
+def create_feedback_token(
+    session: Session,
+    *,
+    user: UserPhone,
+    destination_id: DestinationID,
+    language: Language,
+) -> FeedbackToken:
+    """Create a new, unique feedback token for a call.
+
+    Note: `language` can be used to initialize the feedback form to that
+    language, even if the User is accessing the form using a completely new
+    browser. Therefore, please provide the language the User _requested_ for
+    the call, even if the call took place in another language due to the
+    requested one not being available for calls.
+    """
+    now = datetime.now()
+    expires_at = now + timedelta(seconds=Config.get().feedback.token_timeout)
+
+    @backoff.on_exception(
+        backoff.constant,
+        exception=IntegrityError,
+        max_tries=50,
+        interval=0.01,
+    )
+    def insert_new_token() -> FeedbackToken:
+        """Generate a new token until we find a unique one."""
+        token = FeedbackToken.generate()
+        feedback = UserFeedback(
+            token=token,
+            issued_at=now,
+            expires_at=expires_at,
+            destination_id=destination_id,
+            calling_code=user.calling_code,
+            language=language,
+        )
+        # Tests for uniqueness violation without affecting outer transaction.
+        with session.begin_nested():
+            session.add(feedback)
+        return token
+
+    return insert_new_token()
+
+
+def get_user_feedback_by_token(
+    session: Session,
+    *,
+    token: FeedbackToken,
+) -> UserFeedback:
+    """Get the `UserFeedback` model for a given token."""
+    if not (feedback := session.get(UserFeedback, token)):
+        raise NotFound(f"unknown token `{token}`")
+    return feedback
