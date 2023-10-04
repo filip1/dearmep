@@ -1,6 +1,5 @@
 from contextlib import ExitStack, contextmanager
 import subprocess
-import sys
 from tempfile import NamedTemporaryFile
 from typing import IO, Generator, Iterable
 
@@ -77,13 +76,13 @@ def concat(
         yield output
 
 
-def run(args, **kwargs) -> subprocess.CompletedProcess:
+def run(args, passthru=False, **kwargs) -> subprocess.CompletedProcess:
     """Run an ffmpeg subprocess."""
     completed = subprocess.run(  # type: ignore[call-overload]
         ("ffmpeg", *args),
         **{
-            "stdout": sys.stdout,
-            "stderr": sys.stderr,
+            "stdout": None if passthru else subprocess.DEVNULL,
+            "stderr": None if passthru else subprocess.DEVNULL,
             **kwargs,
         },
     )
