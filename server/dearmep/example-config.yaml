@@ -166,6 +166,14 @@ authentication:
     pepper: CHANGE THIS
 
 
+# Options regarding the after-call feedback functionality.
+feedback:
+
+  # How long (in seconds) until the feedback token expires and the User will no
+  # longer be able to use it to enter feedback about that specific call.
+  token_timeout: 604800  # one week
+
+
 # Options regarding phone calls and SMS.
 telephony:
   # If set to true, do not actually send out SMS and make calls.

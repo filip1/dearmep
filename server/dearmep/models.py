@@ -4,6 +4,7 @@ import enum
 from hashlib import sha256
 import json
 import re
+import secrets
 from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar
 
 from canonicaljson import encode_canonical_json
@@ -17,12 +18,47 @@ T = TypeVar("T")
 
 MAX_SEARCH_RESULT_LIMIT = 20
 
+FEEDBACK_TEXT_LENGTH = 10_000  # characters
+FEEDBACK_TOKEN_LENGTH = 8
+FEEDBACK_TOKEN_LETTERS = "BCDFGHKLMNPQRSTVWXZ"
+
 
 class CountryCode(ConstrainedStr):
     """An ISO-639 country code."""
     min_length = 2
     max_length = 3
     to_upper = True
+
+
+class FeedbackConvinced(str, enum.Enum):
+    """Whether the User thinks they’ve convinced the Destination."""
+    YES = "YES"
+    LIKELY_YES = "LIKELY_YES"
+    LIKELY_NO = "LIKELY_NO"
+    NO = "NO"
+
+
+class FeedbackText(ConstrainedStr):
+    max_length = FEEDBACK_TEXT_LENGTH
+
+
+class FeedbackToken(ConstrainedStr):
+    """A unique token that may be used once to enter feedback about a call."""
+    min_length = FEEDBACK_TOKEN_LENGTH
+    max_length = FEEDBACK_TOKEN_LENGTH
+    to_upper = True
+    regex = re.compile(
+        f"^[{FEEDBACK_TOKEN_LETTERS}{FEEDBACK_TOKEN_LETTERS.lower()}]"
+        f"{{{FEEDBACK_TOKEN_LENGTH}}}$"
+    )
+
+    @staticmethod
+    def generate() -> FeedbackToken:
+        """Generate a new feedback token, not yet guaranteed to be unique."""
+        return FeedbackToken("".join(
+            secrets.choice(FEEDBACK_TOKEN_LETTERS)
+            for _ in range(FEEDBACK_TOKEN_LENGTH)
+        ))
 
 
 class Language(ConstrainedStr):
@@ -560,4 +596,17 @@ class JWTResponse(BaseModel):
     expires_in: int = Field(
         description="Number of seconds after which this JWT will expire.",
         example=3600,
+    )
+
+
+class FeedbackSubmission(BaseModel):
+    convinced: Optional[FeedbackConvinced] = Field(
+        description="Whether the User thinks they’ve convinced the "
+        "Destination.",
+    )
+    technical_problems: Optional[bool] = Field(
+        description="Whether there were technical problems in the call.",
+    )
+    additional: Optional[FeedbackText] = Field(
+        description="Additional feedback text.",
     )

@@ -8,7 +8,8 @@ from sqlmodel import Column, Enum, Field, Relationship, SQLModel, TIMESTAMP, \
     and_, case, or_, func, text
 
 from ..config import Config, ConfigNotLoaded, Language
-from ..models import CountryCode, Score, UserPhone, VerificationCode
+from ..models import CountryCode, FeedbackConvinced, FeedbackText, \
+    FeedbackToken, Score, UserPhone, VerificationCode
 
 
 class _SchemaExtra(TypedDict):
@@ -489,6 +490,80 @@ class DestinationSelectionLogBase(SQLModel):
 class DestinationSelectionLog(DestinationSelectionLogBase, table=True):
     __tablename__ = "dest_select_log"
     destination: Destination = Relationship()
+
+
+class UserFeedback(SQLModel, table=True):
+    __tablename__ = "user_feedback"
+    token: FeedbackToken = Field(
+        primary_key=True,
+        description="The unique token associated with this feedback entry.",
+    )
+    # Not an auto_timestamp_column because it relates to expires_at, the caller
+    # should calculate both and set them explicitly.
+    issued_at: datetime = Field(
+        index=True,
+        description="When the token has been issued.",
+    )
+    expires_at: datetime = Field(
+        index=True,
+        description="When the token will expire.",
+    )
+    feedback_entered_at: Optional[datetime] = Field(
+        index=True,
+        description="When the feedback has been given. Can be null if the "
+        "token has not yet been used.",
+    )
+    destination_id: DestinationID = Field(
+        index=True, foreign_key="destinations.id",
+        description="The Destination this feedback is about.",
+    )
+    destination: Destination = Relationship()
+    calling_code: int = Field(
+        index=True,
+        description="Calling code of the User’s country.",
+    )
+    language: str = Field(
+        index=True,
+        description="The language the User has had selected when starting the "
+        "call.",
+    )
+    convinced: Optional[FeedbackConvinced] = Field(
+        index=True,
+        description="Whether the User thinks they’ve convinced the "
+        "Destination.",
+    )
+    technical_problems: Optional[bool] = Field(
+        index=True,
+        description="Whether there were technical problems in the call.",
+    )
+    additional: Optional[FeedbackText] = Field(
+        description="Additional feedback text.",
+    )
+
+
+class FeedbackContext(BaseModel):
+    expired: bool = Field(
+        description="Whether the token has already expired. This can also be "
+        "true for used tokens, if they already received feedback but are now "
+        "beyond their expiry date.",
+        **_example(False),
+    )
+    used: bool = Field(
+        description="Whether the token has been used for sending feedback "
+        "already. This can also be true for expired tokens, if they already "
+        "received feedback before expiring.",
+        **_example(False),
+    )
+    language: Language = Field(
+        description="The language the User has had selected when starting the "
+        "call. Allows the frontend to initialize itself to that language, "
+        "even if the User is using a completely new browser to access the "
+        "feedback form.",
+    )
+    destination: Optional[DestinationRead] = Field(
+        description="The Destination associated with this token. Will only be "
+        "returned if the token is neither expired nor already used.",
+    )
 
 
 class SwayabilityImport(BaseModel):
