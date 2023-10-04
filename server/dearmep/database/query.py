@@ -349,9 +349,14 @@ def get_user_feedback_by_token(
 def add_medialist(
     session: Session,
     items: List[BlobOrFile],
+    *,
+    format: str,
+    mimetype: str,
 ) -> UUID4:
     mlist = MediaList(
         items=[item.as_medialist_item() for item in items],
+        format=format,
+        mimetype=mimetype,
     )
     with session.begin_nested():
         session.add(mlist)
@@ -361,10 +366,7 @@ def add_medialist(
 def get_medialist_by_id(
     session: Session,
     id: UUID4,
-) -> List[BlobOrFile]:
+) -> MediaList:
     if not (mlist := session.get(MediaList, str(id))):
         raise NotFound(f"no such medialist: `{str(id)}`")
-    return [
-        BlobOrFile.from_medialist_item(item)
-        for item in mlist.items
-    ]
+    return mlist

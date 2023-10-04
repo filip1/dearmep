@@ -576,6 +576,7 @@ class SwayabilityImport(BaseModel):
 
 
 class MediaList(SQLModel, table=True):
+    __tablename__ = "medialists"
     id: UUID4 = Field(
         sa_column=Column(
             String, primary_key=True, default=lambda: str(uuid4())),
@@ -586,6 +587,13 @@ class MediaList(SQLModel, table=True):
     )
     items: List[MediaListItem] = Field(
         sa_column=Column(JSON),
+    )
+    format: str = Field(
+        description="The format of the desired output, compatible to ffmpeg's "
+        "`-f` option, e.g. `ogg`.",
+    )
+    mimetype: str = Field(
+        description="The MIME type the output is going to have.",
     )
 
 

@@ -9,7 +9,7 @@ from prometheus_client import Counter
 from pydantic import BaseModel, UUID4
 
 from ..config import Config, Language, all_frontend_strings
-from ..convert import ffmpeg
+from ..convert import blobfile, ffmpeg
 from ..database.connection import get_session
 from ..database.models import Blob, Destination, DestinationGroupListItem, \
     DestinationID, DestinationRead, DestinationSelectionLogEvent, \
@@ -452,6 +452,11 @@ def get_concatenated_media(
 
     with get_session() as session:
         mlist = query.get_medialist_by_id(session, id)
-    with ffmpeg.concat(mlist, "ogg", delete=False) as concat:
+    items = [
+        blobfile.BlobOrFile.from_medialist_item(item)
+        for item in mlist.items
+    ]
+
+    with ffmpeg.concat(items, mlist.format, delete=False) as concat:
         return StreamingResponse(
-            stream_and_delete_file(concat.name), media_type="audio/ogg")
+            stream_and_delete_file(concat.name), media_type=mlist.mimetype)
