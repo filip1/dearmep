@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ValidatorFn, Validators } from '@angular/forms';
 import { VerificationStep } from './verification-step.enum';
 import { PhoneNumber } from 'src/app/model/phone-number.model';
@@ -7,14 +7,14 @@ import { BaseUrlService } from 'src/app/common/services/base-url.service';
 import { ApiService } from 'src/app/api/services';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { Subject } from 'rxjs/internal/Subject';
-import { takeUntil } from 'rxjs';
+import { filter, takeUntil } from 'rxjs';
 import { PhoneNumberVerificationResponse } from 'src/app/api/models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PhoneNumberValidationErrors } from 'src/app/components/phone-number-input/phone-number-validation-errors';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { SelectDestinationService } from 'src/app/services/select-destination/select-destination.service';
 import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
-import { CallingService } from 'src/app/services/calling/calling.service';
+import { CallingErrorType, CallingService } from 'src/app/services/calling/calling.service';
 
 @Component({
   selector: 'dmep-verify-number',
@@ -44,6 +44,9 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
   public readonly StepEnterNumber = VerificationStep.EnterNumber
   public readonly StepEnterCode = VerificationStep.EnterCode
   public readonly StepSuccess = VerificationStep.Success
+
+  @Input()
+  public disableScheduling = false
 
   public step = this.StepEnterNumber
 
@@ -159,12 +162,11 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
     if (!this.currentLanguage || !this.selectedDestinationID) {
       return
     }
-
-    this.callintService.setUpCall(this.selectedDestinationID, this.currentLanguage)
+    this.routingStateManager.callNow()
   }
 
   public onCallLaterClick() {
-    this.routingStateManager.goToSchedule()
+    this.routingStateManager.scheduleCall()
   }
 
   public getPolicyLinkHtml(): string {

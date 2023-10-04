@@ -95,6 +95,7 @@ export class AuthenticationService {
   private deleteTokens() {
     this.token$.next(undefined)
     this.tokenExpiryTime$.next(undefined)
+    this.authenticatedNumber$.next(undefined)
 
     this.localStorageService.setString(this.tokenStorageKey, undefined)
     this.localStorageService.setString(this.tokenTypeStorageKey, undefined)

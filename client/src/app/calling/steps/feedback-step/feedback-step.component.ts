@@ -12,6 +12,6 @@ export class FeedbackStepComponent {
   ) { }
 
   public submitClick() {
-    this.routingStateManager.goHome()
+    this.routingStateManager.returnHome()
   }
 }

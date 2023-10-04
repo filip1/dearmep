@@ -1,6 +1,6 @@
 <div class="dmep-card-container" [ngSwitch]="step$ | async">
   <dmep-home-step *ngSwitchCase="StepHome" [disableScheduling]="disableScheduling"></dmep-home-step>
-  <dmep-verify-number *ngSwitchCase="StepVerify"></dmep-verify-number>
+  <dmep-verify-number *ngSwitchCase="StepVerify" [disableScheduling]="disableScheduling"></dmep-verify-number>
   <dmep-setup-step *ngSwitchCase="StepSetup"></dmep-setup-step>
   <dmep-feedback-step *ngSwitchCase="StepFeedback"></dmep-feedback-step>
   <dmep-update-call-schedule *ngSwitchCase="StepUpdateCallSchedule"></dmep-update-call-schedule>

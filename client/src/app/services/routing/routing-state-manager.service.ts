@@ -1,6 +1,6 @@
 import { HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, interval, mergeMap } from 'rxjs';
+import { BehaviorSubject, Observable, filter, firstValueFrom, interval, map, mergeMap, take } from 'rxjs';
 import { CallState, CallStateResponse, DestinationInCallResponse, OutsideHoursResponse, UserInCallResponse } from 'src/app/api/models';
 import { ApiService } from 'src/app/api/services';
 import { AUTH_TOKEN_REQUIRED } from 'src/app/common/interceptors/auth.interceptor';
@@ -22,19 +22,31 @@ export class RoutingStateManagerService {
     return this.step$.asObservable()
   }
 
-  public goToVerify() {
-    this.step$.next(CallingStep.Verify)
+  public callNow() {
+    if (!this.authService.isAuthenticated()) {
+      this.goToVerify()
+    } else {
+      this.step$.next(CallingStep.Setup)
+    }
   }
 
-  public goToSchedule() {
-    this.step$.next(CallingStep.UpdateCallSchedule)
+  public scheduleCall() {
+    if (!this.authService.isAuthenticated()) {
+      this.goToVerify()
+    } else {
+      this.step$.next(CallingStep.UpdateCallSchedule)
+    }
   }
 
   public goToFeedback() {
+    this.step$.next(CallingStep.Feedback)
+  }
+
+  public returnHome() {
     this.step$.next(CallingStep.Home)
   }
 
-  public goHome() {
-    this.step$.next(CallingStep.Home)
+  private goToVerify() {
+    this.step$.next(CallingStep.Verify)
   }
 }

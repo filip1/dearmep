@@ -111,7 +111,7 @@ export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
   }
 
   public onScheduleClick() {
-    this.routingStateManager.goHome()
+    this.routingStateManager.returnHome()
   }
 
   private getNameOfDay(day: DayOfWeek): string {

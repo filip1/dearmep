@@ -23,7 +23,7 @@ export class HomeStepComponent {
   constructor(
     private readonly routingStateManager: RoutingStateManagerService,
     private readonly translocoService: TranslocoService,
-    authService: AuthenticationService,
+    private readonly authService: AuthenticationService,
   ) {
     this.descriptions$ = this.translocoService.selectTranslate('call.home.descriptions').pipe(
       filter(d => Array.isArray(d))
@@ -33,14 +33,14 @@ export class HomeStepComponent {
   }
 
   public onCallNowClick() {
-    this.routingStateManager.goToVerify()
+    this.routingStateManager.callNow()
   }
 
   public onCallLaterClick() {
-    this.routingStateManager.goToSchedule()
+    this.routingStateManager.scheduleCall()
   }
 
   public onReauthenticateClick() {
-    this.routingStateManager.goToVerify()
+    this.authService.logout()
   }
 }
