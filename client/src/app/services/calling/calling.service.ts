@@ -1,40 +1,30 @@
 import { HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, interval, mergeMap } from 'rxjs';
+import { BehaviorSubject, Observable, concat, interval, map, mergeMap, pipe } from 'rxjs';
 import { CallState, CallStateResponse, DestinationInCallResponse, OutsideHoursResponse, UserInCallResponse } from 'src/app/api/models';
 import { ApiService } from 'src/app/api/services';
 import { AUTH_TOKEN_REQUIRED } from 'src/app/common/interceptors/auth.interceptor';
 import { SKIP_RETRY_STATUS_CODES } from 'src/app/common/interceptors/retry.interceptor';
-import { CallingStep } from 'src/app/model/calling-step.enum';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CallingStateManagerService {
+export class CallingService {
   private readonly callStatePollInterval = 5000
 
-  private readonly step$ = new BehaviorSubject<CallingStep>(CallingStep.Home)
-
-  public constructor(
+  constructor(
     private readonly apiService: ApiService,
   ) { }
 
-  public getStep$() {
-    return this.step$.asObservable()
+  public setUpCall(destinationID: string, language: string): Observable<CallState> {
+    return concat(
+      this.initiateCall(destinationID, language),
+      this.watchCallState(),
+    )
   }
 
-  public goToVerify() {
-    this.step$.next(CallingStep.Verify)
-  }
-
-  public goToSchedule() {
-    this.step$.next(CallingStep.UpdateCallSchedule)
-  }
-
-  public setUpCall(destinationID: string, language: string) {
-    this.step$.next(CallingStep.Setup)
-
-    this.apiService.initiateCall({
+  private initiateCall(destinationID: string, language: string): Observable<CallState> {
+    return this.apiService.initiateCall({
       body: {
         destination_id: destinationID,
         language: language,
@@ -42,46 +32,17 @@ export class CallingStateManagerService {
     }, new HttpContext()
       .set(AUTH_TOKEN_REQUIRED, true)
       .set(SKIP_RETRY_STATUS_CODES, [ 503 ])
-    ).subscribe({
-      next: (callState) => {
-        const result = this.handleCallState(callState)
-        if (result.keepPolling) {
-          this.watchCallState()
-        }
-      },
-      error: (err: DestinationInCallResponse | UserInCallResponse | OutsideHoursResponse | unknown) => {
-        // TODO: Handle error
-
-        this.step$.next(CallingStep.Home)
-      }
-    })
+    ).pipe(
+      map(response => response.state)
+    )
   }
 
-  public goToFeedback() {
-    this.step$.next(CallingStep.Home)
-  }
-
-  public goHome() {
-    this.step$.next(CallingStep.Home)
-  }
-
-  private watchCallState() {
-    const subscription = interval(this.callStatePollInterval).pipe(
+  private watchCallState(): Observable<CallState> {
+    return interval(this.callStatePollInterval).pipe(
       mergeMap(() =>
-        this.apiService.getCallState(undefined, new HttpContext().set(AUTH_TOKEN_REQUIRED, true))),
-    ).subscribe({
-      next: (callState) => {
-        const result = this.handleCallState(callState)
-        if (!result.keepPolling) {
-          subscription.unsubscribe()
-        }
-      },
-      error: (err) => {
-        // TODO: display error message
-        console.error(err)
-        subscription.unsubscribe()
-      }
-    })
+        this.apiService.getCallState({}, new HttpContext().set(AUTH_TOKEN_REQUIRED, true))),
+      map(response => response.state)
+    )
   }
 
   private handleCallState(callState: CallStateResponse): { keepPolling: boolean } {
@@ -95,13 +56,13 @@ export class CallingStateManagerService {
       case CallState.DestinationConnected:
       case CallState.FinishedCall:
       case CallState.FinishedShortCall:
-        this.goToFeedback()
+        //this.goToFeedback()
         return { keepPolling: false };
       case CallState.CallingUserFailed:
       case CallState.CallingDestinationFailed:
       case CallState.CallAborted:
       case CallState.NoCall:
-        this.goHome()
+        //this.goHome()
         return { keepPolling: false };
       case CallState.CallingUser:
         return { keepPolling: true };

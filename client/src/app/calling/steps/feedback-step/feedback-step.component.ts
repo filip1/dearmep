@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
+import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
 
 @Component({
   selector: 'dmep-feedback-step',
@@ -8,10 +8,10 @@ import { CallingStateManagerService } from 'src/app/services/calling/calling-sta
 })
 export class FeedbackStepComponent {
   constructor(
-    private readonly callingStateManager: CallingStateManagerService,
+    private readonly routingStateManager: RoutingStateManagerService,
   ) { }
 
   public submitClick() {
-    this.callingStateManager.goHome()
+    this.routingStateManager.goHome()
   }
 }

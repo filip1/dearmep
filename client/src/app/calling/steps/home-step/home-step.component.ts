@@ -5,7 +5,7 @@ import { TranslocoService } from '@ngneat/transloco';
 import { filter } from 'rxjs';
 import { TitleComponent } from 'src/app/components/title/title.component';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
+import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
 
 @Component({
   selector: 'dmep-home-step',
@@ -21,7 +21,7 @@ export class HomeStepComponent {
   public disableScheduling = false
 
   constructor(
-    private readonly callingStateManager: CallingStateManagerService,
+    private readonly routingStateManager: RoutingStateManagerService,
     private readonly translocoService: TranslocoService,
     authService: AuthenticationService,
   ) {
@@ -33,14 +33,14 @@ export class HomeStepComponent {
   }
 
   public onCallNowClick() {
-    this.callingStateManager.goToVerify()
+    this.routingStateManager.goToVerify()
   }
 
   public onCallLaterClick() {
-    this.callingStateManager.goToSchedule()
+    this.routingStateManager.goToSchedule()
   }
 
   public onReauthenticateClick() {
-    this.callingStateManager.goToVerify()
+    this.routingStateManager.goToVerify()
   }
 }

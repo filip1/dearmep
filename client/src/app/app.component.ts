@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation }
 import { map, Observable } from 'rxjs';
 import { BaseUrlService } from './common/services/base-url.service';
 import { CallingStep } from './model/calling-step.enum';
-import { CallingStateManagerService } from './services/calling/calling-state-manager.service';
+import { RoutingStateManagerService } from './services/routing/routing-state-manager.service';
 import { UrlUtil } from './common/util/url.util';
 import { L10nService } from './services/l10n/l10n.service';
 
@@ -102,7 +102,7 @@ export class AppComponent implements OnInit, OnChanges {
 
   constructor(
     private readonly baseUrlService: BaseUrlService,
-    private readonly callingStateManagerService: CallingStateManagerService,
+    private readonly routingStateManagerService: RoutingStateManagerService,
     private readonly l10nService: L10nService,
   ) { }
 
@@ -116,13 +116,13 @@ export class AppComponent implements OnInit, OnChanges {
     this.styleUrl$ = this.baseUrlService.toAbsoluteAssetUrl$("./dear-mep-inner.css")
     this.flagsStyleUrl$ = this.baseUrlService.toAbsoluteAssetUrl$("./flags.css")
 
-    this.shouldDisplayTalkingPoints$ = this.callingStateManagerService.getStep$().pipe(
+    this.shouldDisplayTalkingPoints$ = this.routingStateManagerService.getStep$().pipe(
       map(step => step !== CallingStep.Home && step !== CallingStep.HomeAuthenticated)
     );
-    this.shouldDisplayTitle$ = this.callingStateManagerService.getStep$().pipe(
+    this.shouldDisplayTitle$ = this.routingStateManagerService.getStep$().pipe(
       map(step => step === CallingStep.Home || step === CallingStep.HomeAuthenticated || step == CallingStep.UpdateCallSchedule)
     );
-    this.shouldDisplayMEP$ = this.callingStateManagerService.getStep$().pipe(
+    this.shouldDisplayMEP$ = this.routingStateManagerService.getStep$().pipe(
       map(step => step !== CallingStep.UpdateCallSchedule)
     )
 

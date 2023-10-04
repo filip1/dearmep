@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, ValidatorFn, Validators } from '@angular/forms';
-import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
 import { VerificationStep } from './verification-step.enum';
 import { PhoneNumber } from 'src/app/model/phone-number.model';
 import { TranslocoService } from '@ngneat/transloco';
@@ -14,6 +13,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { PhoneNumberValidationErrors } from 'src/app/components/phone-number-input/phone-number-validation-errors';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { SelectDestinationService } from 'src/app/services/select-destination/select-destination.service';
+import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
+import { CallingService } from 'src/app/services/calling/calling.service';
 
 @Component({
   selector: 'dmep-verify-number',
@@ -61,7 +62,8 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
   })
 
   constructor(
-    private readonly callingStateManager: CallingStateManagerService,
+    private readonly routingStateManager: RoutingStateManagerService,
+    private readonly callintService: CallingService,
     private readonly translocoService: TranslocoService,
     private readonly baseUrlService: BaseUrlService,
     private readonly apiService: ApiService,
@@ -158,11 +160,11 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
       return
     }
 
-    this.callingStateManager.setUpCall(this.selectedDestinationID, this.currentLanguage)
+    this.callintService.setUpCall(this.selectedDestinationID, this.currentLanguage)
   }
 
   public onCallLaterClick() {
-    this.callingStateManager.goToSchedule()
+    this.routingStateManager.goToSchedule()
   }
 
   public getPolicyLinkHtml(): string {
