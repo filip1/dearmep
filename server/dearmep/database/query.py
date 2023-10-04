@@ -362,8 +362,8 @@ def get_medialist_by_id(
     session: Session,
     id: UUID4,
 ) -> List[BlobOrFile]:
-    if not (mlist := session.get(MediaList, id)):
-        raise NotFound(f"no such medialist: `{id}`")
+    if not (mlist := session.get(MediaList, str(id))):
+        raise NotFound(f"no such medialist: `{str(id)}`")
     return [
         BlobOrFile.from_medialist_item(item)
         for item in mlist.items

@@ -43,11 +43,14 @@ def build_concat_listfile(
 def concat(
     inputs: Iterable[BlobOrFile],
     out_format: str,
+    *,
+    delete: bool = True,
 ) -> Generator[IO[bytes], None, None]:
     """Concatenate multiple ffmpeg input files.
 
     This is to be used as a context manager; the temporary file it returns will
-    be deleted once you leave the context.
+    be deleted once you leave the context. If you set `delete=False`, it will
+    _not_ be deleted and you have to take care of this yourself.
 
     If the input contains Blobs, these will be rendered to temporary files too,
     to allow ffmpeg to access them. They will be deleted once ffmpeg has
@@ -59,7 +62,7 @@ def concat(
     be the same, they also need to use the same parameters (e.g. sample rate,
     audio channels, etc.).
     """
-    with NamedTemporaryFile("rb", prefix="ffconcat.") as output:
+    with NamedTemporaryFile("rb", prefix="ffconcat.", delete=delete) as output:
         with build_concat_listfile(inputs) as clist:
             run((
                 "-hide_banner",  # be less verbose
