@@ -5,7 +5,8 @@ from hashlib import sha256
 import json
 import re
 import secrets
-from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar
+from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, \
+    TypeVar, Union
 
 from canonicaljson import encode_canonical_json
 import phonenumbers
@@ -70,6 +71,9 @@ class LanguageMixin(BaseModel):
         description="The language to use for interactions with the User.",
         example="de",
     )
+
+
+MediaListItem = Union[int, str]
 
 
 class SearchResultLimit(ConstrainedInt):

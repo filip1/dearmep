@@ -1,9 +1,11 @@
+from __future__ import annotations
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Generator, Optional, Union
 
 from ..database.connection import Session
 from ..database.models import Blob, BlobID
+from ..models import MediaListItem
 
 
 class BlobOrFile:
@@ -21,6 +23,19 @@ class BlobOrFile:
     ):
         self._session = session
         self._obj = blob_or_file
+
+    @classmethod
+    def from_medialist_item(cls, item) -> BlobOrFile:
+        if isinstance(item, str):
+            return cls(Path(item))
+        # TODO
+        raise NotImplementedError()
+
+    def as_medialist_item(self) -> MediaListItem:
+        if isinstance(self._obj, Path):
+            return str(self._obj)
+        # TODO
+        raise NotImplementedError()
 
     @contextmanager
     def get_path(self) -> Generator[Path, None, None]:
