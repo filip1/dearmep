@@ -16,7 +16,7 @@ from ..models import CountryCode, DestinationSearchGroup, \
     DestinationSearchResult, FeedbackToken, Language, PhoneRejectReason, \
     SearchResult, UserPhone, VerificationCode
 from .connection import Session, select
-from .models import Blob, Destination, DestinationID, \
+from .models import Blob, BlobID, Destination, DestinationID, \
     DestinationSelectionLog, DestinationSelectionLogEvent, MediaList, \
     NumberVerificationRequest, UserFeedback
 
@@ -41,6 +41,12 @@ def get_available_countries(session: Session) -> List[str]:
         if isinstance(countries, List) and len(countries) \
         and isinstance(countries[0], str) \
         else []
+
+
+def get_blob_by_id(session: Session, id: BlobID) -> Blob:
+    if not (blob := session.get(Blob, id)):
+        raise NotFound(f"no blob with ID {id}")
+    return blob
 
 
 def get_blob_by_name(session: Session, name: str) -> Blob:
