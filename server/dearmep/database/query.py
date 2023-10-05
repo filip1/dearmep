@@ -352,15 +352,23 @@ def get_user_feedback_by_token(
     return feedback
 
 
-def add_medialist(
+def store_medialist(
     session: Session,
     items: List[BlobOrFile],
     *,
     format: str,
     mimetype: str,
 ) -> UUID4:
+    mlitems = [item.as_medialist_item() for item in items]
+
+    if existing := session.exec(
+        select(MediaList)
+        .where(MediaList.items == mlitems)
+    ).first():
+        return existing.id
+
     mlist = MediaList(
-        items=[item.as_medialist_item() for item in items],
+        items=mlitems,
         format=format,
         mimetype=mimetype,
     )
