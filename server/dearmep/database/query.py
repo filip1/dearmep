@@ -3,6 +3,7 @@ from typing import Callable, Dict, List, NamedTuple, Optional, Union, cast
 from secrets import randbelow
 import re
 import backoff
+from pydantic import UUID4
 
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError, NoResultFound
@@ -10,12 +11,13 @@ from sqlalchemy.sql import label
 from sqlmodel import and_, case, col, column, or_
 
 from ..config import Config
+from ..convert.blobfile import BlobOrFile
 from ..models import CountryCode, DestinationSearchGroup, \
     DestinationSearchResult, FeedbackToken, Language, PhoneRejectReason, \
     SearchResult, UserPhone, VerificationCode
 from .connection import Session, select
-from .models import Blob, Destination, DestinationID, \
-    DestinationSelectionLog, DestinationSelectionLogEvent, \
+from .models import Blob, BlobID, Destination, DestinationID, \
+    DestinationSelectionLog, DestinationSelectionLogEvent, MediaList, \
     NumberVerificationRequest, UserFeedback
 
 
@@ -41,11 +43,31 @@ def get_available_countries(session: Session) -> List[str]:
         else []
 
 
+def get_blob_by_id(session: Session, id: BlobID) -> Blob:
+    if not (blob := session.get(Blob, id)):
+        raise NotFound(f"no blob with ID {id}")
+    return blob
+
+
 def get_blob_by_name(session: Session, name: str) -> Blob:
     try:
         return session.exec(select(Blob).where(Blob.name == name)).one()
     except NoResultFound:
         raise NotFound(f"no blob named `{name}`")
+
+
+def get_blobs_by_names(
+    session: Session,
+    names: List[str],
+) -> Dict[str, Blob]:
+    blobs = session.exec(
+        select(Blob)
+        .where(col(Blob.name).in_(names))
+    ).all()
+    return {
+        blob.name: blob
+        for blob in blobs
+    }
 
 
 def get_destination_by_id(
@@ -342,3 +364,37 @@ def get_user_feedback_by_token(
     if not (feedback := session.get(UserFeedback, token)):
         raise NotFound(f"unknown token `{token}`")
     return feedback
+
+
+def store_medialist(
+    session: Session,
+    items: List[BlobOrFile],
+    *,
+    format: str,
+    mimetype: str,
+) -> UUID4:
+    mlitems = [item.as_medialist_item() for item in items]
+
+    if existing := session.exec(
+        select(MediaList)
+        .where(MediaList.items == mlitems)
+    ).first():
+        return existing.id
+
+    mlist = MediaList(
+        items=mlitems,
+        format=format,
+        mimetype=mimetype,
+    )
+    with session.begin_nested():
+        session.add(mlist)
+    return mlist.id
+
+
+def get_medialist_by_id(
+    session: Session,
+    id: UUID4,
+) -> MediaList:
+    if not (mlist := session.get(MediaList, str(id))):
+        raise NotFound(f"no such medialist: `{str(id)}`")
+    return mlist
