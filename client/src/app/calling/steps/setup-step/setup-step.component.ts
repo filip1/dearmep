@@ -1,7 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { nextDay } from 'date-fns';
-import { Subject, combineLatest, filter, merge, mergeMap, take, takeUntil } from 'rxjs';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { Component, OnInit } from '@angular/core';
+import { combineLatest, filter, take } from 'rxjs';
 import { CallingErrorType, CallingService } from 'src/app/services/calling/calling.service';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';

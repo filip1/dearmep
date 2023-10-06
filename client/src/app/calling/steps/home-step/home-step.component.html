@@ -1,6 +1,6 @@
 <div class="container">
 
-  <ng-container *ngIf="!(isAuthenticated$ | async)" >
+  <ng-container *ngIf="(isAuthenticated$ | async) === false" >
     <h2 transloco="call.home.title" class="calling-title"></h2>
 
     <p *ngFor="let description of descriptions$ | async" class="description">

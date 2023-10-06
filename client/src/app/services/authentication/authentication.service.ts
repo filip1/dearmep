@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 import { JwtResponse } from 'src/app/api/models';
 import { addSeconds, differenceInMilliseconds, isAfter, subMilliseconds } from 'date-fns';
-import { BehaviorSubject, Observable, ReplaySubject, combineLatest, filter, map, tap } from 'rxjs';
-
+import { BehaviorSubject, Observable, combineLatest, filter, map } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })

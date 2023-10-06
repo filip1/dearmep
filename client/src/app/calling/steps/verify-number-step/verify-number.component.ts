@@ -7,14 +7,14 @@ import { BaseUrlService } from 'src/app/common/services/base-url.service';
 import { ApiService } from 'src/app/api/services';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { Subject } from 'rxjs/internal/Subject';
-import { filter, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { PhoneNumberVerificationResponse } from 'src/app/api/models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PhoneNumberValidationErrors } from 'src/app/components/phone-number-input/phone-number-validation-errors';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { SelectDestinationService } from 'src/app/services/select-destination/select-destination.service';
 import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
-import { CallingErrorType, CallingService } from 'src/app/services/calling/calling.service';
+import { CallingService } from 'src/app/services/calling/calling.service';
 
 @Component({
   selector: 'dmep-verify-number',

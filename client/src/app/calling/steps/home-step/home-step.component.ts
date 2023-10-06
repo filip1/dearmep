@@ -1,9 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslocoService } from '@ngneat/transloco';
 import { filter } from 'rxjs';
-import { TitleComponent } from 'src/app/components/title/title.component';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
 

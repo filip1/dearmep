@@ -1,10 +1,5 @@
-import { HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, filter, firstValueFrom, interval, map, mergeMap, take } from 'rxjs';
-import { CallState, CallStateResponse, DestinationInCallResponse, OutsideHoursResponse, UserInCallResponse } from 'src/app/api/models';
-import { ApiService } from 'src/app/api/services';
-import { AUTH_TOKEN_REQUIRED } from 'src/app/common/interceptors/auth.interceptor';
-import { SKIP_RETRY_STATUS_CODES } from 'src/app/common/interceptors/retry.interceptor';
+import { BehaviorSubject } from 'rxjs';
 import { CallingStep } from 'src/app/model/calling-step.enum';
 import { AuthenticationService } from '../authentication/authentication.service';
 
