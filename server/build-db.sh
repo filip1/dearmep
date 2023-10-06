@@ -1,12 +1,6 @@
 #!/bin/sh
 set -e
 
-# This script will
-#   * create a new file `dearmep.sqlite` and initialize it
-#   * download the current MEP dump from Parltrack (except when it already has
-#     an up to date copy)
-#   * convert the dump to DearMEP Destination JSON
-
 ME='build-db.sh'
 BASEDIR='build-db'
 DB_FILE='dearmep.sqlite'
@@ -15,6 +9,7 @@ MEP_DUMP="$BASEDIR/ep_meps.json.lz"
 DESTINATION_JSON="$BASEDIR/destinations.ndjson"
 PORTRAIT_DIR="$BASEDIR/portraits"
 LOGO_DIR="$BASEDIR/logos"
+NAMES_DIR="$BASEDIR/names"
 SWAYABILITY="$BASEDIR/2023-05-04-swayability.csv"
 
 msg() {
@@ -57,20 +52,28 @@ create_destination_json() {
 	dearmep convert parltrack.meps "$MEP_DUMP" > "$DESTINATION_JSON"
 }
 
-download_portraits() {
-	if ! [ -d "$PORTRAIT_DIR" ]; then
-		msg "Creating portrait directory $PORTRAIT_DIR."
-		mkdir "$PORTRAIT_DIR"
+download_media() {
+	SUBCMD="$1"; shift
+	KIND="$1"; shift
+	SUFFIX="$1"; shift
+	TARGET_DIR="$1"; shift
+	if ! [ -d "$TARGET_DIR" ]; then
+		msg "Creating $KIND directory $TARGET_DIR."
+		mkdir "$TARGET_DIR"
 	fi
-	msg "Downloading portraits into $PORTRAIT_DIR."
+	msg "Downloading ${KIND}s into $TARGET_DIR."
 	in2csv -f ndjson "$DESTINATION_JSON" \
 	| csvgrep -c '_dearmep_type' -m 'destination' \
 	| csvcut -c 'id' \
 	| tail -n +2 \
-	| xargs dearmep convert europarl.portraits \
-		--filename-template "$PORTRAIT_DIR/{id}.jpg" \
+	| xargs dearmep convert "europarl.$SUBCMD" \
+		--filename-template "$TARGET_DIR/{id}.$SUFFIX" \
 		--existing skip \
 		--not-found ignore
+}
+
+download_portraits() {
+	download_media 'portraits' 'portrait' 'jpg' "$PORTRAIT_DIR"
 	msg 'Downloading placeholder image.'
 	dearmep convert europarl.portraits \
 		--filename-template "$PORTRAIT_DIR/placeholder.jpg" \
@@ -78,6 +81,11 @@ download_portraits() {
 		--not-found save \
 		0
 	msg 'Downloaded portraits.'
+}
+
+download_names() {
+	download_media 'name-audio' 'name' 'mp3' "$NAMES_DIR"
+	msg 'Downloaded names.'
 }
 
 import_destinations() {
@@ -103,5 +111,6 @@ init_db
 download_mep_dump
 create_destination_json
 download_portraits
+download_names
 import_destinations
 import_swayability
