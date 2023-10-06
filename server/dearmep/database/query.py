@@ -56,6 +56,20 @@ def get_blob_by_name(session: Session, name: str) -> Blob:
         raise NotFound(f"no blob named `{name}`")
 
 
+def get_blobs_by_names(
+    session: Session,
+    names: List[str],
+) -> Dict[str, Blob]:
+    blobs = session.exec(
+        select(Blob)
+        .where(col(Blob.name).in_(names))
+    ).all()
+    return {
+        blob.name: blob
+        for blob in blobs
+    }
+
+
 def get_destination_by_id(
     session: Session,
     id: DestinationID,
