@@ -94,6 +94,7 @@ import_destinations() {
 		--portrait-template "$PORTRAIT_DIR/{filename}" \
 		--fallback-portrait "$PORTRAIT_DIR/placeholder.jpg" \
 		--logo-template "$LOGO_DIR/{filename}" \
+		--name-audio-template "$NAMES_DIR/{filename}" \
 		"$DESTINATION_JSON"
 	msg 'Destinations imported.'
 }
