@@ -11,7 +11,13 @@ AUDIO_FORMAT = "ogg"  # ffmpeg -f
 AUDIO_EXTENSION = "ogg"  # file extension
 AUDIO_SAMPLERATE = 44100
 IMPORT_OPTS = (
-    "-filter:a", "loudnorm",  # normalize loudness
+    "-filter:a",
+    ", ".join((
+        # normalize loudness
+        # "loudnorm",
+        # remove silence
+        "silenceremove=stop_periods=-1:stop_duration=1:stop_threshold=-50dB",
+    )),
     # loudnorm upsamples to 192k, bring it back down again
     "-ar", str(AUDIO_SAMPLERATE),
     "-ac", "1",  # mix down to mono -- beware of phase cancellation though
