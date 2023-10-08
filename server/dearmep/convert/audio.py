@@ -1,8 +1,19 @@
 from mimetypes import guess_type
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from typing import Optional
 
+from . import ffmpeg
 from ..database.models import Blob
+
+
+AUDIO_FORMAT = "ogg"  # ffmpeg -f
+AUDIO_EXTENSION = "ogg"  # file extension
+IMPORT_OPTS = (
+    "-filter:a", "loudnorm",  # normalize loudness
+    "-ar", "44100",  # loudnorm upsamples to 192k, bring it back down again
+    "-ac", "1",  # mix down to mono -- beware of phase cancellation though
+)
 
 
 def audio2blob(
@@ -10,13 +21,35 @@ def audio2blob(
     path: Path,
     *,
     description: Optional[str] = None,
+    convert: bool = True,
 ) -> Blob:
-    data = path.read_bytes()
-    mimetype = guess_type(path, strict=False)[0]
+    if convert:
+        with NamedTemporaryFile(
+            "rb", prefix="audioconv.", suffix=f".{AUDIO_EXTENSION}",
+        ) as temp:
+            name = f"{path.stem}.{AUDIO_EXTENSION}"
+            convert_file(path, Path(temp.name))
+            data = temp.read()
+            mimetype = guess_type(temp.name, strict=False)[0]
+    else:
+        name = path.name
+        data = path.read_bytes()
+        mimetype = guess_type(path, strict=False)[0]
     return Blob(
         type=type,
         mime_type=mimetype,
-        name=path.name,
+        name=name,
         description=description,
         data=data,
     )
+
+
+def convert_file(
+    input: Path,
+    output: Path,
+):
+    ffmpeg.run((
+        "-i", str(input),
+        *IMPORT_OPTS,
+        str(output),
+    ))
