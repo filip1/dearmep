@@ -15,6 +15,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { SelectDestinationService } from 'src/app/services/select-destination/select-destination.service';
 import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
 import { CallingService } from 'src/app/services/calling/calling.service';
+import { ErrorService } from 'src/app/services/error/error.service';
 
 @Component({
   selector: 'dmep-verify-number',
@@ -73,6 +74,7 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
     private readonly l10nService: L10nService,
     private readonly authenticationService: AuthenticationService,
     private readonly selectDestinationService: SelectDestinationService,
+    private readonly errorService: ErrorService,
   ) {
   }
 
@@ -135,12 +137,10 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
           } else if (firstError === PhoneRejectReason.TooManyVerificationRequests) {
             this.phoneNumberValidationServerError = { isTooManyAttempts: true }
           } else {
-            this.phoneNumberValidationServerError = { }
+            this.errorService.handleUnknownError(err)
           }
-
         } else {
-          this.phoneNumberValidationServerError = { }
-          console.log(err)
+          this.errorService.handleUnknownError(err)
         }
 
         this.phoneNumberSentToServerForValidation = phoneNumber
@@ -168,7 +168,7 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
         if (err instanceof HttpErrorResponse && (err.status === 400 || err.status === 422)) {
           this.codeFormControl.setErrors({ invalidCode: true })
         } else {
-          console.error(err)
+          this.errorService.handleUnknownError(err)
         }
       }
     })
