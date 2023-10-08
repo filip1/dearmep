@@ -10,6 +10,8 @@
       <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isEmptyError']" transloco="verification.enterNumber.numberIsRequired"></mat-error>
       <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isInvalidError']" transloco="verification.enterNumber.invalidNumber"></mat-error>
       <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isNotAllowedError']" transloco="verification.enterNumber.numberNotAllowed"></mat-error>
+      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isBlockedError']" transloco="verification.enterNumber.numberBlocked"></mat-error>
+      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isTooManyAttempts']" transloco="verification.enterNumber.tooManyAttempts"></mat-error>
     </mat-form-field>
 
     <section class="dmep-policy-section">

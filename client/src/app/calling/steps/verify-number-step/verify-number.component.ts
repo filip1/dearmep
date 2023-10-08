@@ -8,7 +8,7 @@ import { ApiService } from 'src/app/api/services';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { takeUntil } from 'rxjs';
-import { PhoneNumberVerificationResponse } from 'src/app/api/models';
+import { PhoneNumberVerificationRejectedResponse, PhoneNumberVerificationResponse, PhoneRejectReason } from 'src/app/api/models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PhoneNumberValidationErrors } from 'src/app/components/phone-number-input/phone-number-validation-errors';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -122,11 +122,27 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
       error: (err: HttpErrorResponse | unknown) => {
         if (err instanceof HttpErrorResponse && err.status === 422) {
           this.phoneNumberValidationServerError = { isInvalidError: true }
-        } else if (err instanceof HttpErrorResponse && err.error.error === 'NUMBER_NOT_ALLOWED') {
-          this.phoneNumberValidationServerError = { isNotAllowedError: true }
+        } else if (err instanceof HttpErrorResponse && err.status === 400 && err.error.errors?.length) {
+          const errBody: PhoneNumberVerificationRejectedResponse = err.error
+          const firstError = errBody.errors[0] // API specifies that the first error is the most important one in case of multiple errors
+
+          if (firstError === PhoneRejectReason.DisallowedType || firstError === PhoneRejectReason.DisallowedCountry) {
+            this.phoneNumberValidationServerError = { isNotAllowedError: true }
+          } else if (firstError === PhoneRejectReason.InvalidPattern) {
+            this.phoneNumberValidationServerError = { isInvalidError: true }
+          } else if (firstError === PhoneRejectReason.Blocked) {
+            this.phoneNumberValidationServerError = { isBlockedError: true }
+          } else if (firstError === PhoneRejectReason.TooManyVerificationRequests) {
+            this.phoneNumberValidationServerError = { isTooManyAttempts: true }
+          } else {
+            this.phoneNumberValidationServerError = { }
+          }
+
         } else {
+          this.phoneNumberValidationServerError = { }
           console.log(err)
         }
+
         this.phoneNumberSentToServerForValidation = phoneNumber
         this.numberFormControl.updateValueAndValidity()
       }

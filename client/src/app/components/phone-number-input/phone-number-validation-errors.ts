@@ -4,4 +4,6 @@ export interface PhoneNumberValidationErrors extends ValidationErrors {
   isEmptyError?: boolean;
   isInvalidError?: boolean;
   isNotAllowedError?: boolean;
+  isBlockedError?: boolean;
+  isTooManyAttempts?: boolean;
 }
