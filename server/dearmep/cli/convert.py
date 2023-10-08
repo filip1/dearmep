@@ -1,12 +1,14 @@
 from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
 import logging
+from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
     from . import Context
 from ..config import APP_NAME, CMD_NAME
-from ..convert import dump
+from ..convert import ActionIfExists, audio, dump
+from ..convert.audio import AUDIO_EXTENSION, AUDIO_FORMAT, AUDIO_SAMPLERATE
 from ..convert.europarl import media, rollcallvote
 from ..convert.parltrack import mep
 from ..convert.tabular import CSVStreamTabular, Tabular
@@ -28,6 +30,27 @@ def tabular_class(ctx: Context):
         return CSVStreamTabular
     else:
         return Tabular
+
+
+def convert_audio(ctx: Context):
+    args = ctx.args
+    out_path = args.output_file \
+        or Path(args.input).with_suffix(f".{AUDIO_EXTENSION}")
+
+    if out_path.exists():
+        if args.existing == ActionIfExists.SKIP.value:
+            return
+        if args.existing == ActionIfExists.FAIL.value:
+            raise FileExistsError(out_path)
+        if out_path.resolve() == args.input.resolve():
+            raise ValueError(
+                "input & output refer to the same file, cannot overwrite")
+
+    audio.convert_file(
+        args.input,
+        out_path,
+    )
+    print(out_path)
 
 
 def parltrack_meps(ctx: Context):
@@ -247,5 +270,29 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         help='include MEPs that are marked in the input as being "inactive"',
     )
     meps.set_defaults(func=parltrack_meps, raw_stdout=True, lz=True)
+
+    audio = subsub.add_parser(
+        "audio",
+        help="audio files",
+        description="Convert an audio file into the format recommended by "
+        f"{APP_NAME}: {AUDIO_SAMPLERATE} Hz {AUDIO_FORMAT}, mono.",
+    )
+    audio.add_argument(
+        "input", metavar="INPUT_FILE", type=Path,
+        help="name of the input file",
+    )
+    audio.add_argument(
+        "-o", "--output-file", type=Path,
+        help="name of the output file (defaults to the name of the input file "
+        f"with the suffix replaced with .{AUDIO_EXTENSION})"
+    )
+    audio.add_argument(
+        "-e", "--existing", default="fail",
+        choices=tuple(action.value for action in ActionIfExists),
+        help="what to do if the output file already exists: 'skip' the "
+        "conversion and do nothing, 'overwrite' it, or 'fail' and exit with "
+        "an error code",
+    )
+    audio.set_defaults(func=convert_audio)
 
     help_if_no_subcommand(parser)

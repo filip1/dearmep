@@ -9,9 +9,11 @@ from ..database.models import Blob
 
 AUDIO_FORMAT = "ogg"  # ffmpeg -f
 AUDIO_EXTENSION = "ogg"  # file extension
+AUDIO_SAMPLERATE = 44100
 IMPORT_OPTS = (
     "-filter:a", "loudnorm",  # normalize loudness
-    "-ar", "44100",  # loudnorm upsamples to 192k, bring it back down again
+    # loudnorm upsamples to 192k, bring it back down again
+    "-ar", str(AUDIO_SAMPLERATE),
     "-ac", "1",  # mix down to mono -- beware of phase cancellation though
 )
 
@@ -21,7 +23,7 @@ def audio2blob(
     path: Path,
     *,
     description: Optional[str] = None,
-    convert: bool = True,
+    convert: bool = False,
 ) -> Blob:
     if convert:
         with NamedTemporaryFile(

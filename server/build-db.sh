@@ -88,13 +88,20 @@ download_names() {
 	msg 'Downloaded names.'
 }
 
+convert_names() {
+	msg 'Converting name audio.'
+	find "$NAMES_DIR" -name '*.mp3' -print0 \
+	| xargs -0 -P 4 -n 1 dearmep convert audio --existing skip
+	msg 'Converted names.'
+}
+
 import_destinations() {
 	msg 'Importing Destinations into database.'
 	dearmep import destinations \
 		--portrait-template "$PORTRAIT_DIR/{filename}" \
 		--fallback-portrait "$PORTRAIT_DIR/placeholder.jpg" \
 		--logo-template "$LOGO_DIR/{filename}" \
-		--name-audio-template "$NAMES_DIR/{filename}" \
+		--name-audio-template "$NAMES_DIR/{id}.ogg" \
 		"$DESTINATION_JSON"
 	msg 'Destinations imported.'
 }
@@ -113,5 +120,6 @@ download_mep_dump
 create_destination_json
 download_portraits
 download_names
+convert_names
 import_destinations
 import_swayability
