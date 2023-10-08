@@ -8,6 +8,7 @@ import {
   HttpContextToken,
 } from '@angular/common/http';
 import { Observable, TimeoutError, delay, of, retry, throwError } from 'rxjs';
+import { ErrorService } from 'src/app/services/error/error.service';
 
 /**
  * Pass one or more status codes that should not be retried
@@ -27,6 +28,10 @@ export class RetryInterceptor implements HttpInterceptor {
 
   private readonly connectionErrorInterval = 1000
   private readonly connectionErrorMaxRetries = 5
+
+  constructor(
+    private readonly errorServcie: ErrorService,
+  ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const skipRetryStatusCodes = request.context.get(SKIP_RETRY_STATUS_CODES)
@@ -65,6 +70,7 @@ export class RetryInterceptor implements HttpInterceptor {
   private shouldRetryAfter(error: unknown, retryCount: number, maxRetryCount: number, retryInterval: number, errorName = "HttpError", url: string | null = "unknown") {
     if (retryCount > maxRetryCount) {
       console.error(`${errorName} encountered. Reached max retreis. Failing! (url: ${url}).`)
+      this.errorServcie.displayConnectionError()
       return this.fail(error)
     }
     console.error(`${errorName} encountered. Retrying after ${retryInterval / 1000.0}s (url: ${url}).`)

@@ -12,10 +12,20 @@ export class ErrorService {
     private readonly matSnackBar: MatSnackBar
   ) {}
 
-  public handleUnknownError(error: unknown) {
+  // Handle unknonw errors by simply displaying a generic error message and a console output
+  // This should only be called as a last resort when the returned error does not match any of
+  // to expected errors.
+  public displayUnknownError(error: unknown) {
     console.error("unknown error occurred", error)
-    const errorText = this.translocoService.translate("errro.genericError")
-    this.matSnackBar.open(errorText, undefined, { })
+    this.showSnackBar("errro.genericError")
   }
 
+  public displayConnectionError() {
+    this.showSnackBar("error.genericApiError")
+  }
+
+  private showSnackBar(translationKey: string) {
+    const errorText = this.translocoService.translate(translationKey)
+    this.matSnackBar.open(errorText, undefined, { })
+  }
 }

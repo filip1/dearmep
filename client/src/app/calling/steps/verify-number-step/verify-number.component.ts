@@ -137,10 +137,10 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
           } else if (firstError === PhoneRejectReason.TooManyVerificationRequests) {
             this.phoneNumberValidationServerError = { isTooManyAttempts: true }
           } else {
-            this.errorService.handleUnknownError(err)
+            this.errorService.displayUnknownError(err)
           }
         } else {
-          this.errorService.handleUnknownError(err)
+          this.errorService.displayUnknownError(err)
         }
 
         this.phoneNumberSentToServerForValidation = phoneNumber
@@ -168,7 +168,7 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
         if (err instanceof HttpErrorResponse && (err.status === 400 || err.status === 422)) {
           this.codeFormControl.setErrors({ invalidCode: true })
         } else {
-          this.errorService.handleUnknownError(err)
+          this.errorService.displayUnknownError(err)
         }
       }
     })
