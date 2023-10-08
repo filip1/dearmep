@@ -34,23 +34,23 @@ def tabular_class(ctx: Context):
 
 def convert_audio(ctx: Context):
     args = ctx.args
-    out_path = args.output_file \
-        or Path(args.input).with_suffix(f".{AUDIO_EXTENSION}")
+    for input in args.input:
+        out_path = Path(input).with_suffix(f".{AUDIO_EXTENSION}")
 
-    if out_path.exists():
-        if args.existing == ActionIfExists.SKIP.value:
-            return
-        if args.existing == ActionIfExists.FAIL.value:
-            raise FileExistsError(out_path)
-        if out_path.resolve() == args.input.resolve():
-            raise ValueError(
-                "input & output refer to the same file, cannot overwrite")
+        if out_path.exists():
+            if args.existing == ActionIfExists.SKIP.value:
+                continue
+            if args.existing == ActionIfExists.FAIL.value:
+                raise FileExistsError(out_path)
+            if out_path.resolve() == input.resolve():
+                raise ValueError(
+                    "input & output refer to the same file, cannot overwrite")
 
-    audio.convert_file(
-        args.input,
-        out_path,
-    )
-    print(out_path)
+        audio.convert_file(
+            input,
+            out_path,
+        )
+        print(out_path)
 
 
 def parltrack_meps(ctx: Context):
@@ -278,18 +278,13 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         f"{APP_NAME}: {AUDIO_SAMPLERATE} Hz {AUDIO_FORMAT}, mono.",
     )
     audio.add_argument(
-        "input", metavar="INPUT_FILE", type=Path,
-        help="name of the input file",
-    )
-    audio.add_argument(
-        "-o", "--output-file", type=Path,
-        help="name of the output file (defaults to the name of the input file "
-        f"with the suffix replaced with .{AUDIO_EXTENSION})"
+        "input", metavar="INPUT_FILE", type=Path, nargs="+",
+        help="name of the input file(s)",
     )
     audio.add_argument(
         "-e", "--existing", default="fail",
         choices=tuple(action.value for action in ActionIfExists),
-        help="what to do if the output file already exists: 'skip' the "
+        help="what to do if an output file already exists: 'skip' the "
         "conversion and do nothing, 'overwrite' it, or 'fail' and exit with "
         "an error code",
     )
