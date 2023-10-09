@@ -29,7 +29,7 @@ export class HomeStepComponent {
     this.isAuthenticated$ = authService.isAuthenticated$()
     this.authenticatedNumberHtml$ = authService.getAuthenticatedNumber$().pipe(
       filter(n => typeof n === 'string'),
-      map(n => MarkupUtil.NoWrap(n)),
+      map(n => MarkupUtil.NoWrap(n, 'dmep-nowrap dmep-bold')),
     )
   }
 

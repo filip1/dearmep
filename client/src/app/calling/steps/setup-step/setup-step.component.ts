@@ -28,7 +28,7 @@ export class SetupStepComponent implements OnInit {
     this.selectedDestinationNameHtml$ = selectDestinationService.getDestination$().pipe(
       map(d => d?.name),
       filter(n => typeof n === 'string'),
-      map(n => MarkupUtil.NoWrap(n))
+      map(n => MarkupUtil.NoWrap(n, 'dmep-nowrap dmep-bold'))
     )
   }
 

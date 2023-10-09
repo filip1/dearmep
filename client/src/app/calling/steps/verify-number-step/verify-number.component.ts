@@ -209,7 +209,7 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
   }
 
   public noWrap(str?: string): string {
-    return MarkupUtil.NoWrap(str) || ''
+    return MarkupUtil.NoWrap(str, 'dmep-nowrap dmep-bold') || ''
   }
 
   private phoneNumberToString(number: PhoneNumber | null): string {
