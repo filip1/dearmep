@@ -16,6 +16,7 @@ import { SelectDestinationService } from 'src/app/services/select-destination/se
 import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
 import { CallingService } from 'src/app/services/calling/calling.service';
 import { ErrorService } from 'src/app/services/error/error.service';
+import { MarkupUtil } from 'src/app/common/util/markup.util';
 
 @Component({
   selector: 'dmep-verify-number',
@@ -205,6 +206,10 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
     }
 
     return `<a href="${ absPolicyUrl }" target="_blank">${ linkText }</a>`
+  }
+
+  public noWrap(str?: string): string {
+    return MarkupUtil.NoWrap(str) || ''
   }
 
   private phoneNumberToString(number: PhoneNumber | null): string {

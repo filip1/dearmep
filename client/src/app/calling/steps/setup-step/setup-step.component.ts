@@ -1,7 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Observable, combineLatest, filter, take } from 'rxjs';
+import { Observable, combineLatest, filter, map, take } from 'rxjs';
 import { CallState, DestinationInCallResponse, OutsideHoursResponse, UserInCallResponse } from 'src/app/api/models';
+import { MarkupUtil } from 'src/app/common/util/markup.util';
 import { TypedHttpError } from 'src/app/common/util/typed-http-error';
 import { CallingErrorType, CallingService } from 'src/app/services/calling/calling.service';
 import { ErrorService } from 'src/app/services/error/error.service';
@@ -15,7 +16,7 @@ import { SelectDestinationService } from 'src/app/services/select-destination/se
   styleUrls: ['./setup-step.component.scss']
 })
 export class SetupStepComponent implements OnInit {
-  public readonly selectedDestination$
+  public readonly selectedDestinationNameHtml$
 
   constructor(
     private readonly selectDestinationService: SelectDestinationService,
@@ -24,7 +25,11 @@ export class SetupStepComponent implements OnInit {
     private readonly routingStateManager: RoutingStateManagerService,
     private readonly errorService: ErrorService,
   ) {
-    this.selectedDestination$ = selectDestinationService.getDestination$()
+    this.selectedDestinationNameHtml$ = selectDestinationService.getDestination$().pipe(
+      map(d => d?.name),
+      filter(n => typeof n === 'string'),
+      map(n => MarkupUtil.NoWrap(n))
+    )
   }
 
   public ngOnInit(): void {

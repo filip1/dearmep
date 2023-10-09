@@ -16,3 +16,8 @@
   font-size: 125px;
   margin: 32px 0;
 }
+
+::ng-deep
+.description>span {
+  font-weight: 700;
+}

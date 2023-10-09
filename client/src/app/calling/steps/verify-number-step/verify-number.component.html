@@ -33,7 +33,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="StepEnterCode">
 
-    <p class="enter-code-description">{{ 'verification.enterCode.description' | transloco: { number: serverValidatedPhoneNumber } }}</p>
+    <p class="enter-code-description" [innerHTML]="'verification.enterCode.description' | transloco: { number: noWrap(serverValidatedPhoneNumber) }"></p>
 
     <p class="not-your-number description">
       <a (click)="onEditNumberClick(); $event.preventDefault()" href="#">{{ 'verification.enterCode.notYourNumber' | transloco }}</a>
@@ -59,7 +59,7 @@
       <mat-icon class="success-icon" [inline]="false">check_circle</mat-icon>
     </div>
 
-    <p class="success-description">{{ 'verification.success.message' | transloco: { number: serverValidatedPhoneNumber } }}</p>
+    <p class="success-description" [innerHTML]="'verification.success.message' | transloco: { number: noWrap(serverValidatedPhoneNumber) }"></p>
 
   </ng-container>
 </ng-container>

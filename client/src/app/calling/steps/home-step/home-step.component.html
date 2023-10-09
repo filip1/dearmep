@@ -11,7 +11,7 @@
   <ng-container *ngIf="isAuthenticated$ | async" >
     <h2 transloco="call.home.titleAuthenticated" class="calling-title"></h2>
 
-    <p class="description" transloco="call.home.youHaveAlreadySignedIn" [translocoParams]="{ number: authenticatedNumber$ | async }"></p>
+    <p class="description" [innerHTML]="'call.home.youHaveAlreadySignedIn' | transloco: { number: authenticatedNumberHtml$ | async }"></p>
 
     <p class="not-your-number description" >
       <a (click)="onReauthenticateClick(); $event.preventDefault()" href="#">{{ 'call.home.notYourNumber' | transloco }}</a>
