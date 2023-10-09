@@ -1,6 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { combineLatest, filter, take } from 'rxjs';
+import { Observable, combineLatest, filter, take } from 'rxjs';
+import { CallState, DestinationInCallResponse, OutsideHoursResponse, UserInCallResponse } from 'src/app/api/models';
+import { TypedHttpError } from 'src/app/common/util/typed-http-error';
 import { CallingErrorType, CallingService } from 'src/app/services/calling/calling.service';
+import { ErrorService } from 'src/app/services/error/error.service';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
 import { SelectDestinationService } from 'src/app/services/select-destination/select-destination.service';
@@ -18,6 +22,7 @@ export class SetupStepComponent implements OnInit {
     private readonly l10nService: L10nService,
     private readonly callingService: CallingService,
     private readonly routingStateManager: RoutingStateManagerService,
+    private readonly errorService: ErrorService,
   ) {
     this.selectedDestination$ = selectDestinationService.getDestination$()
   }
@@ -43,8 +48,35 @@ export class SetupStepComponent implements OnInit {
     ).subscribe({
       next: () => { this.routingStateManager.goToFeedback() },
       error: (err: CallingErrorType) => {
-        // TODO
-        console.error(err)
+        let errorDialogResult: Observable<void> | undefined
+
+        if (err === CallState.CallingUserFailed) {
+          errorDialogResult = this.errorService.displayErrorDialog('callSetup.error.failedToEstablishCall')
+        } else if (err === CallState.CallingDestinationFailed) {
+          errorDialogResult = this.errorService.displayErrorDialog('callSetup.error.failedToReachDestination')
+        } else if ((err as TypedHttpError<DestinationInCallResponse | UserInCallResponse | OutsideHoursResponse>).error) {
+          const httpError = (err as TypedHttpError<DestinationInCallResponse | UserInCallResponse | OutsideHoursResponse>).error
+          if (httpError?.error === 'DESTINATION_IN_CALL') {
+            errorDialogResult = this.errorService.displayErrorDialog('callSetup.error.failedToReachDestination')
+          } else if (httpError?.error === 'USER_IN_CALL') {
+            errorDialogResult = this.errorService.displayErrorDialog('callSetup.error.failedToEstablishCall')
+          } else if (httpError?.error === 'OUTSIDE_HOURS') {
+            errorDialogResult = this.errorService.displayErrorDialog('callSetup.error.outsideOfficeHours')
+          } else {
+            this.errorService.displayUnknownError(err)
+          }
+        } else {
+          this.errorService.displayUnknownError(err)
+        }
+
+        if (errorDialogResult) {
+          errorDialogResult.subscribe({
+            next: () => {
+              this.selectDestinationService.renewSuggestedDestination()
+              this.routingStateManager.returnHome()
+            }
+          })
+        }
       },
     })
   }

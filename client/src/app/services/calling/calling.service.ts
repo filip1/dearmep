@@ -1,12 +1,13 @@
-import { HttpContext } from '@angular/common/http';
+import { HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, concat, filter, interval, map, mergeMap, take } from 'rxjs';
 import { CallState, DestinationInCallResponse, OutsideHoursResponse, UserInCallResponse } from 'src/app/api/models';
 import { ApiService } from 'src/app/api/services';
 import { AUTH_TOKEN_REQUIRED } from 'src/app/common/interceptors/auth.interceptor';
 import { SKIP_RETRY_STATUS_CODES } from 'src/app/common/interceptors/retry.interceptor';
+import { TypedHttpError } from 'src/app/common/util/typed-http-error';
 
-export type CallingErrorType = CallState.CallingUserFailed | CallState.CallingDestinationFailed | CallState.CallAborted | DestinationInCallResponse | UserInCallResponse | OutsideHoursResponse;
+export type CallingErrorType = CallState.CallingUserFailed | CallState.CallingDestinationFailed | CallState.CallAborted | TypedHttpError<DestinationInCallResponse | UserInCallResponse | OutsideHoursResponse> | unknown;
 
 @Injectable({
   providedIn: 'root'

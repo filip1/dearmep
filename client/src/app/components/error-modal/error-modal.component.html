@@ -1,0 +1,8 @@
+<h1 mat-dialog-title [transloco]="model.title"></h1>
+<div mat-dialog-content class="content">
+  <p [transloco]="model.body"></p>
+</div>
+<div mat-dialog-actions>
+  <button *ngIf="model.buttonCancelText" mat-button (click)="onCancelClick()" cdkFocusInitial [transloco]="model.buttonCancelText"></button>
+  <button mat-button [mat-dialog-close]="{ click: model.buttonAcceptText }" cdkFocusInitial [transloco]="model.buttonAcceptText"></button>
+</div>
