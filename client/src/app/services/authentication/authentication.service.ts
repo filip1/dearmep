@@ -3,6 +3,7 @@ import { LocalStorageService } from '../local-storage/local-storage.service';
 import { JwtResponse } from 'src/app/api/models';
 import { addSeconds, differenceInMilliseconds, isAfter, subMilliseconds } from 'date-fns';
 import { BehaviorSubject, Observable, combineLatest, filter, map } from 'rxjs';
+import { PhoneNupmberUtil } from 'src/app/common/util/phone-number.util';
 @Injectable({
   providedIn: 'root'
 })
@@ -27,15 +28,16 @@ export class AuthenticationService {
 
   public setToken(jwtResponse: JwtResponse, authenticatedNumber: string) {
     const expiryTime = addSeconds(new Date(), jwtResponse.expires_in)
+    const maskedNumber = PhoneNupmberUtil.MaskPhoneNumber(authenticatedNumber)
 
     this.token$.next(jwtResponse.access_token)
     this.tokenExpiryTime$.next(expiryTime)
-    this.authenticatedNumber$.next(authenticatedNumber)
+    this.authenticatedNumber$.next(maskedNumber)
 
     this.localStorageService.setString(this.tokenStorageKey, jwtResponse.access_token)
     this.localStorageService.setString(this.tokenTypeStorageKey, jwtResponse.token_type)
     this.localStorageService.setString(this.tokenExpiryTimeStorageKey, expiryTime.toISOString())
-    this.localStorageService.setString(this.authenticatedNumberStorageKey, authenticatedNumber)
+    this.localStorageService.setString(this.authenticatedNumberStorageKey, maskedNumber)
 
     this.setExpiryTick(expiryTime)
   }
