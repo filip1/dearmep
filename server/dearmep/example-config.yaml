@@ -394,6 +394,56 @@ l10n:
       en: Calling is only possible during office hours.
       de: Anrufe sind nur während der Bürozeiten möglich.
 
+    # Title for UI popover explaining the current office hours
+    call.office-hours.title:
+      en: Office Hours
+      de: Bürozeiten
+
+    # Description for UI popover explaining the current office hours
+    call.office-hours.description:
+      en: Calling is only possible during office hours.
+      de: Anrufe sind nur während der Bürozeiten möglich.
+
+    # Text specifying the office hours in original and local timezone
+    # Examples:
+    #   Monday through Thursday: 8:00 - 17:00 Europe/Vienna (9:00 - 18:00 Local)
+    #   Friday: 8:00 - 15:00 Europe/Vienna (9:00 - 16:00 Local)
+    # Placeholders:
+    # {{ dayOrRange }}      ... Either a single weekday or a range of days (see: call.office-hours.day-range)
+    # {{ timeRange }}       ... Range from start- to end-time including remtoe timezone (see: call.office-hours.time-range-zoned)
+    # {{ timeRangeLocal }}  ... Range from start- to end-time in local timezone (see: call.office-hours.time-range-zoned)
+    call.office-hours.hours-zoned:
+      en: "{{ dayOrRange }}: {{ timeRange }} ({{ timeRangeLocal }})"
+
+    # Same as 'call.office-hours.hours-zoned' applies when the user is in the same time-zone as the destination
+    call.office-hours.hours:
+      en: "{{ dayOrRange }}: {{ timeRange }}"
+
+    # Specifies a Day-Range
+    # Example:
+    #   Monday through Thursday
+    call.office-hours.day-range:
+      en: "{{ startDayOfWeek }} through {{ endDayOfWeek }}"
+      de: "{{ startDayOfWeek }} bis {{ endDayOfWeek }}"
+
+    # Specifies a time-range with a start and end time
+    # Example:
+    #   8:00 - 17:00 Europe/Vienna
+    #   8:00 - 17:00 Local (see: 'call.office-hours.time-zone-local')
+    call.office-hours.time-range-zoned:
+      en: "{{ startTime }} - {{ endTime }} {{ timeZone }}"
+
+    # Same as 'call.office-hours.time-range-zoned' applies when the user is in the same time-zone as the destination
+    # Example:
+    #   8:00 - 17:00
+    call.office-hours.time-range:
+      en: "{{ startTime }} - {{ endTime }}"
+
+    # Specifies that a certain time is in local timezone
+    call.office-hours.time-zone-local:
+      en: Local
+      de: Lokal
+
     # Text of the button that allows the user to schedule a call at a later point in time.
     call.call-later-btn.title:
       en: Call later
@@ -745,7 +795,7 @@ l10n:
       da: Hvis du har yderligere kommentarer, så skriv dem her. Hvis du vil snakke med os om oplevelsen, så skriv også dine kontaktoplysninger.
       pt: Se tens comentários adicionais, escreve-os aqui. Se quiseres que te contactemos, escreve aqui o teu contacto.
 
-    # Submit button that allows the user to send their feedback.
+    # Submit button that allows the user to send their feedback and go back to the home-screen where they can instantly start another call.
     feedback.submit:
       en: Submit
       de: Abschicken
@@ -753,6 +803,11 @@ l10n:
       fr: Envoyer
       da: Send
       pt: Enviar
+
+    # Submit button that allows the user to send their feedback and go back to the home-screen where they can instantly start another call.
+    feedback.skip:
+      en: Skip
+      de: Überspringen
 
     # Error message that is shown if feedback was already submitted. This could happen if the user
     # opens the same feedback link twice.
