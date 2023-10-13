@@ -804,7 +804,7 @@ l10n:
       da: Send
       pt: Enviar
 
-    # Submit button that allows the user to send their feedback and go back to the home-screen where they can instantly start another call.
+    # Skip button that allows the user go back to the home-screen where they can instantly start another call without submiting any feedback.
     feedback.skip:
       en: Skip
       de: Überspringen
