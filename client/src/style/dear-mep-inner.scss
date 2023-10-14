@@ -83,9 +83,19 @@
   .dmep-btn-container {
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
     .dmep-btn-primary, .dmep-btn-secondary, .dmep-btn-primary-sm {
-      flex-basis: 80%;
+      //flex-basis: 80%;
+      min-width: 80%;
     }
+  }
+
+  .dmep-error-hint {
+    font-size: 1rem;
+    display: flex;
+    align-content: center;
+    gap: 4px;
   }
 
   .dmep-btn {
@@ -126,6 +136,8 @@
   .dmep-popover {
     color: var(--dmep-popover-text-color);
     background-color: var(--dmep-popover-background-color);
+    border-radius: 8px;
+    padding: 8px 16px;
   }
 
   .dmep-nowrap {
@@ -155,10 +167,6 @@
   a {
     color: var(--dmep-text-color);
     text-decoration: underline;
-  }
-
-  mat-icon {
-    color: var(--dmep-text-color);
   }
 
   p {

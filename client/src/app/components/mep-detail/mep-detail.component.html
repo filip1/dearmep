@@ -15,7 +15,7 @@
       <img *ngIf="group.logo" [src]="group.logo | toAbsolute: 'api'" class="mep-group-icon">
       <span>{{ group.long_name }}</span>
     </div>
-    <p class="country" *ngIf="mep">{{ 'countries.' + mep.country | transloco  }}</p>
+    <!-- <p class="country" *ngIf="mep">{{ 'countries.' + mep.country | transloco  }}</p> -->
     <div class="socials">
       <dmep-social-icon *ngFor="let contact of mep?.contacts" [type]="contact.type" [target]="contact.contact"></dmep-social-icon>
     </div>
