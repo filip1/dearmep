@@ -7,10 +7,10 @@
         <span>{{ 'countries.' + selectedCountry | transloco }}</span>
       </div>
     </mat-select-trigger>
-    <mat-option [value]="country" *ngFor="let country of countries">
+    <mat-option [value]="country.shortCode" *ngFor="let country of countries$ | async">
       <div class="dmep-country-option">
-        <span [classList]="'flag:' + country"></span>
-        <span>{{ getCountryTranslationKey(country) | transloco }}</span>
+        <span [classList]="'flag:' + country.shortCode"></span>
+        <span>{{ country.name }}</span>
       </div>
     </mat-option>
   </mat-select>
