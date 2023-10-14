@@ -1,4 +1,4 @@
-import { HttpContext, HttpErrorResponse } from '@angular/common/http';
+import { HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, concat, filter, interval, map, mergeMap, take } from 'rxjs';
 import { CallState, DestinationInCallResponse, OutsideHoursResponse, UserInCallResponse } from 'src/app/api/models';

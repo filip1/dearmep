@@ -2,8 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TranslocoService } from '@ngneat/transloco';
 // Change this import to enable optimizations as soon as https://github.com/marnusw/date-fns-tz/issues/193 is fixed
-import {zonedTimeToUtc} from 'date-fns-tz';
-import { addMinutes, format, isBefore, isEqual, set } from 'date-fns/esm';
+import { addMinutes, format, isBefore, isEqual } from 'date-fns/esm';
 import { Subject, takeUntil } from 'rxjs';
 import { StringUtil } from 'src/app/common/util/string.util';
 import { DayOfWeek } from 'src/app/model/day-of-week.enum';

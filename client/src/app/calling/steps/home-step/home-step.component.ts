@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TranslocoService } from '@ngneat/transloco';
-import { combineLatest, filter, map, take } from 'rxjs';
+import { filter, map, take } from 'rxjs';
 import { MarkupUtil } from 'src/app/common/util/markup.util';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { OfficeHoursService } from 'src/app/services/office-hours/office-hours.service';

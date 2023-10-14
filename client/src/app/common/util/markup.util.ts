@@ -1,5 +1,5 @@
 export class MarkupUtil {
-  public static NoWrap(str: string | null | undefined, classNames: string = 'dmep-nowrap'): string | null | undefined {
+  public static NoWrap(str: string | null | undefined, classNames = 'dmep-nowrap'): string | null | undefined {
     if (!str) {
       return str
     }
