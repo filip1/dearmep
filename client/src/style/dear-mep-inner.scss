@@ -85,8 +85,7 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    .dmep-btn-primary, .dmep-btn-secondary, .dmep-btn-primary-sm {
-      //flex-basis: 80%;
+    .dmep-btn-primary, .dmep-btn-secondary, .dmep-btn-primary-sm, .dmep-btn-secondary-sm {
       min-width: 80%;
     }
   }
@@ -102,7 +101,7 @@
     text-transform: uppercase;
   }
 
-  .dmep-btn-primary, .dmep-btn-secondary, .dmep-btn-primary-sm {
+  .dmep-btn-primary, .dmep-btn-secondary, .dmep-btn-primary-sm, .dmep-btn-secondary-sm {
     border-radius: 16px;
     text-transform: uppercase;
     margin: 4px;
@@ -145,23 +144,6 @@
   }
   .dmep-bold {
     font-weight: 700;
-  }
-
-  .cdk-overlay-container {
-    position: unset;
-    grid-column: 1;
-    grid-row: 1;
-    display: grid;
-    .cdk-overlay-backdrop {
-      position: unset;
-      grid-row: 1;
-      grid-column: 1;
-    }
-    .cdk-global-overlay-wrapper {
-      position: unset;
-      grid-row: 1;
-      grid-column: 1;
-    }
   }
 
   a {

@@ -17,4 +17,9 @@ export class FeedbackStepComponent {
     this.selectDestinationService.renewSuggestedDestination()
     this.routingStateManager.returnHome()
   }
+
+  public skipClick() {
+    this.selectDestinationService.renewSuggestedDestination()
+    this.routingStateManager.returnHome()
+  }
 }
