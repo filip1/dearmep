@@ -2,15 +2,16 @@ from datetime import date
 from functools import lru_cache
 import logging
 from pathlib import Path
-import re
 from typing import Any, ClassVar, Dict, List, Literal, Optional, Union
 
-from pydantic import AnyHttpUrl, BaseModel, BaseSettings, ConstrainedStr, \
-    DirectoryPath, Field, FilePath, ValidationError, validator
+from pydantic import AnyHttpUrl, BaseModel, BaseSettings, DirectoryPath, \
+    Field, FilePath, PositiveInt, ValidationError, validator
 from pydantic.fields import ModelField
 from pydantic.utils import deep_update
 import yaml
 from yaml.parser import ParserError
+
+from .models import Language
 
 
 _logger = logging.getLogger(__name__)
@@ -31,10 +32,6 @@ class ConfigNotLoaded(Exception):
     pass
 
 
-class Language(ConstrainedStr):
-    regex = re.compile(r"^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$")
-
-
 class IPRateLimits(BaseModel):
     ip_limit: str
     small_block_limit: str
@@ -49,11 +46,37 @@ class CorsConfig(BaseModel):
 class APIRateLimitConfig(BaseModel):
     simple: IPRateLimits
     computational: IPRateLimits
+    sms: IPRateLimits
 
 
 class APIConfig(BaseModel):
     cors: CorsConfig
     rate_limits: APIRateLimitConfig
+
+
+class JWTConfig(BaseModel):
+    allowed_algorithms: List[str]
+    symmetric_encryption_key: str
+
+
+class SecretsConfig(BaseModel):
+    pepper: str
+    jwt: JWTConfig
+
+
+class SessionConfig(BaseModel):
+    max_logins: PositiveInt
+    max_logins_cutoff_days: PositiveInt
+    max_unused_codes: PositiveInt
+
+
+class AuthenticationConfig(BaseModel):
+    secrets: SecretsConfig
+    session: SessionConfig
+
+
+class FeedbackConfig(BaseModel):
+    token_timeout: PositiveInt
 
 
 class ContactTimespanFilterTimespan(BaseModel):
@@ -181,27 +204,22 @@ class L10nConfig(BaseModel):
         return v
 
 
-class JWTConfig(BaseModel):
-    allowed_algorithms: List[str]
-    symmetric_encryption_key: str
-
-
-class SecretConfig(BaseModel):
-    pepper: str
-    jwt: JWTConfig
-
-
-class AuthenticationConfig(BaseModel):
-    secret: SecretConfig
+class TelephonyConfig(BaseModel):
+    allowed_calling_codes: List[int]
+    blocked_numbers: List[str] = []
+    approved_numbers: List[str] = []
+    dry_run: bool = False
 
 
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""
     api: APIConfig
+    authentication: AuthenticationConfig
     contact_timespan_filter: Optional[ContactTimespanFilterConfig]
     database: DatabaseConfig
+    feedback: FeedbackConfig
     l10n: L10nConfig
-    authentication: AuthenticationConfig
+    telephony: TelephonyConfig
 
     _instance: ClassVar[Optional["Config"]] = None
     _patch: ClassVar[Optional[Dict]] = None

@@ -1,6 +1,7 @@
 from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
 import csv
+import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -14,15 +15,19 @@ from ..database.models import SwayabilityImport
 from ..progress import FlexiBytesReader, FlexiStrReader
 
 
+_logger = logging.getLogger(__name__)
+
+
 def import_destinations(ctx: Context):
     Config.load()
     input: FlexiBytesReader = ctx.args.input
 
     with get_session() as session:
         importer = db_importing.Importer(
-            portrait_template=getattr(ctx.args, "portrait_template", None),
-            fallback_portrait=getattr(ctx.args, "fallback_portrait", None),
-            logo_template=getattr(ctx.args, "logo_template", None),
+            portrait_template=ctx.args.portrait_template,
+            fallback_portrait=ctx.args.fallback_portrait,
+            logo_template=ctx.args.logo_template,
+            name_audio_template=ctx.args.name_audio_template,
         )
         with ctx.task_factory() as tf:
             with tf.create_task("reading and converting JSON") as task:
@@ -45,10 +50,14 @@ def import_swayability(ctx: Context):
                 input.set_task(task)
                 with input as input_stream:
                     csvr = csv.DictReader(input_stream)
-                    db_importing.import_swayability(session, map(
+                    ignored = db_importing.import_swayability(session, map(
                         SwayabilityImport.parse_obj, csvr
-                    ))
+                    ), ignore_unknown=ctx.args.ignore_unknown)
                 session.commit()
+    if ignored:
+        _logger.warning(
+            "Ignored the following IDs which were not found in the database: "
+            f"{', '.join(ignored)}")
 
 
 def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
@@ -73,7 +82,7 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         "the Destination, e.g. `portraits/{filename}`; available placeholders "
         "are {filename} (the name as given in the `portrait` field in the "
         "Destination object in the stream) and {id} (the Destination's ID as "
-        "given in the JSON",
+        "given in the JSON)",
     )
     destinations.add_argument(
         "-P", "--fallback-portrait", metavar="FILE",
@@ -89,6 +98,14 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         "object in the stream), {id} (the Group's ID as given in the JSON), "
         "{short_name} and {long_name} (as given in the JSON)",
     )
+    destinations.add_argument(
+        "-a", "--name-audio-template", metavar="TEMPLATE",
+        help="template string to construct the path to the spoken version of "
+        "the Destination's name, e.g. `names/{filename}`; available "
+        "placeholders are {filename} (the name as given in the `name_audio` "
+        "field in the Destination object in the stream) and {id} (the "
+        "Destination's ID as given in the JSON)",
+    )
     destinations.set_defaults(func=import_destinations, raw_stdout=True)
 
     swayability = subsub.add_parser(
@@ -100,6 +117,12 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         "to set the Base Endorsement value for the destination.",
     )
     FlexiStrReader.add_as_argument(swayability)
+    swayability.add_argument(
+        "--ignore-unknown", action="store_true",
+        help="If the CSV contains IDs which are not found in the database, "
+        "ignore these. If this option is not set, unknown IDs will instead "
+        "cause the import to abort.",
+    )
     swayability.set_defaults(func=import_swayability)
 
     help_if_no_subcommand(parser)

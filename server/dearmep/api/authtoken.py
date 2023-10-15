@@ -39,7 +39,7 @@ def create_token(claim: PhoneNumberClaim, expiry: timedelta) -> Dict:
     ````
     """
     config = Config.get()
-    jwt_config = config.authentication.secret.jwt
+    jwt_config = config.authentication.secrets.jwt
     valid_until = datetime.utcnow() + expiry
     to_encode = {"phone_number": claim.phone_number, "exp": valid_until}
     token = jwt.encode(
@@ -65,7 +65,7 @@ def get_confirmed_phone_number(
     """
 
     config = Config.get()
-    jwt_config = config.authentication.secret.jwt
+    jwt_config = config.authentication.secrets.jwt
     try:
         claim = jwt.decode(
             token,

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "DearMEP"
-version = "0.1.0-dev.9999999999"
+version = "1.0.0-dev.9999999999"
 description = "DearMEP helps people contact their representatives."
 authors = ["Tim Weber"]
 license = "AGPL-3.0"
@@ -37,6 +37,8 @@ markdown-it-py = "^2.2"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 types-python-jose = "^3.3.4.8"
 xlsxwriter = {version = "^3.1.5", optional = true}
+canonicaljson = "^2.0.0"
+phonenumbers = "^8.13.22"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^4.0.1"

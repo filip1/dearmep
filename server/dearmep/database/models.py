@@ -4,11 +4,12 @@ from typing import Any, Dict, List, Optional, TypedDict, Union
 from uuid import uuid4
 
 from pydantic import UUID4, BaseModel
-from sqlmodel import Column, Enum, Field, Relationship, SQLModel, TIMESTAMP, \
-    and_, case, or_, func, text
+from sqlmodel import Column, Enum, Field, JSON, Relationship, SQLModel, \
+    String, TIMESTAMP, and_, case, or_, func, text
 
-from ..config import Config, ConfigNotLoaded
-from ..models import CountryCode, Score, UserPhone
+from ..config import Config, ConfigNotLoaded, Language
+from ..models import CountryCode, FeedbackConvinced, FeedbackText, \
+    FeedbackToken, MediaListItem, Score, UserPhone, VerificationCode
 
 
 class _SchemaExtra(TypedDict):
@@ -87,12 +88,27 @@ DestinationGroupID = str
 DEFAULT_BASE_ENDORSEMENT = 0.5
 
 
-def auto_timestamp_column() -> Column:
-    """A timestamp column that will default to whenever the row is created."""
+def auto_timestamp_column_kwargs() -> Dict[str, Any]:
+    return {
+        "nullable": False,
+        "server_default": func.now(),
+    }
+
+
+def auto_timestamp_column(**kwargs) -> Column:
+    """A timestamp column that will default to whenever the row is created.
+
+    Note that this returns a `Column`, which will cause the field to be
+    prioritized higher than normal SQLModel fields in table creation. It will
+    probably be come right after the primary key. Worse yet, if it is part of
+    the primary key, it will be ordered before any non-`Column` fields. If this
+    breaks your ordering, use `sa_column_kwargs=auto_timestamp_column_kwargs()`
+    instead. See <https://github.com/tiangolo/sqlmodel/issues/542> for details.
+    """
     return Column(
         TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=func.now(),
+        **auto_timestamp_column_kwargs(),
+        **kwargs,
     )
 
 
@@ -275,6 +291,7 @@ class DestinationDump(DestinationBase):
     contacts: List[ContactDump] = []
     groups: List[DestinationGroupID] = []
     portrait: Optional[str]
+    name_audio: Optional[str]
 
 
 class DestinationRead(DestinationBase):
@@ -334,7 +351,45 @@ class DestinationGroupListItem(DestinationGroupBase):
     logo: Optional[str]
 
 
-DestinationRead.update_forward_refs()
+DestinationRead.update_forward_refs()  # after DestinationGroupListItem
+
+
+class NumberVerificationRequest(SQLModel, table=True):
+    __tablename__ = "number_verification_requests"
+    id: Optional[int] = Field(
+        primary_key=True,
+        description="Auto-generated ID.",
+    )
+    user: UserPhone = Field(
+        index=True,
+        description="User requesting the verification.",
+    )
+    code: VerificationCode = Field(
+        description="Verification code sent out via SMS.",
+    )
+    # Not an auto_timestamp_column because it relates to expires_at, the caller
+    # should calculate both and set them explicitly.
+    requested_at: datetime = Field(
+        index=True,
+        description="Timestamp of when the User requested the code.",
+    )
+    expires_at: datetime = Field(
+        description="Timestamp of when the code will expire.",
+    )
+    completed_at: Optional[datetime] = Field(
+        index=True,
+        description="Timestamp of when the request has been completed "
+        "successfully (if at all) by entering the correct code.",
+    )
+    language: Language = Field(
+        description="UI language in use when the code was requested.",
+    )
+    ignore: bool = Field(
+        False,
+        description="Whether to ignore this entry, e.g. from counting the "
+        "number of verification requests. To be set manually by the "
+        "administrator."
+    )
 
 
 class DestinationSelectionLogEvent(str, enum.Enum):
@@ -420,8 +475,7 @@ class DestinationSelectionLogBase(SQLModel):
         description="ID of the phone call that relates to this log, if any.",
     )
     timestamp: Optional[datetime] = Field(
-        index=True,
-        sa_column=auto_timestamp_column(),
+        sa_column=auto_timestamp_column(index=True),
         description="Timestamp of when the selection took place.",
     )
     event: DestinationSelectionLogEvent = Field(
@@ -438,6 +492,80 @@ class DestinationSelectionLog(DestinationSelectionLogBase, table=True):
     destination: Destination = Relationship()
 
 
+class UserFeedback(SQLModel, table=True):
+    __tablename__ = "user_feedback"
+    token: FeedbackToken = Field(
+        primary_key=True,
+        description="The unique token associated with this feedback entry.",
+    )
+    # Not an auto_timestamp_column because it relates to expires_at, the caller
+    # should calculate both and set them explicitly.
+    issued_at: datetime = Field(
+        index=True,
+        description="When the token has been issued.",
+    )
+    expires_at: datetime = Field(
+        index=True,
+        description="When the token will expire.",
+    )
+    feedback_entered_at: Optional[datetime] = Field(
+        index=True,
+        description="When the feedback has been given. Can be null if the "
+        "token has not yet been used.",
+    )
+    destination_id: DestinationID = Field(
+        index=True, foreign_key="destinations.id",
+        description="The Destination this feedback is about.",
+    )
+    destination: Destination = Relationship()
+    calling_code: int = Field(
+        index=True,
+        description="Calling code of the User’s country.",
+    )
+    language: str = Field(
+        index=True,
+        description="The language the User has had selected when starting the "
+        "call.",
+    )
+    convinced: Optional[FeedbackConvinced] = Field(
+        index=True,
+        description="Whether the User thinks they’ve convinced the "
+        "Destination.",
+    )
+    technical_problems: Optional[bool] = Field(
+        index=True,
+        description="Whether there were technical problems in the call.",
+    )
+    additional: Optional[FeedbackText] = Field(
+        description="Additional feedback text.",
+    )
+
+
+class FeedbackContext(BaseModel):
+    expired: bool = Field(
+        description="Whether the token has already expired. This can also be "
+        "true for used tokens, if they already received feedback but are now "
+        "beyond their expiry date.",
+        **_example(False),
+    )
+    used: bool = Field(
+        description="Whether the token has been used for sending feedback "
+        "already. This can also be true for expired tokens, if they already "
+        "received feedback before expiring.",
+        **_example(False),
+    )
+    language: Language = Field(
+        description="The language the User has had selected when starting the "
+        "call. Allows the frontend to initialize itself to that language, "
+        "even if the User is using a completely new browser to access the "
+        "feedback form.",
+    )
+    destination: Optional[DestinationRead] = Field(
+        description="The Destination associated with this token. Will only be "
+        "returned if the token is neither expired nor already used.",
+    )
+
+
 class SwayabilityImport(BaseModel):
     id: DestinationID = Field(
         description="ID of the Destination to manipulate.",
@@ -445,6 +573,28 @@ class SwayabilityImport(BaseModel):
     endorsement: Optional[Score] = Field(
         None,
         description="Base Endorsement value to set.",
+    )
+
+
+class MediaList(SQLModel, table=True):
+    __tablename__ = "medialists"
+    id: UUID4 = Field(
+        sa_column=Column(
+            String, primary_key=True, default=lambda: str(uuid4())),
+        description="ID of the media list.",
+    )
+    created_at: datetime = Field(
+        sa_column=auto_timestamp_column(index=True),
+    )
+    items: List[MediaListItem] = Field(
+        sa_column=Column(JSON),
+    )
+    format: str = Field(
+        description="The format of the desired output, compatible to ffmpeg's "
+        "`-f` option, e.g. `ogg`.",
+    )
+    mimetype: str = Field(
+        description="The MIME type the output is going to have.",
     )
 
 
