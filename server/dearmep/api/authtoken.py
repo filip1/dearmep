@@ -44,8 +44,8 @@ def create_token(claim: PhoneNumberClaim, expiry: timedelta) -> Dict:
     to_encode = {"phone_number": claim.phone_number, "exp": valid_until}
     token = jwt.encode(
         to_encode,
-        jwt_config.symmetric_encryption_key,
-        algorithm=jwt_config.allowed_algorithms[0],
+        jwt_config.key,
+        algorithm=jwt_config.algorithms[0],
     )
     return {"access_token": token, "token_type": "bearer"}
 
@@ -69,8 +69,8 @@ def get_confirmed_phone_number(
     try:
         claim = jwt.decode(
             token,
-            jwt_config.symmetric_encryption_key,
-            algorithms=jwt_config.allowed_algorithms[0],
+            jwt_config.key,
+            algorithms=jwt_config.algorithms[0],
             options={"require_exp": True},
         )
     except JWTError:

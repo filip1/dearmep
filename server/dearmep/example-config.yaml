@@ -184,9 +184,17 @@ authentication:
     # Application-wide pepper value for hashes.
     pepper: CHANGE THIS
 
+    # The JSON Web Tokens used for authenticating the frontend against the
+    # backend, i.e. our "session token".
     jwt:
-      allowed_algorithms: ["HS512"]
-      symmetric_encryption_key: "a very secret key that should be infeasible to guess"
+
+      # The token is encrypted symmetrically using this key.
+      key: CHANGE THIS TOO
+
+      # The algorithms we support. The first one in the list will be used for
+      # creating new tokens, while the others (if any) are accepted for
+      # existing lokens. You should not need to change this.
+      algorithms: [ HS512 ]
 
 
 # Options regarding the after-call feedback functionality.

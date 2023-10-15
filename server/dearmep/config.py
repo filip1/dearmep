@@ -55,8 +55,14 @@ class APIConfig(BaseModel):
 
 
 class JWTConfig(BaseModel):
-    allowed_algorithms: List[str]
-    symmetric_encryption_key: str
+    algorithms: List[str]
+    key: str
+
+    @validator("algorithms")
+    def list_not_empty(cls, v: List[str]) -> List[str]:
+        if len(v) == 0:
+            raise ValueError("at least one algorithm needs to be specified")
+        return v
 
 
 class SecretsConfig(BaseModel):
