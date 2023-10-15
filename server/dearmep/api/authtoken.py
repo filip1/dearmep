@@ -1,85 +1,58 @@
-from datetime import timedelta, datetime
-
-from typing import Dict
-from typing_extensions import Annotated  # NOTE: Python 3.9 moved into `typing`
+from datetime import timedelta, datetime, timezone
+from typing_extensions import Annotated
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
-from pydantic import BaseModel
+from pydantic import ValidationError
 
 from ..config import Config
+from ..models import JWTClaims, JWTResponse, PhoneNumber
+
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/api/v1/number-verification/request-verification"
-)  # bearer is a jwt token
+    tokenUrl="/api/v1/number-verification/request",
+    auto_error=True,
+)
 
 
-class AuthToken(BaseModel):
-    access_token: str  # JWT token
-    token_type: str  # always "bearer"
-
-
-class PhoneNumberClaim(BaseModel):
-    phone_number: str  # TODO use sanitized type
-
-
-def create_token(claim: PhoneNumberClaim, expiry: timedelta) -> Dict:
-    """
-    Get an encrypted token to claim a particular phone number.
-
-    Usage:
-    ```
-    @router.get("/token", response_model=AuthToken, ...)
-    def get_test_token():
-        delta = datetime.timedelta(seconds=
-            config.authentication.session.authentication_timeout)
-        claim = PhoneNumberClaim(phone_number="123")
-        return create_token(claim, delta)
-    ````
-    """
-    config = Config.get()
-    jwt_config = config.authentication.secrets.jwt
-    valid_until = datetime.utcnow() + expiry
-    to_encode = {"phone_number": claim.phone_number, "exp": valid_until}
+def create_token(phone: PhoneNumber, expiry: timedelta) -> JWTResponse:
+    """Get an encrypted token to claim a particular phone number."""
+    jwt_config = Config.get().authentication.secrets.jwt
+    valid_until = datetime.now() + expiry
     token = jwt.encode(
-        to_encode,
+        JWTClaims(phone=phone, exp=valid_until).dict(),
         jwt_config.key,
         algorithm=jwt_config.algorithms[0],
     )
-    return {"access_token": token, "token_type": "bearer"}
+    return JWTResponse(access_token=token, expires_in=expiry.total_seconds())
 
 
-def get_confirmed_phone_number(
-    token: Annotated[str, Depends(oauth2_scheme)]
-) -> PhoneNumberClaim:
-    """
-    Ensure that a HTTP client has claims to a phone number.
-
-    Usage:
-    ```
-    @router.get("/api-path", ...)
-    def endpoint(token: typing.Annotated[PhoneNumberClaim,
-                                         fastapi.Depends(get_confirmed_phone_number)]):
-        pass
-    """
-
-    config = Config.get()
-    jwt_config = config.authentication.secrets.jwt
+def validate_token(
+    token: Annotated[str, Depends(oauth2_scheme)],
+) -> JWTClaims:
+    """Validate a JWT and return the signed claims it contains."""
+    jwt_config = Config.get().authentication.secrets.jwt
     try:
-        claim = jwt.decode(
+        claims_dict = jwt.decode(
             token,
             jwt_config.key,
-            algorithms=jwt_config.algorithms[0],
+            algorithms=jwt_config.algorithms,
             options={"require_exp": True},
         )
-    except JWTError:
+        claims = JWTClaims.parse_obj(claims_dict)
+    except (JWTError, ValidationError):
         raise HTTPException(
             status.HTTP_401_UNAUTHORIZED,
-            "invalid JWT token",
+            "invalid JWT",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    if number := claim.get("phone_number"):
-        return PhoneNumberClaim(phone_number=number)
-    raise ValueError("JWT Token needs 'phone_number' field")
+    if claims.exp <= datetime.now(timezone.utc):
+        raise HTTPException(
+            status.HTTP_401_UNAUTHORIZED,
+            "JWT expired",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return claims
