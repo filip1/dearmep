@@ -166,10 +166,6 @@ authentication:
     # In other words, in this example you could log in 10 times every 5 days.
     max_logins_cutoff_days: 5
 
-    # How long until the session times out due to inactivity. Any API request
-    # with a valid token will reset this timeout.
-    inactivity_timeout: 7200
-
     # How long until the session times out regardless of any activity. This
     # timeout does not reset. A new verification will need to take place once it
     # has been reached. Its main purpose is to ensure that the user still owns

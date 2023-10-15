@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime, timezone
+from datetime import datetime, timezone
 from typing_extensions import Annotated
 
 from fastapi import Depends, HTTPException, status
@@ -16,16 +16,18 @@ oauth2_scheme = OAuth2PasswordBearer(
 )
 
 
-def create_token(phone: PhoneNumber, expiry: timedelta) -> JWTResponse:
+def create_token(phone: PhoneNumber) -> JWTResponse:
     """Get an encrypted token to claim a particular phone number."""
-    jwt_config = Config.get().authentication.secrets.jwt
-    valid_until = datetime.now() + expiry
+    auth_config = Config.get().authentication
+    jwt_config = auth_config.secrets.jwt
+    timeout = auth_config.session.authentication_timeout
+    valid_until = datetime.now() + timeout
     token = jwt.encode(
         JWTClaims(phone=phone, exp=valid_until).dict(),
         jwt_config.key,
         algorithm=jwt_config.algorithms[0],
     )
-    return JWTResponse(access_token=token, expires_in=expiry.total_seconds())
+    return JWTResponse(access_token=token, expires_in=timeout.total_seconds())
 
 
 def validate_token(
