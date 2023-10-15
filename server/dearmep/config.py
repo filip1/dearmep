@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from functools import lru_cache
 import logging
 from pathlib import Path
@@ -54,14 +54,27 @@ class APIConfig(BaseModel):
     rate_limits: APIRateLimitConfig
 
 
+class JWTConfig(BaseModel):
+    algorithms: List[str]
+    key: str
+
+    @validator("algorithms")
+    def list_not_empty(cls, v: List[str]) -> List[str]:
+        if len(v) == 0:
+            raise ValueError("at least one algorithm needs to be specified")
+        return v
+
+
 class SecretsConfig(BaseModel):
     pepper: str
+    jwt: JWTConfig
 
 
 class SessionConfig(BaseModel):
     max_logins: PositiveInt
     max_logins_cutoff_days: PositiveInt
     max_unused_codes: PositiveInt
+    authentication_timeout: timedelta
 
 
 class AuthenticationConfig(BaseModel):

@@ -166,10 +166,6 @@ authentication:
     # In other words, in this example you could log in 10 times every 5 days.
     max_logins_cutoff_days: 5
 
-    # How long until the session times out due to inactivity. Any API request
-    # with a valid token will reset this timeout.
-    inactivity_timeout: 7200
-
     # How long until the session times out regardless of any activity. This
     # timeout does not reset. A new verification will need to take place once it
     # has been reached. Its main purpose is to ensure that the user still owns
@@ -183,6 +179,18 @@ authentication:
 
     # Application-wide pepper value for hashes.
     pepper: CHANGE THIS
+
+    # The JSON Web Tokens used for authenticating the frontend against the
+    # backend, i.e. our "session token".
+    jwt:
+
+      # The token is encrypted symmetrically using this key.
+      key: CHANGE THIS TOO
+
+      # The algorithms we support. The first one in the list will be used for
+      # creating new tokens, while the others (if any) are accepted for
+      # existing lokens. You should not need to change this.
+      algorithms: [ HS512 ]
 
 
 # Options regarding the after-call feedback functionality.

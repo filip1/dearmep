@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse, StreamingResponse
 from prometheus_client import Counter
 from pydantic import BaseModel, UUID4
 
+from . import authtoken
 from ..config import Config, Language, all_frontend_strings
 from ..convert import blobfile, ffmpeg
 from ..database.connection import get_session
@@ -367,9 +368,8 @@ def verify_number(
             return error_model(
                 status.HTTP_400_BAD_REQUEST,
                 SMSCodeVerificationFailedResponse())
-        response = JWTResponse(
-            access_token="TODO",  # TODO
-            expires_in=3600,  # TODO
+        response = authtoken.create_token(
+            phone=request.phone_number,
         )
         session.commit()
     return response
