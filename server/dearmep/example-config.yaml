@@ -459,7 +459,7 @@ l10n:
     # lines of text.
     call.home.title:
       en: Contact your Member of the European Parliament. Make your voice heard and convince them to stop the chatcontrol bill!
-      de: Sprich mit deinen Abgeordneten im EU Parlament. Überzeuge sie, den Gesetzesvorschlag zur Chatkontrolle zu stoppen!
+      de: Sprich mit deinen Abgeordneten im EU-Parlament. Überzeuge sie, den Gesetzesvorschlag zur Chatkontrolle zu stoppen!
       sv: Prata med en Europaparlamentariker och få dem att stoppa lagförslaget.
       fr: Contacte ton Membre du Parlement européen. Engaage-toi et convaincs-les de rejeter le project de loi sur le contrôle du chat!
       da: Snak med dine politikere i Europa-Parlamentet. Overbevis dem om at stoppe chatkontrolloven!
@@ -489,7 +489,7 @@ l10n:
       pt: Podes ligar agora ou agendar chamadas diárias ou semanais.
     call.home.descriptions.1.text:
       en: We will always connect you free of charge to the Politican that you are most likely to convince.
-      de: Wir werden dich immer kostenlos mit dem Politiker verbinden, der wahrscheinlich am leichtesten zu überzeugen ist.
+      de: Wir werden dich immer kostenlos mit der Person verbinden, die wahrscheinlich am leichtesten zu überzeugen ist.
       sv: Vi kommer alltid att hitta den politikern som du kan övertyga enklast.
       fr: Nous te mettrons en contact gratuitement avec le membre du parlement qui est le plus facile à convaincre pour toi.
       da: Vi vil altid forbinde dig gratis med den politiker, som er lettest at overbevise.
@@ -821,7 +821,7 @@ l10n:
     # button on hover and for screenreaders.
     select-mep.autorenew:
       en: Choose another Politician
-      de: Einen anderen Politiker wählen
+      de: Jemand anderen vorschlagen lassen
       sv: Välj en annan Europaparlamentariker
       fr: Choisir un autre membre du Parlement européen
       da: Vælg en anden politiker
@@ -1066,7 +1066,7 @@ l10n:
       pt: Agendar uma chamada
     schedule.description:
       en: 'Plan now to talk to a politican later! Select a day and time:'
-      de: 'Wähle jetzt Tag und Uhrzeit für dein Gespräch mit einem Politiker:'
+      de: 'Wähle jetzt Tag und Uhrzeit für dein Gespräch mit eine*r Politiker*in:'
       sv: 'Välj dag och tid för ditt samtal med en Europaparlamentariker:'
       fr: "Quand voudrais-tu appeler un membre du Parlement européen? Ajoute un jour et temps, s'il te plaît."
       da: Vælg et senere tidspunktet for din samtale med en politiker nu
@@ -1074,7 +1074,7 @@ l10n:
     schedule.scheduleAsText:
       en: We will give you a ring every {{ timeSlots }} at your number to connect you
         with a politician from {{ country }}.
-      de: Wir werden dich jeden {{ timeSlots }} auf deiner Nummer anrufen um dich mit einem Politiker aus {{ country }} zu verbinden.
+      de: Wir werden dich jeden {{ timeSlots }} auf deiner Nummer anrufen um dich mit eine*r Politiker*in aus {{ country }} zu verbinden.
       sv: Vi kommer att ringa dig varje {{ timeSlots }} på ditt nummer för att koppla dig till en Europaparlamentariker från {{ country }}.
       fr: Nous t'appelerons tous les {{ timeSlots }} à ton numéro pour te mettre en contact avec un membre du Parlement européen du / de la {{ country }}.
       da: Vi vil ringe til dig hver {{ timeSlots }} med dit nummer for at forbinde dig med en politiker fra {{ country }}
