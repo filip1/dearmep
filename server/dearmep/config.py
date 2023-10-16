@@ -121,10 +121,7 @@ class L10nEntry(BaseModel):
         # TODO: Use a context-set language?
         lang = Language(language) if language else l10nconfig.default_language
 
-        return self.for_language(lang).format(**{
-            "campaign": l10nconfig.strings.campaign_name.for_language(lang),
-            **placeholders,
-        })
+        return self.for_language(lang).format(**placeholders)
 
     def for_language(self, language: Language) -> str:
         # If the entry is a simple string, use that.
@@ -144,7 +141,6 @@ class FrontendStrings(BaseModel):
 
 
 class L10nStrings(BaseModel):
-    campaign_name: L10nEntry
     phone_number_verification_sms: L10nEntry
 
 
