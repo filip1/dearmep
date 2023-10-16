@@ -141,6 +141,7 @@ class FrontendStrings(BaseModel):
 
 
 class L10nStrings(BaseModel):
+    feedback_survey_sms: L10nEntry
     phone_number_verification_sms: L10nEntry
 
 

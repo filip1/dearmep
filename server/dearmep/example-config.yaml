@@ -323,9 +323,12 @@ l10n:
       fr: "Voici, ton code de vérification: {code}. Si tu penses avoir reçu ce code par erreur, ignore-le."
       pt: "O teu código de verificação: {code}. Se não solicitaste este código, podes ignorá-lo."
 
-  feedback_survey_sms:
-      en: "How was your phone call with the {campaign} campaign? Your experience helps us improve the tool and always pick politicians that are most likely to be convinced by citizens. Click here, it only takes a minute: {URL}"
-      de: "Wie war dein Anruf bei der {campaign} Kampagne? Deine Erfahrung hilft uns das Tool zu verbessern und die Abgeordneten auszuwählen, die am ehesten überzeugt werden können. Klick hier, es dauert nur eine Minute: {URL}"
+    # Content of SMS sent to users after a seemingly successful call with
+    # someone. {name} will be replaced with the name of the person they've
+    # called. {url} is the link to the feedback form.
+    feedback_survey_sms:
+      en: "How was your call with {name}? Please share your feedback here: {URL}"
+      de: "Wie war dein Anruf mit {name}? Bitte gib uns Feedback unter: {URL}"
 
   frontend_strings:
     # Main title of the campaign.
