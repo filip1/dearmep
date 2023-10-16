@@ -283,7 +283,7 @@ def get_new_sms_auth_code(
         user=user,
         code=code,
         requested_at=now,
-        expires_at=now + timedelta(minutes=10),  # TODO: make configurable
+        expires_at=now + config.authentication.session.code_timeout,
         language=language,
     ))
 

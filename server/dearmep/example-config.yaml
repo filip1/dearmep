@@ -159,6 +159,9 @@ authentication:
     # In other words, in this example you could log in 10 times every 5 days.
     max_logins_cutoff_days: 5
 
+    # How long until verification codes sent via SMS expire.
+    code_timeout: 900  # 15 minutes
+
     # How long until the session times out regardless of any activity. This
     # timeout does not reset. A new verification will need to take place once it
     # has been reached. Its main purpose is to ensure that the user still owns
@@ -266,9 +269,6 @@ telephony:
 
   # Verifying phone numbers by sending an SMS to that number.
   sms_verification:
-
-    # How long until verification codes sent via SMS expire.
-    timeout: 900
 
     # After this many codes have been sent to a certain number without any of
     # them being converted into a Session Token, add the number to a block list.
