@@ -481,15 +481,15 @@ l10n:
     # Make sure to write short and concise paragraphs. Each paragraph should not be more than two or three
     # lines of text.
     call.home.descriptions.0.text:
-      en: You can call now or schedule daily or weekly calls in the future.
-      de: Du kannst entweder jetzt anrufen oder für später tägliche oder wöchentliche Anrufe planen.
+      en: We will call you on your mobile phone, and then connect you to the person you have selected.
+      de: Wir rufen dich auf deinem Mobiltelefon an und verbinden dich dann mit der Person, die du ausgewählt hast.
       sv: Du kan ringa nu eller schemalägga dagliga eller veckovisa samtal.
       fr: Tu peux les appeler maintenant ou choisir d'appeler à un autre moment. De plus, il y a la possibilité de faire des appels chaque jour ou chaque semaine.
       da: Du kan ringe nu eller planlægge et dagligt/ugentligt opkald.
       pt: Podes ligar agora ou agendar chamadas diárias ou semanais.
     call.home.descriptions.1.text:
-      en: We will always connect you free of charge to the Politican that you are most likely to convince.
-      de: Wir werden dich immer kostenlos mit der Person verbinden, die wahrscheinlich am leichtesten zu überzeugen ist.
+      en: The politicians we recommend to you are those where you will likely have the biggest impact. The call is always free of charge.
+      de: Wir schlagen dir die Personen vor, bei denen du den größten Unterschied machen kannst. Der Anruf ist immer kostenlos.
       sv: Vi kommer alltid att hitta den politikern som du kan övertyga enklast.
       fr: Nous te mettrons en contact gratuitement avec le membre du parlement qui est le plus facile à convaincre pour toi.
       da: Vi vil altid forbinde dig gratis med den politiker, som er lettest at overbevise.
