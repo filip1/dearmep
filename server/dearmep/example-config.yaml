@@ -159,6 +159,15 @@ authentication:
     # In other words, in this example you could log in 10 times every 5 days.
     max_logins_cutoff_days: 5
 
+    # After this many wrong codes have been entered, the most recently sent
+    # code becomes invalid. Even if the user then enters the correct code, it
+    # will not be accepted. This protects the system from an attacker trying
+    # all possible codes. (There is rate limiting too, but rate limiting only
+    # slows the attacker down. This setting makes it impossibly to try out all
+    # of the codes, even with unlimited time.) Note that the user can request
+    # new codes, up to the `max_unused_codes` limit defined above.
+    max_wrong_codes: 5
+
     # How long until verification codes sent via SMS expire.
     code_timeout: 900  # 15 minutes
 
@@ -266,15 +275,6 @@ telephony:
     - "+491751234567"  # would've been allowed anyway as it's a mobile number
     # And, as before, you can also use a hash to specify a singular number.
     - "bxsT9xkkRFk1Kl4sO8pGl2nCgYuDManlCzKkRGTGE1U="
-
-  # Verifying phone numbers by sending an SMS to that number.
-  sms_verification:
-
-    # After this many codes have been sent to a certain number without any of
-    # them being converted into a Session Token, add the number to a block list.
-    # It cannot be used again before being manually unlocked by an admin. This
-    # is to prevent spamming a victim with codes, incurring costs.
-    max_unused: 3
 
 
 # Localization options.
