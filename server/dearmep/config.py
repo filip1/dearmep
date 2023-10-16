@@ -74,7 +74,9 @@ class SessionConfig(BaseModel):
     max_logins: PositiveInt
     max_logins_cutoff_days: PositiveInt
     max_unused_codes: PositiveInt
+    max_wrong_codes: PositiveInt
     authentication_timeout: timedelta
+    code_timeout: timedelta
 
 
 class AuthenticationConfig(BaseModel):
