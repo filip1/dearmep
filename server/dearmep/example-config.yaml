@@ -437,7 +437,7 @@ l10n:
       en: "{{ startDayOfWeek }} through {{ endDayOfWeek }}"
       de: "{{ startDayOfWeek }} bis {{ endDayOfWeek }}"
       sv: "{{ startDayOfWeek }} till {{ endDayOfWeek }}"
-      en: "{{ startDayOfWeek }} a {{ endDayOfWeek }}"
+      pt: "{{ startDayOfWeek }} a {{ endDayOfWeek }}"
 
     # Specifies a time-range with a start and end time
     # Example:
