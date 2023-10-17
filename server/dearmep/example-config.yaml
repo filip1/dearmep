@@ -329,6 +329,7 @@ l10n:
     feedback_survey_sms:
       en: "How was your call with {name}? Please share your feedback here: {URL}"
       de: "Wie war dein Anruf mit {name}? Bitte gib uns Feedback unter: {URL}"
+      sv: "Hur var ditt samtal med {name}? Återkoppla gärna här: {URL}"
 
   frontend_strings:
     # Main title of the campaign.
@@ -391,16 +392,19 @@ l10n:
     call.call-now-btn.outOfOfficeHoursHint:
       en: Calling is only possible during office hours.
       de: Anrufe sind nur während der Bürozeiten möglich.
+      sv: Samtal är bara möjliga under kontorstid.
 
     # Title for UI popover explaining the current office hours
     call.office-hours.title:
       en: Office Hours
       de: Bürozeiten
+      sv: Kontorstider
 
     # Description for UI popover explaining the current office hours
     call.office-hours.description:
       en: Calling is only possible during office hours.
       de: Anrufe sind nur während der Bürozeiten möglich.
+      sv: Samtal är bara möjliga under kontorstid.
 
     # Text specifying the office hours in original and local timezone
     # Examples:
@@ -412,10 +416,12 @@ l10n:
     # {{ timeRangeLocal }}  ... Range from start- to end-time in local timezone (see: call.office-hours.time-range-zoned)
     call.office-hours.hours-zoned:
       en: "{{ dayOrRange }}: {{ timeRange }} ({{ timeRangeLocal }})"
+      sv: "{{ dayOrRange }}: {{ timeRange }} ({{ timeRangeLocal }})"
 
     # Same as 'call.office-hours.hours-zoned' applies when the user is in the same time-zone as the destination
     call.office-hours.hours:
       en: "{{ dayOrRange }}: {{ timeRange }}"
+      sv: "{{ dayOrRange }}: {{ timeRange }}"
 
     # Specifies a Day-Range
     # Example:
@@ -423,6 +429,7 @@ l10n:
     call.office-hours.day-range:
       en: "{{ startDayOfWeek }} through {{ endDayOfWeek }}"
       de: "{{ startDayOfWeek }} bis {{ endDayOfWeek }}"
+      sv: "{{ startDayOfWeek }} till {{ endDayOfWeek }}"
 
     # Specifies a time-range with a start and end time
     # Example:
@@ -430,17 +437,20 @@ l10n:
     #   8:00 - 17:00 Local (see: 'call.office-hours.time-zone-local')
     call.office-hours.time-range-zoned:
       en: "{{ startTime }} - {{ endTime }} {{ timeZone }}"
+      sv: "{{ startTime }} - {{ endTime }} {{ timeZone }}"
 
     # Same as 'call.office-hours.time-range-zoned' applies when the user is in the same time-zone as the destination
     # Example:
     #   8:00 - 17:00
     call.office-hours.time-range:
       en: "{{ startTime }} - {{ endTime }}"
+      sv: "{{ startTime }} - {{ endTime }}"
 
     # Specifies that a certain time is in local timezone
     call.office-hours.time-zone-local:
       en: Local
       de: Lokal
+      sv: lokal tid
 
     # Text of the button that allows the user to schedule a call at a later point in time.
     call.call-later-btn.title:
@@ -469,6 +479,7 @@ l10n:
     call.home.titleAuthenticated:
       en: Welcome back!
       de: Willkommen zurück!
+      sv: Välkommen tillbaka!
 
     # Description paragraphs of the calling-section of the app.
     # The paragraphs are displayed in the first step (thus "home") of the calling flow. This means
@@ -500,6 +511,7 @@ l10n:
     call.home.youHaveAlreadySignedIn:
       en: You are already signed in with the number {{ number }}.
       de: Du bist bereits mit der nummer {{ number }} angemeldet.
+      sv: Du är redan inloggad med numret {{ number }}.
 
     # Text of the link-button that allowes the user log-out and re-authenticate with a different number
     call.home.notYourNumber:
@@ -546,26 +558,31 @@ l10n:
     verification.enterNumber.numberIsRequired:
       en: Phone number is required!
       de: Telefonnumer ist erforderlich!
+      sv: Telefonnumret behövs!
 
     # Error-Label that is shown when the entered number is invalid
     verification.enterNumber.invalidNumber:
       en: Invalid phone number!
       de: Ungültige Telefonnumer!
+      sv: Ogiltigt telefonnummer!
 
     # Error-Label that is shown when the entered number not allowed
     verification.enterNumber.numberNotAllowed:
       en: This number is not allowed!
       de: Diese Nummer ist nicht erlaubt!
+      sv: Detta nummer är inte tillåtit!
 
     # Error-Label that is shown when the entered number has been blocked
     verification.enterNumber.numberBlocked:
       en: This number has been blocked!
       de: Diese Nummer wurde blockiert!
+      sv: Detta nummer har blockerats!
 
     # Error-Label that is shown when the verification was attempted too many times
     verification.enterNumber.tooManyAttempts:
       en: Too many attempts, please try again later!
       de: Zu viele Versuche, bitte versuche die es später erneut!
+      sv: För många försök, var god prova igen senare!
 
     # Text for the mandatory privacy-policy checkbox below the number-input.
     # The placeholder {{ policyLink }} is replaced with an HTML A-Tag linking to the privacy
@@ -641,6 +658,7 @@ l10n:
     verification.enterCode.invalidCode:
       en: The code is invalid!
       de: Der Code ist ungültig!
+      sv: Koden är ogiltig!
 
     # Button text of the button that allows the user to submit the verification code in order to complete the verification
     # process.
@@ -693,6 +711,7 @@ l10n:
     callSetup.error.failedToEstablishCall:
       en: The call could not be established, please try again!
       de: Der Anruf konnte nicht aufgebaut werden, bitte versuchen sie es erneut!
+      sv: Samtalet kunde inte kopplas, var god försök igen!
 
     # Error message: It is not possible to reach the selected person at the moment, maybe they
     # are in a call already or they did not pick up the phone.
@@ -702,11 +721,13 @@ l10n:
         calling a different person in the meantime!
       de: Keine Verbindung möglich. Die ausgewählte Person ist möglicherweise bereits in einem Gespräch.
         Bitte versuche es später erneut und rufe in der Zwischeneit eine andere Person an.
+      sv: "Ingen förbindelse. Personen kan vara upptagen. Var god och försök senare. Kanske vill du ringa en annan person under tiden?"
 
     # Error message: It is not possible to make a call right now as we are outside office hours
     callSetup.error.outsideOfficeHours:
       en: Calling outside office hours is not available. Please try again during office hours.
       de: Anrufe außerhalb der Bürozeiten sind nicht möglich. Bitte versuchen Sie es während der Bürozeiten erneut.
+      sv: Samtal utanför kontorstid är inte möjliga. Var god försök igen under kontorstiden.
 
   # Translation strings related to the feedback step that will be displayed as soon as the user is connected to the MEP.
   # This means the feedback can already be entered during the call. This can be helpful for textual notes during the call.
@@ -806,12 +827,14 @@ l10n:
     feedback.skip:
       en: Skip
       de: Überspringen
+      sv: Hoppa över
 
     # Error message that is shown if feedback was already submitted. This could happen if the user
     # opens the same feedback link twice.
     feedback.alreadySubmitedError:
       en: The feedback for this call has already been submitted.
       de: Das Feedback für diesen Anruf wurde bereits abgegeben.
+      sv: Återkopplingen för detta samtal har redan skickats in.
 
   # Translation strings related to the section of the MEP-Selection section on the left side of the screen
 
@@ -1449,18 +1472,22 @@ l10n:
     error.genericApiError:
       en: Error! Failed to connect to server!
       de: Fehler! Verbeindung zum Server fehlgeschlagen!
+      sv: Fel! Ingen förbindelse till servern!
 
     # Generic error message that is used when an unusual error has occurred and we do not know what has happend.
     errro.genericError:
       en: An error has occurred!
       de: Es ist ein Fehler aufgetreten!
+      sv: Ett fel har uppstått.
 
     # Title of the error-dialog, that will be shown when a severe error has occured.
     error.errorDialogTitle:
       en: Error
       de: Fehler
+      sv: Fel
 
     # OK-Button of the error-dialog, that will be shown when a severe error has occured.
     error.errorDialogOK:
       en: OK
       de: OK
+      sv: OK
