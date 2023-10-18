@@ -10,6 +10,7 @@ from starlette_exporter.optional_metrics import request_body_size, \
 
 from . import __version__, markdown_files, static_files
 from .api import v1 as api_v1
+from .phone import elks
 from .config import APP_NAME, Config
 
 
@@ -23,7 +24,9 @@ def require_operation_id(app: FastAPI):
     This allows e.g. auto-generated clients to use nice method names.
     """
     for route in app.routes:
-        if isinstance(route, APIRoute) and not route.operation_id:
+        if isinstance(route, APIRoute) \
+                and route.include_in_schema \
+                and not route.operation_id:
             _logger.error(
                 f'API function "{route.name}" ({", ".join(route.methods)} '
                 f"{route.path}) does not have operation_id set"
@@ -54,6 +57,7 @@ def create_app(config_dict: Optional[dict] = None) -> FastAPI:
     setup_cors(app, config)
 
     app.include_router(api_v1.router, prefix="/api/v1")
+    elks.mount_router(app, "/phone")
     static_files.mount_if_configured(app, "/static")
     markdown_files.mount_if_configured(app, "/pages")
 

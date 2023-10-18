@@ -1,31 +1,36 @@
 from datetime import datetime
-import os
 from typing import Any, Callable, Dict, Iterable, List, Optional, Union
-
+from typing_extensions import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
     Response, status
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse
+
 from prometheus_client import Counter
-from pydantic import BaseModel, UUID4
+from pydantic import BaseModel
+import pytz
+from sqlmodel import col
 
 from . import authtoken
 from ..config import Config, Language, all_frontend_strings
-from ..convert import blobfile, ffmpeg
 from ..database.connection import get_session
 from ..database.models import Blob, Destination, DestinationGroupListItem, \
-    DestinationID, DestinationRead, DestinationSelectionLogEvent, \
-    FeedbackContext
+    DestinationID, DestinationRead, DestinationSelectionLog, \
+    DestinationSelectionLogEvent, FeedbackContext
 from ..database import query
 from ..l10n import find_preferred_language, get_country, parse_accept_language
-from ..models import MAX_SEARCH_RESULT_LIMIT, CountryCode, \
-    DestinationSearchResult, FeedbackSubmission, FeedbackToken, \
-    FrontendStringsResponse, JWTResponse, LanguageDetection, \
-    LocalizationResponse, PhoneNumberVerificationRejectedResponse, \
-    PhoneNumberVerificationResponse, PhoneRejectReason, RateLimitResponse, \
-    SMSCodeVerificationFailedResponse, SearchResult, SearchResultLimit, \
-    UserPhone, PhoneNumberVerificationRequest, SMSCodeVerificationRequest
+from ..models import MAX_SEARCH_RESULT_LIMIT, CallState, CallStateResponse, \
+    CountryCode, DestinationInCallResponse, DestinationSearchResult, \
+    FeedbackSubmission, FeedbackToken, FrontendStringsResponse, \
+    InitiateCallRequest, JWTClaims, JWTResponse, LanguageDetection, \
+    LocalizationResponse, OutsideHoursResponse, \
+    PhoneNumberVerificationRejectedResponse, PhoneNumberVerificationResponse, \
+    PhoneRejectReason, RateLimitResponse, SMSCodeVerificationFailedResponse, \
+    SearchResult, SearchResultLimit, UserPhone, UserInCallResponse, \
+    PhoneNumberVerificationRequest, SMSCodeVerificationRequest
+
 from ..phone.abstract import get_phone_service
 from ..ratelimit import Limit, client_addr
+from ..phone.elks.elks import start_elks_call
 
 
 l10n_autodetect_total = Counter(
@@ -114,10 +119,10 @@ def get_localization(
 
     preferences = parse_accept_language(accept_language)
     recommended_lang = find_preferred_language(
-                prefs=preferences,
-                available=available_languages,
-                fallback=default_language,
-            )
+        prefs=preferences,
+        available=available_languages,
+        fallback=default_language,
+    )
 
     with get_session() as session:
         location = get_country(session, geo_db, client_addr)
@@ -282,8 +287,7 @@ def get_suggested_destination(
     """
     with get_session() as session:
         try:
-            # TODO: Replace with actually _recommended_, not random.
-            dest = query.get_random_destination(
+            dest = query.get_recommended_destination(
                 session,
                 country=country,
                 event=DestinationSelectionLogEvent.WEB_SUGGESTED,
@@ -292,6 +296,87 @@ def get_suggested_destination(
             raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
         session.commit()
         return destination_to_destinationread(dest)
+
+
+@router.post(
+    "/call/initiate",
+    operation_id="initiateCall",
+    response_model=CallStateResponse,
+    responses={
+        **rate_limit_response,  # type: ignore[arg-type]
+        503: {
+            "model": Union[
+                DestinationInCallResponse,
+                UserInCallResponse,
+                OutsideHoursResponse,
+            ],
+        },
+    },
+    dependencies=(computational_rate_limit,),
+)
+def initiate_call(
+    request: InitiateCallRequest,
+    claims: Annotated[JWTClaims, Depends(authtoken.validate_token)],
+):
+    """
+    Call the User and start an IVR interaction with them.
+    """
+    now = datetime.now(pytz.timezone("Europe/Brussels"))
+    if now.weekday() >= 5 or now.hour < 9 or now.hour > 19:
+        return error_model(
+            status.HTTP_503_SERVICE_UNAVAILABLE, OutsideHoursResponse())
+
+    with get_session() as session:
+        try:
+            query.get_destination_by_id(
+                session,
+                request.destination_id,
+            )
+        except query.NotFound as e:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+
+        call_state = start_elks_call(
+            user_phone_number=claims.phone,
+            user_language=request.language,
+            destination_id=request.destination_id,
+            config=Config.get(),
+            session=session,
+        )
+        if isinstance(call_state,
+                      (DestinationInCallResponse, UserInCallResponse)):
+            return error_model(status.HTTP_503_SERVICE_UNAVAILABLE, call_state)
+
+    return CallStateResponse(state=call_state)
+
+
+@router.get(
+    "/call/state",
+    operation_id="getCallState",
+    response_model=CallStateResponse,
+    responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(simple_rate_limit,),
+)
+def get_call_state(
+    claims: Annotated[JWTClaims, Depends(authtoken.validate_token)],
+):
+    """
+    Returns the state of the User’s latest call.
+    """
+    with get_session() as session:
+
+        user_id = UserPhone(claims.phone)
+
+        if (last_log := (
+            session.query(DestinationSelectionLog.event).filter(
+                DestinationSelectionLog.user_id == user_id
+            ).filter(
+                col(DestinationSelectionLog.event).in_(
+                    CallState.__members__.keys())
+            ).order_by(
+                col(DestinationSelectionLog.timestamp).desc()).first())):
+
+            return CallStateResponse(state=CallState[last_log.event.name])
+        return CallStateResponse(state=CallState.NO_CALL)
 
 
 @router.post(
@@ -428,35 +513,3 @@ def submit_call_feedback(
         feedback.additional = submission.additional
         session.add(feedback)
         session.commit()
-
-
-@router.get(
-    "/medialists/{id}/concat", operation_id="getConcatMedia",
-    response_class=StreamingResponse,
-    responses={
-        200: {
-            "content": {"application/octet-stream": {}},
-            "description": "The concatenated media.",
-        },
-    },
-)
-def get_concatenated_media(
-    id: UUID4,
-):
-    def stream_and_delete_file(name: str):
-        try:
-            fobj = open(name, "rb")
-            yield from fobj
-        finally:
-            os.unlink(name)
-
-    with get_session() as session:
-        mlist = query.get_medialist_by_id(session, id)
-    items = [
-        blobfile.BlobOrFile.from_medialist_item(item, session=session)
-        for item in mlist.items
-    ]
-
-    with ffmpeg.concat(items, mlist.format, delete=False) as concat:
-        return StreamingResponse(
-            stream_and_delete_file(concat.name), media_type=mlist.mimetype)
