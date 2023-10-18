@@ -3,22 +3,22 @@
 <label id="convincing-question-label" transloco="feedback.convincingQuestion"></label>
 <br>
 <mat-radio-group aria-labelledby="convincing-question-label" class="convincing-question-group dmep-inner-card-container"
-  color="primary">
-  <mat-radio-button [value]="3">{{ "feedback.convincingQuestionFeedback.yes" | transloco }} </mat-radio-button>
-  <mat-radio-button [value]="2">{{ "feedback.convincingQuestionFeedback.likelyYes" | transloco }}</mat-radio-button>
-  <mat-radio-button [value]="1">{{ "feedback.convincingQuestionFeedback.likelyNo" | transloco }}</mat-radio-button>
-  <mat-radio-button [value]="0">{{ "feedback.convincingQuestionFeedback.no" | transloco }}</mat-radio-button>
+  color="primary" [formControl]="formGroup.controls.convinced">
+  <mat-radio-button [value]="convincedYes">{{ "feedback.convincingQuestionFeedback.yes" | transloco }} </mat-radio-button>
+  <mat-radio-button [value]="convincedLikeleyYes">{{ "feedback.convincingQuestionFeedback.likelyYes" | transloco }}</mat-radio-button>
+  <mat-radio-button [value]="convincedLikeleyNo">{{ "feedback.convincingQuestionFeedback.likelyNo" | transloco }}</mat-radio-button>
+  <mat-radio-button [value]="convincedNo">{{ "feedback.convincingQuestionFeedback.no" | transloco }}</mat-radio-button>
 </mat-radio-group>
 
-<mat-checkbox color="primary">{{ "feedback.technicalProblemsQuestion" | transloco }}</mat-checkbox>
+<mat-checkbox color="primary" [formControl]="formGroup.controls.technicalProblems">{{ "feedback.technicalProblemsQuestion" | transloco }}</mat-checkbox>
 
-<mat-form-field class="" appearance="outline" subscriptSizing="dynamic" class="dmep-additional-feedback-field">
+<mat-form-field class="" [formControl]="formGroup.controls.additionalFeedback" appearance="outline" subscriptSizing="dynamic" class="dmep-additional-feedback-field">
   <mat-label transloco="feedback.additionalFeedbackQuestion"></mat-label>
   <textarea matInput [placeholder]="'feedback.additionalFeedbackPlaceholder' | transloco"></textarea>
 </mat-form-field>
 
 <div class="dmep-btn-container">
-  <button mat-stroked-button class="dmep-submit-feedback-btn dmep-btn dmep-btn-primary-sm" color="primary" (click)="submitClick()">
+  <button mat-stroked-button [disabled]="!formGroup.touched" class="dmep-submit-feedback-btn dmep-btn dmep-btn-primary-sm" color="primary" (click)="submitClick()">
     <span class="btn-content">
       {{ 'feedback.submit' | transloco }}
     </span>
