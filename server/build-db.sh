@@ -90,7 +90,7 @@ download_names() {
 
 convert_names() {
 	msg 'Converting name audio.'
-	find "$NAMES_DIR" -name '*.mp3' -print0 \
+	find "$NAMES_DIR/" -name '*.mp3' -print0 \
 	| xargs -0 -P 4 -n 10 dearmep convert audio --existing skip
 	msg 'Converted names.'
 }
