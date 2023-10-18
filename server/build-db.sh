@@ -116,6 +116,11 @@ import_swayability() {
 	msg 'Imported Base Endorsement.'
 }
 
+lint_db() {
+	msg 'Linting database.'
+	dearmep db lint
+}
+
 check_basedir
 init_db
 download_mep_dump
@@ -125,3 +130,4 @@ download_names
 convert_names
 import_destinations
 import_swayability
+lint_db

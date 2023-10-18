@@ -9,7 +9,7 @@ from sqlalchemy.exc import IntegrityError
 if TYPE_CHECKING:
     from . import Context
 from ..config import APP_NAME, Config
-from ..database import create_db, query
+from ..database import create_db, lint, query
 from ..database.connection import get_session
 from ..database.models import Blob
 
@@ -17,6 +17,12 @@ from ..database.models import Blob
 def cmd_init(ctx: Context):
     Config.load()
     create_db()
+
+
+def cmd_lint(ctx: Context):
+    Config.load()
+    with get_session() as session:
+        lint.print_all_issues(session)
 
 
 def cmd_store_blob(ctx: Context):
@@ -62,6 +68,13 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         description="Create a new, empty database.",
     )
     init.set_defaults(func=cmd_init)
+
+    lint = subsub.add_parser(
+        "lint",
+        help="check database contents for issues",
+        description="Check the database for things that don't look right.",
+    )
+    lint.set_defaults(func=cmd_lint)
 
     store_blob = subsub.add_parser(
         "store-blob",
