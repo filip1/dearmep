@@ -424,9 +424,9 @@ def request_number_verification(
             return reject([result])
 
         config = Config.get()
-        sms_messages = config.l10n.strings.phone_number_verification_sms
-        message = sms_messages.for_language(
-            request.language).replace("{code}", result)
+        message = config.l10n.strings.phone_number_verification_sms.apply({
+            "code": result,
+        }, request.language)
 
         send_sms(
             session=session,
