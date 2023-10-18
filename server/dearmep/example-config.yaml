@@ -52,6 +52,10 @@ contact_timespan_filter:
 
 # The HTTP API.
 api:
+  # The absolute url where this software is to be found. This also accepts IP
+  # addresses with or without port.
+  base_url: https://example-campaign.com
+
   # Configuration for Cross-Origin Resource Sharing, see
   # <https://en.wikipedia.org/wiki/Cross-origin_resource_sharing>. Enter a list
   # of HTTP and/or HTTPS URLs (without any paths or trailing slashes). You may
@@ -213,6 +217,14 @@ telephony:
   # This is useful for developing the application.
   dry_run: true
 
+  # This determines the time after which a call is considered successful. The
+  # reason for this is that we give lower weight to connected calls that lasted
+  # shorter than the specified value, because employees may have answered
+  # instead of MEPs. Short calls indicate that there was no meaningful
+  # conversation with MEPs. In seconds.
+  successful_call_duration: 35
+
+
   # Calling codes that we allow Users to have. This corresponds to the "country
   # code" part of an international phone number. For example, the number
   # +491751234567 has a country code of 49. Note that these are not simply
@@ -277,6 +289,30 @@ telephony:
     # And, as before, you can also use a hash to specify a singular number.
     - "bxsT9xkkRFk1Kl4sO8pGl2nCgYuDManlCzKkRGTGE1U="
 
+  # The phone provider, currently only `46elks`
+  # (API CREDENTIALS) https://46elks.com/account for Basic Auth
+  provider:
+    provider_name: 46elks
+    username: xxx
+    password: yyy
+    # allowed IPs taken from https://46elks.com/docs/verify-callback-origin
+    # (2023-09)
+    allowed_ips:
+      - "176.10.154.199"
+      - "85.24.146.132"
+      - "185.39.146.243"
+      - "2001:9b0:2:902::199"
+      - "127.0.0.1"
+      - "::1"
+  # Local path to audio files to be played in phone calls.
+  audio_source: /var/dearmep/audio
+
+  # If you set the following variable always_connect_to to a phone number, it will get
+  # called instead of the MEP when doing the final connect step. Only use this
+  # for testing the IVR and Scheduled call flows if you don't want to actually
+  # call the MEP. Leave commented out if you don't know what that means.
+  #
+  # always_connect_to: "+4940428990" # a german robot doing time announcements
 
 # Localization options.
 l10n:

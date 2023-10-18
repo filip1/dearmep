@@ -5,7 +5,7 @@ from uuid import uuid4
 
 from pydantic import UUID4, BaseModel
 from sqlmodel import Column, Enum, Field, JSON, Relationship, SQLModel, \
-    String, TIMESTAMP, and_, case, or_, func, text
+    String, TIMESTAMP, UniqueConstraint, and_, case, or_, func, text
 
 from ..config import Config, ConfigNotLoaded, Language
 from ..models import CountryCode, FeedbackConvinced, FeedbackText, \
@@ -242,6 +242,52 @@ class DestinationBase(SQLModel):
     )
 
 
+class Call(SQLModel, table=True):
+    """A Call that is currently ongoing in our System """
+    __tablename__ = "calls"
+    __table_args__ = (
+        UniqueConstraint("provider", "provider_call_id", name="unique_call"),
+    )
+    id: UUID4 = Field(
+        primary_key=True,
+        default_factory=uuid4,
+        description="A unique string to identify this Call.",
+        **_example("80d35849-2527-4672-b227-0540e6133e09"),
+    )
+    provider: str = Field(
+        description="The Provider who makes the call for us.",
+        **_example("46elks"),
+    )
+    provider_call_id: str = Field(
+        description="The Provider's Call ID.",
+        **_example("c4644bcfb44e712345c36e189faba04bd"),
+        index=True,
+    )
+    started_at: datetime = Field(
+        description="Timestamp of when the call was started.",
+        **_example("2021-01-01 00:00:00"),
+    )
+    connected_at: Optional[datetime] = Field(
+        None,
+        description="Timestamp of when the call was connected.",
+        **_example("2021-01-01 00:00:00"),
+    )
+    user_language: Language = Field(
+        description="The user's language.",
+        **_example("en"),
+    )
+    user_id: UserPhone = Field(
+        index=True,
+        description="ID [PhoneNumber] to reuse for this call",
+    )
+    destination_id: DestinationID = Field(
+        index=True,
+        foreign_key="destinations.id",
+        description="The Destination this Call belongs to.",
+    )
+    destination: "Destination" = Relationship()
+
+
 class Destination(DestinationBase, table=True):
     sort_name: str = Field(
         index=True,
@@ -302,6 +348,11 @@ class DestinationRead(DestinationBase):
         "any is available.",
         **_example("/api/v1/blob/j.m.mierscheid.jpg"),
     )
+
+
+class ContactRead(ContactBase):
+    destination_id: DestinationID
+    destination: DestinationRead
 
 
 class DestinationGroupBase(SQLModel):
@@ -401,6 +452,9 @@ class NumberVerificationRequest(SQLModel, table=True):
 
 
 class DestinationSelectionLogEvent(str, enum.Enum):
+    # NOTE: `CallState` and `DestinationSelectionLogEvent` share many of their
+    # states, as well as a lot of the docstring. If you make changes to either
+    # of them, please make sure to also update the other accordingly, if needed
     """
     Destinations may be "selected" for different reasons, and depending on the
     reason, it might have different effects on whether the Destination can be

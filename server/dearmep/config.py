@@ -1,18 +1,17 @@
+import logging
 from datetime import date, timedelta
 from functools import lru_cache
-import logging
 from pathlib import Path
-from typing import Any, ClassVar, Dict, List, Literal, Optional, Union
+from typing import Any, ClassVar, Dict, List, Literal, Optional, Tuple, Union
 
+import yaml
 from pydantic import AnyHttpUrl, BaseModel, BaseSettings, DirectoryPath, \
     Field, FilePath, PositiveInt, ValidationError, validator
 from pydantic.fields import ModelField
 from pydantic.utils import deep_update
-import yaml
 from yaml.parser import ParserError
 
 from .models import Language
-
 
 _logger = logging.getLogger(__name__)
 
@@ -50,8 +49,16 @@ class APIRateLimitConfig(BaseModel):
 
 
 class APIConfig(BaseModel):
+    base_url: AnyHttpUrl
     cors: CorsConfig
     rate_limits: APIRateLimitConfig
+
+
+class ElksConfig(BaseModel):
+    provider_name: Literal["46elks"]
+    username: str
+    password: str
+    allowed_ips: Tuple[str, ...]
 
 
 class JWTConfig(BaseModel):
@@ -212,9 +219,13 @@ class L10nConfig(BaseModel):
 
 class TelephonyConfig(BaseModel):
     allowed_calling_codes: List[int]
-    blocked_numbers: List[str] = []
     approved_numbers: List[str] = []
+    blocked_numbers: List[str] = []
     dry_run: bool = False
+    successful_call_duration: PositiveInt
+    provider: ElksConfig
+    audio_source: Path
+    always_connect_to: Optional[str]
 
 
 class Config(BaseModel):
