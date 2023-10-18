@@ -75,6 +75,11 @@ class CallState(str, enum.Enum):
 
 
 class CallStateResponse(BaseModel):
+    feedback_token: Optional[FeedbackToken] = Field(
+        description="The token that can be used to submit call feedback. Will "
+        "only be returned when initially creating the call, not in the _Get "
+        "Call State_ endpoint.",
+    )
     state: CallState
 
 

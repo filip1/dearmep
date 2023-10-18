@@ -335,6 +335,13 @@ def initiate_call(
         except query.NotFound as e:
             raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
 
+        fb_token = query.create_feedback_token(
+            session,
+            user=UserPhone(claims.phone),
+            destination_id=request.destination_id,
+            language=request.language,
+        )
+
         call_state = start_elks_call(
             user_phone_number=claims.phone,
             user_language=request.language,
@@ -346,7 +353,7 @@ def initiate_call(
                       (DestinationInCallResponse, UserInCallResponse)):
             return error_model(status.HTTP_503_SERVICE_UNAVAILABLE, call_state)
 
-    return CallStateResponse(state=call_state)
+    return CallStateResponse(state=call_state, feedback_token=fb_token)
 
 
 @router.get(
