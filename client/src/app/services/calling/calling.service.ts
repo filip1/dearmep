@@ -1,11 +1,12 @@
 import { HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, concat, filter, interval, map, mergeMap, take } from 'rxjs';
-import { CallState, DestinationInCallResponse, OutsideHoursResponse, UserInCallResponse } from 'src/app/api/models';
+import { Observable, concat, filter, interval, map, mergeMap, take, tap } from 'rxjs';
+import { CallState, CallStateResponse, DestinationInCallResponse, OutsideHoursResponse, UserInCallResponse } from 'src/app/api/models';
 import { ApiService } from 'src/app/api/services';
 import { AUTH_TOKEN_REQUIRED } from 'src/app/common/interceptors/auth.interceptor';
 import { SKIP_RETRY_STATUS_CODES } from 'src/app/common/interceptors/retry.interceptor';
 import { TypedHttpError } from 'src/app/common/util/typed-http-error';
+import { FeedbackService } from '../feedback/feedback.service';
 
 export type CallingErrorType = CallState.CallingUserFailed | CallState.CallingDestinationFailed | CallState.CallAborted | TypedHttpError<DestinationInCallResponse | UserInCallResponse | OutsideHoursResponse> | unknown;
 
@@ -17,11 +18,16 @@ export class CallingService {
 
   constructor(
     private readonly apiService: ApiService,
+    private readonly feedbackService: FeedbackService,
   ) { }
 
   public setUpCall(destinationID: string, language: string): Observable<void> {
     return concat(
-      this.initiateCall(destinationID, language).pipe(take(1)),
+      this.initiateCall(destinationID, language).pipe(
+        take(1),
+        tap(resp => this.feedbackService.setToken(resp.feedback_token)),
+        map(resp => resp.state)
+      ),
       this.watchCallState(),
     ).pipe(
       filter(state => state !== CallState.CallingUser), // Poll call-status until user picks up the phone or error occurs
@@ -34,7 +40,7 @@ export class CallingService {
     )
   }
 
-  private initiateCall(destinationID: string, language: string): Observable<CallState> {
+  private initiateCall(destinationID: string, language: string): Observable<CallStateResponse> {
     return this.apiService.initiateCall({
       body: {
         destination_id: destinationID,
@@ -43,8 +49,6 @@ export class CallingService {
     }, new HttpContext()
       .set(AUTH_TOKEN_REQUIRED, true)
       .set(SKIP_RETRY_STATUS_CODES, [ 503 ])
-    ).pipe(
-      map(response => response.state),
     )
   }
 
