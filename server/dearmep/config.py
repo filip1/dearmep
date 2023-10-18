@@ -228,6 +228,30 @@ class TelephonyConfig(BaseModel):
     always_connect_to: Optional[str]
 
 
+class EndorsementCutoffConfig(BaseModel):
+    min: float = Field(ge=0, le=1, default=0)
+    max: float = Field(ge=0, le=1, default=1)
+
+    @validator("max")
+    def max_must_be_gt_min(cls, v, values):
+        if v <= values["min"]:
+            raise ValueError("max must be greater than min")
+        return v
+
+
+class BaseEndorsementScoring(BaseModel):
+    center: float = Field(ge=0, le=1, default=0.5)
+    minimum: float = Field(ge=0, le=0.9, default=0)
+    steepness: int = Field(ge=0, le=50, default=4)
+
+
+class RecommenderConfig(BaseModel):
+    endorsement_cutoff: EndorsementCutoffConfig
+    soft_cool_down_call_timeout: float = Field(ge=0, default=900)
+    base_endorsement_scoring: BaseEndorsementScoring
+    n_clear_feedback_threshold: int = Field(ge=0, default=8)
+
+
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""
     api: APIConfig
@@ -237,6 +261,7 @@ class Config(BaseModel):
     feedback: FeedbackConfig
     l10n: L10nConfig
     telephony: TelephonyConfig
+    recommender: RecommenderConfig
 
     _instance: ClassVar[Optional["Config"]] = None
     _patch: ClassVar[Optional[Dict]] = None
