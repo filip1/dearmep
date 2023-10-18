@@ -25,7 +25,7 @@ export class CallingService {
     return concat(
       this.initiateCall(destinationID, language).pipe(
         take(1),
-        tap(resp => this.feedbackService.setToken(resp)),
+        tap(resp => this.feedbackService.setToken(resp.feedback_token)),
         map(resp => resp.state)
       ),
       this.watchCallState(),

@@ -13,7 +13,7 @@ export class FeedbackService {
     private readonly apiService: ApiService,
   ) { }
 
-  public setToken(token: string) {
+  public setToken(token: string | undefined) {
     this.feedbackToken = token
   }
 
