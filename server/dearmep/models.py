@@ -27,6 +27,25 @@ FEEDBACK_TOKEN_LENGTH = 8
 FEEDBACK_TOKEN_LETTERS = "BCDFGHKLMNPQRSTVWXZ"
 
 
+class FeedbackToken(ConstrainedStr):
+    """A unique token that may be used once to enter feedback about a call."""
+    min_length = FEEDBACK_TOKEN_LENGTH
+    max_length = FEEDBACK_TOKEN_LENGTH
+    to_upper = True
+    regex = re.compile(
+        f"^[{FEEDBACK_TOKEN_LETTERS}{FEEDBACK_TOKEN_LETTERS.lower()}]"
+        f"{{{FEEDBACK_TOKEN_LENGTH}}}$"
+    )
+
+    @staticmethod
+    def generate() -> FeedbackToken:
+        """Generate a new feedback token, not yet guaranteed to be unique."""
+        return FeedbackToken("".join(
+            secrets.choice(FEEDBACK_TOKEN_LETTERS)
+            for _ in range(FEEDBACK_TOKEN_LENGTH)
+        ))
+
+
 class CallState(str, enum.Enum):
     # NOTE: `CallState` and `DestinationSelectionLogEvent` share many of their
     # states, as well as a lot of the docstring. If you make changes to either
@@ -79,6 +98,7 @@ class CallStateResponse(BaseModel):
         description="The token that can be used to submit call feedback. Will "
         "only be returned when initially creating the call, not in the _Get "
         "Call State_ endpoint.",
+        example="TDLXSBTB",
     )
     state: CallState
 
@@ -109,25 +129,6 @@ class FeedbackConvinced(str, enum.Enum):
 
 class FeedbackText(ConstrainedStr):
     max_length = FEEDBACK_TEXT_LENGTH
-
-
-class FeedbackToken(ConstrainedStr):
-    """A unique token that may be used once to enter feedback about a call."""
-    min_length = FEEDBACK_TOKEN_LENGTH
-    max_length = FEEDBACK_TOKEN_LENGTH
-    to_upper = True
-    regex = re.compile(
-        f"^[{FEEDBACK_TOKEN_LETTERS}{FEEDBACK_TOKEN_LETTERS.lower()}]"
-        f"{{{FEEDBACK_TOKEN_LENGTH}}}$"
-    )
-
-    @staticmethod
-    def generate() -> FeedbackToken:
-        """Generate a new feedback token, not yet guaranteed to be unique."""
-        return FeedbackToken("".join(
-            secrets.choice(FEEDBACK_TOKEN_LETTERS)
-            for _ in range(FEEDBACK_TOKEN_LENGTH)
-        ))
 
 
 class Language(ConstrainedStr):
