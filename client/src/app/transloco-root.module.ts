@@ -35,6 +35,8 @@ export class TranslocoHttpLoader implements TranslocoLoader {
         failedRetries: 0,
         reRenderOnLangChange: true,
         prodMode: !isDevMode(),
+        defaultLang: 'en',
+        availableLangs: [ 'en' ],
         missingHandler: {
           useFallbackTranslation: false
         }
