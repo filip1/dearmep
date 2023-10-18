@@ -13,7 +13,7 @@ PORTRAIT_DIR="$BASEDIR/portraits"
 LOGO_DIR="$BASEDIR/logos"
 NAMES_DIR="$BASEDIR/names"
 IVR_DIR="$BASEDIR/ivr"
-SWAYABILITY="$BASEDIR/2023-05-04-swayability.csv"
+SWAYABILITY="$BASEDIR/swayability/2023-10-18-libe-focus/libe-focus-base-endorsement.csv"
 
 msg() {
 	printf '%s: %s\n' "$ME" "$*"
