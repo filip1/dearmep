@@ -6,6 +6,7 @@ import { DayOfWeek } from 'src/app/model/day-of-week.enum';
 import { TimeOfDay } from 'src/app/model/time-of-day';
 import { TimeService } from '../time/time.service';
 import { TranslocoService } from '@ngneat/transloco';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -66,6 +67,10 @@ export class OfficeHoursService {
   }
 
   public isInOfficeHours(time: Date): boolean {
+    if (environment.disableOfficeHoursCheck) {
+      return true
+    }
+
     const day = this.getDayOfWeek(time, this.timezone)
     if (this.days.indexOf(day) === -1) {
       return false
