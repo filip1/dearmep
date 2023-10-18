@@ -90,8 +90,10 @@ download_names() {
 
 convert_names() {
 	msg 'Converting name audio.'
-	find "$NAMES_DIR/" -name '*.mp3' -print0 \
-	| xargs -0 -P 4 -n 10 dearmep convert audio --existing skip
+	for suffix in mp3 m4a; do
+		find "$NAMES_DIR/" -name "*.$suffix" -print0 \
+		| xargs -0 -P 4 -n 10 -r dearmep convert audio --existing skip
+	done
 	msg 'Converted names.'
 }
 
