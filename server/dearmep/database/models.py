@@ -579,6 +579,10 @@ class UserFeedback(SQLModel, table=True):
         description="When the feedback has been given. Can be null if the "
         "token has not yet been used.",
     )
+    user_id: UserPhone = Field(
+        index=True,
+        description="User who gave this feedback.",
+    )
     destination_id: DestinationID = Field(
         index=True, foreign_key="destinations.id",
         description="The Destination this feedback is about.",

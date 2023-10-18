@@ -659,6 +659,7 @@ def create_feedback_token(
             issued_at=now,
             expires_at=expires_at,
             destination_id=destination_id,
+            user_id=user,
             calling_code=user.calling_code,
             language=language,
         )
