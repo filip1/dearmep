@@ -402,7 +402,7 @@ def mount_router(app: FastAPI, prefix: str):
             # we don't need to log the event here, as it is logged in the
             # get_random_destination function
             try:
-                new_destination = query.get_random_destination(
+                new_destination = query.get_recommended_destination(
                     session=session,
                     country=call.destination.country,
                     call_id=call.provider_call_id,
