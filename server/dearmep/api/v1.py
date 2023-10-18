@@ -429,7 +429,6 @@ def request_number_verification(
         }, request.language)
 
         send_sms(
-            session=session,
             from_title=config.telephony.sms_sender_name,
             message=message,
             user_phone_number=number,

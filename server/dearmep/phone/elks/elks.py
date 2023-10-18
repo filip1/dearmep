@@ -32,12 +32,12 @@ repeat = 2
 
 
 def send_sms(
+    *,
     user_phone_number: str,
     from_title: str,
     message: str,
-    session: Session,
     config: Config,
-) -> bool:
+):
     provider_cfg = config.telephony.provider
     auth = (
         provider_cfg.username,
@@ -55,8 +55,7 @@ def send_sms(
     if not response.ok:
         _logger.critical(
             f"46elks request to send sms failed: {response.status_code}")
-        return False
-    return True
+        response.raise_for_status()
 
 
 def start_elks_call(
