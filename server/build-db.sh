@@ -2,6 +2,8 @@
 set -e
 
 ME='build-db.sh'
+CONVERT_JOBS=4
+CONVERT_BATCHSIZE=50
 BASEDIR='build-db'
 DB_FILE='dearmep.sqlite'
 MEP_DUMP_URL='https://parltrack.org/dumps/ep_meps.json.lz'
@@ -10,7 +12,8 @@ DESTINATION_JSON="$BASEDIR/destinations.ndjson"
 PORTRAIT_DIR="$BASEDIR/portraits"
 LOGO_DIR="$BASEDIR/logos"
 NAMES_DIR="$BASEDIR/names"
-SWAYABILITY="$BASEDIR/2023-05-04-swayability.csv"
+IVR_DIR="$BASEDIR/ivr"
+SWAYABILITY="$BASEDIR/swayability/2023-10-18-libe-focus/libe-focus-base-endorsement.csv"
 
 msg() {
 	printf '%s: %s\n' "$ME" "$*"
@@ -90,8 +93,11 @@ download_names() {
 
 convert_names() {
 	msg 'Converting name audio.'
-	find "$NAMES_DIR" -name '*.mp3' -print0 \
-	| xargs -0 -P 4 -n 10 dearmep convert audio --existing skip
+	for suffix in mp3 m4a; do
+		find "$NAMES_DIR/" -name "*.$suffix" -print0 \
+		| xargs -0 -P "$CONVERT_JOBS" -n "$CONVERT_BATCHSIZE" -r \
+			dearmep convert audio --existing skip
+	done
 	msg 'Converted names.'
 }
 
@@ -114,6 +120,23 @@ import_swayability() {
 	msg 'Imported Base Endorsement.'
 }
 
+import_ivr() {
+	msg 'Converting IVR audio.'
+	find "$IVR_DIR/" -name '*.wav' -print0 \
+	| xargs -0 -P "$CONVERT_JOBS" -n "$CONVERT_BATCHSIZE" -r \
+		dearmep convert audio --existing skip
+	msg 'Importing IVR audio.'
+	find "$IVR_DIR/" -name '*.ogg' -print0 \
+	| xargs -0 -r dearmep db store-blob \
+		--type ivr_audio \
+		>/dev/null
+}
+
+lint_db() {
+	msg 'Linting database.'
+	dearmep db lint
+}
+
 check_basedir
 init_db
 download_mep_dump
@@ -123,3 +146,5 @@ download_names
 convert_names
 import_destinations
 import_swayability
+import_ivr
+lint_db
