@@ -11,7 +11,7 @@ from pydantic.fields import ModelField
 from pydantic.utils import deep_update
 from yaml.parser import ParserError
 
-from .models import Language
+from .models import Language, SMSSenderName
 
 _logger = logging.getLogger(__name__)
 
@@ -226,7 +226,7 @@ class TelephonyConfig(BaseModel):
     provider: ElksConfig
     audio_source: Path
     always_connect_to: Optional[str]
-    sms_sender_name: str
+    sms_sender_name: SMSSenderName
 
 
 class EndorsementCutoffConfig(BaseModel):
