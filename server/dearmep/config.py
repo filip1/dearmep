@@ -226,6 +226,7 @@ class TelephonyConfig(BaseModel):
     provider: ElksConfig
     audio_source: Path
     always_connect_to: Optional[str]
+    sms_sender_name: str
 
 
 class EndorsementCutoffConfig(BaseModel):

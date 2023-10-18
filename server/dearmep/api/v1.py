@@ -28,9 +28,8 @@ from ..models import MAX_SEARCH_RESULT_LIMIT, CallState, CallStateResponse, \
     SearchResult, SearchResultLimit, UserPhone, UserInCallResponse, \
     PhoneNumberVerificationRequest, SMSCodeVerificationRequest
 
-from ..phone.abstract import get_phone_service
 from ..ratelimit import Limit, client_addr
-from ..phone.elks.elks import start_elks_call
+from ..phone.elks.elks import start_elks_call, send_sms
 
 
 l10n_autodetect_total = Counter(
@@ -424,8 +423,19 @@ def request_number_verification(
         if isinstance(result, PhoneRejectReason):
             return reject([result])
 
-        message = f"Your code is {result}"  # TODO translation
-        get_phone_service().send_sms(number, message)
+        config = Config.get()
+        sms_messages = config.l10n.strings.phone_number_verification_sms
+        message = sms_messages.for_language(
+            request.language).replace("{code}", result)
+
+        send_sms(
+            session=session,
+            from_title=config.telephony.sms_sender_name,
+            message=message,
+            user_phone_number=number,
+            config=config,
+        )
+
         response = PhoneNumberVerificationResponse(
             phone_number=number,
         )

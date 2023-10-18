@@ -657,6 +657,13 @@ class VerificationCode(ConstrainedStr):
     max_length = 6
 
 
+class SMSSenderName(ConstrainedStr):
+    """The name of the SMS sender."""
+    min_length = 1
+    max_length = 11
+    regex = re.compile("a-zA-Z0-9 ")
+
+
 class SMSCodeVerificationRequest(BaseModel):
     phone_number: PhoneNumber
     code: VerificationCode
