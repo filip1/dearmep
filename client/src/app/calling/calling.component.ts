@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CallingStep } from '../model/calling-step.enum';
-import { CallingStateManagerService } from '../services/calling/calling-state-manager.service';
+import { RoutingStateManagerService } from '../services/routing/routing-state-manager.service';
 
 @Component({
   selector: 'dmep-calling',
@@ -21,8 +21,8 @@ export class CallingComponent {
   public disableScheduling = false
 
   constructor(
-    private readonly callingStateManager: CallingStateManagerService,
+    routingStateManager: RoutingStateManagerService,
   ) {
-    this.step$ = callingStateManager.getStep$()
+    this.step$ = routingStateManager.getStep$()
   }
 }

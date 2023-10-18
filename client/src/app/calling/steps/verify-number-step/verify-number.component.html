@@ -4,14 +4,19 @@
   <ng-container *ngSwitchCase="StepEnterNumber">
     <p transloco="verification.enterNumber.description" class="enter-number-description description"></p>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" subscriptSizing="fixed">
       <mat-label transloco="verification.enterNumber.numberFieldLabel"></mat-label>
       <dmep-phone-number-input [formControl]="numberFormControl"></dmep-phone-number-input>
+      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isEmptyError']" transloco="verification.enterNumber.numberIsRequired"></mat-error>
+      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isInvalidError']" transloco="verification.enterNumber.invalidNumber"></mat-error>
+      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isNotAllowedError']" transloco="verification.enterNumber.numberNotAllowed"></mat-error>
+      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isBlockedError']" transloco="verification.enterNumber.numberBlocked"></mat-error>
+      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isTooManyAttempts']" transloco="verification.enterNumber.tooManyAttempts"></mat-error>
     </mat-form-field>
 
     <section class="dmep-policy-section">
-      <mat-checkbox color="primary" 
-        [checked]="acceptPolicy" 
+      <mat-checkbox color="primary"
+        [checked]="acceptPolicy"
         (change)="acceptPolicy = $event.checked">
         <div [innerHTML]="'verification.enterNumber.policy' | transloco: { policyLink: getPolicyLinkHtml() }"></div>
       </mat-checkbox>
@@ -28,15 +33,16 @@
   </ng-container>
   <ng-container *ngSwitchCase="StepEnterCode">
 
-    <p class="enter-code-description">{{ 'verification.enterCode.description' | transloco: { number: getSelectedNumber() } }}</p>
+    <p class="enter-code-description" [innerHTML]="'verification.enterCode.description' | transloco: { number: noWrap(serverValidatedPhoneNumber) }"></p>
 
     <p class="not-your-number description">
       <a (click)="onEditNumberClick(); $event.preventDefault()" href="#">{{ 'verification.enterCode.notYourNumber' | transloco }}</a>
     </p>
-    
-    <mat-form-field class="enter-code-form-field" appearance="outline" subscriptSizing="dynamic">
+
+    <mat-form-field class="enter-code-form-field" appearance="outline" subscriptSizing="dynamic" [hideRequiredMarker]="true">
       <mat-label transloco="verification.enterCode.codeFieldLabel"></mat-label>
       <input type="text" matInput [formControl]="codeFormControl">
+      <mat-error *ngIf="codeFormControl.errors" transloco="verification.enterCode.invalidCode"></mat-error>
     </mat-form-field>
 
     <div class="dmep-btn-container">
@@ -53,7 +59,7 @@
       <mat-icon class="success-icon" [inline]="false">check_circle</mat-icon>
     </div>
 
-    <p class="success-description">{{ 'verification.success.message' | transloco: { number: getSelectedNumber() } }}</p>
+    <p class="success-description" [innerHTML]="'verification.success.message' | transloco: { number: noWrap(serverValidatedPhoneNumber) }"></p>
 
   </ng-container>
 </ng-container>
@@ -69,7 +75,7 @@
   </button>
 </div>
 
-<div class="dmep-btn-container">
+<div class="dmep-btn-container" *ngIf="!disableScheduling">
   <button mat-stroked-button class="dmep-call-later-btn dmep-btn dmep-btn-secondary" [disabled]="step !== StepSuccess" (click)="onCallLaterClick()">
     <span class="btn-content">
       {{ 'call.call-later-btn.title' | transloco }}

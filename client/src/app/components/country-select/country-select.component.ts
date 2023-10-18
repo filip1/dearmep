@@ -1,8 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TranslocoService } from '@ngneat/transloco';
-import { Subject, filter, takeUntil } from 'rxjs';
+import { TranslocoService, flatten } from '@ngneat/transloco';
+import { countries } from 'country-flag-icons';
+import { Observable, Subject, combineLatest, count, filter, flatMap, forkJoin, map, mergeAll, mergeMap, shareReplay, takeUntil, tap } from 'rxjs';
+import { nameof } from 'src/app/common/util/nameof';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { SelectDestinationService } from 'src/app/services/select-destination/select-destination.service';
+
+interface Country {
+  shortCode: string,
+  name: string
+}
 
 @Component({
   selector: 'dmep-country-select',
@@ -12,7 +19,7 @@ import { SelectDestinationService } from 'src/app/services/select-destination/se
 export class CountrySelectComponent implements OnInit, OnDestroy {
   private readonly destroyed$ = new Subject<void>()
 
-  public countries?: string[]
+  public countries$?: Observable<Country[]>
 
   public selectedCountry?: string
 
@@ -23,21 +30,19 @@ export class CountrySelectComponent implements OnInit, OnDestroy {
   ) { }
 
   public ngOnInit(): void {
-    this.l10nService.getAvailableCountries$().pipe(
+    this.countries$ = this.l10nService.getAvailableCountries$().pipe(
       takeUntil(this.destroyed$),
-    ).subscribe({
-      next: (c) => {
-        this.countries = c
-        this.sortCountries()
-      }
-    })
-
-    this.translocoService.events$.pipe(
-      takeUntil(this.destroyed$),
-      filter(e => e.type === 'langChanged' || e.type === 'translationLoadSuccess'),
-    ).subscribe({
-      next: () => this.sortCountries()
-    })
+      filter(x => x && Array.isArray(x)),
+      mergeMap(countryCodes =>
+        combineLatest(countryCodes
+          .map(countryCode => this.translocoService
+            .selectTranslate(`countries.${countryCode}`)
+            .pipe(
+              map((countryName): Country => ({ shortCode: countryCode, name: countryName }))
+      )))),
+      tap(countries => countries.sort((a, b) => a.name.localeCompare(b.name))),
+      shareReplay(),
+    )
 
     this.l10nService.getCountry$().subscribe({
       next: (c) => this.selectedCountry = c || undefined
@@ -55,18 +60,5 @@ export class CountrySelectComponent implements OnInit, OnDestroy {
       this.selectDestinationService.renewSuggestedDestination(country)
       this.selectedCountry = country
     }
-  }
-
-  public getCountryTranslationKey(country: string): string {
-    return `countries.${country}`
-  }
-
-  private sortCountries() {
-    this.countries?.sort((a, b) => {
-      const aTrans = this.translocoService.translate(this.getCountryTranslationKey(a))
-      const bTrans = this.translocoService.translate(this.getCountryTranslationKey(b))
-      return aTrans.localeCompare(bTrans)
-    })
-
   }
 }

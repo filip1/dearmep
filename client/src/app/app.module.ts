@@ -14,6 +14,7 @@ import { ComponentsModule } from './components/components.module';
 import { CallingModule } from './calling/calling.module';
 import { RetryInterceptor } from './common/interceptors/retry.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
+import { AuthInterceptor } from './common/interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
     CallingModule,
   ],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: BaseUrlInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: RetryInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: TimeoutInterceptor, multi: true },

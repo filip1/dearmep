@@ -1,18 +1,49 @@
-<div class="container" *transloco="let t">
-  <h2 transloco="call.home.title" class="calling-title"></h2>
+<div class="container">
 
-  <p *ngFor="let description of descriptions$ | async" class="description">
-    {{ description.text }}
-  </p>
+  <ng-container *ngIf="(isAuthenticated$ | async) === false">
+    <h2 transloco="call.home.title" class="calling-title"></h2>
 
-  <div class="dmep-btn-container">
-    <button mat-stroked-button color="primary" class="dmep-call-now-btn dmep-btn dmep-btn-primary" (click)="onCallNowClick()">
+    <p *ngFor="let description of descriptions$ | async" class="description">
+      {{ description.text }}
+    </p>
+  </ng-container>
+
+  <ng-container *ngIf="isAuthenticated$ | async">
+    <h2 transloco="call.home.titleAuthenticated" class="calling-title"></h2>
+
+    <p class="description"
+      [innerHTML]="'call.home.youHaveAlreadySignedIn' | transloco: { number: authenticatedNumberHtml$ | async }"></p>
+
+    <p class="not-your-number description">
+      <a (click)="onReauthenticateClick(); $event.preventDefault()" href="#">{{ 'call.home.notYourNumber' | transloco
+        }}</a>
+    </p>
+  </ng-container>
+
+  <ng-template cdkConnectedOverlay [cdkConnectedOverlayHasBackdrop]="true"
+    cdkConnectedOverlayBackdropClass="dmep-popover-backdrop" (backdropClick)="officeHoursPopoverOpen = false"
+    [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="officeHoursPopoverOpen">
+    <div class="dmep-popover">
+      <h3 transloco="call.office-hours.title"></h3>
+      <p transloco="call.office-hours.description"></p>
+      <p>{{ officeHoursText$ | async }}</p>
+    </div>
+  </ng-template>
+
+  <div class="dmep-btn-container" cdkOverlayOrigin #trigger="cdkOverlayOrigin" (click)="onCallNowContainerClick()">
+    <button mat-stroked-button color="primary" class="dmep-call-now-btn dmep-btn dmep-btn-primary"
+      (click)="onCallNowClick()" [disabled]="(isOfficeHours$ | async) === false">
       <span class="btn-content">
         <strong>{{ 'call.call-now-btn.title' | transloco }}</strong>
         <br>
         {{ 'call.call-now-btn.subtitle' | transloco }}
       </span>
     </button>
+    <mat-error *ngIf="(isOfficeHours$ | async) === false" class="dmep-error-hint"
+      (click)="officeHoursPopoverOpen = true">
+      <mat-icon [inline]="true">info</mat-icon>
+      <span>{{ "call.call-now-btn.outOfOfficeHoursHint" | transloco }}</span>
+    </mat-error>
   </div>
 
   <div class="dmep-btn-container" *ngIf="!disableScheduling">

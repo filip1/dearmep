@@ -13,6 +13,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule  } from  '@angular/material/snack-bar'
 
 @NgModule({
   declarations: [],
@@ -29,6 +31,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatTooltipModule,
     OverlayModule,
     MatProgressSpinnerModule,
+    MatDialogModule,
+    MatSnackBarModule,
   ],
   providers: [
     { provide: OverlayContainer, useClass: ShadowRootOverlayContainer },
@@ -47,6 +51,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatTooltipModule,
     OverlayModule,
     MatProgressSpinnerModule,
+    MatDialogModule,
+    MatSnackBarModule,
   ]
 })
 export class MaterialModule { }

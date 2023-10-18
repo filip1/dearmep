@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
+import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
+import { SelectDestinationService } from 'src/app/services/select-destination/select-destination.service';
 
 @Component({
   selector: 'dmep-feedback-step',
@@ -8,10 +9,17 @@ import { CallingStateManagerService } from 'src/app/services/calling/calling-sta
 })
 export class FeedbackStepComponent {
   constructor(
-    private readonly callingStateManager: CallingStateManagerService,
+    private readonly routingStateManager: RoutingStateManagerService,
+    private readonly selectDestinationService: SelectDestinationService,
   ) { }
 
   public submitClick() {
-    this.callingStateManager.goHome()
+    this.selectDestinationService.renewSuggestedDestination()
+    this.routingStateManager.returnHome()
+  }
+
+  public skipClick() {
+    this.selectDestinationService.renewSuggestedDestination()
+    this.routingStateManager.returnHome()
   }
 }

@@ -83,16 +83,25 @@
   .dmep-btn-container {
     display: flex;
     justify-content: center;
-    .dmep-btn-primary, .dmep-btn-secondary, .dmep-btn-primary-sm {
-      flex-basis: 80%;
+    flex-direction: column;
+    align-items: center;
+    .dmep-btn-primary, .dmep-btn-secondary, .dmep-btn-primary-sm, .dmep-btn-secondary-sm {
+      min-width: 80%;
     }
+  }
+
+  .dmep-error-hint {
+    font-size: 1rem;
+    display: flex;
+    align-content: center;
+    gap: 4px;
   }
 
   .dmep-btn {
     text-transform: uppercase;
   }
 
-  .dmep-btn-primary, .dmep-btn-secondary, .dmep-btn-primary-sm {
+  .dmep-btn-primary, .dmep-btn-secondary, .dmep-btn-primary-sm, .dmep-btn-secondary-sm {
     border-radius: 16px;
     text-transform: uppercase;
     margin: 4px;
@@ -126,15 +135,20 @@
   .dmep-popover {
     color: var(--dmep-popover-text-color);
     background-color: var(--dmep-popover-background-color);
+    border-radius: 8px;
+    padding: 8px 16px;
+  }
+
+  .dmep-nowrap {
+    white-space: nowrap;
+  }
+  .dmep-bold {
+    font-weight: 700;
   }
 
   a {
     color: var(--dmep-text-color);
     text-decoration: underline;
-  }
-
-  mat-icon {
-    color: var(--dmep-text-color);
   }
 
   p {

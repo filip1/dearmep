@@ -2,13 +2,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TranslocoService } from '@ngneat/transloco';
 // Change this import to enable optimizations as soon as https://github.com/marnusw/date-fns-tz/issues/193 is fixed
-import {zonedTimeToUtc} from 'date-fns-tz';
-import { addMinutes, format, isBefore, isEqual, set } from 'date-fns/esm';
+import { addMinutes, format, isBefore, isEqual } from 'date-fns/esm';
 import { Subject, takeUntil } from 'rxjs';
 import { StringUtil } from 'src/app/common/util/string.util';
 import { DayOfWeek } from 'src/app/model/day-of-week.enum';
-import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
+import { OfficeHoursService } from 'src/app/services/office-hours/office-hours.service';
+import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
 import { TimeService } from 'src/app/services/time/time.service';
 
 @Component({
@@ -18,9 +18,6 @@ import { TimeService } from 'src/app/services/time/time.service';
 })
 export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
   private readonly destroyed$ = new Subject<void>()
-  private readonly startHour = 9
-  private readonly endHour = 18
-  private readonly targetTimeZone = "Europe/Brussels"
 
   public localTimeZone?: string
 
@@ -28,25 +25,23 @@ export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
 
   public selectedCountry: string | undefined
 
-  public availableDays = [
-    DayOfWeek.Monday,
-    DayOfWeek.Tuesday,
-    DayOfWeek.Wednesday,
-    DayOfWeek.Thursday,
-    DayOfWeek.Friday,
-  ]
+  public availableDays
 
   public selectedDayFormControl = new FormControl<DayOfWeek>(DayOfWeek.Monday)
-  public selectedTimeFormControls = new Map(
-    this.availableDays.map((day) => [ day, new FormControl<string | null>(null) ])
-  )
+  public selectedTimeFormControls
 
   constructor(
     private readonly translocoService: TranslocoService,
     private readonly timeSerivce: TimeService,
     private readonly l10nService: L10nService,
-    private readonly callingStateManager: CallingStateManagerService,
-  ) { }
+    private readonly routingStateManager: RoutingStateManagerService,
+    private readonly officeHoursService: OfficeHoursService,
+  ) {
+    this.availableDays = officeHoursService.getDays()
+    this.selectedTimeFormControls = new Map(
+      this.availableDays.map((day) => [ day, new FormControl<string | null>(null) ])
+    )
+  }
 
   public ngOnInit(): void {
     this.localTimeZone = this.timeSerivce.getCurrentTimeZone()
@@ -111,7 +106,7 @@ export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
   }
 
   public onScheduleClick() {
-    this.callingStateManager.goHome()
+    this.routingStateManager.returnHome()
   }
 
   private getNameOfDay(day: DayOfWeek): string {
@@ -122,16 +117,11 @@ export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
     return ""
   }
 
-  private getTimestampFromHour(hour: number, timezone: string) {
-    const timeTarget = set(new Date(), { hours: hour, minutes: 0, seconds: 0, milliseconds: 0 })
-    return zonedTimeToUtc(timeTarget, timezone)
-  }
-
   private getAvailableTimes(): string[] {
     const result: string[] = []
 
-    const startTime = this.getTimestampFromHour(this.startHour, this.targetTimeZone)
-    const endTime = this.getTimestampFromHour(this.endHour, this.targetTimeZone)
+    const startTime = this.officeHoursService.getStartTimestampLocal()
+    const endTime = this.officeHoursService.getEndTimestampLocal()
 
     for (let time = startTime; isBefore(time, endTime) || isEqual(time, endTime); time = addMinutes(time, 15)) {
       result.push(format(time, "HH:mm"))

@@ -1,7 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { TranslocoService } from '@ngneat/transloco';
-import { filter } from 'rxjs';
-import { CallingStateManagerService } from 'src/app/services/calling/calling-state-manager.service';
+import { filter, map, take } from 'rxjs';
+import { MarkupUtil } from 'src/app/common/util/markup.util';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { OfficeHoursService } from 'src/app/services/office-hours/office-hours.service';
+import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
 
 @Component({
   selector: 'dmep-home-step',
@@ -10,24 +13,56 @@ import { CallingStateManagerService } from 'src/app/services/calling/calling-sta
 })
 export class HomeStepComponent {
   public descriptions$
+  public isAuthenticated$
+  public authenticatedNumberHtml$
+  public officeHoursText$
+  public officeHoursPopoverOpen = false
+  public isOfficeHours$
+
 
   @Input()
   public disableScheduling = false
 
   constructor(
-    private readonly callingStateManager: CallingStateManagerService,
+    private readonly routingStateManager: RoutingStateManagerService,
     private readonly translocoService: TranslocoService,
+    private readonly authService: AuthenticationService,
+    private readonly officeHoursService: OfficeHoursService,
   ) {
     this.descriptions$ = this.translocoService.selectTranslate('call.home.descriptions').pipe(
       filter(d => Array.isArray(d))
     )
+    this.isAuthenticated$ = authService.isAuthenticated$()
+    this.authenticatedNumberHtml$ = authService.getAuthenticatedNumber$().pipe(
+      filter(n => typeof n === 'string'),
+      map(n => MarkupUtil.NoWrap(n, 'dmep-nowrap dmep-bold')),
+    )
+    this.officeHoursText$ = this.officeHoursService.getOfficeHoursText$()
+    this.isOfficeHours$ = this.officeHoursService.inOfficeHours$()
   }
 
   public onCallNowClick() {
-    this.callingStateManager.goToVerify()
+    this.routingStateManager.callNow()
   }
 
   public onCallLaterClick() {
-    this.callingStateManager.goToSchedule()
+    this.routingStateManager.scheduleCall()
+  }
+
+  public onReauthenticateClick() {
+    this.authService.logout()
+  }
+
+  // Disabled button or error message is clicked outside of office hours
+  onCallNowContainerClick() {
+    this.isOfficeHours$
+      .pipe(take(1))
+      .subscribe({
+        next: (isOfficeHours) => {
+          if (!isOfficeHours) {
+            this.officeHoursPopoverOpen = true
+          }
+        }
+    })
   }
 }

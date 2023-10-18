@@ -5,7 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'dmep-social-icon',
   templateUrl: './social-icon.component.html',
-  styleUrls: ['./social-icon.component.css']
+  styleUrls: ['./social-icon.component.scss']
 })
 export class SocialIconComponent implements OnInit {
   public popoverIsOpen = false
