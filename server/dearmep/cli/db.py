@@ -27,31 +27,34 @@ def cmd_lint(ctx: Context):
 
 def cmd_store_blob(ctx: Context):
     Config.load()
-    name = ctx.args.name or ctx.args.file.name
-    mime = ctx.args.mime or guess_type(ctx.args.file, strict=False)[0]
-    if not mime:
-        raise ValueError("could not guess MIME type")
-    blob = Blob(
-        type=ctx.args.type,
-        mime_type=mime,
-        name=name,
-        description=ctx.args.description,
-        data=ctx.args.file.read_bytes(),
-    )
-    with get_session() as session:
-        if ctx.args.overwrite:
+    if ctx.args.name and len(ctx.args.files) > 1:
+        raise Exception("--name can only be used with a single input file")
+    for file in ctx.args.files:
+        name = ctx.args.name or file.name
+        mime = ctx.args.mime or guess_type(file, strict=False)[0]
+        if not mime:
+            raise ValueError(f"could not guess MIME type for {file}")
+        blob = Blob(
+            type=ctx.args.type,
+            mime_type=mime,
+            name=name,
+            description=ctx.args.description,
+            data=file.read_bytes(),
+        )
+        with get_session() as session:
+            if ctx.args.overwrite:
+                try:
+                    oldblob = query.get_blob_by_name(session, name)
+                    session.delete(oldblob)
+                    session.flush()
+                except query.NotFound:
+                    pass
+            session.add(blob)
             try:
-                oldblob = query.get_blob_by_name(session, name)
-                session.delete(oldblob)
-                session.flush()
-            except query.NotFound:
-                pass
-        session.add(blob)
-        try:
-            session.commit()
-        except IntegrityError:
-            raise Exception(f"blob named {name} already exists") from None
-        print(blob.id)
+                session.commit()
+            except IntegrityError:
+                raise Exception(f"blob named {name} already exists") from None
+            print(blob.id)
 
 
 def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
@@ -79,7 +82,7 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
     store_blob = subsub.add_parser(
         "store-blob",
         help="store a blob (i.e., file asset) in the database",
-        description="Store a static file in the database.",
+        description="Store one or more static files in the database.",
     )
     store_blob.add_argument(
         "--type", required=True,
@@ -91,7 +94,8 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
     )
     store_blob.add_argument(
         "--name", metavar="NAME",
-        help="the file name to use when storing (default: keep original)",
+        help="the file name to use when storing (default: keep original); may "
+        "not be set when supplying multiple files as arguments",
     )
     store_blob.add_argument(
         "--description", metavar="TEXT",
@@ -102,7 +106,7 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         help="if there already is a blob with that name, overwrite it",
     )
     store_blob.add_argument(
-        "file", metavar="FILE", type=Path,
+        "files", metavar="FILE", type=Path, nargs="+",
         help="name of the local file to read and store",
     )
     store_blob.set_defaults(func=cmd_store_blob)
