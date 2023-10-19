@@ -54,7 +54,7 @@ export class SetupStepComponent implements OnInit {
       error: (err: CallingErrorType) => {
         let errorDialogResult: Observable<void> | undefined
 
-        if (err === CallState.CallingUserFailed) {
+        if (err === CallState.CallingUserFailed || err === CallState.CallAborted) {
           errorDialogResult = this.errorService.displayErrorDialog('callSetup.error.failedToEstablishCall')
         } else if (err === CallState.CallingDestinationFailed) {
           errorDialogResult = this.errorService.displayErrorDialog('callSetup.error.failedToReachDestination')
