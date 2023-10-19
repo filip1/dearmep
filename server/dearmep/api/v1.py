@@ -293,7 +293,17 @@ def get_suggested_destination(
                 event=DestinationSelectionLogEvent.WEB_SUGGESTED,
             )
         except query.NotFound as e:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+            if country:
+                # Try getting someone from a different country then.
+                try:
+                    dest = query.get_recommended_destination(
+                        session,
+                        event=DestinationSelectionLogEvent.WEB_SUGGESTED,
+                    )
+                except query.NotFound as e2:
+                    raise HTTPException(status.HTTP_404_NOT_FOUND, str(e2))
+            else:
+                raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
         session.commit()
         return destination_to_destinationread(dest)
 
