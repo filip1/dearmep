@@ -28,6 +28,7 @@ _logger = logging.getLogger(__name__)
 
 phone_numbers: List[Number] = []
 timeout = 9  # seconds
+establish_call_timeout = 45  # seconds
 repeat = 2
 
 
@@ -55,6 +56,16 @@ def send_sms(
         _logger.critical(
             f"46elks request to send sms failed: {response.status_code}")
         response.raise_for_status()
+
+    try:
+        response_data = response.json()
+        elks_metrics.observe_sms_cost(
+            cost=response_data["cost"],
+            parts=response_data["parts"],
+            recipient=user_phone_number,
+        )
+    except Exception:
+        _logger.exception("observing SMS cost failed")
 
 
 def start_elks_call(
@@ -93,7 +104,7 @@ def start_elks_call(
             "from": phone_number.number,
             "voice_start": f"{elks_url}/instant_main_menu",
             "whenhangup": f"{elks_url}/hangup",
-            "timeout": timeout,
+            "timeout": establish_call_timeout,
         }
     )
 
