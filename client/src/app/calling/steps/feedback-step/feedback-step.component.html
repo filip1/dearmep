@@ -12,13 +12,13 @@
 
 <mat-checkbox color="primary" [formControl]="formGroup.controls.technicalProblems">{{ "feedback.technicalProblemsQuestion" | transloco }}</mat-checkbox>
 
-<mat-form-field class="" [formControl]="formGroup.controls.additionalFeedback" appearance="outline" subscriptSizing="dynamic" class="dmep-additional-feedback-field">
+<mat-form-field class="" appearance="outline" subscriptSizing="dynamic" class="dmep-additional-feedback-field">
   <mat-label transloco="feedback.additionalFeedbackQuestion"></mat-label>
-  <textarea matInput [placeholder]="'feedback.additionalFeedbackPlaceholder' | transloco"></textarea>
+  <textarea matInput [placeholder]="'feedback.additionalFeedbackPlaceholder' | transloco" [formControl]="formGroup.controls.additionalFeedback" ></textarea>
 </mat-form-field>
 
 <div class="dmep-btn-container">
-  <button mat-stroked-button [disabled]="!formGroup.touched" class="dmep-submit-feedback-btn dmep-btn dmep-btn-primary-sm" color="primary" (click)="submitClick()">
+  <button mat-stroked-button [disabled]="!formGroup.dirty" class="dmep-submit-feedback-btn dmep-btn dmep-btn-primary-sm" color="primary" (click)="submitClick()">
     <span class="btn-content">
       {{ 'feedback.submit' | transloco }}
     </span>

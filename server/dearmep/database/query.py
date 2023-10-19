@@ -190,7 +190,7 @@ def base_endorsement_scoring(base_score: float) -> float:
     ) * (1-minimum) + minimum
 
 
-def feedback_scoring(feedback_sum: int) -> float:
+def feedback_scoring(feedback_sum: Optional[int]) -> float:
     """Computes the likeliness of being selected based on
     the feedback.
     A plot of the function applied:
@@ -198,6 +198,7 @@ def feedback_scoring(feedback_sum: int) -> float:
     *3%29%5E4+%2B1%29+for+-40%3C%3Dx%3C%3D40%2C+N%3D10
     returns a value between 0 and 1.
     """
+    feedback_sum = 0 if feedback_sum is None else feedback_sum
     rc = Config.get().recommender
     threshold = rc.n_clear_feedback_threshold
     return 1 / (

@@ -19,9 +19,9 @@ export class FeedbackStepComponent {
   public readonly convincedNo = FeedbackConvinced.No
 
   public readonly formGroup = new FormGroup({
-    convinced: new FormControl<FeedbackConvinced | undefined>(undefined),
-    technicalProblems: new FormControl<boolean>(false),
-    additionalFeedback: new FormControl<string | undefined>(undefined),
+    convinced: new FormControl<FeedbackConvinced | undefined>(undefined, { updateOn: "change" }),
+    technicalProblems: new FormControl<boolean>(false, { updateOn: 'change' }),
+    additionalFeedback: new FormControl<string | undefined>(undefined, { updateOn: 'change' }),
   })
 
   constructor(
@@ -32,7 +32,6 @@ export class FeedbackStepComponent {
   ) { }
 
   public async submitClick() {
-
     this.feedbackService.submitFeedback({
       convinced: this.formGroup.value.convinced || undefined,
       technical_problems: this.formGroup.value.technicalProblems || undefined,
