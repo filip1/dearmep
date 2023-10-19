@@ -533,6 +533,7 @@ l10n:
     # {{ timeRangeLocal }}  ... Range from start- to end-time in local timezone (see: call.office-hours.time-range-zoned)
     call.office-hours.hours-zoned:
       en: "{{ dayOrRange }}: {{ timeRange }} ({{ timeRangeLocal }})"
+      de: "{{ dayOrRange }}: {{ timeRange }} ({{ timeRangeLocal }})"
       sv: "{{ dayOrRange }}: {{ timeRange }} ({{ timeRangeLocal }})"
       da: "{{ dayOrRange }}: {{ timeRange }} ({{ timeRangeLocal }})"
       pt: "{{ dayOrRange }}: {{ timeRange }} ({{ timeRangeLocal }})"
@@ -540,6 +541,7 @@ l10n:
     # Same as 'call.office-hours.hours-zoned' applies when the user is in the same time-zone as the destination
     call.office-hours.hours:
       en: "{{ dayOrRange }}: {{ timeRange }}"
+      de: "{{ dayOrRange }}: {{ timeRange }}"
       sv: "{{ dayOrRange }}: {{ timeRange }}"
       da: "{{ dayOrRange }}: {{ timeRange }}"
       pt: "{{ dayOrRange }}: {{ timeRange }}"
@@ -560,6 +562,7 @@ l10n:
     #   8:00 - 17:00 Local (see: 'call.office-hours.time-zone-local')
     call.office-hours.time-range-zoned:
       en: "{{ startTime }} - {{ endTime }} {{ timeZone }}"
+      de: "{{ startTime }} - {{ endTime }} {{ timeZone }}"
       sv: "{{ startTime }} - {{ endTime }} {{ timeZone }}"
       da: "{{ startTime }} - {{ endTime }} {{ timeZone }}"
       pt: "{{ startTime }} - {{ endTime }} {{ timeZone }}"
@@ -569,6 +572,7 @@ l10n:
     #   8:00 - 17:00
     call.office-hours.time-range:
       en: "{{ startTime }} - {{ endTime }}"
+      de: "{{ startTime }} - {{ endTime }}"
       sv: "{{ startTime }} - {{ endTime }}"
       da: "{{ startTime }} - {{ endTime }}"
       pt: "{{ startTime }} - {{ endTime }}"
