@@ -23,7 +23,7 @@ export class OfficeHoursService {
     DayOfWeek.Friday,
   ]
   private readonly startTime: TimeOfDay = { hour: 9, min: 0 }
-  private readonly endTime: TimeOfDay = { hour: 18, min: 0 }
+  private readonly endTime: TimeOfDay = { hour: 20, min: 0 }
   private readonly isOfficeHours$
 
   constructor(
