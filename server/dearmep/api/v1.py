@@ -345,7 +345,6 @@ def initiate_call(
             user_phone_number=claims.phone,
             user_language=request.language,
             destination_id=request.destination_id,
-            config=Config.get(),
             session=session,
         )
         if isinstance(call_state,
@@ -432,7 +431,6 @@ def request_number_verification(
             from_title=config.telephony.sms_sender_name,
             message=message,
             user_phone_number=number,
-            config=config,
         )
 
         response = PhoneNumberVerificationResponse(

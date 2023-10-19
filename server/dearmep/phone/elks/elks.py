@@ -36,9 +36,8 @@ def send_sms(
     user_phone_number: str,
     from_title: str,
     message: str,
-    config: Config,
 ):
-    provider_cfg = config.telephony.provider
+    provider_cfg = Config.get().telephony.provider
     auth = (
         provider_cfg.username,
         provider_cfg.password,
@@ -62,10 +61,10 @@ def start_elks_call(
     user_phone_number: str,
     user_language: Language,
     destination_id: str,
-    config: Config,
     session: Session,
 ) -> Union[CallState, DestinationInCallResponse, UserInCallResponse]:
     """ Initiate a Phone call via 46elks """
+    config = Config.get()
     provider_cfg = config.telephony.provider
     elks_url = config.api.base_url + "/phone"
     auth = (
