@@ -311,6 +311,13 @@ telephony:
   # call the MEP. Leave commented out if you don't know what that means.
   #
   # always_connect_to: "+4940428990" # a german robot doing time announcements
+  #
+
+  # This name will be the one we send SMS from. This will be displayed to the
+  # user in their cellphone. There are some important restrictions to this! Max
+  # 11 chars, must not start with number, limited to a-zA-Z and digits. see:
+  # https://46elks.com/kb/text-sender-id
+  sms_sender_name: DearMEP
 
 # Options to tweak the destination recommender algorithm
 # The recommender randomly selects destinations, while

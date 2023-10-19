@@ -1,15 +1,14 @@
-from abc import ABC, abstractmethod
 from typing import Union
 
-from ..config import Config
+from .elks import elks
+from .abstract import AbstractPhoneService
 from ..database.connection import Session
 from ..database.models import DestinationID
 from ..models import CallState, DestinationInCallResponse, Language, \
     PhoneNumber, SMSSenderName, UserInCallResponse
 
 
-class AbstractPhoneService(ABC):
-    @abstractmethod
+class ElksPhoneService(AbstractPhoneService):
     def send_sms(
         self,
         *,
@@ -17,12 +16,12 @@ class AbstractPhoneService(ABC):
         content: str,
         sender: SMSSenderName,
     ) -> None:
-        """
-        Send a SMS to a phone with a given number.
-        """
-        pass
+        elks.send_sms(
+            user_phone_number=recipient,
+            from_title=sender,
+            message=content,
+        )
 
-    @abstractmethod
     def establish_call(
         self,
         *,
@@ -31,16 +30,9 @@ class AbstractPhoneService(ABC):
         language: Language,
         session: Session,
     ) -> Union[CallState, DestinationInCallResponse, UserInCallResponse]:
-        """
-        Establish a call between our user and a destination.
-        """
-        pass
-
-
-def get_phone_service() -> AbstractPhoneService:
-    if Config.get().telephony.dry_run:
-        from .developer_phone import DeveloperPhoneService
-        return DeveloperPhoneService()
-    else:
-        from .elks_phone import ElksPhoneService
-        return ElksPhoneService()
+        return elks.start_elks_call(
+            user_phone_number=user_phone,
+            user_language=language,
+            destination_id=destination_id,
+            session=session,
+        )

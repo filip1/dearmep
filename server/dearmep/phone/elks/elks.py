@@ -31,14 +31,40 @@ timeout = 9  # seconds
 repeat = 2
 
 
+def send_sms(
+    *,
+    user_phone_number: str,
+    from_title: str,
+    message: str,
+):
+    provider_cfg = Config.get().telephony.provider
+    auth = (
+        provider_cfg.username,
+        provider_cfg.password,
+    )
+    response = requests.post(
+        url="https://api.46elks.com/a1/sms",
+        auth=auth,
+        data={
+            "from": from_title,
+            "to": user_phone_number,
+            "message": message,
+        }
+    )
+    if not response.ok:
+        _logger.critical(
+            f"46elks request to send sms failed: {response.status_code}")
+        response.raise_for_status()
+
+
 def start_elks_call(
     user_phone_number: str,
     user_language: Language,
     destination_id: str,
-    config: Config,
     session: Session,
 ) -> Union[CallState, DestinationInCallResponse, UserInCallResponse]:
     """ Initiate a Phone call via 46elks """
+    config = Config.get()
     provider_cfg = config.telephony.provider
     elks_url = config.api.base_url + "/phone"
     auth = (
