@@ -382,7 +382,9 @@ def get_recommended_destination(
         latest_log = session.query(DestinationSelectionLog).where(
             col(DestinationSelectionLog.event).in_(SUGGEST_EVENTS)
         ).order_by(col(DestinationSelectionLog.timestamp).desc()).first()
-        if latest_log:  # making sure that there is a log at all
+        if latest_log and latest_log.destination_id in merged_scores:
+            # Making sure that there is a log at all and that
+            # the latest log is part of the current destination selection.
             merged_scores[latest_log.destination_id] = 0.00001
 
     # destination was called recently
@@ -443,7 +445,7 @@ def get_recommended_destination(
     else:
         final_dest_id = None
 
-    if not final_dest_id or final_dest_id not in destinations:
+    if not final_dest_id:
         raise NotFound("no destination found that could be recommended")
 
     final_dest = destinations[final_dest_id]
