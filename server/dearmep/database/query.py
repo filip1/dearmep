@@ -445,7 +445,8 @@ def get_recommended_destination(
     else:
         final_dest_id = None
 
-    if not final_dest_id:
+    # TODO: Remove the `not in` check once we're sure that it can't happen.
+    if not final_dest_id or final_dest_id not in destinations:
         raise NotFound("no destination found that could be recommended")
 
     final_dest = destinations[final_dest_id]
