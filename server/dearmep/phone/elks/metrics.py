@@ -1,5 +1,7 @@
 from prometheus_client import Counter, Summary
 
+from ...models import UserPhone
+
 
 class ElksMetrics:
     provider = "46elks"
@@ -28,6 +30,21 @@ class ElksMetrics:
         name="call_in_menu_limit_reached_total",
         documentation="call reached the limit of time being allowed in menu",
         labelnames=("provider")
+    )
+    sms_sent_total = Counter(
+        name="sms_sent_total",
+        documentation="number of SMS messages sent out",
+        labelnames=("provider", "country"),
+    )
+    sms_parts_sent_total = Counter(
+        name="sms_parts_sent_total",
+        documentation="number of SMS parts sent out",
+        labelnames=("provider", "country"),
+    )
+    sms_cost_euros = Summary(
+        name="sms_cost_euros",
+        documentation="accumulated SMS cost in Euros",
+        labelnames=("provider", "country"),
     )
 
     def observe_connect_time(self,
@@ -77,6 +94,24 @@ class ElksMetrics:
         self.call_in_menu_limit_reached_total.labels(
             provider=self.provider
         ).inc()
+
+    def observe_sms_cost(
+        self,
+        *,
+        cost: int,
+        parts: int,
+        recipient: str,
+    ):
+        country = str(UserPhone(recipient).calling_code)
+        self.sms_sent_total \
+            .labels(provider=self.provider, country=country) \
+            .inc()
+        self.sms_parts_sent_total \
+            .labels(provider=self.provider, country=country) \
+            .inc(parts)
+        self.sms_cost_euros \
+            .labels(provider=self.provider, country=country) \
+            .observe(cost / 10_000)
 
 
 elks_metrics: ElksMetrics = ElksMetrics()

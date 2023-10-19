@@ -57,6 +57,16 @@ def send_sms(
             f"46elks request to send sms failed: {response.status_code}")
         response.raise_for_status()
 
+    try:
+        response_data = response.json()
+        elks_metrics.observe_sms_cost(
+            cost=response_data["cost"],
+            parts=response_data["parts"],
+            recipient=user_phone_number,
+        )
+    except Exception:
+        _logger.exception("observing SMS cost failed")
+
 
 def start_elks_call(
     user_phone_number: str,
