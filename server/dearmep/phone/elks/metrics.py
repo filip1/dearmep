@@ -4,28 +4,28 @@ from prometheus_client import Counter, Summary
 class ElksMetrics:
     provider = "46elks"
 
-    call_connect_time = Summary(
-        name="call_connect_time",
+    call_duration_seconds = Summary(
+        name="call_duration_seconds",
         documentation="how long was user connected to MEP in seconds",
         labelnames=("provider", "destination_id")
     )
-    call_cost = Summary(
-        name="call_cost",
-        documentation="how much was the call in 100 = 1 cent",
+    call_cost_euros = Summary(
+        name="call_cost_euros",
+        documentation="accumulated call costs in Euros",
         labelnames=("provider", "destination_id")
     )
     call_start_total = Counter(
-        name="call_start",
-        documentation="call started to MEP",
+        name="call_start_total",
+        documentation="number of calls started to Destination",
         labelnames=("provider", "destination_number", "our_number")
     )
     call_end_total = Counter(
-        name="call_end",
-        documentation="call ended to MEP",
+        name="call_end_total",
+        documentation="number of calls ended with Destination",
         labelnames=("provider", "destination_number", "our_number")
     )
-    call_in_menu_limit_reached = Counter(
-        name="call_in_menu_limit_reached",
+    call_in_menu_limit_reached_total = Counter(
+        name="call_in_menu_limit_reached_total",
         documentation="call reached the limit of time being allowed in menu",
         labelnames=("provider")
     )
@@ -35,7 +35,7 @@ class ElksMetrics:
                              duration: int
                              ):
         """Track the connected calltime of user to MEP in seconds"""
-        self.call_connect_time.labels(
+        self.call_duration_seconds.labels(
             provider=self.provider,
             destination_id=destination_id
         ).observe(duration)
@@ -45,10 +45,10 @@ class ElksMetrics:
                      cost: int
                      ):
         """Track how much the call cost"""
-        self.call_cost.labels(
+        self.call_cost_euros.labels(
             provider=self.provider,
             destination_id=destination_id
-        ).observe(cost)
+        ).observe(cost / 10_000)
 
     def inc_start(self,
                   destination_number: str,
@@ -74,7 +74,7 @@ class ElksMetrics:
 
     def inc_menu_limit(self):
         """Track a call that reached the limit of time being allowed in menu"""
-        self.call_in_menu_limit_reached.labels(
+        self.call_in_menu_limit_reached_total.labels(
             provider=self.provider
         ).inc()
 
