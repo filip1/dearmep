@@ -28,6 +28,7 @@ _logger = logging.getLogger(__name__)
 
 phone_numbers: List[Number] = []
 timeout = 9  # seconds
+establish_call_timeout = 45  # seconds
 repeat = 2
 
 
@@ -93,7 +94,7 @@ def start_elks_call(
             "from": phone_number.number,
             "voice_start": f"{elks_url}/instant_main_menu",
             "whenhangup": f"{elks_url}/hangup",
-            "timeout": timeout,
+            "timeout": establish_call_timeout,
         }
     )
 
