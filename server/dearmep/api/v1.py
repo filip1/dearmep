@@ -29,7 +29,7 @@ from ..models import MAX_SEARCH_RESULT_LIMIT, CallState, CallStateResponse, \
     PhoneNumberVerificationRequest, SMSCodeVerificationRequest
 
 from ..ratelimit import Limit, client_addr
-from ..phone.elks.elks import start_elks_call, send_sms
+from ..phone.abstract import get_phone_service
 
 
 l10n_autodetect_total = Counter(
@@ -341,9 +341,9 @@ def initiate_call(
             language=request.language,
         )
 
-        call_state = start_elks_call(
-            user_phone_number=claims.phone,
-            user_language=request.language,
+        call_state = get_phone_service().establish_call(
+            user_phone=claims.phone,
+            language=request.language,
             destination_id=request.destination_id,
             session=session,
         )
@@ -427,10 +427,10 @@ def request_number_verification(
             "code": result,
         }, request.language)
 
-        send_sms(
-            from_title=config.telephony.sms_sender_name,
-            message=message,
-            user_phone_number=number,
+        get_phone_service().send_sms(
+            sender=config.telephony.sms_sender_name,
+            content=message,
+            recipient=number,
         )
 
         response = PhoneNumberVerificationResponse(

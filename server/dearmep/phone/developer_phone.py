@@ -1,7 +1,12 @@
 from logging import getLogger
+from typing import Union
 
 from .abstract import AbstractPhoneService
-from ..models import PhoneNumber
+from ..database.connection import Session
+from ..database.models import DestinationID
+from ..models import CallState, DestinationInCallResponse, Language, \
+    PhoneNumber, SMSSenderName, UserInCallResponse
+
 
 _logger = getLogger(__name__)
 
@@ -14,11 +19,25 @@ class DeveloperPhoneService(AbstractPhoneService):
     Python logging framework at the INFO level.
     """
 
-    def send_sms(self, recipient: PhoneNumber, content: str) -> None:
+    def send_sms(
+        self,
+        *,
+        recipient: PhoneNumber,
+        content: str,
+        sender: SMSSenderName,
+    ) -> None:
         """
         Show a [SMS] log file message
         """
         _logger.info(f"[SMS] {recipient}: {content}")
 
-    def establish_call(self, caller: PhoneNumber, callee: PhoneNumber) -> None:
-        _logger.info(f"[CALL] {caller} <-> {callee} simulated")
+    def establish_call(
+        self,
+        *,
+        user_phone: PhoneNumber,
+        destination_id: DestinationID,
+        language: Language,
+        session: Session,
+    ) -> Union[CallState, DestinationInCallResponse, UserInCallResponse]:
+        _logger.info(f"[CALL] {user_phone} <-> {destination_id} simulated")
+        return CallState.CALLING_USER
