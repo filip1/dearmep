@@ -120,7 +120,7 @@ class Medialist:
                     "arguments_choice_cancel_1",
                     destination_name,
                     "arguments_choice_cancel_2",
-                    "argument_extra",
+                    # "argument_extra",  (not relevant right now)
                     *arguments,
                     "arguments_end",
                 ]
