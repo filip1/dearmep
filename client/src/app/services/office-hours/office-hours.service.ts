@@ -6,7 +6,7 @@ import { DayOfWeek } from 'src/app/model/day-of-week.enum';
 import { TimeOfDay } from 'src/app/model/time-of-day';
 import { TimeService } from '../time/time.service';
 import { TranslocoService } from '@ngneat/transloco';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
