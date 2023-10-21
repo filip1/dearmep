@@ -341,15 +341,15 @@ def get_recommended_destination(
                 case(
                     [
                         (UserFeedback.convinced ==
-                        FeedbackConvinced.YES,            2),
+                         FeedbackConvinced.YES,            2),
                         (UserFeedback.convinced ==
-                        FeedbackConvinced.LIKELY_YES,     1),
+                         FeedbackConvinced.LIKELY_YES,     1),
                         (UserFeedback.convinced ==
-                        FeedbackConvinced.LIKELY_NO,     -1),
+                         FeedbackConvinced.LIKELY_NO,     -1),
                         (UserFeedback.convinced ==
-                        FeedbackConvinced.NO,            -2),
+                         FeedbackConvinced.NO,            -2),
                     ],
-                    else_=0 # as 'convinced' is optional
+                    else_=0  # as 'convinced' is optional
                 )
             )
         ).label("numeric_feedback_sum")
