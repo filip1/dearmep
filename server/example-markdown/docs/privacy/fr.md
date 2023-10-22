@@ -74,9 +74,11 @@ Le numéro de téléphone ne sera traité que pendant la durée de la campagne o
 
 ## Feedback d'appel
 
-À la fin d'un appel d'une certaine durée, l'utilisateur est invité par SMS à nous faire part de ses remarques sous la forme d'un lien unique vers une brève évaluation concernant l'appel.
+À la fin d'un appel conclu et après un certain temps s'est passé, l'utilisateur et invité à nous faire part de ses remarques sous la forme d'un lien unique vers une brève évaluation concernant l'appel particulier.
+Nous pouvons lui demander ce commentaire directement dans le logiciel de navigation ou par l'intermédiaire d'un message SMS contenant un lien unique.
 Nous demandons à l'utilisateur s'il ou elle pense d'avoir réussi à convaincre le politicien, s'il y avait un problème technique et s'il ou si elle a eu d'autres remarques volontaires.
-Ces informations sont complétées par le nom de l'homme ou de la femme politique appelé/e, le pays de l'utilisateur et les premiers chiffres de son numéro de téléphone, qui ne révèlent que l'indicatif du pays et le nom de l'opérateur, mais pas le nom de l'utilisateur.
+
+Ces informations sont complétées par le nom du politicien, le pays de l'utilisateur, le numéro de téléphone haché et les premiers chiffres de son numéro de téléphone, qui ne révèlent que l'indicatif du pays et le nom de l'opérateur, mais pas le nom de l'utilisateur. Nous gardons le numéro de téléphone haché afin de pouvoir corréler les réponses avec le même utilisateur.
 
 Le feedback d'appel reste intentionnellement anonyme afin de permettre le partage de ces informations avec les campagnes qui mettent également en œuvre cette version de DearMEP sans révéler d'informations personnelles sur les utilisateurs.
 
