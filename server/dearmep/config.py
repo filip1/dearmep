@@ -1,17 +1,19 @@
 import logging
-from datetime import date, timedelta
+from datetime import date, datetime, time, timedelta, timezone
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, ClassVar, Dict, List, Literal, Optional, Tuple, Union
+from typing import Any, ClassVar, Dict, List, Literal, Optional, Set, Tuple, \
+    Union
 
-import yaml
+import pytz
 from pydantic import AnyHttpUrl, BaseModel, BaseSettings, DirectoryPath, \
     Field, FilePath, PositiveInt, ValidationError, validator
 from pydantic.fields import ModelField
 from pydantic.utils import deep_update
+import yaml
 from yaml.parser import ParserError
 
-from .models import Language, SMSSenderName
+from .models import Language, SMSSenderName, WeekdayNumber
 
 _logger = logging.getLogger(__name__)
 
@@ -217,11 +219,61 @@ class L10nConfig(BaseModel):
         return v
 
 
+class OfficeHoursConfig(BaseModel):
+    timezone: str
+    weekdays: Set[WeekdayNumber]
+    begin: time
+    end: time
+
+    @validator("begin", "end")
+    def no_timezone_in_begin_and_end(cls, v: time) -> time:
+        if v.tzinfo:
+            raise ValueError(
+                "you may not specify a time zone offset in `begin` or `end`, "
+                "use the `timezone` field instead")
+        return v
+
+    def timezone_obj(self):
+        """Return a timezone definition object for the configured timezone."""
+        return pytz.timezone(self.timezone)
+
+    def to_office_timezone(self, dt: datetime) -> datetime:
+        """Convert input object to office hours timezone.
+
+        Naive inputs (i.e. without an associated timezone) are assumed to be in
+        the system's local timezone. Use with care.
+        """
+        return dt.astimezone(self.timezone_obj())
+
+    def open(self, now: Optional[datetime] = None) -> bool:
+        """Return whether `now` is in the office hours.
+
+        If `now` is not specified, it defaults to the current date and time.
+        """
+        if now is None:
+            now = datetime.now(timezone.utc)
+
+        # Convert `now` to the office hours timezone.
+        now = self.to_office_timezone(now)
+
+        # Check whether we're in one of the configured weekdays.
+        if now.isoweekday() not in self.weekdays:
+            return False
+
+        # Check whether we're in the configured interval.
+        time = now.time()
+        if time < self.begin or time >= self.end:
+            return False
+
+        return True
+
+
 class TelephonyConfig(BaseModel):
     allowed_calling_codes: List[int]
     approved_numbers: List[str] = []
     blocked_numbers: List[str] = []
     dry_run: bool = False
+    office_hours: OfficeHoursConfig
     successful_call_duration: PositiveInt
     provider: ElksConfig
     audio_source: Path

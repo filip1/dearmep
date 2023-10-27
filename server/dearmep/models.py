@@ -131,6 +131,11 @@ class FeedbackText(ConstrainedStr):
     max_length = FEEDBACK_TEXT_LENGTH
 
 
+class WeekdayNumber(ConstrainedInt):
+    ge = 1
+    le = 7
+
+
 class Language(ConstrainedStr):
     regex = re.compile(r"^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$")
 

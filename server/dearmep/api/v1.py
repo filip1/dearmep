@@ -7,7 +7,6 @@ from fastapi.responses import JSONResponse
 
 from prometheus_client import Counter
 from pydantic import BaseModel
-import pytz
 from sqlmodel import col
 
 from . import authtoken
@@ -330,8 +329,7 @@ def initiate_call(
     """
     Call the User and start an IVR interaction with them.
     """
-    now = datetime.now(pytz.timezone("Europe/Brussels"))
-    if now.weekday() >= 5 or now.hour < 9 or now.hour > 19:
+    if not Config.get().telephony.office_hours.open():
         return error_model(
             status.HTTP_503_SERVICE_UNAVAILABLE, OutsideHoursResponse())
 
