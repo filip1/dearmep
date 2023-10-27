@@ -109,6 +109,9 @@ def get_localization(
     """
     Based on the user’s IP address and `Accept-Language` header, suggest a
     country and language from the ones available in the campaign.
+
+    See the `/frontend_strings` endpoint for additional information on the
+    `format_strings` field.
     """
     l10n_config = Config.get().l10n
     available_languages = l10n_config.languages
@@ -158,6 +161,10 @@ def get_frontend_strings(
     will be returned in the default language instead. All strings that exist
     in the config's `frontend_strings` section are guaranteed to be available
     at least in the default language.
+
+    **Note:** If you are calling `/localization` anyway, use its
+    `frontend_strings` option to retrieve the strings in that same request,
+    which allows you to completely skip calling this specialized endpoint here.
     """
     return FrontendStringsResponse(
         frontend_strings=all_frontend_strings(language),
