@@ -13,7 +13,7 @@ import secrets
 from canonicaljson import encode_canonical_json
 import phonenumbers
 from pydantic import BaseModel, ConstrainedFloat, ConstrainedInt, \
-    ConstrainedStr, Field
+    ConstrainedStr, Field, validator
 from pydantic.generics import GenericModel
 
 
@@ -548,6 +548,12 @@ class OfficeHoursInterval(BaseModel):
     end: time = Field(
         description="The end of the interval (exclusive).",
     )
+
+    @validator("end")
+    def end_after_begin(cls, v: time, values: Dict[str, time]) -> time:
+        if v <= values["begin"]:
+            raise ValueError("`end` has to be after `begin`")
+        return v
 
 
 class OfficeHoursResponse(BaseModel):

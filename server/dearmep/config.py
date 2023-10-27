@@ -233,6 +233,12 @@ class OfficeHoursConfig(BaseModel):
                 "use the `timezone` field instead")
         return v
 
+    @validator("end")
+    def end_after_begin(cls, v: time, values: Dict[str, time]) -> time:
+        if v <= values["begin"]:
+            raise ValueError("`end` has to be after `begin`")
+        return v
+
     def timezone_obj(self):
         """Return a timezone definition object for the configured timezone."""
         return pytz.timezone(self.timezone)
