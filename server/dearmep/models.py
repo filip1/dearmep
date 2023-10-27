@@ -1,6 +1,6 @@
 from __future__ import annotations
 from base64 import b64encode
-from datetime import datetime
+from datetime import datetime, time
 import enum
 from hashlib import sha256
 from ipaddress import IPv4Network, IPv6Network
@@ -541,6 +541,32 @@ class FrontendStringsResponse(BaseModel):
     frontend_strings: Dict[str, str] = frontend_strings_field
 
 
+class OfficeHoursInterval(BaseModel):
+    begin: time = Field(
+        description="The beginning of the interval (inclusive).",
+    )
+    end: time = Field(
+        description="The end of the interval (exclusive).",
+    )
+
+
+class OfficeHoursResponse(BaseModel):
+    timezone: str = Field(
+        description="The Olson timezone specifier used for the office hours.",
+        example="Europe/Brussels",
+    )
+    weekdays: Dict[WeekdayNumber, List[OfficeHoursInterval]] = Field(
+        description="For each weekday, the office hour intervals. Weekdays "
+        "are numbered according to ISO 8601, i.e. 1 is Monday, 7 is Sunday. "
+        "Not all weekdays may be present; if a weekday is missing, there are "
+        "no office hours on that day.",
+        example={
+            day: [OfficeHoursInterval(begin="09:00", end="17:00")]
+            for day in range(1, 6)
+        }
+    )
+
+
 class LanguageDetection(BaseModel):
     available: List[str] = Field(
         ...,
@@ -608,6 +634,10 @@ class LocalizationResponse(BaseModel):
         description="Information about the probable physical location.",
     )
     frontend_strings: Optional[Dict[str, str]] = frontend_strings_field
+
+
+class FrontendSetupResponse(LocalizationResponse, OfficeHoursResponse):
+    pass
 
 
 class RateLimitResponse(BaseModel):

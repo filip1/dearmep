@@ -3,7 +3,7 @@ from datetime import date, datetime, time, timedelta, timezone
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, ClassVar, Dict, List, Literal, Optional, Set, Tuple, \
-    Union
+    Union, cast
 
 import pytz
 from pydantic import AnyHttpUrl, BaseModel, BaseSettings, DirectoryPath, \
@@ -13,7 +13,7 @@ from pydantic.utils import deep_update
 import yaml
 from yaml.parser import ParserError
 
-from .models import Language, SMSSenderName, WeekdayNumber
+from .models import Language, OfficeHoursInterval, SMSSenderName, WeekdayNumber
 
 _logger = logging.getLogger(__name__)
 
@@ -244,6 +244,21 @@ class OfficeHoursConfig(BaseModel):
         the system's local timezone. Use with care.
         """
         return dt.astimezone(self.timezone_obj())
+
+    def intervals_by_weekday(
+        self,
+    ) -> Dict[WeekdayNumber, List[OfficeHoursInterval]]:
+        """Return the "open" intervals for each weekday.
+
+        If a weekday has no office hours, it will not be in the return value.
+        """
+        return {
+            cast(WeekdayNumber, daynum): [
+                OfficeHoursInterval(begin=self.begin, end=self.end),
+            ]
+            for daynum in range(1, 8)
+            if daynum in self.weekdays
+        }
 
     def open(self, now: Optional[datetime] = None) -> bool:
         """Return whether `now` is in the office hours.
