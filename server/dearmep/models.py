@@ -636,8 +636,10 @@ class LocalizationResponse(BaseModel):
     frontend_strings: Optional[Dict[str, str]] = frontend_strings_field
 
 
-class FrontendSetupResponse(LocalizationResponse, OfficeHoursResponse):
-    pass
+class FrontendSetupResponse(LocalizationResponse):
+    office_hours: OfficeHoursResponse = Field(
+        description="The hours during which phone calls are allowed.",
+    )
 
 
 class RateLimitResponse(BaseModel):

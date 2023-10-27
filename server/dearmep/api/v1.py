@@ -21,11 +21,12 @@ from ..models import MAX_SEARCH_RESULT_LIMIT, CallState, CallStateResponse, \
     CountryCode, DestinationInCallResponse, DestinationSearchResult, \
     FeedbackSubmission, FeedbackToken, FrontendSetupResponse, \
     FrontendStringsResponse, InitiateCallRequest, JWTClaims, JWTResponse, \
-    LanguageDetection, LocalizationResponse, OutsideHoursResponse, \
-    PhoneNumberVerificationRejectedResponse, PhoneNumberVerificationResponse, \
-    PhoneRejectReason, RateLimitResponse, SMSCodeVerificationFailedResponse, \
-    SearchResult, SearchResultLimit, UserPhone, UserInCallResponse, \
-    PhoneNumberVerificationRequest, SMSCodeVerificationRequest
+    LanguageDetection, LocalizationResponse, OfficeHoursResponse, \
+    OutsideHoursResponse, PhoneNumberVerificationRejectedResponse, \
+    PhoneNumberVerificationResponse, PhoneRejectReason, RateLimitResponse, \
+    SMSCodeVerificationFailedResponse, SearchResult, SearchResultLimit, \
+    UserPhone, UserInCallResponse, PhoneNumberVerificationRequest, \
+    SMSCodeVerificationRequest
 
 from ..ratelimit import Limit, client_addr
 from ..phone.abstract import get_phone_service
@@ -228,8 +229,10 @@ def get_frontend_setup(
         language=l10n_res.language,
         location=l10n_res.location,
         frontend_strings=l10n_res.frontend_strings,
-        timezone=hours.timezone,
-        weekdays=hours.intervals_by_weekday(),
+        office_hours=OfficeHoursResponse(
+            timezone=hours.timezone,
+            weekdays=hours.intervals_by_weekday(),
+        ),
     )
 
 
