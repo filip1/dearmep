@@ -10,7 +10,7 @@
 
 ## Installing dependencies
 
-Run `npm install` to install dependencies for loal development.
+Run `npm install` to install dependencies for local development.
 
 ## Generating the API Client
 
@@ -24,7 +24,7 @@ After that the API client can simpy be generated using the command `npm run gene
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
 ## Serve Embeding-Test-Page
 
@@ -36,7 +36,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/dear-mep-bundle/` directory.
+Run `npm build` to build the project. The build artifacts will be stored in the `dist/dear-mep-bundle/` directory.
 
 ## Lint
 
@@ -44,7 +44,7 @@ Run `npm run lint` or `npm run lint:fix` to lint (and fix) the code.
 
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `npm test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
 ## Running end-to-end tests
 
