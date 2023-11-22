@@ -8,6 +8,7 @@ from starlette_exporter import PrometheusMiddleware, handle_metrics
 from starlette_exporter.optional_metrics import request_body_size, \
     response_body_size
 
+from . import schedules
 from . import __version__, markdown_files, static_files
 from .api import v1 as api_v1
 from .phone import elks
@@ -71,5 +72,8 @@ def create_app(config_dict: Optional[dict] = None) -> FastAPI:
     app.add_route("/metrics", handle_metrics)
 
     require_operation_id(app)
+
+    for task in schedules.tasks:
+        app.on_event("startup")(task)
 
     return app
