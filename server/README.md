@@ -28,6 +28,26 @@ DearMEP defines the following extras:
 Please set the environment variable `DEARMEP_CONFIG` (which defaults to `config.yaml`) to the name of a YAML file containing the configuration.
 See [`example-config.yaml`](dearmep/example-config.yaml) for an example.
 
+## Alembic
+
+### For Users
+
+If you upgrade, make sure to `alembic upgrade head`. You can downgrade the database via `alembic downgrade $REVISION`
+
+### For Developers
+
+If you change the models which are reflected in the database, you'll need to do use alembic to handle database migrations. You can create migrations via
+
+```sh
+alembic revision --autogenerate --message "your short alembic message about the reason of this migration"
+```
+
+Alembic generates a file in `migrations/versions/`. **Check this file** for sanity. You can edit or delete this file though this usually should not be necessary. If you are happy about the migration, commit to version control.
+
+Make sure to `upgrade` the database to the latest revision when developing. It is recommended to check the upgrades first, for example by making a copy of the the database source and changing the `sqlalchemy.uri` in the `alembic.ini` or by checking the raw SQL with the `--sql` flag.
+
+Please check [alembics documentation](https://alembic.sqlalchemy.org/en/latest/) for more.
+
 ## Running a Development Server
 
 ```sh

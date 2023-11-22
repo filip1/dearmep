@@ -12,9 +12,9 @@ config = context.config
 
 if config.get_main_option('sqlalchemy.url') is None:
     # we load the config here to be able to use the database url
-    from dearmep.config import Config as dearmep_config
-    dearmep_config.load()
-    config.set_main_option('sqlalchemy.url', dearmep_config.get().database.url)
+    from dearmep.config import Config as app_config
+    dearmep_config = app_config.load()
+    config.set_main_option('sqlalchemy.url', dearmep_config.database.url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
