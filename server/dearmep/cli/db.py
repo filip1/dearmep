@@ -9,14 +9,9 @@ from sqlalchemy.exc import IntegrityError
 if TYPE_CHECKING:
     from . import Context
 from ..config import APP_NAME, Config
-from ..database import create_db, lint, query
+from ..database import lint, query
 from ..database.connection import get_session
 from ..database.models import Blob
-
-
-def cmd_init(ctx: Context):
-    Config.load()
-    create_db()
 
 
 def cmd_lint(ctx: Context):
@@ -64,13 +59,6 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         description=f"Manage the {APP_NAME} database and its contents.",
     )
     subsub = parser.add_subparsers(metavar="COMMAND")
-
-    init = subsub.add_parser(
-        "init",
-        help="initialize the database from scratch",
-        description="Create a new, empty database.",
-    )
-    init.set_defaults(func=cmd_init)
 
     lint = subsub.add_parser(
         "lint",

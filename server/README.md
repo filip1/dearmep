@@ -30,13 +30,16 @@ See [`example-config.yaml`](dearmep/example-config.yaml) for an example.
 
 ## Alembic
 
+DearMEP is using [Alembic](https://alembic.sqlalchemy.org/) to manage the database and perform version upgrades to it.
+Currently, this is a manual process.
+
 ### For Users
 
 If you upgrade, make sure to `alembic upgrade head`. You can downgrade the database via `alembic downgrade $REVISION`
 
 ### For Developers
 
-If you change the models which are reflected in the database, you'll need to do use alembic to handle database migrations. You can create migrations via
+If you change the models which are reflected in the database, you'll need to do use Alembic to handle database migrations. You can create migrations via
 
 ```sh
 alembic revision --autogenerate --message "your short alembic message about the reason of this migration"
@@ -46,7 +49,7 @@ Alembic generates a file in `migrations/versions/`. **Check this file** for sani
 
 Make sure to `upgrade` the database to the latest revision when developing. It is recommended to check the upgrades first, for example by making a copy of the the database source and changing the `sqlalchemy.uri` in the `alembic.ini` or by checking the raw SQL with the `--sql` flag.
 
-Please check [alembics documentation](https://alembic.sqlalchemy.org/en/latest/) for more.
+Please check [Alembic's documentation](https://alembic.sqlalchemy.org/en/latest/) for more.
 
 ## Running a Development Server
 
