@@ -326,6 +326,28 @@ class RecommenderConfig(BaseModel):
     n_clear_feedback_threshold: int = Field(ge=0, default=8)
 
 
+class SchedulerTaskConfig(BaseModel):
+    interval: float
+    wait_first: bool = True
+
+
+class SchedulerCallBuildQueueConfig(SchedulerTaskConfig):
+    interval: float = 30.2
+
+
+class SchedulerCallHandleQueueConfig(SchedulerTaskConfig):
+    interval: float = 33.3
+
+
+class SchedulerCallConfig(BaseModel):
+    build_queue: Optional[SchedulerCallBuildQueueConfig]
+    handle_queue: Optional[SchedulerCallHandleQueueConfig]
+
+
+class SchedulerConfig(BaseModel):
+    calls: Optional[SchedulerCallConfig]
+
+
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""
     api: APIConfig
@@ -336,6 +358,7 @@ class Config(BaseModel):
     l10n: L10nConfig
     telephony: TelephonyConfig
     recommender: RecommenderConfig
+    scheduler: Optional[SchedulerConfig]
 
     _instance: ClassVar[Optional["Config"]] = None
     _patch: ClassVar[Optional[Dict]] = None

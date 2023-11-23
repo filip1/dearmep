@@ -1,4 +1,4 @@
-# Options ending in `_duration` or `_timeout` (or simply named `duration` or
+# Options ending in `_duration`, `_interval` or `_timeout` (or simply named `duration`, `interval` or
 # `timeout`) should be specified in seconds, unless noted otherwise.
 
 # Options ending in `_limit` (or simply named `limit`) should contain a string
@@ -408,6 +408,22 @@ recommender:
   #     https://www.wolframalpha.com/input?i=plot+1%2F%281%28abs%28x%2F%28N*8%29%29*3%29%5E4+%2B1%29+for+-40%3C%3Dx%3C%3D40%2C+N%3D10
   n_clear_feedback_threshold: 8
 
+# The Scheduler is responsible for scheduling background tasks of the
+# application, for example to initiate calls or cleaning up of database.
+# Check the `doc/scheduler.md` file for more information.
+scheduler:
+  calls:
+    # This builds a queue of calls to be made automatically from the saved
+    # schedules of Users.
+    build_queue:
+      # time in seconds after which the task is executed again
+      interval: 30.2 # this is the default value for this task
+      # wait_first: false means that the task is executed immediately after
+      # startup.
+      wait_first: false
+    # This initiates the next call in the queue.
+    handle_queue:
+      interval: 33.3 # this is the default value for this task
 
 # Localization options.
 l10n:
