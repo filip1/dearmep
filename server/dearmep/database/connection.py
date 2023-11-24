@@ -63,10 +63,6 @@ def get_session():
         yield session
 
 
-def create_db() -> None:
-    SQLModel.metadata.create_all(AutoEngine.get_engine())
-
-
 __all__ = [
     "Session",
     "get_session",

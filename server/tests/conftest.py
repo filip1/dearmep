@@ -7,11 +7,11 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from pydantic.utils import deep_update
 import pytest
-from sqlmodel import Session, create_engine
+from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
 import yaml
 
-from dearmep.database.connection import AutoEngine, create_db, get_session
+from dearmep.database.connection import AutoEngine, get_session
 from dearmep.database.models import Destination
 from dearmep.main import create_app
 from dearmep.ratelimit import Limit
@@ -74,7 +74,7 @@ def engine_fixture():
     )
     prev_engine = AutoEngine.engines.get(0, None)
     AutoEngine.engines[0] = memory_engine
-    create_db()
+    SQLModel.metadata.create_all(AutoEngine.get_engine())
     yield memory_engine
     if prev_engine:
         AutoEngine.engines[0] = prev_engine

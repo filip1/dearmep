@@ -40,7 +40,7 @@ init_db() {
 		die 3 "Database $DB_FILE already exists, refusing to overwrite."
 	fi
 	msg 'Initializing database.'
-	dearmep db init
+	alembic upgrade head
 	msg 'Database initialized.'
 }
 
