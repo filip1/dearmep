@@ -224,6 +224,27 @@ telephony:
   # conversation with MEPs. In seconds.
   successful_call_duration: 35
 
+  # It does not make sense to call representatives' offices in the middle of
+  # the night. Therefore, you can configure "office hours". Outside of the time
+  # range defined here, starting new calls will not be possible.
+  office_hours:
+
+    # A Olson timezone identifier. Will be used both by pytz in the backend as
+    # well as date-fns-tz in the frontend.
+    timezone: Europe/Brussels
+
+    # The weekdays on which calls can take place. These are ISO 8601 weekday
+    # numbers, i.e. Monday is 1, Sunday is 7.
+    weekdays: [1, 2, 3, 4, 5]
+
+    # The time of day at which calls can take place. Calls are allowed from
+    # begin (inclusive) to end (exclusive). "24:00" is not a valid time, use
+    # "00:00" instead. Currently, "end" must be greater than "begin", i.e.
+    # specifying office hours that cross midnight is not supported. Also, since
+    # "end" cannot be more than "23:59:59", true around-the-clock setups are
+    # not possible. Both restrictions might be removed in a future version.
+    begin: "09:00"
+    end: "20:00"
 
   # Calling codes that we allow Users to have. This corresponds to the "country
   # code" part of an international phone number. For example, the number

@@ -7,7 +7,6 @@ from fastapi.responses import JSONResponse
 
 from prometheus_client import Counter
 from pydantic import BaseModel
-import pytz
 from sqlmodel import col
 
 from . import authtoken
@@ -20,13 +19,14 @@ from ..database import query
 from ..l10n import find_preferred_language, get_country, parse_accept_language
 from ..models import MAX_SEARCH_RESULT_LIMIT, CallState, CallStateResponse, \
     CountryCode, DestinationInCallResponse, DestinationSearchResult, \
-    FeedbackSubmission, FeedbackToken, FrontendStringsResponse, \
-    InitiateCallRequest, JWTClaims, JWTResponse, LanguageDetection, \
-    LocalizationResponse, OutsideHoursResponse, \
-    PhoneNumberVerificationRejectedResponse, PhoneNumberVerificationResponse, \
-    PhoneRejectReason, RateLimitResponse, SMSCodeVerificationFailedResponse, \
-    SearchResult, SearchResultLimit, UserPhone, UserInCallResponse, \
-    PhoneNumberVerificationRequest, SMSCodeVerificationRequest
+    FeedbackSubmission, FeedbackToken, FrontendSetupResponse, \
+    FrontendStringsResponse, InitiateCallRequest, JWTClaims, JWTResponse, \
+    LanguageDetection, LocalizationResponse, OfficeHoursResponse, \
+    OutsideHoursResponse, PhoneNumberVerificationRejectedResponse, \
+    PhoneNumberVerificationResponse, PhoneRejectReason, RateLimitResponse, \
+    SMSCodeVerificationFailedResponse, SearchResult, SearchResultLimit, \
+    UserPhone, UserInCallResponse, PhoneNumberVerificationRequest, \
+    SMSCodeVerificationRequest
 
 from ..ratelimit import Limit, client_addr
 from ..phone.abstract import get_phone_service
@@ -90,27 +90,12 @@ def error_model(status_code: int, instance: BaseModel) -> JSONResponse:
 router = APIRouter()
 
 
-@router.get(
-    "/localization", operation_id="getLocalization",
-    response_model=LocalizationResponse,
-    responses=rate_limit_response,  # type: ignore[arg-type]
-    dependencies=(computational_rate_limit,),
-)
-def get_localization(
-    frontend_strings: bool = Query(
-        False,
-        description="Whether to also include all frontend translation strings "
-        "for the detected language. If you don’t request this, the "
-        "`frontend_strings` field in the response will be `null` to save "
-        "bandwidth.",
-    ),
-    client_addr: str = Depends(client_addr),
-    accept_language: str = Header(""),
+def _get_localization(
+    *,
+    frontend_strings: bool,
+    client_addr: str,
+    accept_language: str,
 ):
-    """
-    Based on the user’s IP address and `Accept-Language` header, suggest a
-    country and language from the ones available in the campaign.
-    """
     l10n_config = Config.get().l10n
     available_languages = l10n_config.languages
     default_language = l10n_config.default_language
@@ -143,6 +128,41 @@ def get_localization(
     )
 
 
+@router.get(
+    "/localization", operation_id="getLocalization",
+    response_model=LocalizationResponse,
+    responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(computational_rate_limit,),
+    deprecated=True,
+)
+def get_localization(
+    frontend_strings: bool = Query(
+        False,
+        description="Whether to also include all frontend translation strings "
+        "for the detected language. If you don’t request this, the "
+        "`frontend_strings` field in the response will be `null` to save "
+        "bandwidth.",
+    ),
+    client_addr: str = Depends(client_addr),
+    accept_language: str = Header(""),
+):
+    """
+    Based on the user’s IP address and `Accept-Language` header, suggest a
+    country and language from the ones available in the campaign.
+
+    See the `/frontend-strings` endpoint for additional information on the
+    `frontend_strings` field.
+
+    **Deprecated:** Use `/frontend-setup` instead. It expects the same input
+    parameters, but provides more information, e.g. office hours.
+    """
+    return _get_localization(
+        frontend_strings=frontend_strings,
+        client_addr=client_addr,
+        accept_language=accept_language,
+    )
+
+
 # TODO: Add caching headers, this is pretty static data.
 @router.get(
     "/frontend-strings/{language}", operation_id="getFrontendStrings",
@@ -159,9 +179,60 @@ def get_frontend_strings(
     will be returned in the default language instead. All strings that exist
     in the config's `frontend_strings` section are guaranteed to be available
     at least in the default language.
+
+    **Note:** If you are calling `/frontend-setup` anyway, use its
+    `frontend_strings` option to retrieve the strings in that same request,
+    which allows you to completely skip calling this specialized endpoint here.
     """
     return FrontendStringsResponse(
         frontend_strings=all_frontend_strings(language),
+    )
+
+
+@router.get(
+    "/frontend-setup", operation_id="getFrontendSetup",
+    response_model=FrontendSetupResponse,
+    responses=rate_limit_response,  # type: ignore[arg-type]
+    dependencies=(computational_rate_limit,),
+)
+def get_frontend_setup(
+    frontend_strings: bool = Query(
+        False,
+        description="Whether to also include all frontend translation strings "
+        "for the detected language. If you don’t request this, the "
+        "`frontend_strings` field in the response will be `null` to save "
+        "bandwidth.",
+    ),
+    client_addr: str = Depends(client_addr),
+    accept_language: str = Header(""),
+) -> FrontendSetupResponse:
+    """
+    Based on the user’s IP address and `Accept-Language` header, suggest a
+    country and language from the ones available in the campaign.
+
+    If requested, provide corresponding translation strings for the detected
+    language.
+
+    Also returns the office hours that have been configured, and the timezone
+    they are using.
+
+    See the `/frontend-strings` endpoint for additional information on the
+    `frontend_strings` field.
+    """
+    hours = Config.get().telephony.office_hours
+    l10n_res = _get_localization(
+        frontend_strings=frontend_strings,
+        client_addr=client_addr,
+        accept_language=accept_language,
+    )
+    return FrontendSetupResponse(
+        language=l10n_res.language,
+        location=l10n_res.location,
+        frontend_strings=l10n_res.frontend_strings,
+        office_hours=OfficeHoursResponse(
+            timezone=hours.timezone,
+            weekdays=hours.intervals_by_weekday(),
+        ),
     )
 
 
@@ -330,8 +401,7 @@ def initiate_call(
     """
     Call the User and start an IVR interaction with them.
     """
-    now = datetime.now(pytz.timezone("Europe/Brussels"))
-    if now.weekday() >= 5 or now.hour < 9 or now.hour > 19:
+    if not Config.get().telephony.office_hours.open():
         return error_model(
             status.HTTP_503_SERVICE_UNAVAILABLE, OutsideHoursResponse())
 

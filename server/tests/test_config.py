@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import Callable
 
 from fastapi import FastAPI
@@ -6,7 +7,18 @@ import pytest
 from yaml.parser import ParserError
 
 from dearmep.config import Config, FrontendStrings, L10nConfig, L10nEntry, \
-    L10nStrings
+    L10nStrings, OfficeHoursConfig
+
+
+UTC = timezone.utc
+
+
+EXAMPLE_HOURS = OfficeHoursConfig.parse_obj({
+    "timezone": "Europe/Brussels",
+    "weekdays": (1, 2, 3, 4, 5),
+    "begin": "09:00",
+    "end": "18:00",
+})
 
 
 @pytest.fixture
@@ -111,3 +123,16 @@ def test_invalid_yaml(fastapi_factory: Callable[[], FastAPI]):
 def test_invalid_config(fastapi_factory: Callable[[], FastAPI]):
     with pytest.raises(ValidationError):
         fastapi_factory()
+
+
+@pytest.mark.parametrize("now,open", (
+    (datetime(2023, 10, 26, 22, 0, tzinfo=UTC), False),  # Fri 00:00 Brussels
+    (datetime(2023, 10, 27, 6, 30, tzinfo=UTC), False),  # Fri 08:30 Brussels
+    (datetime(2023, 10, 27, 7, 00, tzinfo=UTC), True),  # Fri 09:00 Brussels
+    (datetime(2023, 10, 27, 9, 30, tzinfo=UTC), True),  # Fri 11:30 Brussels
+    (datetime(2023, 10, 27, 15, 59, tzinfo=UTC), True),  # Fri 17:59 Brussels
+    (datetime(2023, 10, 27, 16, 00, tzinfo=UTC), False),  # Fri 18:00 Brussels
+    (datetime(2023, 10, 28, 9, 30, tzinfo=UTC), False),  # Sat 11:30 Brussels
+))
+def test_office_hours(now: datetime, open: bool):
+    assert EXAMPLE_HOURS.open(now) is open
