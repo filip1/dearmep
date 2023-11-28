@@ -1,6 +1,7 @@
 import logging
 from typing import Optional
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
@@ -8,7 +9,7 @@ from starlette_exporter import PrometheusMiddleware, handle_metrics
 from starlette_exporter.optional_metrics import request_body_size, \
     response_body_size
 
-from . import __version__, markdown_files, static_files
+from . import __version__, markdown_files, schedules, static_files
 from .api import v1 as api_v1
 from .phone import elks
 from .config import APP_NAME, Config
@@ -50,9 +51,17 @@ def create_app(config_dict: Optional[dict] = None) -> FastAPI:
     else:
         config = Config.load_dict(config_dict)
 
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        for task in schedules.get_background_tasks(config):
+            _logger.info(f"Loading background Task: {task.__name__}")
+            await task()
+        yield
+
     app = FastAPI(
         title=APP_NAME,
         version=__version__,
+        lifespan=lifespan,
     )
     setup_cors(app, config)
 
