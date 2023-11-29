@@ -1,4 +1,4 @@
-import { DoBootstrap, Injector, NgModule } from '@angular/core';
+import { APP_INITIALIZER, DoBootstrap, Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -15,6 +15,13 @@ import { CallingModule } from './calling/calling.module';
 import { RetryInterceptor } from './common/interceptors/retry.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { AuthInterceptor } from './common/interceptors/auth.interceptor';
+import { ApiService } from './api/services';
+import { ConfigService } from './services/config/config.service';
+import { AppInitializationService } from './services/app-initialization/app-initialization.service';
+
+function initializeApp(appInitializationService: AppInitializationService) {
+  return appInitializationService.initialize()
+}
 
 @NgModule({
   declarations: [
@@ -35,6 +42,7 @@ import { AuthInterceptor } from './common/interceptors/auth.interceptor';
     { provide: HTTP_INTERCEPTORS, useClass: BaseUrlInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: RetryInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: TimeoutInterceptor, multi: true },
+    { provide: APP_INITIALIZER, useFactory: (i: AppInitializationService) => initializeApp(i), deps: [ AppInitializationService ] }
   ],
   bootstrap: [],
 })
@@ -46,3 +54,5 @@ export class AppModule implements DoBootstrap {
     customElements.define('dear-mep', app);
   }
 }
+
+
