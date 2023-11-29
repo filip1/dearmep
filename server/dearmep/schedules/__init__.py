@@ -1,6 +1,6 @@
 from typing import Callable, List, Tuple
 
-from fastapi_utils.tasks import repeat_every
+from fastapi_restful.tasks import repeat_every
 
 from .calls import build_queue, handle_queue
 from ..config import Config, SchedulerTaskConfig

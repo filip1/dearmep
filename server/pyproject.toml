@@ -42,7 +42,7 @@ canonicaljson = "^2.0.0"
 phonenumbers = "^8.13.22"
 pytz = "^2023.3.post1"
 alembic = "^1.12.1"
-fastapi-utils = "^0.2.1"
+fastapi-restful = "^0.5.0"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^4.0.1"
