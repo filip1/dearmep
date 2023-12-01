@@ -10,12 +10,14 @@ import { Injectable, isDevMode, NgModule } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { ApiService } from './api/services';
 import { ObjectUtil } from './common/util/object.util';
+import { ConfigService } from './services/config/config.service';
 
 
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
   constructor(
     private apiService: ApiService,
+    private configService: ConfigService,
   ) {}
 
   getTranslation(lang: string): Observable<Translation> {
@@ -26,21 +28,34 @@ export class TranslocoHttpLoader implements TranslocoLoader {
   }
 }
 
+function translocoConfigFactory(configService: ConfigService) {
+  const language = configService.getSelectedLanguage()
+  const availableLanguages = configService.getAvailableLanguages()
+
+  // APP_INITIALIZER should have initialized the languages, if they are not there something went wrong
+  if (!language || !availableLanguages || availableLanguages.length === 0) {
+    throw new Error('Language not initialized')
+  }
+
+  return translocoConfig({
+    failedRetries: 0,
+    reRenderOnLangChange: true,
+    prodMode: !isDevMode(),
+    defaultLang: language,
+    availableLangs: availableLanguages,
+    missingHandler: {
+      useFallbackTranslation: false
+    }
+  })
+}
+
 @NgModule({
   exports: [ TranslocoModule ],
   providers: [
     {
       provide: TRANSLOCO_CONFIG,
-      useValue: translocoConfig({
-        failedRetries: 0,
-        reRenderOnLangChange: true,
-        prodMode: !isDevMode(),
-        defaultLang: 'en',
-        availableLangs: [ 'en' ],
-        missingHandler: {
-          useFallbackTranslation: false
-        }
-      })
+      useFactory: translocoConfigFactory,
+      deps: [ ConfigService ],
     },
     { provide: TRANSLOCO_LOADER, useClass: TranslocoHttpLoader }
   ]

@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, DoBootstrap, Injector, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ApplicationInitStatus, DoBootstrap, Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -17,10 +17,34 @@ import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { AuthInterceptor } from './common/interceptors/auth.interceptor';
 import { ApiService } from './api/services';
 import { ConfigService } from './services/config/config.service';
-import { AppInitializationService } from './services/app-initialization/app-initialization.service';
+import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
+import { BaseUrlService } from './common/services/base-url.service';
+import { UrlUtil } from './common/util/url.util';
 
-function initializeApp(appInitializationService: AppInitializationService) {
-  return appInitializationService.initialize()
+const dmepTagName = "dear-mep"
+
+// It is required to set the api-url before the app is initialized
+// otherwise the APP_INITIALIZER will be stuck trying to make a request
+// this solves the chicken and egg problem.
+function setApiUrl(baseUrlService: BaseUrlService) {
+  const elements = document.getElementsByTagName(dmepTagName)
+  if (!elements || elements.length === 0) {
+    throw Error(`<${dmepTagName}></${dmepTagName}> element not found`)
+  }
+  const hostAttr = elements[0].getAttribute("host")
+  const apiAttr = elements[0].getAttribute("api") || "/"
+  if (!hostAttr) {
+    throw Error(`<${dmepTagName}></${dmepTagName}> is missing "host" attribute`)
+  }
+  const apiUrl = UrlUtil.toAbsolute(apiAttr, hostAttr)
+  baseUrlService.setAPIUrl(apiUrl)
+}
+
+function appInitializerFactory(configService: ConfigService, baseUrlService: BaseUrlService): () => Promise<void> {
+  return async() => {
+    setApiUrl(baseUrlService)
+    await configService.initialize()
+  }
 }
 
 @NgModule({
@@ -42,7 +66,7 @@ function initializeApp(appInitializationService: AppInitializationService) {
     { provide: HTTP_INTERCEPTORS, useClass: BaseUrlInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: RetryInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: TimeoutInterceptor, multi: true },
-    { provide: APP_INITIALIZER, useFactory: (i: AppInitializationService) => initializeApp(i), deps: [ AppInitializationService ] }
+    { provide: APP_INITIALIZER, useFactory: appInitializerFactory, deps: [ ConfigService, BaseUrlService ], multi: true }
   ],
   bootstrap: [],
 })
@@ -51,7 +75,7 @@ export class AppModule implements DoBootstrap {
 
   ngDoBootstrap() {
     const app = createCustomElement(AppComponent, { injector: this.injector });
-    customElements.define('dear-mep', app);
+    customElements.define(dmepTagName, app);
   }
 }
 
