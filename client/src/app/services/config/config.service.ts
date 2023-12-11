@@ -43,6 +43,7 @@ export class ConfigService {
   }
 
   private config$: Observable<AppConfig>;
+  private config?: AppConfig;
 
   private language: string | undefined
   private availableLanguages: string[] | undefined
@@ -58,6 +59,13 @@ export class ConfigService {
 
   public getConfig$(): Observable<AppConfig> {
     return this.config$
+  }
+
+  public getConfig(): AppConfig {
+    if (!this.config) {
+      throw Error("config not initialized")
+    }
+    return this.config
   }
 
   public getLanguage(): string | undefined {
@@ -100,6 +108,7 @@ export class ConfigService {
         return config
       }),
       tap((c) => {
+        this.config = c
         this.language = c.language.recommended
         this.availableLanguages = c.language.available
       }),

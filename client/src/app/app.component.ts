@@ -65,7 +65,7 @@ export class AppComponent implements OnInit, OnChanges {
   public 'disable-scheduling': '' | undefined = '' // NOTE: This default will be changed to false as soon as scheduling is implemented in the backend.
 
   public get disableScheduling(): boolean {
-    return this['disable-scheduling'] !== undefined
+    return this.convertBooleanAttribute(this['disable-scheduling'])
   }
 
   /**
@@ -82,7 +82,7 @@ export class AppComponent implements OnInit, OnChanges {
   public 'disable-calling': '' | undefined = undefined
 
   public get disableCalling(): boolean {
-    return this['disable-calling'] !== undefined
+    return this.convertBooleanAttribute(this['disable-calling'])
   }
 
   /**
@@ -147,5 +147,9 @@ export class AppComponent implements OnInit, OnChanges {
     if (changes["defaultCountry"]) {
       this.l10nService.setDefaultCountry(this.defaultCountry?.toUpperCase())
     }
+  }
+
+  private convertBooleanAttribute(attrValue: string | null | undefined): boolean {
+    return !(attrValue === null || attrValue === undefined || attrValue.toLowerCase() === "false");
   }
 }

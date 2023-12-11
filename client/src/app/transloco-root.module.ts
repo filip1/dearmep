@@ -29,7 +29,7 @@ export class TranslocoHttpLoader implements TranslocoLoader {
 }
 
 function translocoConfigFactory(configService: ConfigService) {
-  const language = configService.getSelectedLanguage()
+  const language = configService.getLanguage()
   const availableLanguages = configService.getAvailableLanguages()
 
   // APP_INITIALIZER should have initialized the languages, if they are not there something went wrong
