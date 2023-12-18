@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, combineLatest, distinctUntilKeyChanged, filter, map, shareReplay, take } from 'rxjs';
-import { ApiService } from 'src/app/api/services';
-import { LocalStorageService } from '../local-storage/local-storage.service';
+import { BehaviorSubject, Observable, ReplaySubject, combineLatest, distinctUntilKeyChanged, filter, map, shareReplay } from 'rxjs';
 import { TranslocoService } from '@ngneat/transloco';
 import { ConfigService } from '../config/config.service';
 

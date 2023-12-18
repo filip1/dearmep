@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, ApplicationInitStatus, DoBootstrap, Injector, NgModule } from '@angular/core';
+import { APP_INITIALIZER, DoBootstrap, Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -15,9 +15,7 @@ import { CallingModule } from './calling/calling.module';
 import { RetryInterceptor } from './common/interceptors/retry.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { AuthInterceptor } from './common/interceptors/auth.interceptor';
-import { ApiService } from './api/services';
 import { ConfigService } from './services/config/config.service';
-import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 import { BaseUrlService } from './common/services/base-url.service';
 import { UrlUtil } from './common/util/url.util';
 

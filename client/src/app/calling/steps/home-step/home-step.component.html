@@ -25,8 +25,9 @@
     [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="officeHoursPopoverOpen">
     <div class="dmep-popover">
       <h3 transloco="call.office-hours.title"></h3>
-      <p transloco="call.office-hours.description"></p>
+      <p transloco="call.office-hours.description" class="office-hours-description"></p>
       <p *ngFor="let hours of (officeHoursText$ | async)">{{ hours }}</p>
+      <p class="office-hours-timezone">{{ officeHoursTimezone }}</p>
     </div>
   </ng-template>
 

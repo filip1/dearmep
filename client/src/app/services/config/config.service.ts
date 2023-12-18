@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from './app-config.model';
-import { Observable, ReplaySubject, firstValueFrom, map, shareReplay, tap } from 'rxjs';
+import { Observable, firstValueFrom, map, shareReplay, tap } from 'rxjs';
 import { ApiService } from 'src/app/api/services';
 import { LocalStorageService } from '../local-storage/local-storage.service';
-import { FrontendSetupResponse } from 'src/app/api/models';
 
 @Injectable({
   providedIn: 'root'

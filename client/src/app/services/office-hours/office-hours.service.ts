@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { format, set } from 'date-fns';
-import { getTimezoneOffset, utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
-import { Observable, combineLatest, distinctUntilChanged, filter, map, mergeMap, shareReplay, timer } from 'rxjs';
+import { getTimezoneOffset, utcToZonedTime } from 'date-fns-tz';
+import { Observable, combineLatest, distinctUntilChanged, map, mergeMap, shareReplay, timer } from 'rxjs';
 import { DayOfWeek } from 'src/app/model/day-of-week.enum';
-import { TimeOfDay } from 'src/app/model/time-of-day';
 import { TimeService } from '../time/time.service';
 import { TranslocoService } from '@ngneat/transloco';
 import { environment } from 'src/environments/environment';
@@ -56,14 +54,17 @@ export class OfficeHoursService {
         const intervals = this.officeHours.weekdays[day]
 
         const timeRanges = combineLatest(
-          intervals.map(interval => this.translocoService.selectTranslate('call.office-hours.time-range',  { startTime: interval.begin, endTime: interval.end }) )
+          intervals.map(interval => this.translocoService.selectTranslate('call.office-hours.time-range',  {
+            startTime: interval.begin.endsWith(":00") ? interval.begin.substring(0, interval.begin.length - 3) : interval.begin,
+            endTime: interval.end.endsWith(":00") ? interval.end.substring(0, interval.end.length - 3) : interval.end
+          }) )
         ).pipe(map(ranges => ranges.join(' ')))
 
         return combineLatest([
-          this.translocoService.selectTranslateObject('schedule.days' + day),
+          this.translocoService.selectTranslateObject('schedule.days') as Observable<string[]>,
           timeRanges,
         ]).pipe(
-          mergeMap(([dayOrRange, timeRange]) => this.translocoService.selectTranslate('call.office-hours.hours', { dayOrRange, timeRange }))
+          mergeMap(([days, timeRange]) => this.translocoService.selectTranslate('call.office-hours.hours-zoned', { dayOrRange: days[day], timeRange }))
         )
       })
 
@@ -85,7 +86,7 @@ export class OfficeHoursService {
     const destTimeOfDay = TimeUtil.ToTimeOfDay(destinationTime)
 
     for (const interval of dailyHours) {
-      const startTime = TimeUtil.ParseTimeOfDay(interval.end)
+      const startTime = TimeUtil.ParseTimeOfDay(interval.begin)
       const endTime = TimeUtil.ParseTimeOfDay(interval.end)
       if (!TimeUtil.TimeOfDayIsBefore(destTimeOfDay, startTime) && TimeUtil.TimeOfDayIsBefore(destTimeOfDay, endTime)) {
         return true

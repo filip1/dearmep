@@ -1,4 +1,4 @@
-import { Inject, Injectable, Injector } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslocoService } from '@ngneat/transloco';

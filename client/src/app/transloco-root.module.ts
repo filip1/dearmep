@@ -7,7 +7,7 @@ import {
   TranslocoModule
 } from '@ngneat/transloco';
 import { Injectable, isDevMode, NgModule } from '@angular/core';
-import { Observable, from, map, mergeMap, of, single, switchMap } from 'rxjs';
+import { Observable, map, mergeMap, of } from 'rxjs';
 import { ApiService } from './api/services';
 import { ObjectUtil } from './common/util/object.util';
 import { ConfigService } from './services/config/config.service';

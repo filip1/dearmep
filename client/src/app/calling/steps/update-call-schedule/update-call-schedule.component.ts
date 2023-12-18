@@ -4,16 +4,15 @@ import { FormControl } from '@angular/forms';
 import { TranslocoService } from '@ngneat/transloco';
 import { zonedTimeToUtc } from 'date-fns-tz';
 // Change this import to enable optimizations as soon as https://github.com/marnusw/date-fns-tz/issues/193 is fixed
-import { addMinutes, format, isBefore, isEqual } from 'date-fns/esm';
+import { addMinutes, isBefore } from 'date-fns/esm';
 import { Subject, take, takeUntil } from 'rxjs';
-import { OfficeHoursInterval, OfficeHoursResponse, Schedule, ScheduleResponse } from 'src/app/api/models';
+import { OfficeHoursInterval, OfficeHoursResponse, Schedule } from 'src/app/api/models';
 import { ApiService } from 'src/app/api/services';
 import { AUTH_TOKEN_REQUIRED } from 'src/app/common/interceptors/auth.interceptor';
 import { StringUtil } from 'src/app/common/util/string.util';
 import { TimeUtil } from 'src/app/common/util/time.util';
 import { DayOfWeek } from 'src/app/model/day-of-week.enum';
 import { TimeOfDay } from 'src/app/model/time-of-day';
-import { ConfigService } from 'src/app/services/config/config.service';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { OfficeHoursService } from 'src/app/services/office-hours/office-hours.service';
 import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
@@ -27,7 +26,7 @@ import { TimeService } from 'src/app/services/time/time.service';
 export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
   private readonly destroyed$ = new Subject<void>()
 
-  public scheduleLoaded: boolean = false
+  public scheduleLoaded = false
 
   public localTimeZone?: string
 

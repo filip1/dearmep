@@ -18,6 +18,7 @@ export class HomeStepComponent {
   public officeHoursText$
   public officeHoursPopoverOpen = false
   public isOfficeHours$
+  public officeHoursTimezone
 
 
   @Input()
@@ -39,6 +40,7 @@ export class HomeStepComponent {
     )
     this.officeHoursText$ = this.officeHoursService.getOfficeHoursText$()
     this.isOfficeHours$ = this.officeHoursService.inOfficeHours$()
+    this.officeHoursTimezone = this.officeHoursService.getOfficeHours().timezone
   }
 
   public onCallNowClick() {
