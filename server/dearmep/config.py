@@ -13,7 +13,8 @@ from pydantic.utils import deep_update
 import yaml
 from yaml.parser import ParserError
 
-from .models import Language, OfficeHoursInterval, SMSSenderName, WeekdayNumber
+from .models import FeaturesConfig, Language, OfficeHoursInterval, \
+    SMSSenderName, WeekdayNumber
 
 _logger = logging.getLogger(__name__)
 
@@ -355,6 +356,7 @@ class Config(BaseModel):
     authentication: AuthenticationConfig
     contact_timespan_filter: Optional[ContactTimespanFilterConfig]
     database: DatabaseConfig
+    features: FeaturesConfig = Field(default_factory=FeaturesConfig)
     feedback: FeedbackConfig
     l10n: L10nConfig
     telephony: TelephonyConfig

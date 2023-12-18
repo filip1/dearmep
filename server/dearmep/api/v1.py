@@ -220,13 +220,15 @@ def get_frontend_setup(
     See the `/frontend-strings` endpoint for additional information on the
     `frontend_strings` field.
     """
-    hours = Config.get().telephony.office_hours
+    config = Config.get()
+    hours = config.telephony.office_hours
     l10n_res = _get_localization(
         frontend_strings=frontend_strings,
         client_addr=client_addr,
         accept_language=accept_language,
     )
     return FrontendSetupResponse(
+        features=config.features,
         language=l10n_res.language,
         location=l10n_res.location,
         frontend_strings=l10n_res.frontend_strings,

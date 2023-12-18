@@ -176,6 +176,38 @@ class Score(ConstrainedFloat):
     le = 1.0
 
 
+class MaintenanceMessageConfig(BaseModel):
+    """Additional details about the maintenance mode message."""
+    dismissable: Literal[False] = Field(
+        False,
+        description="Whether the user should be allowed to dismiss the "
+        "message and access the frontend anyway. Currently always false.",
+    )
+
+
+class MaintenanceConfig(BaseModel):
+    """Details about whether the system is in maintenance mode."""
+    active: bool = Field(
+        False,
+        description="Whether maintenance is currently being performed on the "
+        "system. If so, a message should be shown to notify the User.",
+    )
+    message: MaintenanceMessageConfig = Field(
+        default_factory=MaintenanceMessageConfig,
+    )
+
+
+class FeaturesConfig(BaseModel):
+    """Details about whether certain parts of the system are enabled."""
+    maintenance: MaintenanceConfig = Field(default_factory=MaintenanceConfig)
+    telephony: Literal[True] = Field(
+        True,
+        description="Whether telephony features (SMS authentication, "
+        "initiating calls, scheduling calls) are enabled. Currently, this is "
+        "always true.",
+    )
+
+
 INPUT_NUMBER_REGEX = re.compile(r"^[+0-9./ ()-]+$")
 
 
@@ -498,7 +530,7 @@ frontend_strings_field = Field(
     example={
         "title": "Call your MEP!",
         "call.start-call-btn.title": "Start Call",
-        "veification.description": "We've sent a code to {{ number }}.",
+        "verification.description": "We've sent a code to {{ number }}.",
     }
 )
 
@@ -652,6 +684,7 @@ class LocalizationResponse(BaseModel):
 
 
 class FrontendSetupResponse(LocalizationResponse):
+    features: FeaturesConfig
     office_hours: OfficeHoursResponse = Field(
         description="The hours during which phone calls are allowed.",
     )
