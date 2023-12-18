@@ -32,8 +32,19 @@
 
 <p class="dmep-schedule-as-text dmep-description-sm" [innerHtml]="getSelectedTimesAsText()"></p>
 
+<ng-template cdkConnectedOverlay [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="dmep-popover-backdrop" (backdropClick)="scheduleUpdatedPopoverOpen = false"
+  [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="scheduleUpdatedPopoverOpen">
+  <div class="dmep-popover dmep-popover-success">
+    <mat-icon>done</mat-icon>
+    <p>The schedule was successfully updated! </p>
+  </div>
+</ng-template>
+
 <div class="dmep-btn-container">
-  <button mat-stroked-button color="primary" class="dmep-schedule-call-btn dmep-btn dmep-btn-primary" (click)="onScheduleClick()">
+  <button mat-stroked-button color="primary" class="dmep-schedule-call-btn dmep-btn dmep-btn-primary"
+    cdkOverlayOrigin #trigger="cdkOverlayOrigin"
+    [disabled]="!canUpdateSchedule()" (click)="onScheduleClick()">
     <span class="btn-content">
       <strong>{{ 'schedule.schedule-btn.title' | transloco }}</strong>
       <br>

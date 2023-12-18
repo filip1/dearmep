@@ -2,7 +2,7 @@ import { HttpContext } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TranslocoService } from '@ngneat/transloco';
-import { zonedTimeToUtc } from 'date-fns-tz';
+import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 // Change this import to enable optimizations as soon as https://github.com/marnusw/date-fns-tz/issues/193 is fixed
 import { addMinutes, isBefore } from 'date-fns/esm';
 import { Subject, take, takeUntil } from 'rxjs';
@@ -26,8 +26,6 @@ import { TimeService } from 'src/app/services/time/time.service';
 export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
   private readonly destroyed$ = new Subject<void>()
 
-  public scheduleLoaded = false
-
   public localTimeZone?: string
 
   public availableTimes?: Map<DayOfWeek, TimeOfDay[]>
@@ -38,6 +36,8 @@ export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
 
   public selectedDayFormControl = new FormControl<DayOfWeek>(DayOfWeek.Monday)
   public selectedTimeFormControls
+
+  public scheduleUpdatedPopoverOpen = false
 
   private officeHours: OfficeHoursResponse
 
@@ -75,7 +75,8 @@ export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
       next: (schedule) => {
         for (const s of schedule.schedule) {
           const d: DayOfWeek = s.day
-          const t = TimeUtil.ParseTimeOfDay(s.start_time)
+          let t = TimeUtil.ParseTimeOfDay(s.start_time)
+          t = this.convertTimeOfDayFromUTC(t)
           const control = this.selectedTimeFormControls.get(d)
           if (control) {
             control.setValue(t)
@@ -150,15 +151,26 @@ export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
 
   public removeSelectedTime() {
     const control = this.getSelectTimeFormControl()
-    control.reset(null)
+    control.setValue(null)
+    control.markAsTouched()
+  }
+
+  public canUpdateSchedule() {
+    for (const v of this.selectedTimeFormControls.values()) {
+      if (v.touched) {
+        return true
+      }
+    }
+    return false
   }
 
   public onScheduleClick() {
     const schedule: Schedule[] = []
     for (const day of this.availableDays) {
       const control = this.selectedTimeFormControls.get(day)
-      const time = control?.value
+      let time = control?.value
       if (time) {
+        time = this.convertTimeOfDayToUTC(time)
         schedule.push({
           day,
           start_time: TimeUtil.StringifyTimeOfDay(time)
@@ -175,7 +187,11 @@ export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
       take(1)
     ).subscribe({
       next: () => {
-        this.routingStateManager.returnHome()
+        this.scheduleUpdatedPopoverOpen = true
+        setTimeout(() => {
+          this.routingStateManager.returnHome()
+          this.scheduleUpdatedPopoverOpen = false
+        }, 2000)
       }
     })
   }
@@ -222,5 +238,17 @@ export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
       result.push(TimeUtil.ToTimeOfDay(time))
     }
     return result
+  }
+
+  private convertTimeOfDayToUTC(time: TimeOfDay): TimeOfDay {
+    let t = TimeUtil.TimeOfDayToTimestamp(time, new Date())
+    t = utcToZonedTime(t, "UTC")
+    return TimeUtil.ToTimeOfDay(t)
+  }
+
+  private convertTimeOfDayFromUTC(time: TimeOfDay): TimeOfDay {
+    let t = TimeUtil.TimeOfDayToTimestamp(time, new Date())
+    t = zonedTimeToUtc(t, "UTC")
+    return TimeUtil.ToTimeOfDay(t)
   }
 }
