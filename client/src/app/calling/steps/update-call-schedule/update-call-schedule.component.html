@@ -20,8 +20,8 @@
     </span>
 
     <mat-form-field appearance="outline" class="dmep-schedule-select-time">
-      <mat-select [formControl]="getSelectTimeFormControl()">
-        <mat-option [value]="time" *ngFor="let time of availableTimes">{{ time }}</mat-option>
+      <mat-select [formControl]="getSelectTimeFormControl()" [compareWith]="compareTimes">
+        <mat-option [value]="time" *ngFor="let time of getTimes()">{{ formatTimeOfDay(time) }}</mat-option>
       </mat-select>
       <mat-hint transloco="schedule.timezone" [translocoParams]="{ zone: localTimeZone }"></mat-hint>
       <mat-icon matSuffix *ngIf="getSelectTimeFormControl().value"

@@ -26,7 +26,7 @@
     <div class="dmep-popover">
       <h3 transloco="call.office-hours.title"></h3>
       <p transloco="call.office-hours.description"></p>
-      <p>{{ officeHoursText$ | async }}</p>
+      <p *ngFor="let hours of (officeHoursText$ | async)">{{ hours }}</p>
     </div>
   </ng-template>
 

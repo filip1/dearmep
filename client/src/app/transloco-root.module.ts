@@ -7,7 +7,7 @@ import {
   TranslocoModule
 } from '@ngneat/transloco';
 import { Injectable, isDevMode, NgModule } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, from, map, mergeMap, of, single, switchMap } from 'rxjs';
 import { ApiService } from './api/services';
 import { ObjectUtil } from './common/util/object.util';
 import { ConfigService } from './services/config/config.service';
@@ -21,8 +21,15 @@ export class TranslocoHttpLoader implements TranslocoLoader {
   ) {}
 
   getTranslation(lang: string): Observable<Translation> {
-    return this.apiService.getFrontendStrings({ language: lang })
-    .pipe(
+    return this.configService.getConfig$().pipe(
+      mergeMap(c => {
+        // use strings from config if present in selected language otherwise load from API
+        if (c.language.recommended === lang && c.frontend_strings) {
+          return of(c)
+        } else {
+          return this.apiService.getFrontendStrings({ language: lang })
+        }
+      }),
       map(r => ObjectUtil.UnflattenObject(r.frontend_strings) as Translation)
     )
   }

@@ -571,21 +571,12 @@ l10n:
 
     # Text specifying the office hours in original and local timezone
     # Examples:
-    #   Monday through Thursday: 8:00 - 17:00 Europe/Vienna (9:00 - 18:00 Local)
-    #   Friday: 8:00 - 15:00 Europe/Vienna (9:00 - 16:00 Local)
+    #   Monday through Thursday: 8:00 - 17:00 Europe/Vienna
+    #   Friday: 8:00 - 15:00 Europe/Vienna
     # Placeholders:
     # {{ dayOrRange }}      ... Either a single weekday or a range of days (see: call.office-hours.day-range)
     # {{ timeRange }}       ... Range from start- to end-time including remtoe timezone (see: call.office-hours.time-range-zoned)
-    # {{ timeRangeLocal }}  ... Range from start- to end-time in local timezone (see: call.office-hours.time-range-zoned)
     call.office-hours.hours-zoned:
-      en: "{{ dayOrRange }}: {{ timeRange }} ({{ timeRangeLocal }})"
-      de: "{{ dayOrRange }}: {{ timeRange }} ({{ timeRangeLocal }})"
-      sv: "{{ dayOrRange }}: {{ timeRange }} ({{ timeRangeLocal }})"
-      da: "{{ dayOrRange }}: {{ timeRange }} ({{ timeRangeLocal }})"
-      pt: "{{ dayOrRange }}: {{ timeRange }} ({{ timeRangeLocal }})"
-
-    # Same as 'call.office-hours.hours-zoned' applies when the user is in the same time-zone as the destination
-    call.office-hours.hours:
       en: "{{ dayOrRange }}: {{ timeRange }}"
       de: "{{ dayOrRange }}: {{ timeRange }}"
       sv: "{{ dayOrRange }}: {{ timeRange }}"
@@ -1317,16 +1308,8 @@ l10n:
       pt: "{{ dayOfWeek }} às {{ time }}"
 
     # Long-Names of the seven weekdays.
-    # The inxex is zero-based and ordered according to the semantics of 'Date.getDay()' in JavaScript.
-    # Example: 0 => "Sunday", 1 => "Monday", ...
+    # Weekdays are numbered according to ISO 8601, i.e. 1 is Monday, 7 is Sunday
     # See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getDay
-    schedule.days.0:
-      en: Sunday
-      de: Sonntag
-      sv: söndag
-      fr: Dimanche
-      da: søndag
-      pt: domingo
     schedule.days.1:
       en: Monday
       de: Montag
@@ -1369,20 +1352,19 @@ l10n:
       fr: Samedi
       da: lørdag
       pt: sábado
+    schedule.days.7:
+      en: Sunday
+      de: Sonntag
+      sv: söndag
+      fr: Dimanche
+      da: søndag
+      pt: domingo
 
     # Short-Names of the seven weekdays.
     # Ideally two-letter abbreviations of the weekdays should be used.
     # It is possible to use more than two letters if necessary but it might lead to styling-issues.
-    # The inxex is zero-based and ordered according to the semantics of 'Date.getDay()' in JavaScript.
-    # Example: 0 => "Sunday", 1 => "Monday", ...
+    # Weekdays are numbered according to ISO 8601, i.e. 1 is Monday, 7 is Sunday
     # See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getDay
-    schedule.days-short.0:
-      en: Su
-      de: So
-      sv: sön
-      fr: Dim
-      da: søn
-      pt: dom
     schedule.days-short.1:
       en: Mo
       de: Mo
@@ -1425,6 +1407,13 @@ l10n:
       fr: Sam
       da: lør
       pt: sáb
+    schedule.days-short.7:
+      en: Su
+      de: So
+      sv: sön
+      fr: Dim
+      da: søn
+      pt: dom
 
     # Main text of the primary button that lets the user save the configured schedule.
     schedule.schedule-btn.title:

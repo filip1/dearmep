@@ -7,63 +7,67 @@ import { TimeOfDay } from 'src/app/model/time-of-day';
 import { TimeService } from '../time/time.service';
 import { TranslocoService } from '@ngneat/transloco';
 import { environment } from 'src/environments/environment';
+import { ConfigService } from '../config/config.service';
+import { AppConfig } from '../config/app-config.model';
+import { OfficeHoursResponse } from 'src/app/api/models';
+import { TimeUtil } from 'src/app/common/util/time.util';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OfficeHoursService {
-  // To simplify things a bit this service currently assumes
-  // the same hours each day of the week.
-  private readonly timezone = "Europe/Brussels"
-  private readonly days = [
-    DayOfWeek.Monday,
-    DayOfWeek.Tuesday,
-    DayOfWeek.Wednesday,
-    DayOfWeek.Thursday,
-    DayOfWeek.Friday,
-  ]
-  private readonly startTime: TimeOfDay = { hour: 9, min: 0 }
-  private readonly endTime: TimeOfDay = { hour: 20, min: 0 }
+  private officeHours: OfficeHoursResponse
+
   private readonly isOfficeHours$
 
   constructor(
     private readonly timeService: TimeService,
     private readonly translocoService: TranslocoService,
+    private readonly configService: ConfigService,
   ) {
+    this.officeHours = this.configService.getConfig().office_hours
+
     // check every second if we are in office hours
     this.isOfficeHours$ = timer(0, 1000).pipe(
-      map(() => this.isInOfficeHours(new Date())),
+      map(() => this.isInOfficeHours(this.timeService.now())),
       distinctUntilChanged(),
       shareReplay(),
     )
+
+    this.configService.getConfig$().subscribe({
+      next: (config: AppConfig) => {
+        this.officeHours = config.office_hours
+      }
+    })
+  }
+
+  public getOfficeHours(): OfficeHoursResponse {
+    return this.officeHours
   }
 
   public inOfficeHours$(): Observable<boolean> {
     return this.isOfficeHours$
   }
 
-  public getOfficeHoursText$(): Observable<string> {
-    const startDay = this.days[0]
-    const endDay = this.days[this.days.length - 1]
+  public getOfficeHoursText$(): Observable<string[]> {
+    const dailyOfficeHours = TimeUtil.WeekDays
+      .filter(day => this.officeHours.weekdays[day])
+      .map(day => {
+        const intervals = this.officeHours.weekdays[day]
 
-    const startTime = format(this.toTimestamp(this.startTime), "HH:mm")
-    const endTime = format(this.toTimestamp(this.endTime), "HH:mm")
-    const startTimeLocal = format(this.toTimestampLocal(this.startTime, this.timezone), "HH:mm")
-    const endTimeLocal = format(this.toTimestampLocal(this.endTime, this.timezone), "HH:mm")
+        const timeRanges = combineLatest(
+          intervals.map(interval => this.translocoService.selectTranslate('call.office-hours.time-range',  { startTime: interval.begin, endTime: interval.end }) )
+        ).pipe(map(ranges => ranges.join(' ')))
 
-    return combineLatest([
-      this.translocoService.selectTranslateObject('schedule.days').pipe(
-        filter(days => days && Array.isArray(days)),
-        mergeMap((days: string[]) => this.translocoService.selectTranslate('call.office-hours.day-range', { startDayOfWeek: days[startDay], endDayOfWeek: days[endDay] }))
-      ),
-      this.translocoService.selectTranslate(this.isSameTimezone() ? 'call.office-hours.time-range' : 'call.office-hours.time-range-zoned', { startTime, endTime, timeZone: this.timezone }),
-      this.translocoService.selectTranslate('call.office-hours.time-zone-local').pipe(
-        mergeMap(local => this.translocoService.selectTranslate('call.office-hours.time-range-zoned', { startTime: startTimeLocal, endTime: endTimeLocal, timeZone: local }))
-      )
-    ]).pipe(
-      mergeMap(([ dayOrRange, timeRange, timeRangeLocal ]) => this.translocoService.selectTranslate(this.isSameTimezone() ? 'call.office-hours.hours' : 'call.office-hours.hours-zoned',
-        { dayOrRange, timeRange, timeRangeLocal }))
-    )
+        return combineLatest([
+          this.translocoService.selectTranslateObject('schedule.days' + day),
+          timeRanges,
+        ]).pipe(
+          mergeMap(([dayOrRange, timeRange]) => this.translocoService.selectTranslate('call.office-hours.hours', { dayOrRange, timeRange }))
+        )
+      })
+
+    return combineLatest(dailyOfficeHours)
   }
 
   public isInOfficeHours(time: Date): boolean {
@@ -71,57 +75,37 @@ export class OfficeHoursService {
       return true
     }
 
-    const day = this.getDayOfWeek(time, this.timezone)
-    if (this.days.indexOf(day) === -1) {
+    const day = this.getDayOfWeek(time, this.officeHours.timezone)
+    const dailyHours = this.officeHours.weekdays[day]
+    if (!dailyHours) {
       return false
     }
 
-    const destinationTime = utcToZonedTime(time, this.timezone)
-    const destTimeOfDay: TimeOfDay = { hour: destinationTime.getHours(), min: destinationTime.getMinutes() }
+    const destinationTime = utcToZonedTime(time, this.officeHours.timezone)
+    const destTimeOfDay = TimeUtil.ToTimeOfDay(destinationTime)
 
-    return this.isAfter(destTimeOfDay, this.startTime) && !this.isAfter(destTimeOfDay, this.endTime)
+    for (const interval of dailyHours) {
+      const startTime = TimeUtil.ParseTimeOfDay(interval.end)
+      const endTime = TimeUtil.ParseTimeOfDay(interval.end)
+      if (!TimeUtil.TimeOfDayIsBefore(destTimeOfDay, startTime) && TimeUtil.TimeOfDayIsBefore(destTimeOfDay, endTime)) {
+        return true
+      }
+    }
+    return false
   }
 
-  public getTimezone() {
-    return this.timezone
+  public getDays() {
+    return TimeUtil.WeekDays.filter(day => this.officeHours.weekdays[day])
   }
 
   /**
    * Returns true if there is no difference in time between the browser time and the destination time
    */
-  public isSameTimezone() {
-    const localTimeZone = this.timeService.getCurrentTimeZone()
-    return getTimezoneOffset(this.timezone, new Date()) === getTimezoneOffset(localTimeZone, new Date())
+  public isLocalTimezone(timezone: string) {
+    const localTimeZone = this.timeService.getLocalTimeZone()
+    return getTimezoneOffset(timezone, new Date()) === getTimezoneOffset(localTimeZone, new Date())
   }
 
-  public getDays() {
-    return this.days
-  }
-
-  public getStartTime() {
-    return this.startTime
-  }
-
-  public getEndTime() {
-    return this.endTime
-  }
-
-  public getStartTimestampLocal() {
-    return this.toTimestampLocal(this.startTime, this.timezone)
-  }
-
-  public getEndTimestampLocal() {
-    return this.toTimestampLocal(this.endTime, this.timezone)
-  }
-
-  private toTimestampLocal(time: TimeOfDay, timezone: string, base: Date = new Date()): Date {
-    const timeDestination = this.toTimestamp(time, base)
-    return zonedTimeToUtc(timeDestination, timezone)
-  }
-
-  private toTimestamp(time: TimeOfDay, base: Date = new Date()): Date {
-    return set(base, { hours: time.hour, minutes: time.min, seconds: 0, milliseconds: 0 })
-  }
 
   /**
    * Day of week in destination timezone
@@ -129,10 +113,10 @@ export class OfficeHoursService {
    * @param timezone Destination timezone
    */
   private getDayOfWeek(time: Date, timezone: string): DayOfWeek {
-    return utcToZonedTime(new Date(), timezone).getDay()
-  }
-
-  private isAfter(time: TimeOfDay, timeToCompare: TimeOfDay): boolean {
-    return time.hour > timeToCompare.hour || (time.hour === timeToCompare.hour && time.min >= timeToCompare.min)
+    const day = utcToZonedTime(time, timezone).getDay()
+    if (day === 0) {
+      return DayOfWeek.Sunday
+    }
+    return day as DayOfWeek
   }
 }

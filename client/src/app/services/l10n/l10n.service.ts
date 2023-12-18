@@ -26,8 +26,8 @@ export class L10nService {
     private readonly configService: ConfigService,
     private readonly translocoService: TranslocoService,
   ) {
-    this.userSelectedLanguage$ = new BehaviorSubject<string | undefined>(undefined)
-    this.userSelectedCountry$ = new BehaviorSubject<string | undefined>(undefined)
+    this.userSelectedLanguage$ = new BehaviorSubject<string | undefined>(this.configService.getSelectedLanguage())
+    this.userSelectedCountry$ = new BehaviorSubject<string | undefined>(this.configService.getSelectedCountry())
 
     this.detectedCountry$ = this.configService.getConfig$().pipe(map(c => c.location.country))
     this.detectedLanguage$ = this.configService.getConfig$().pipe(map(c => c.language.recommended))
