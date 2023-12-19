@@ -7,9 +7,13 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class TimeService {
-  public getCurrentTimeZone(): string {
+  public getLocalTimeZone(): string {
     const format = new Intl.DateTimeFormat()
     const options = format.resolvedOptions()
     return options.timeZone
+  }
+
+  public now(): Date {
+    return new Date()
   }
 }

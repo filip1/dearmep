@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TranslocoService, flatten } from '@ngneat/transloco';
-import { countries } from 'country-flag-icons';
-import { Observable, Subject, combineLatest, count, filter, flatMap, forkJoin, map, mergeAll, mergeMap, shareReplay, takeUntil, tap } from 'rxjs';
-import { nameof } from 'src/app/common/util/nameof';
+import { TranslocoService } from '@ngneat/transloco';
+import { Observable, Subject, combineLatest, filter, map, mergeMap, shareReplay, takeUntil, tap } from 'rxjs';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { SelectDestinationService } from 'src/app/services/select-destination/select-destination.service';
 

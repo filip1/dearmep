@@ -20,8 +20,8 @@
     </span>
 
     <mat-form-field appearance="outline" class="dmep-schedule-select-time">
-      <mat-select [formControl]="getSelectTimeFormControl()">
-        <mat-option [value]="time" *ngFor="let time of availableTimes">{{ time }}</mat-option>
+      <mat-select [formControl]="getSelectTimeFormControl()" [compareWith]="compareTimes">
+        <mat-option [value]="time" *ngFor="let time of getTimes()">{{ formatTimeOfDay(time) }}</mat-option>
       </mat-select>
       <mat-hint transloco="schedule.timezone" [translocoParams]="{ zone: localTimeZone }"></mat-hint>
       <mat-icon matSuffix *ngIf="getSelectTimeFormControl().value"
@@ -32,8 +32,19 @@
 
 <p class="dmep-schedule-as-text dmep-description-sm" [innerHtml]="getSelectedTimesAsText()"></p>
 
+<ng-template cdkConnectedOverlay [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="dmep-popover-backdrop" (backdropClick)="scheduleUpdatedPopoverOpen = false"
+  [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="scheduleUpdatedPopoverOpen">
+  <div class="dmep-popover dmep-popover-success">
+    <mat-icon>done</mat-icon>
+    <p>The schedule was successfully updated! </p>
+  </div>
+</ng-template>
+
 <div class="dmep-btn-container">
-  <button mat-stroked-button color="primary" class="dmep-schedule-call-btn dmep-btn dmep-btn-primary" (click)="onScheduleClick()">
+  <button mat-stroked-button color="primary" class="dmep-schedule-call-btn dmep-btn dmep-btn-primary"
+    cdkOverlayOrigin #trigger="cdkOverlayOrigin"
+    [disabled]="!canUpdateSchedule()" (click)="onScheduleClick()">
     <span class="btn-content">
       <strong>{{ 'schedule.schedule-btn.title' | transloco }}</strong>
       <br>

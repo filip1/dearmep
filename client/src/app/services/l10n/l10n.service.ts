@@ -1,37 +1,38 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, combineLatest, distinctUntilKeyChanged, filter, map, shareReplay, take } from 'rxjs';
-import { ApiService } from 'src/app/api/services';
-import { LocalStorageService } from '../local-storage/local-storage.service';
+import { BehaviorSubject, Observable, ReplaySubject, combineLatest, distinctUntilKeyChanged, filter, map, shareReplay } from 'rxjs';
 import { TranslocoService } from '@ngneat/transloco';
+import { ConfigService } from '../config/config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class L10nService {
-  private readonly languageStorageKey = "language"
-  private readonly countryStorageKey = "country"
-
   private readonly defaultCountry$ = new ReplaySubject<string | undefined>()
 
-  private readonly availableLanguages$ = new ReplaySubject<string[]>()
-  private readonly detectedLanguage$ = new ReplaySubject<string | undefined>()
+  private readonly availableLanguages$: Observable<string[]>
+  private readonly detectedLanguage$: Observable<string | undefined>
   private readonly userSelectedLanguage$: BehaviorSubject<string | undefined>
 
-  private readonly availableCountries$ = new ReplaySubject<string[]>()
-  private readonly detectedCountry$ = new ReplaySubject<string | undefined>()
+  private readonly availableCountries$: Observable<string[]>
+  private readonly detectedCountry$: Observable<string | undefined>
   private readonly userSelectedCountry$: BehaviorSubject<string | undefined>
 
   private readonly randomCountry$: Observable<string>
   private readonly country$: Observable<string>
 
   constructor(
-    private readonly apiService: ApiService,
-    private readonly localStorageService: LocalStorageService,
+    private readonly configService: ConfigService,
     private readonly translocoService: TranslocoService,
   ) {
-    this.userSelectedLanguage$ = new BehaviorSubject<string | undefined>(this.getStoredUserSelectedLanguage())
-    this.userSelectedCountry$ = new BehaviorSubject<string | undefined>(this.getStoredUserSelectedCountry())
-    this.detectUserLocalizationViaAPI()
+    this.userSelectedLanguage$ = new BehaviorSubject<string | undefined>(this.configService.getSelectedLanguage())
+    this.userSelectedCountry$ = new BehaviorSubject<string | undefined>(this.configService.getSelectedCountry())
+
+    this.detectedCountry$ = this.configService.getConfig$().pipe(map(c => c.location.country))
+    this.detectedLanguage$ = this.configService.getConfig$().pipe(map(c => c.language.recommended))
+
+    this.availableCountries$ = this.configService.getConfig$().pipe(map(c => c.location.available))
+    this.availableLanguages$ = this.configService.getConfig$().pipe(map(c => c.language.available))
+
     this.getLanguage$().subscribe({
       next(lang) { if (lang) { translocoService.setActiveLang(lang) } }
     })
@@ -61,7 +62,7 @@ export class L10nService {
   }
 
   public getAvailableLanguages$(): Observable<string[]> {
-    return this.availableLanguages$.asObservable()
+    return this.availableLanguages$
   }
 
   public getLanguage$(): Observable<string | undefined> {
@@ -77,7 +78,7 @@ export class L10nService {
   }
 
   public setLanguage(langCode: string) {
-    this.localStorageService.setString(this.languageStorageKey, langCode)
+    this.configService.setSelectedLanguage(langCode)
     this.userSelectedLanguage$.next(langCode)
   }
 
@@ -86,11 +87,11 @@ export class L10nService {
   }
 
   public getAvailableCountries$(): Observable<string[]> {
-    return this.availableCountries$.asObservable()
+    return this.availableCountries$
   }
 
   public setCountry(country: string) {
-    this.localStorageService.setString(this.countryStorageKey, country)
+    this.configService.setSelectedCountry(country)
     this.userSelectedCountry$.next(country)
   }
 
@@ -98,29 +99,7 @@ export class L10nService {
     this.defaultCountry$.next(country)
   }
 
-  private getStoredUserSelectedLanguage(): string | undefined {
-    return this.localStorageService.getString(this.languageStorageKey) || undefined
-  }
-
-  private getStoredUserSelectedCountry(): string | undefined {
-    return this.localStorageService.getString(this.countryStorageKey) || undefined
-  }
-
-  private detectUserLocalizationViaAPI() {
-    this.apiService.getLocalization().pipe(
-      take(1),
-    ).subscribe({
-      next: (resp) => {
-        this.detectedLanguage$.next(resp.language.recommended || undefined)
-        this.detectedCountry$.next(resp.location.recommended || undefined)
-        this.availableLanguages$.next(resp.language.available)
-        this.availableCountries$.next(resp.location.available)
-        this.translocoService.setAvailableLangs(resp.language.available)
-      }
-    })
-  }
-
-  private mustBePartOf(item: string | undefined, items: string[] ): string | undefined {
+  private mustBePartOf(item: string | undefined, items: string[]): string | undefined {
     if (item !== undefined && items.indexOf(item) !== -1) {
       return item
     }

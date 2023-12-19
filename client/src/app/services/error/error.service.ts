@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslocoService } from '@ngneat/transloco';
@@ -10,11 +10,12 @@ import { ErrorModalComponent } from 'src/app/components/error-modal/error-modal.
   providedIn: 'root'
 })
 export class ErrorService {
+  private _translocoServiceLazy?: TranslocoService
 
   constructor(
-    private readonly translocoService: TranslocoService,
     private readonly matSnackBar: MatSnackBar,
     private readonly matDialog: MatDialog,
+    private readonly injector: Injector,
   ) {}
 
   public displayErrorDialog(body: string, title = 'error.errorDialogTitle', buttonAcceptText = 'error.errorDialogOK', buttonCancelText?: string): Observable<void> {
@@ -45,7 +46,16 @@ export class ErrorService {
   }
 
   private showSnackBar(translationKey: string) {
-    const errorText = this.translocoService.translate(translationKey)
+    const translocoService = this.getTranslocoService()
+    const errorText = translocoService?.translate(translationKey) || translationKey
     this.matSnackBar.open(errorText, undefined, { })
+  }
+
+  // get service lazy to avoid circular dependency
+  private getTranslocoService(): TranslocoService | undefined {
+    if (!this._translocoServiceLazy) {
+    //  this._translocoServiceLazy = this.injector.get(TranslocoService, undefined, { optional: true }) || undefined
+    }
+    return this._translocoServiceLazy
   }
 }
