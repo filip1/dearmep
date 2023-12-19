@@ -16,6 +16,16 @@ database:
   url: sqlite:///dearmep.sqlite
 
 
+# Whether to enable certain features.
+features:
+
+  # Maintenance mode will show a message to the User and prevent them from
+  # accessing the system. See the `maintenance.message` in the
+  # `frontend_strings` section for specifying the actual message content.
+  maintenance:
+    active: false  # Set to true to enable maintenance mode.
+
+
 # Optional filtering of contacts based on timespans. Useful for Members of the
 # European Parliament, which move between Brussels & Strasbourg.
 contact_timespan_filter:
@@ -498,6 +508,11 @@ l10n:
       fr: Stop Scanning Me! L'UE veut inspecter tous nos messages personnels.
       da: Stop Scanning Me! EU vil overvåge alle dine chats
       pt: Stop Scanning Me! A UE quer escutar todas as nossas mensagens privadas.
+
+    # Message to display in maintenance mode. HTML allowed.
+    maintenance.message:
+      en: The system is currently down for maintenance. Please check back later.
+      de: Das System ist momentan im Wartungsmodus und daher nicht verfügbar. Bitte versuche es später noch einmal.
 
   # Translation strings for the calling-section on the right side of the screen
 
