@@ -5,6 +5,7 @@ import { CallingStep } from './model/calling-step.enum';
 import { RoutingStateManagerService } from './services/routing/routing-state-manager.service';
 import { UrlUtil } from './common/util/url.util';
 import { L10nService } from './services/l10n/l10n.service';
+import { ConfigService } from './services/config/config.service';
 
 @Component({
   selector: 'dmep-root',
@@ -18,7 +19,7 @@ export class AppComponent implements OnInit, OnChanges {
   public shouldDisplayTalkingPoints$?: Observable<boolean>
   public shouldDisplayTitle$?: Observable<boolean>
   public shouldDisplayMEP$?: Observable<boolean>
-  public showMaintenanceOverlay = true
+  public showMaintenanceOverlay = false
 
   /**
    * 'hostUrl' defines the url of the DearMEP-Backend.
@@ -105,6 +106,7 @@ export class AppComponent implements OnInit, OnChanges {
     private readonly baseUrlService: BaseUrlService,
     private readonly routingStateManagerService: RoutingStateManagerService,
     private readonly l10nService: L10nService,
+    private readonly configService: ConfigService,
   ) { }
 
   public ngOnInit() {
@@ -128,6 +130,12 @@ export class AppComponent implements OnInit, OnChanges {
     )
 
     this.l10nService.setDefaultCountry(this.defaultCountry?.toUpperCase())
+
+    this.configService.getConfig$().subscribe({
+      next: config => {
+        this.showMaintenanceOverlay = !!config.features.maintenance?.active
+      }
+    })
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
