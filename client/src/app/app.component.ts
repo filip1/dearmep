@@ -6,6 +6,8 @@ import { RoutingStateManagerService } from './services/routing/routing-state-man
 import { UrlUtil } from './common/util/url.util';
 import { L10nService } from './services/l10n/l10n.service';
 import { ConfigService } from './services/config/config.service';
+import { FeedbackService } from './services/feedback/feedback.service';
+import { ErrorService } from './services/error/error.service';
 
 @Component({
   selector: 'dmep-root',
@@ -107,6 +109,8 @@ export class AppComponent implements OnInit, OnChanges {
     private readonly routingStateManagerService: RoutingStateManagerService,
     private readonly l10nService: L10nService,
     private readonly configService: ConfigService,
+    private readonly feedbackService: FeedbackService,
+    private readonly errorService: ErrorService,
   ) { }
 
   public ngOnInit() {
@@ -136,6 +140,23 @@ export class AppComponent implements OnInit, OnChanges {
         this.showMaintenanceOverlay = !!config.features.maintenance?.active
       }
     })
+
+    const token = this.feedbackService.checkUrlFeedbackTokenPresent()
+    if (token) {
+      this.feedbackService.setToken(token)
+      console.log("feedback token present in url")
+      this.feedbackService.loadFeedbackContext().subscribe({
+        next: (successful) => {
+          console.log("feedback context loaded", successful)
+          if (successful) {
+            this.routingStateManagerService.goToFeedback()
+          } else {
+            this.errorService.displayErrorDialog("feedback.error.invalidToken")
+          }
+        },
+        error: (err) => { this.errorService.displayUnknownError(err) }
+      })
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges): void {

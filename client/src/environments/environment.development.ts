@@ -1,3 +1,3 @@
 export const environment = {
-  disableOfficeHoursCheck: true
+  disableOfficeHoursCheck: false
 };

@@ -1049,6 +1049,10 @@ l10n:
       da: Tilbagemeldingen for dette opkald er allerede sendt ud.
       pt: Já submeteste os teus comentários para esta chamada.
 
+    feedback.error.invalidToken:
+      en: The feedback link is no longer valid.
+      de: Der Feedback-Link ist nicht mehr gültig.
+
   # Translation strings related to the section of the MEP-Selection section on the left side of the screen
 
     # Alternative text for an icon-button using a renew-icon that lets the user ask for a new MEP-Suggestion
@@ -1688,7 +1692,7 @@ l10n:
       pt: Erro ao comunicar com o servidor.
 
     # Generic error message that is used when an unusual error has occurred and we do not know what has happend.
-    errro.genericError:
+    error.genericError:
       en: An error has occurred!
       de: Es ist ein Fehler aufgetreten!
       sv: Ett fel har uppstått.
