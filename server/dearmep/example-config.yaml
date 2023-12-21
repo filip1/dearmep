@@ -75,6 +75,7 @@ api:
   cors:
     origins:
       - http://localhost:8000
+      - http://localhost:8080 # for local test-page
 
       - https://dearmep.eu
       - https://chatcontrol.dearmep.eu
