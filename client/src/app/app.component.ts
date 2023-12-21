@@ -18,6 +18,7 @@ export class AppComponent implements OnInit, OnChanges {
   public shouldDisplayTalkingPoints$?: Observable<boolean>
   public shouldDisplayTitle$?: Observable<boolean>
   public shouldDisplayMEP$?: Observable<boolean>
+  public showMaintenanceOverlay = true
 
   /**
    * 'hostUrl' defines the url of the DearMEP-Backend.

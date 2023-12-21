@@ -5,7 +5,7 @@
 <link *ngIf="flagsStyleUrl$ | async" rel="stylesheet" [href]="flagsStyleUrl$ | async | safe: 'resourceUrl'"
   type="text/css">
 
-<div class="dmep-app-container" dmepResponsive [breakpoints]="{ 'dmep-display-xs': 575, 'dmep-display-md': 991 }">
+<div class="dmep-app-container" dmepResponsive [breakpoints]="{ 'dmep-display-xs': 575, 'dmep-display-md': 991 }" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
 
   <div class="dmep-app-layout" [ngClass]="{ 'dmep-talking-points-visible': shouldDisplayTalkingPoints$ | async, 'dmep-calling-disabled': disableCalling }">
     <dmep-title class="dmep-layout-left" *ngIf="shouldDisplayTitle$ | async"></dmep-title>
@@ -18,5 +18,20 @@
   </div>
 
   <dmep-footer></dmep-footer>
+
+  <div class="dmep-overlay-backdrop" *ngIf="showMaintenanceOverlay"></div>
+
 </div>
 
+<!-- Maintenance mode overlay -->
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="showMaintenanceOverlay"
+  [cdkConnectedOverlayHasBackdrop]="false"
+  [cdkConnectedOverlayPositions]="[ { originX: 'center', originY: 'center', overlayX: 'center', overlayY: 'center' } ]"
+>
+  <div class="dmep-popover dmep-maintenance-message">
+    <p transloco="maintenance.message"></p>
+  </div>
+</ng-template>

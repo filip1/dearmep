@@ -1,6 +1,8 @@
 .dmep-app-container {
   padding: var(--dmep-layout-gap);
   display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto;
 }
 .dmep-app-container.dmep-display-xs {
   padding: var(--dmep-layout-gap-xs);
@@ -107,7 +109,6 @@ dmep-footer {
   }
 }
 
-
 .dmep-display-xs {
   .dmep-app-layout {
     column-gap: var(--dmep-layout-gap-xs);
@@ -116,4 +117,15 @@ dmep-footer {
     margin-bottom: calc(var(--dmep-layout-gap-xs) * -1);
     height: var(--dmep-layout-gap-xs);
   }
+}
+
+.dmep-overlay-backdrop {
+  margin: calc(-1 * var(--dmep-layout-gap));
+  grid-row: 1;
+  grid-column: 1/2;
+  z-index: 1000;
+}
+
+.dmep-maintenance-message {
+  max-width: 320px;
 }
