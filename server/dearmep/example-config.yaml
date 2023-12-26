@@ -24,6 +24,10 @@ features:
   # `frontend_strings` section for specifying the actual message content.
   maintenance:
     active: false  # Set to true to enable maintenance mode.
+    # The following block holds additional configuration about how the message
+    # is displayed, not the message text itself.
+    message:
+      dismissable: false  # Set to true to allow the user to dismiss the message.
 
 
 # Optional filtering of contacts based on timespans. Useful for Members of the

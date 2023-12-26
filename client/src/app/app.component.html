@@ -19,19 +19,21 @@
 
   <dmep-footer></dmep-footer>
 
-  <div class="dmep-overlay-backdrop" *ngIf="showMaintenanceOverlay"></div>
+  <div class="dmep-overlay-backdrop" *ngIf="showMaintenanceOverlay" (click)="onMaintenanceOverlayDismissClick()"></div>
 
 </div>
 
 <!-- Maintenance mode overlay -->
 <ng-template
   cdkConnectedOverlay
+  #maintenanceOverlay="cdkConnectedOverlay"
   [cdkConnectedOverlayOrigin]="trigger"
   [cdkConnectedOverlayOpen]="showMaintenanceOverlay"
   [cdkConnectedOverlayHasBackdrop]="false"
   [cdkConnectedOverlayPositions]="[ { originX: 'center', originY: 'center', overlayX: 'center', overlayY: 'center' } ]"
 >
   <div class="dmep-popover dmep-maintenance-message">
-    <p transloco="maintenance.message"></p>
+    <mat-icon [inline]="true" class="dmep-maintenance-message-dismiss-btn" (click)="onMaintenanceOverlayDismissClick()" *ngIf="maintenanceOverlayDismissable">close</mat-icon>
+    <p [innerHTML]="'maintenance.message' | transloco"></p>
   </div>
 </ng-template>

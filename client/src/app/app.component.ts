@@ -1,11 +1,12 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { delay, filter, map, Observable, timer } from 'rxjs';
 import { BaseUrlService } from './common/services/base-url.service';
 import { CallingStep } from './model/calling-step.enum';
 import { RoutingStateManagerService } from './services/routing/routing-state-manager.service';
 import { UrlUtil } from './common/util/url.util';
 import { L10nService } from './services/l10n/l10n.service';
 import { ConfigService } from './services/config/config.service';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'dmep-root',
@@ -13,13 +14,17 @@ import { ConfigService } from './services/config/config.service';
   styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom,
 })
-export class AppComponent implements OnInit, OnChanges {
+export class AppComponent implements OnInit, OnChanges, AfterViewInit {
   public styleUrl$?: Observable<string>
   public flagsStyleUrl$?: Observable<string>
   public shouldDisplayTalkingPoints$?: Observable<boolean>
   public shouldDisplayTitle$?: Observable<boolean>
   public shouldDisplayMEP$?: Observable<boolean>
   public showMaintenanceOverlay = false
+  public maintenanceOverlayDismissable = false
+
+  @ViewChild("maintenanceOverlay")
+  public maintenanceOverlay: CdkConnectedOverlay | undefined
 
   /**
    * 'hostUrl' defines the url of the DearMEP-Backend.
@@ -128,12 +133,22 @@ export class AppComponent implements OnInit, OnChanges {
     )
 
     this.l10nService.setDefaultCountry(this.defaultCountry?.toUpperCase())
+  }
 
-    this.configService.getConfig$().subscribe({
+  public ngAfterViewInit() {
+    this.configService.getConfig$().pipe(
+      delay(50),
+    ).subscribe({
       next: config => {
         this.showMaintenanceOverlay = !!config.features.maintenance?.active
+        this.maintenanceOverlayDismissable = !!config.features.maintenance?.message?.dismissable
       }
     })
+
+    // make sure the overlay is positioned correctly after the content has been rendered
+    timer(500)
+      .pipe(filter(() => this.showMaintenanceOverlay))
+      .subscribe({ next: () => this.maintenanceOverlay?.overlayRef?.updatePosition() })
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -153,6 +168,12 @@ export class AppComponent implements OnInit, OnChanges {
     }
     if (changes["defaultCountry"]) {
       this.l10nService.setDefaultCountry(this.defaultCountry?.toUpperCase())
+    }
+  }
+
+  public onMaintenanceOverlayDismissClick() {
+    if (this.maintenanceOverlayDismissable) {
+      this.showMaintenanceOverlay = false
     }
   }
 
