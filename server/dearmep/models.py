@@ -176,12 +176,24 @@ class Score(ConstrainedFloat):
     le = 1.0
 
 
+class MaintenanceMessageConfig(BaseModel):
+    """Additional details about the maintenance mode message."""
+    dismissable: bool = Field(
+        False,
+        description="Whether the user should be allowed to dismiss the "
+        "message and access the frontend anyway.",
+    )
+
+
 class MaintenanceConfig(BaseModel):
     """Details about whether the system is in maintenance mode."""
     active: bool = Field(
         False,
         description="Whether maintenance is currently being performed on the "
         "system. If so, a message should be shown to notify the User.",
+    )
+    message: MaintenanceMessageConfig = Field(
+        default_factory=MaintenanceMessageConfig,
     )
 
 
