@@ -11,6 +11,7 @@ from starlette_exporter.optional_metrics import request_body_size, \
 
 from . import __version__, markdown_files, schedules, static_files
 from .api import v1 as api_v1
+from .database import get_session
 from .phone import elks
 from .config import APP_NAME, Config
 
@@ -32,6 +33,15 @@ def require_operation_id(app: FastAPI):
                 f'API function "{route.name}" ({", ".join(route.methods)} '
                 f"{route.path}) does not have operation_id set"
             )
+
+
+def require_working_database():
+    """Require a database session to be obtainable.
+
+    This will crash, for example, when using a non-threadsafe SQLite.
+    """
+    with get_session():
+        pass
 
 
 def setup_cors(app: FastAPI, config: Config):
@@ -80,5 +90,6 @@ def create_app(config_dict: Optional[dict] = None) -> FastAPI:
     app.add_route("/metrics", handle_metrics)
 
     require_operation_id(app)
+    require_working_database()
 
     return app

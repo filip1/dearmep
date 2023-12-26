@@ -1,56 +1,73 @@
+from __future__ import annotations
 from contextlib import contextmanager
-import threading
-from typing import Dict
-
-from prometheus_client import Gauge
 
 from sqlalchemy.future import Engine
-from sqlmodel import MetaData, Session, SQLModel, create_engine, select
+from sqlmodel import MetaData, Session, SQLModel, create_engine, select, text
 
 from ..config import Config
 
 
-database_engine_refs_total = Gauge(
-    "database_engine_refs_total",
-    "Number of database engine instances held by the AutoEngine class. This "
-    "should be one per thread on non-threadsafe database engines, else 1.",
-)
+class NotThreadsafe(Exception):
+    """The selected database engine is not available in a threadsafe way."""
 
 
 class AutoEngine:
-    # The engine for each thread, if one has been created already.
-    engines: Dict[int, Engine] = {}
+    engine: Engine | None = None
 
     @staticmethod
-    def engine_is_threadsafe(config: Config) -> bool:
-        """Whether the engine in the config can be considered threadsafe.
+    def create_sqlite_engine(config: Config) -> Engine:
+        """Create an SQLite engine and check for thread safety.
 
-        Note that SQLite _can_ be threadsafe (see `sqlite3.threadsafety`), but
-        due to `check_same_thread` in `sqlite3.connect()` defaulting to `True`,
-        even when `sqlite3.threadsafety == 3`, we cannot consider this here."""
-        return not config.database.url.startswith("sqlite")
+        SQLite can be non-threadsafe, depending on how it has been compiled and
+        configured at runtime. Since we regularly ran into problems with
+        sporadic sqlite3.ProgrammingError exceptions being raised because
+        SQLAlchemy or FastAPI or someone was sharing connections across thread
+        boundaries, we decided to make a threadsafe SQLite mandatory.
+
+        If SQLite has been compiled with SQLITE_THREADSAFE=1 or 2, the thread
+        safety can be configured at runtime. However, Python's default sqlite3
+        module does not seem to provide an interface for this. Therefore, we
+        request the value of the compile option to check whether SQLite is
+        threadsafe, and assume that that's also the value being applied to our
+        connection (since we have no way of changing it).
+
+        THREADSAFE=2 requires some guarantees from the program (i.e. us) that
+        we can't give, so the only supported mode of operation is THREADSAFE=1.
+
+        Note that sqlite3.threadsafety cannot be relied upon, as it was
+        hardcoded to 1 (i.e. "connections may not be shared between threads")
+        until Python 3.11.
+
+        See also:
+        <https://sqlite.org/threadsafe.html>
+        <https://sqlite.org/compile.html#threadsafe>
+        <https://peps.python.org/pep-0249/#threadsafety>
+        """
+        engine = create_engine(config.database.url, connect_args={
+            "check_same_thread": False,
+        })
+        # Check whether SQLite has been compiled with thread safety.
+        with Session(engine) as session:
+            res = session.execute(text("""
+                select compile_options from pragma_compile_options
+                where compile_options like 'THREADSAFE=%'
+            """)).one()
+            if res[0] != "THREADSAFE=1":
+                raise NotThreadsafe(
+                    "SQLite3 library needs to have been compiled with "
+                    "SQLITE_THREADSAFE=1; instead it has been compiled with "
+                    f"SQLITE_{res[0]}"
+                )
+        return engine
 
     @classmethod
     def get_engine(cls) -> Engine:
-        """Get a (possibly cached) database engine instance."""
-        thread_id = threading.get_ident()
-        # If this thread has a cached engine, return that.
-        if thread_id in cls.engines:
-            return cls.engines[thread_id]
-        # If there is a global engine for all threads, return that.
-        if 0 in cls.engines:
-            return cls.engines[0]
-        # No cached engine available.
-
-        # Check whether we can create a global instance for the DBMS we use.
-        config = Config.get()
-        if cls.engine_is_threadsafe(config):
-            thread_id = 0
-
-        # Create, cache, and return the engine.
-        e = cls.engines[thread_id] = create_engine(Config.get().database.url)
-        database_engine_refs_total.set(len(cls.engines))
-        return e
+        if cls.engine is None:
+            config = Config.get()
+            cls.engine = (cls.create_sqlite_engine(config)
+                          if config.database.url.startswith("sqlite")
+                          else create_engine(config.database.url))
+        return cls.engine
 
 
 def get_metadata() -> MetaData:
