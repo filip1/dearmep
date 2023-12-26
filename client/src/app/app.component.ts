@@ -54,8 +54,6 @@ export class AppComponent implements OnInit, OnChanges {
   /**
    * This parameter hides the call-scheduling functionality. By default scheduling is enabled.
    *
-   * NOTE: Sceduling is currently disabled by default as the backend does not yet support the functionality.
-   *
    * It can be applied in the HTML code by simply specifying the attribute-name:
    *
    *  <dear-mep disable-scheduling></dear-mep>
@@ -64,7 +62,7 @@ export class AppComponent implements OnInit, OnChanges {
    * The getter 'disableScheduling' converts this value into a boolean accordinly.
    */
   @Input()
-  public 'disable-scheduling': '' | undefined = '' // NOTE: This default will be changed to false as soon as scheduling is implemented in the backend.
+  public 'disable-scheduling': '' | undefined = undefined
 
   public get disableScheduling(): boolean {
     return this.convertBooleanAttribute(this['disable-scheduling'])
