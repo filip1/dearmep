@@ -33,6 +33,7 @@
   [cdkConnectedOverlayPositions]="[ { originX: 'center', originY: 'center', overlayX: 'center', overlayY: 'center' } ]"
 >
   <div class="dmep-popover dmep-maintenance-message">
+    <mat-icon [inline]="true" class="dmep-maintenance-message-dismiss-btn" (click)="onMaintenanceOverlayDismissClick()" *ngIf="maintenanceOverlayDismissable">close</mat-icon>
     <p [innerHTML]="'maintenance.message' | transloco"></p>
   </div>
 </ng-template>

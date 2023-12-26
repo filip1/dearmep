@@ -21,6 +21,7 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
   public shouldDisplayTitle$?: Observable<boolean>
   public shouldDisplayMEP$?: Observable<boolean>
   public showMaintenanceOverlay = false
+  public maintenanceOverlayDismissable = false
 
   @ViewChild("maintenanceOverlay")
   public maintenanceOverlay: CdkConnectedOverlay | undefined
@@ -142,6 +143,7 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
     ).subscribe({
       next: config => {
         this.showMaintenanceOverlay = !!config.features.maintenance?.active
+        this.maintenanceOverlayDismissable = !!config.features.maintenance?.message?.dismissable
       }
     })
 
@@ -172,7 +174,7 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   public onMaintenanceOverlayDismissClick() {
-    if (this.configService.getConfig()?.features?.maintenance?.message?.dismissable) {
+    if (this.maintenanceOverlayDismissable) {
       this.showMaintenanceOverlay = false
     }
   }
