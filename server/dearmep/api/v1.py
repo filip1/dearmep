@@ -580,6 +580,7 @@ def get_feedback_context(
             expired=feedback.expires_at <= datetime.now(),
             used=feedback.feedback_entered_at is not None,
             destination=destination_to_destinationread(feedback.destination),
+            language=feedback.language,
         )
 
 
