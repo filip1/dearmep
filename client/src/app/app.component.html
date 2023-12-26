@@ -32,6 +32,6 @@
   [cdkConnectedOverlayPositions]="[ { originX: 'center', originY: 'center', overlayX: 'center', overlayY: 'center' } ]"
 >
   <div class="dmep-popover dmep-maintenance-message">
-    <p transloco="maintenance.message"></p>
+    <p [innerHTML]="'maintenance.message' | transloco"></p>
   </div>
 </ng-template>
