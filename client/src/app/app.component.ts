@@ -158,6 +158,12 @@ export class AppComponent implements OnInit, OnChanges {
     }
   }
 
+  public onMaintenanceOverlayDismissClick() {
+    if (this.configService.getConfig()?.features?.maintenance?.message?.dismissable) {
+      this.showMaintenanceOverlay = false
+    }
+  }
+
   private convertBooleanAttribute(attrValue: string | null | undefined): boolean {
     return !(attrValue === null || attrValue === undefined || attrValue.toLowerCase() === "false");
   }
