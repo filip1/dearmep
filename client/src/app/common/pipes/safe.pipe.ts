@@ -8,7 +8,8 @@ import { DomSanitizer, SafeHtml, SafeResourceUrl, SafeScript, SafeStyle, SafeUrl
  * It must never be used with values that originate from user input in any way.
  */
 @Pipe({
-  name: 'safe'
+  name: 'safe',
+  pure: true,
 })
 export class SafePipe implements PipeTransform {
   constructor(private readonly sanitizer: DomSanitizer) { }
