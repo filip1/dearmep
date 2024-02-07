@@ -64,3 +64,15 @@ specs = ["eralchemy2"]
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+packages = "dearmep"
+python_version = "3.8"
+warn_return_any = true
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers --junit-xml=report.xml --cov-report=term --cov-report=xml --cov=dearmep"
+markers = [
+	"config_path: set a custom config YAML file name",
+	"config_content: set custom config YAML data",
+]
