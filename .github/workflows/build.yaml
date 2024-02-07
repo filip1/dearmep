@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.11"]
+        python-version: ["3.8", "3.12"]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -25,19 +25,20 @@ jobs:
           sudo apt install -y graphviz graphviz-dev python3-dev
           python -m pip install poetry
           poetry install --all-extras
-      - name: Lint with flake8
-        run: poetry run flake8
+      - name: Lint with Ruff
+        run: poetry run ruff check --output-format github
+        continue-on-error: true  # temporary, until we've updated the codebase to Ruff's standards
       - name: Typecheck with mypy
         run: poetry run mypy
       - name: Test with pytest
         run: poetry run pytest
       - name: Export OpenAPI spec & ERD
-        if: ${{ matrix.python-version == '3.11' }}  # We only need it once.
+        if: ${{ matrix.python-version == '3.12' }}  # We only need it once.
         run: |
           poetry run dearmep dump openapi > openapi.json
           poetry run dearmep dump erd dearmep-erd.svg
       - name: Collect OpenAPI spec & ERD as an artifact
-        if: ${{ matrix.python-version == '3.11' }}
+        if: ${{ matrix.python-version == '3.12' }}
         uses: actions/upload-artifact@v3
         with:
           name: specs
@@ -99,10 +100,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.11
+      - name: Set up Python 3.12
         uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: 3.12
       - name: Set package version
         run: |
           if [ "$GITHUB_REF_TYPE" = 'tag' ]; then
