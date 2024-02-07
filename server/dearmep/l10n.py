@@ -135,7 +135,7 @@ def get_country(
     except (
         FileNotFoundError, ValueError, mmdberrors.InvalidDatabaseError
     ) as e:
-        _logger.exception(e)
+        _logger.exception("could not determine country")
 
     if isinstance(country, str) and 1 < len(country) < 4:
         country = country.upper()
