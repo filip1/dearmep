@@ -59,7 +59,7 @@ def cmd_store_blob(ctx: Context):
             print(blob.id)
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):
     parser: ArgumentParser = subparsers.add_parser(
         "db",
         help="manage the database",

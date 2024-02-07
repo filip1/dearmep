@@ -60,6 +60,11 @@ class Context:
 
 
 def help_if_no_subcommand(parser: ArgumentParser):
+    """Convenience function that prints help and exits.
+
+    Passed to command parsers; they can set this as the default if they require
+    a subcommand. If none was supplied, this function prints the help.
+    """
     def exit_help(ctx: Context):
         parser.print_help(stderr)
         exit(127)

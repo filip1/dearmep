@@ -66,7 +66,7 @@ def import_swayability(ctx: Context):
             f"{', '.join(ignored)}")
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):
     parser: ArgumentParser = subparsers.add_parser(
         "import",
         help=f"import data into the {APP_NAME} database",

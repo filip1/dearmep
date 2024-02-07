@@ -847,7 +847,6 @@ def mark_scheduled_calls_queued(
 
 def get_next_queued_call(
     session: Session,
-    now: datetime,
 ) -> Optional[QueuedCall]:
     """
     Returns a QueuedCall object which was the first inserted.

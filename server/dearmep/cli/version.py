@@ -37,7 +37,7 @@ def run(ctx: Context):
         print(f"{component.ljust(longest_pkg_name_len)} {version}")
 
 
-def add_parser(subparsers: _SubParsersAction, **kwargs):
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):
     parser: ArgumentParser = subparsers.add_parser(
         "version",
         help="show version information",

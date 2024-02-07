@@ -77,7 +77,7 @@ def dump_openapi(ctx: Context):
     print(json.dumps(app.openapi(), indent=None if ctx.args.compact else 2))
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):
     parser: ArgumentParser = subparsers.add_parser(
         "dump",
         help="dump example files & specifications",

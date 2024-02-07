@@ -33,7 +33,7 @@ def serve(ctx: Context):
     )
 
 
-def add_parser(subparsers: _SubParsersAction, **kwargs):
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):
     parser: ArgumentParser = subparsers.add_parser(
         "serve",
         help="run an HTTP server",
