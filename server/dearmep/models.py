@@ -365,7 +365,7 @@ class UserPhone(str):
 
         value = encode_canonical_json(struct.dict(by_alias=True)).decode()
 
-        instance = super(UserPhone, cls).__new__(cls, value)
+        instance = super().__new__(cls, value)
         object.__setattr__(instance, "country_codes", tuple(map(
             CountryCode,
             phonenumbers.COUNTRY_CODE_TO_REGION_CODE[struct.calling_code])))

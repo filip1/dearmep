@@ -38,7 +38,7 @@ class Document:
 md = MarkdownIt()
 
 
-@lru_cache()
+@lru_cache
 def get_doc(path: Path) -> Document:
     markdown = path.read_text()
     html = md.render(markdown)
