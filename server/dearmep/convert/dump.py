@@ -6,8 +6,11 @@ import json
 from typing import IO, Any, Dict, Iterable, Optional, Type
 
 from ..config import CMD_NAME
-from ..database.models import DestinationDump, DestinationGroupDump, \
-    DumpableModels
+from ..database.models import (
+    DestinationDump,
+    DestinationGroupDump,
+    DumpableModels,
+)
 
 
 META_PREFIX = f"_{CMD_NAME}_"

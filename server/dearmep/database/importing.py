@@ -3,16 +3,25 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
+
 from pathlib import Path
 from typing import Callable, Dict, Iterable, Optional, Set, Type
 
-from sqlmodel import SQLModel, Session
+from sqlmodel import Session, SQLModel
 
 from ..convert.audio import audio2blob
 from ..convert.dump import DumpFormatException
 from ..convert.image import image2blob
-from .models import Contact, Destination, DestinationDump, DestinationGroup, \
-    DestinationGroupDump, DestinationID, DumpableModels, SwayabilityImport
+from .models import (
+    Contact,
+    Destination,
+    DestinationDump,
+    DestinationGroup,
+    DestinationGroupDump,
+    DestinationID,
+    DumpableModels,
+    SwayabilityImport,
+)
 
 
 class Importer:

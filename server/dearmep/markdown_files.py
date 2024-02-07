@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import dataclasses
-from functools import lru_cache
 import logging
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 

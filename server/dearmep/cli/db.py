@@ -4,12 +4,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-from argparse import _SubParsersAction, ArgumentParser
+
+from argparse import ArgumentParser, _SubParsersAction
 from mimetypes import guess_type
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from sqlalchemy.exc import IntegrityError
+
 
 if TYPE_CHECKING:
     from . import Context

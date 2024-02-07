@@ -3,13 +3,15 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 # mypy: ignore-errors
+import datetime
+import secrets
+
+import pytest
 from fastapi.testclient import TestClient
+
+from dearmep.database.connection import get_session
 from dearmep.models import UserPhone
 from dearmep.phone.elks import ongoing_calls
-from dearmep.database.connection import get_session
-import secrets
-import datetime
-import pytest
 
 
 def test_ongoing_calls_interface(client: TestClient):

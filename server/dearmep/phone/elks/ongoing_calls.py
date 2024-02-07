@@ -5,13 +5,13 @@
 from datetime import datetime
 
 from sqlalchemy import and_, select
-from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import NoResultFound
+from sqlalchemy.orm import joinedload
 from sqlmodel import Session, col
 
 from ...config import Language
 from ...database.models import Call, Destination
-from ...models import UserPhone, CallType
+from ...models import CallType, UserPhone
 
 
 class CallError(Exception):

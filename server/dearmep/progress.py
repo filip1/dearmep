@@ -3,20 +3,33 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
+
+import os
+import stat
+import sys
+import warnings
 from argparse import ArgumentParser
 from collections.abc import Sized
 from functools import partial
 from io import BufferedReader, TextIOWrapper, UnsupportedOperation
 from numbers import Real
-import os
 from pathlib import Path
-import stat
-import sys
-from typing import IO, Any, Callable, Dict, Iterator, Literal, Optional, \
-    Tuple, TypeVar, Union, overload
-import warnings
+from typing import (
+    IO,
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    Literal,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+    overload,
+)
 
-from rich.progress import Progress as RichProgress, Task as _RichTask
+from rich.progress import Progress as RichProgress
+from rich.progress import Task as _RichTask
 
 
 class BaseTask:

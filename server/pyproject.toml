@@ -139,6 +139,7 @@ select = [
 ignore = [
 	"ANN101",   # type annotation for self
 	"ANN102",   # type annotation for @classmethod first argument
+	"FA100",    # suggests `from __future__ import annotations`, which causes trouble in SQLModel <https://github.com/tiangolo/sqlmodel/issues/196>
 	"ISC001",   # conflict w/ formatter, see https://github.com/astral-sh/ruff/issues/8272
 	"PLC0415",  # forbids dynamic imports
 	"PT006",    # forbids comma-separated string for @pytest.mark.parametrize names

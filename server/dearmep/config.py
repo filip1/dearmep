@@ -9,19 +9,44 @@ import logging
 from datetime import date, datetime, time, timedelta, timezone
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, ClassVar, Dict, List, Literal, Optional, Set, Tuple, \
-    Union, cast
+from typing import (
+    Any,
+    ClassVar,
+    Dict,
+    List,
+    Literal,
+    Optional,
+    Set,
+    Tuple,
+    Union,
+    cast,
+)
 
 import pytz
-from pydantic import AnyHttpUrl, BaseModel, BaseSettings, DirectoryPath, \
-    Field, FilePath, PositiveInt, ValidationError, validator
+import yaml
+from pydantic import (
+    AnyHttpUrl,
+    BaseModel,
+    BaseSettings,
+    DirectoryPath,
+    Field,
+    FilePath,
+    PositiveInt,
+    ValidationError,
+    validator,
+)
 from pydantic.fields import ModelField
 from pydantic.utils import deep_update
-import yaml
 from yaml.parser import ParserError
 
-from .models import FeaturesConfig, Language, OfficeHoursInterval, \
-    SMSSenderName, WeekdayNumber
+from .models import (
+    FeaturesConfig,
+    Language,
+    OfficeHoursInterval,
+    SMSSenderName,
+    WeekdayNumber,
+)
+
 
 _logger = logging.getLogger(__name__)
 

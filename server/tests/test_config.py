@@ -6,13 +6,19 @@
 from datetime import datetime, timezone
 from typing import Callable
 
+import pytest
 from fastapi import FastAPI
 from pydantic import ValidationError
-import pytest
 from yaml.parser import ParserError
 
-from dearmep.config import Config, FrontendStrings, L10nConfig, L10nEntry, \
-    L10nStrings, OfficeHoursConfig
+from dearmep.config import (
+    Config,
+    FrontendStrings,
+    L10nConfig,
+    L10nEntry,
+    L10nStrings,
+    OfficeHoursConfig,
+)
 
 
 UTC = timezone.utc

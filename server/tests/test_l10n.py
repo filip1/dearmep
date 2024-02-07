@@ -8,8 +8,8 @@ from typing import Any, Dict, List, Literal, Optional, Union
 import pytest
 from sqlmodel import Session
 
-from dearmep.config import Config
 from dearmep import l10n
+from dearmep.config import Config
 
 
 TEST_MMDB = str(Path(Path(__file__).parent, "geo_ip", "test.mmdb"))

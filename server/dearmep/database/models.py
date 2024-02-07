@@ -5,20 +5,43 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import datetime, time, date
 import enum
-from typing import Any, Dict, List, NamedTuple, Optional, TypedDict, \
-    Union
+from datetime import date, datetime, time
+from typing import Any, Dict, List, NamedTuple, Optional, TypedDict, Union
 from uuid import uuid4
 
 from pydantic import UUID4, BaseModel
-from sqlmodel import Column, Enum, Field, JSON, Relationship, SQLModel, \
-    String, TIMESTAMP, UniqueConstraint, and_, case, or_, func, text
+from sqlmodel import (
+    JSON,
+    TIMESTAMP,
+    Column,
+    Enum,
+    Field,
+    Relationship,
+    SQLModel,
+    String,
+    UniqueConstraint,
+    and_,
+    case,
+    func,
+    or_,
+    text,
+)
 
 from ..config import Config, ConfigNotLoaded, Language
-from ..models import CallType, CountryCode, FeedbackConvinced, FeedbackText, \
-    FeedbackToken, MediaListItem, PhoneNumber, Score, UserPhone, \
-    VerificationCode, WeekdayNumber
+from ..models import (
+    CallType,
+    CountryCode,
+    FeedbackConvinced,
+    FeedbackText,
+    FeedbackToken,
+    MediaListItem,
+    PhoneNumber,
+    Score,
+    UserPhone,
+    VerificationCode,
+    WeekdayNumber,
+)
 
 
 class _SchemaExtra(TypedDict):

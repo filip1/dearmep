@@ -9,8 +9,8 @@ from threading import Thread
 from typing import List, Literal, Optional, Set, Tuple, Union
 
 import backoff
-from ratelimit import RateLimitException, limits  # type: ignore[import]
 import requests
+from ratelimit import RateLimitException, limits  # type: ignore[import]
 
 from . import __version__
 from .config import APP_NAME

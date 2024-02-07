@@ -3,9 +3,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
+
 import csv
-from itertools import chain
 import sys
+from itertools import chain
 from typing import Any, Iterable, List, Mapping, Optional
 
 from rich.console import Console

@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import logging
-from pathlib import Path
 import re
+from pathlib import Path
 from typing import List, Optional, Sequence, Union
 
 import maxminddb

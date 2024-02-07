@@ -3,19 +3,27 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-from argparse import _SubParsersAction, ArgumentParser
+
 import json
 import logging
-from os import environ
 import sys
+from argparse import ArgumentParser, _SubParsersAction
+from os import environ
 from typing import TYPE_CHECKING, Dict, Optional
 
 from pydantic import ValidationError
 
+
 if TYPE_CHECKING:
     from . import Context
-from ..config import APP_NAME, ENV_PREFIX, Config, Settings, included_file, \
-    is_config_missing
+from ..config import (
+    APP_NAME,
+    ENV_PREFIX,
+    Config,
+    Settings,
+    included_file,
+    is_config_missing,
+)
 from ..main import create_app
 
 
@@ -44,6 +52,7 @@ def dump_included_file(name: str):
 def dump_erd(ctx: Context):
     try:
         from eralchemy2 import render_er
+
         from ..database import get_metadata
     except ModuleNotFoundError:
         _logger.exception(

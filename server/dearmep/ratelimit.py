@@ -6,10 +6,10 @@
 import ipaddress
 import logging
 from time import time
-from typing import Dict, Literal, Optional, Tuple, Union, Set
+from typing import Dict, Literal, Optional, Set, Tuple, Union
 
-from fastapi import Depends, HTTPException, Request, routing, status
 import limits
+from fastapi import Depends, HTTPException, Request, routing, status
 from prometheus_client import Counter
 
 from .config import Config, IPRateLimits

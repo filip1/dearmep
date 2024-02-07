@@ -6,7 +6,8 @@ from typing import List, Tuple
 
 import pytest
 
-from dearmep.models import PhoneRejectReason as Reason, UserPhone
+from dearmep.models import PhoneRejectReason as Reason
+from dearmep.models import UserPhone
 
 
 @pytest.mark.parametrize("number", (

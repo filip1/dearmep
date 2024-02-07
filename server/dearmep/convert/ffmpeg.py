@@ -2,8 +2,8 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from contextlib import ExitStack, contextmanager
 import subprocess
+from contextlib import ExitStack, contextmanager
 from tempfile import NamedTemporaryFile
 from typing import IO, Generator, Iterable
 

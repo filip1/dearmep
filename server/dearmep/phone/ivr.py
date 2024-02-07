@@ -3,10 +3,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import re
-from pydantic import UUID4
 from random import shuffle
-from sqlmodel import Session
 from typing import List, Optional
+
+from pydantic import UUID4
+from sqlmodel import Session
 
 from ..config import Config
 from ..convert import blobfile

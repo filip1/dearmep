@@ -2,17 +2,21 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import date
-from io import BufferedReader
 import json
 import re
+from datetime import date
+from io import BufferedReader
 from typing import Any, Dict, Generator, Iterable, List, Union, cast
 
 from countryguess import guess_country  # type: ignore[import]
 
 from ...config import APP_NAME
-from ...database.models import ContactDump, DestinationDump, \
-    DestinationGroupDump, DumpableModels
+from ...database.models import (
+    ContactDump,
+    DestinationDump,
+    DestinationGroupDump,
+    DumpableModels,
+)
 from ...progress import BaseTaskFactory, FlexiBytesReader
 
 

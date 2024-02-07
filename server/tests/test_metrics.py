@@ -4,9 +4,9 @@
 
 from typing import Iterable
 
+import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
-import pytest
 
 from dearmep.config import APP_NAME
 

@@ -7,8 +7,8 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Optional
 
-from . import ffmpeg
 from ..database.models import Blob
+from . import ffmpeg
 
 
 AUDIO_FORMAT = "ogg"  # ffmpeg -f

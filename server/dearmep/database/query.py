@@ -5,15 +5,15 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import date, datetime, timedelta
-from typing import Callable, Dict, List, NamedTuple, Optional, Union, cast
-from secrets import randbelow
+import logging
+import random
 import re
+from datetime import date, datetime, timedelta
+from secrets import randbelow
+from typing import Callable, Dict, List, NamedTuple, Optional, Union, cast
+
 import backoff
 from pydantic import UUID4
-import random
-import logging
-
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.sql import label
@@ -21,15 +21,35 @@ from sqlmodel import and_, case, col, column, delete, or_
 
 from ..config import Config
 from ..convert.blobfile import BlobOrFile
-from ..models import CountryCode, DestinationSearchGroup, \
-    DestinationSearchResult, FeedbackToken, Language, PhoneNumber, \
-    PhoneRejectReason, Schedule, SearchResult, UserPhone, \
-    VerificationCode, FeedbackConvinced
+from ..models import (
+    CountryCode,
+    DestinationSearchGroup,
+    DestinationSearchResult,
+    FeedbackConvinced,
+    FeedbackToken,
+    Language,
+    PhoneNumber,
+    PhoneRejectReason,
+    Schedule,
+    SearchResult,
+    UserPhone,
+    VerificationCode,
+)
 from .connection import Session, select
-from .models import Blob, BlobID, CurrentlyScheduledCalls, Destination, \
-    DestinationID, DestinationSelectionLog, DestinationSelectionLogEvent, \
-    MediaList, NumberVerificationRequest, QueuedCall, ScheduledCall, \
-    UserFeedback
+from .models import (
+    Blob,
+    BlobID,
+    CurrentlyScheduledCalls,
+    Destination,
+    DestinationID,
+    DestinationSelectionLog,
+    DestinationSelectionLogEvent,
+    MediaList,
+    NumberVerificationRequest,
+    QueuedCall,
+    ScheduledCall,
+    UserFeedback,
+)
 
 
 _logger = logging.getLogger(__name__)

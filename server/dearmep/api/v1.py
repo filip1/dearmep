@@ -7,37 +7,72 @@
 
 from datetime import datetime
 from typing import Any, Callable, Dict, Iterable, List, Optional, Union
-from typing_extensions import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
-    Response, status
-from fastapi.responses import JSONResponse
 
+from fastapi import (
+    APIRouter,
+    Depends,
+    Header,
+    HTTPException,
+    Query,
+    Response,
+    status,
+)
+from fastapi.responses import JSONResponse
 from prometheus_client import Counter
 from pydantic import BaseModel
 from sqlmodel import col
+from typing_extensions import Annotated
 
-from . import authtoken
 from ..config import Config, Language, all_frontend_strings
-from ..database.connection import get_session
-from ..database.models import Blob, Destination, DestinationGroupListItem, \
-    DestinationID, DestinationRead, DestinationSelectionLog, \
-    DestinationSelectionLogEvent, FeedbackContext
 from ..database import query
+from ..database.connection import get_session
+from ..database.models import (
+    Blob,
+    Destination,
+    DestinationGroupListItem,
+    DestinationID,
+    DestinationRead,
+    DestinationSelectionLog,
+    DestinationSelectionLogEvent,
+    FeedbackContext,
+)
 from ..l10n import find_preferred_language, get_country, parse_accept_language
-from ..models import MAX_SEARCH_RESULT_LIMIT, CallState, CallStateResponse, \
-    CallType, CountryCode, DestinationInCallResponse, \
-    DestinationSearchResult, FeedbackSubmission, FeedbackToken, \
-    FrontendSetupResponse, FrontendStringsResponse, InitiateCallRequest, \
-    JWTClaims, JWTResponse, LanguageDetection, LocalizationResponse, \
-    OfficeHoursResponse, OutsideHoursResponse, \
-    PhoneNumberVerificationRejectedResponse, PhoneNumberVerificationResponse, \
-    PhoneRejectReason, RateLimitResponse, ScheduleResponse, \
-    SetScheduleRequest, SMSCodeVerificationFailedResponse, SearchResult, \
-    SearchResultLimit, UserPhone, UserInCallResponse,  \
-    PhoneNumberVerificationRequest, SMSCodeVerificationRequest
-
-from ..ratelimit import Limit, client_addr
+from ..models import (
+    MAX_SEARCH_RESULT_LIMIT,
+    CallState,
+    CallStateResponse,
+    CallType,
+    CountryCode,
+    DestinationInCallResponse,
+    DestinationSearchResult,
+    FeedbackSubmission,
+    FeedbackToken,
+    FrontendSetupResponse,
+    FrontendStringsResponse,
+    InitiateCallRequest,
+    JWTClaims,
+    JWTResponse,
+    LanguageDetection,
+    LocalizationResponse,
+    OfficeHoursResponse,
+    OutsideHoursResponse,
+    PhoneNumberVerificationRejectedResponse,
+    PhoneNumberVerificationRequest,
+    PhoneNumberVerificationResponse,
+    PhoneRejectReason,
+    RateLimitResponse,
+    ScheduleResponse,
+    SearchResult,
+    SearchResultLimit,
+    SetScheduleRequest,
+    SMSCodeVerificationFailedResponse,
+    SMSCodeVerificationRequest,
+    UserInCallResponse,
+    UserPhone,
+)
 from ..phone.abstract import get_phone_service
+from ..ratelimit import Limit, client_addr
+from . import authtoken
 
 
 l10n_autodetect_total = Counter(

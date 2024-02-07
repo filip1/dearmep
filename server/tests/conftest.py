@@ -8,13 +8,13 @@ from os import environ
 from pathlib import Path
 from typing import Callable, Dict, Optional
 
+import pytest
+import yaml
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from pydantic.utils import deep_update
-import pytest
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
-import yaml
 
 from dearmep.database.connection import AutoEngine, get_session
 from dearmep.database.models import Destination

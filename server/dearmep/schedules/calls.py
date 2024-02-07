@@ -9,10 +9,15 @@ from prometheus_client import Counter
 
 from ..config import Config
 from ..database import query
-from ..database.models import CallType, DestinationSelectionLogEvent, \
-    QueuedCall, UserPhone
 from ..database.connection import get_session
+from ..database.models import (
+    CallType,
+    DestinationSelectionLogEvent,
+    QueuedCall,
+    UserPhone,
+)
 from ..phone.abstract import get_phone_service
+
 
 queued_calls_total = Counter(
     name="queued_calls_total",

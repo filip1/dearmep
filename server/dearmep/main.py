@@ -5,21 +5,23 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import logging
+from contextlib import asynccontextmanager
 from typing import Optional
 
-from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
 from starlette_exporter import PrometheusMiddleware, handle_metrics
-from starlette_exporter.optional_metrics import request_body_size, \
-    response_body_size
+from starlette_exporter.optional_metrics import (
+    request_body_size,
+    response_body_size,
+)
 
 from . import __version__, markdown_files, schedules, static_files
 from .api import v1 as api_v1
+from .config import APP_NAME, Config
 from .database import get_session
 from .phone import elks
-from .config import APP_NAME, Config
 
 
 _logger = logging.getLogger(__name__)

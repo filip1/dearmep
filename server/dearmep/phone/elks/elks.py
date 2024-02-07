@@ -8,8 +8,15 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Literal, Optional, Union
 
 import requests
-from fastapi import APIRouter, Depends, FastAPI, Form, HTTPException, \
-    Request, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    FastAPI,
+    Form,
+    HTTPException,
+    Request,
+    status,
+)
 from fastapi.responses import FileResponse
 from pydantic import UUID4, Json
 from sqlmodel import Session
@@ -19,13 +26,21 @@ from ...convert import blobfile, ffmpeg
 from ...database import query
 from ...database.connection import get_session
 from ...database.models import Destination, DestinationSelectionLogEvent
-from ...models import CallType, CallState, DestinationInCallResponse, \
-    PhoneNumber, Schedule, UserPhone, UserInCallResponse
+from ...models import (
+    CallState,
+    CallType,
+    DestinationInCallResponse,
+    PhoneNumber,
+    Schedule,
+    UserInCallResponse,
+    UserPhone,
+)
 from .. import ivr
 from . import ongoing_calls
 from .metrics import elks_metrics
 from .models import InitialCallElkResponse, Number
 from .utils import choose_from_number, get_numbers
+
 
 _logger = logging.getLogger(__name__)
 

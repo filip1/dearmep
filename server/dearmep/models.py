@@ -5,21 +5,38 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-from base64 import b64encode
-from datetime import datetime, time
+
 import enum
-from hashlib import sha256
-from ipaddress import IPv4Network, IPv6Network
 import json
 import re
-from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, \
-    TypeVar, Union
 import secrets
+from base64 import b64encode
+from datetime import datetime, time
+from hashlib import sha256
+from ipaddress import IPv4Network, IPv6Network
+from typing import (
+    Any,
+    Dict,
+    Generic,
+    List,
+    Literal,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
-from canonicaljson import encode_canonical_json
 import phonenumbers
-from pydantic import BaseModel, ConstrainedFloat, ConstrainedInt, \
-    ConstrainedStr, Field, PositiveInt, validator
+from canonicaljson import encode_canonical_json
+from pydantic import (
+    BaseModel,
+    ConstrainedFloat,
+    ConstrainedInt,
+    ConstrainedStr,
+    Field,
+    PositiveInt,
+    validator,
+)
 from pydantic.generics import GenericModel
 
 

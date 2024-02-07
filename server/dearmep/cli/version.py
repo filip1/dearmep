@@ -3,10 +3,12 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-from argparse import _SubParsersAction, ArgumentParser
-from importlib import metadata
+
 import sys
+from argparse import ArgumentParser, _SubParsersAction
+from importlib import metadata
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from . import Context
