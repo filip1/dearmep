@@ -88,7 +88,7 @@ markers = [
 [tool.ruff]
 line-length = 79
 indent-width = 4
-target-version = "py38"
+target-version = "py38"  # when changing this, check below whether some rules can be re-enabled
 exclude = [
 	".git",
 	"migrations",
@@ -139,7 +139,6 @@ select = [
 ignore = [
 	"ANN101",   # type annotation for self
 	"ANN102",   # type annotation for @classmethod first argument
-	"FA100",    # suggests `from __future__ import annotations`, which causes trouble in SQLModel <https://github.com/tiangolo/sqlmodel/issues/196>
 	"ISC001",   # conflict w/ formatter, see https://github.com/astral-sh/ruff/issues/8272
 	"PLC0415",  # forbids dynamic imports
 	"PT006",    # forbids comma-separated string for @pytest.mark.parametrize names
@@ -148,6 +147,11 @@ ignore = [
 	"RUF002",   # complains about Unicode typography in docstrings
 	"RUF200",   # requires a name for projects
 	"TRY003",   # complains about simple ValueError messages
+	# to be re-enabled when minimum Python version is >= 3.9
+	"UP006",    # suggests stdlib generic collection annotations (list[...]), which can confuse Python < 3.9
+	# to be re-enabled when minimum Python version is >= 3.10
+	"FA100",    # suggests `from __future__ import annotations`, which causes trouble in SQLModel <https://github.com/tiangolo/sqlmodel/issues/196>
+	"UP007",    # suggests X | Y annotations, which can confuse Python < 3.10
 ]
 
 [tool.ruff.lint.isort]
