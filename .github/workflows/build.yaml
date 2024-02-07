@@ -25,6 +25,9 @@ jobs:
           sudo apt install -y graphviz graphviz-dev python3-dev
           python -m pip install poetry
           poetry install --all-extras
+      - name: Lint with Ruff
+        run: poetry run ruff
+        continue-on-error: true  # temporary, until we've updated the codebase to Ruff's standards
       - name: Typecheck with mypy
         run: poetry run mypy
       - name: Test with pytest

@@ -81,6 +81,11 @@ markers = [
 [tool.ruff]
 line-length = 79
 indent-width = 4
+target-version = "py38"
+exclude = [
+	".git",
+	"migrations",
+]
 
 [tool.ruff.format]
 quote-style = "double"
@@ -129,6 +134,10 @@ ignore = [
 	"ANN102",   # type annotation for @classmethod first argument
 	"ISC001",   # conflict w/ formatter, see https://github.com/astral-sh/ruff/issues/8272
 	"PLC0415",  # forbids dynamic imports
+	"PT006",    # forbids comma-separated string for @pytest.mark.parametrize names
+	"PT007",    # forbids non-list types for @pytest.mark.parametrize values
+	"RUF001",   # complains about Unicode typography in strings
+	"RUF002",   # complains about Unicode typography in docstrings
 	"RUF200",   # requires a name for projects
 	"TRY003",   # complains about simple ValueError messages
 ]
@@ -136,3 +145,12 @@ ignore = [
 [tool.ruff.lint.isort]
 # Two blank lines after the imports.
 lines-after-imports = 2
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+	"ANN001",  # missing function argument annotation
+	"ANN201",  # missing return type annotation
+	"ARG001",  # unused function argument (e.g. require-only fixtures)
+	"INP001",  # implicit namespace package
+	"S101",    # use of assert
+]
