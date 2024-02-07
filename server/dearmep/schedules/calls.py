@@ -47,8 +47,7 @@ def build_queue() -> None:
                     language=call.language,
                     is_postponed=True,
                 ))
-        queued_calls_total.inc(
-            (len(calls.regular) + len(calls.postponed)))
+        queued_calls_total.inc(len(calls.regular) + len(calls.postponed))
         query.mark_scheduled_calls_queued(session, calls, now)
         session.commit()
 
