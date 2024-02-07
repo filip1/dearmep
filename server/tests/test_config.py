@@ -35,10 +35,9 @@ EXAMPLE_HOURS = OfficeHoursConfig.parse_obj({
 
 @pytest.fixture
 def dummy_translation_strings() -> L10nStrings:
-    return L10nStrings.parse_obj({
-        k: "foo"
-        for k in L10nStrings.__fields__.keys()
-    })
+    return L10nStrings.parse_obj(
+        dict.fromkeys(L10nStrings.__fields__.keys(), "foo")
+    )
 
 
 @pytest.fixture
