@@ -45,8 +45,6 @@ alembic = "^1.12.1"
 fastapi-restful = "^0.5.0"
 
 [tool.poetry.group.dev.dependencies]
-flake8 = "^4.0.1"
-flake8-quotes = "^3.3.1"
 mypy = "<1.0"
 pytest = "^7.3.0"
 pytest-cov = "^4.0.0"
