@@ -70,7 +70,7 @@ def create_app(config_dict: Optional[dict] = None) -> FastAPI:
         config = Config.load_dict(config_dict)
 
     @asynccontextmanager
-    async def lifespan(app: FastAPI):
+    async def lifespan(app: FastAPI):  # noqa: ARG001
         for task in schedules.get_background_tasks(config):
             _logger.info(f"Loading background Task: {task.__name__}")
             await task()

@@ -299,8 +299,8 @@ def mount_router(app: FastAPI, prefix: str):
     @router.post("/main_menu")
     def main_menu(
         callid: str = Form(),
-        direction: Literal["incoming", "outgoing"] = Form(),
-        from_number: PhoneNumber = Form(alias="from"),
+        direction: Literal["incoming", "outgoing"] = Form(),  # noqa: ARG001
+        from_number: PhoneNumber = Form(alias="from"),  # noqa: ARG001
         to_number: PhoneNumber = Form(alias="to"),
         result: str = Form(),
         why: Optional[str] = Form(default=None),
@@ -383,9 +383,9 @@ def mount_router(app: FastAPI, prefix: str):
     @router.post("/connect")
     def connect(
         callid: str = Form(),
-        direction: Literal["incoming", "outgoing"] = Form(),
-        from_number: PhoneNumber = Form(alias="from"),
-        to_number: PhoneNumber = Form(alias="to"),
+        direction: Literal["incoming", "outgoing"] = Form(),  # noqa: ARG001
+        from_number: PhoneNumber = Form(alias="from"),  # noqa: ARG001
+        to_number: PhoneNumber = Form(alias="to"),  # noqa: ARG001
         result: str = Form(),
         why: Optional[str] = Form(default=None),
     ):
@@ -515,7 +515,7 @@ def mount_router(app: FastAPI, prefix: str):
     @router.post("/postpone")
     def postpone(
         callid: str = Form(),
-        from_number: PhoneNumber = Form(alias="from"),
+        from_number: PhoneNumber = Form(alias="from"),  # noqa: ARG001
         to_number: PhoneNumber = Form(alias="to"),
         result: str = Form(),
         why: Optional[str] = Form(default=None),
@@ -600,7 +600,7 @@ def mount_router(app: FastAPI, prefix: str):
     @router.post("/delete")
     def delete(
             callid: str = Form(),
-            from_number: PhoneNumber = Form(alias="from"),
+            from_number: PhoneNumber = Form(alias="from"),  # noqa: ARG001
             to_number: PhoneNumber = Form(alias="to"),
             result: str = Form(),
             why: Optional[str] = Form(default=None),
@@ -662,8 +662,8 @@ def mount_router(app: FastAPI, prefix: str):
     @router.post("/arguments")
     def arguments(
             callid: str = Form(),
-            from_number: PhoneNumber = Form(alias="from"),
-            to_number: PhoneNumber = Form(alias="to"),
+            from_number: PhoneNumber = Form(alias="from"),  # noqa: ARG001
+            to_number: PhoneNumber = Form(alias="to"),  # noqa: ARG001
             result: str = Form(),
             why: Optional[str] = Form(default=None),
     ):
@@ -699,9 +699,9 @@ def mount_router(app: FastAPI, prefix: str):
     @router.post("/finalize_connect")
     def finalize_connect(
         callid: str = Form(),
-        direction: Literal["incoming", "outgoing"] = Form(),
+        direction: Literal["incoming", "outgoing"] = Form(),  # noqa: ARG001
         from_number: PhoneNumber = Form(alias="from"),
-        to_number: PhoneNumber = Form(alias="to"),
+        to_number: PhoneNumber = Form(alias="to"),  # noqa: ARG001
         result: str = Form(),
         why: Optional[str] = Form(default=None),
     ):
@@ -738,17 +738,17 @@ def mount_router(app: FastAPI, prefix: str):
     def hangup(
         # Arguments always present, also failures
         direction: Literal["incoming", "outgoing"] = Form(),
-        created: datetime = Form(),
+        created: datetime = Form(),  # noqa: ARG001
         from_number: PhoneNumber = Form(alias="from"),
         callid: str = Form(alias="id"),
-        to_number: PhoneNumber = Form(alias="to"),
+        to_number: PhoneNumber = Form(alias="to"),  # noqa: ARG001
         state: str = Form(),
         # Arguments present in some cases, i.e. success
         start: Optional[datetime] = Form(default=None),
-        actions: Optional[Json] = Form(default=None),
+        actions: Optional[Json] = Form(default=None),  # noqa: ARG001
         cost: Optional[int] = Form(default=None),  # in 100 = 1 cent
-        duration: Optional[int] = Form(default=None),  # in sec
-        legs: Optional[Json] = Form(default=None)
+        duration: Optional[int] = Form(default=None),  # in sec  # noqa: ARG001
+        legs: Optional[Json] = Form(default=None)  # noqa: ARG001
     ):
         """
         Handles the hangup and cleanup of calls

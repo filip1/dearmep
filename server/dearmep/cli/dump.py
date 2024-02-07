@@ -63,11 +63,11 @@ def dump_erd(ctx: Context):
     render_er(get_metadata(), ctx.args.outfile)
 
 
-def dump_example_config(ctx: Context):
+def dump_example_config(ctx: Context):  # noqa: ARG001
     dump_included_file("example-config.yaml")
 
 
-def dump_log_config(ctx: Context):
+def dump_log_config(ctx: Context):  # noqa: ARG001
     dump_included_file("logging.yaml")
 
 

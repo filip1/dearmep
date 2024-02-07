@@ -21,7 +21,7 @@ from ..database.connection import get_session
 from ..database.models import Blob
 
 
-def cmd_lint(ctx: Context):
+def cmd_lint(ctx: Context):  # noqa: ARG001
     Config.load()
     with get_session() as session:
         lint.print_all_issues(session)
