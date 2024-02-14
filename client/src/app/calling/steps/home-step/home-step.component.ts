@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TranslocoService } from '@ngneat/transloco';
-import { filter, map, take } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { MarkupUtil } from 'src/app/common/util/markup.util';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { OfficeHoursService } from 'src/app/services/office-hours/office-hours.service';
@@ -16,7 +16,6 @@ export class HomeStepComponent {
   public isAuthenticated$
   public authenticatedNumberHtml$
   public officeHoursText$
-  public officeHoursPopoverOpen = false
   public isOfficeHours$
   public officeHoursTimezone
 
@@ -53,18 +52,5 @@ export class HomeStepComponent {
 
   public onReauthenticateClick() {
     this.authService.logout()
-  }
-
-  // Disabled button or error message is clicked outside of office hours
-  onCallNowContainerClick() {
-    this.isOfficeHours$
-      .pipe(take(1))
-      .subscribe({
-        next: (isOfficeHours) => {
-          if (!isOfficeHours) {
-            this.officeHoursPopoverOpen = true
-          }
-        }
-    })
   }
 }

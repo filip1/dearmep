@@ -64,21 +64,12 @@
   </ng-container>
 </ng-container>
 
-<div class="dmep-btn-container">
-  <button mat-stroked-button color="primary" class="dmep-start-call-btn dmep-btn dmep-btn-primary"
-    [disabled]="step !== StepSuccess" (click)="onCallNowClick()">
-    <span class="btn-content">
-      <strong>{{ 'call.start-call-btn.title' | transloco }}</strong>
-      <br>
-      {{ 'call.start-call-btn.subtitle' | transloco }}
-    </span>
-  </button>
-</div>
-
-<div class="dmep-btn-container" *ngIf="!disableScheduling">
-  <button mat-stroked-button class="dmep-call-later-btn dmep-btn dmep-btn-secondary" [disabled]="step !== StepSuccess" (click)="onCallLaterClick()">
-    <span class="btn-content">
-      {{ 'call.call-later-btn.title' | transloco }}
-    </span>
-  </button>
-</div>
+<dmep-calling-buttons
+  (callNowClick)="onCallNowClick()"
+  (callLaterClick)="onCallLaterClick()"
+  [disabled]="step !== StepSuccess"
+  [disableScheduling]="disableScheduling"
+  [isOfficeHours]="(isOfficeHours$ | async) || true"
+  [officeHoursTimezone]="officeHoursTimezone"
+  [officeHoursText]="(officeHoursText$ | async) || []"
+></dmep-calling-buttons>
