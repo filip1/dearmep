@@ -16,7 +16,6 @@ export class HomeStepComponent {
   public isAuthenticated$
   public authenticatedNumberHtml$
   public officeHoursText$
-  public officeHoursPopoverOpen = false
   public isOfficeHours$
   public officeHoursTimezone
 
@@ -53,18 +52,5 @@ export class HomeStepComponent {
 
   public onReauthenticateClick() {
     this.authService.logout()
-  }
-
-  // Disabled button or error message is clicked outside of office hours
-  onCallNowContainerClick() {
-    this.isOfficeHours$
-      .pipe(take(1))
-      .subscribe({
-        next: (isOfficeHours) => {
-          if (!isOfficeHours) {
-            this.officeHoursPopoverOpen = true
-          }
-        }
-    })
   }
 }

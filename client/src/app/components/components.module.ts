@@ -12,6 +12,7 @@ import { CountrySelectComponent } from './country-select/country-select.componen
 import { PhoneNumberInputComponent } from './phone-number-input/phone-number-input.component';
 import { SocialIconComponent } from './social-icon/social-icon.component';
 import { ErrorModalComponent } from './error-modal/error-modal.component';
+import { CallingButtonsComponent } from './calling-buttons/calling-buttons.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { ErrorModalComponent } from './error-modal/error-modal.component';
     PhoneNumberInputComponent,
     SocialIconComponent,
     ErrorModalComponent,
+    CallingButtonsComponent,
   ],
   imports: [
     AppCommonModule,
@@ -41,6 +43,7 @@ import { ErrorModalComponent } from './error-modal/error-modal.component';
     CountrySelectComponent,
     PhoneNumberInputComponent,
     ErrorModalComponent,
+    CallingButtonsComponent,
   ]
 })
 export class ComponentsModule { }

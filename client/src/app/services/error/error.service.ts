@@ -54,7 +54,7 @@ export class ErrorService {
   // get service lazy to avoid circular dependency
   private getTranslocoService(): TranslocoService | undefined {
     if (!this._translocoServiceLazy) {
-    //  this._translocoServiceLazy = this.injector.get(TranslocoService, undefined, { optional: true }) || undefined
+      this._translocoServiceLazy = this.injector.get(TranslocoService, undefined, { optional: true }) || undefined
     }
     return this._translocoServiceLazy
   }

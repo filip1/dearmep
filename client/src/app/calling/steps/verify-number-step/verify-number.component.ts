@@ -17,6 +17,7 @@ import { RoutingStateManagerService } from 'src/app/services/routing/routing-sta
 import { CallingService } from 'src/app/services/calling/calling.service';
 import { ErrorService } from 'src/app/services/error/error.service';
 import { MarkupUtil } from 'src/app/common/util/markup.util';
+import { OfficeHoursService } from 'src/app/services/office-hours/office-hours.service';
 
 @Component({
   selector: 'dmep-verify-number',
@@ -52,6 +53,10 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
 
   public step = this.StepEnterNumber
 
+  public officeHoursText$
+  public isOfficeHours$
+  public officeHoursTimezone
+
   public serverValidatedPhoneNumber?: string;
 
   public numberFormControl = new FormControl<PhoneNumber>({ callingCode: "+43", number: "" }, {
@@ -76,7 +81,11 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
     private readonly authenticationService: AuthenticationService,
     private readonly selectDestinationService: SelectDestinationService,
     private readonly errorService: ErrorService,
+    private readonly officeHoursService: OfficeHoursService,
   ) {
+    this.officeHoursText$ = this.officeHoursService.getOfficeHoursText$()
+    this.isOfficeHours$ = this.officeHoursService.inOfficeHours$()
+    this.officeHoursTimezone = this.officeHoursService.getOfficeHours().timezone
   }
 
   public ngOnInit(): void {
