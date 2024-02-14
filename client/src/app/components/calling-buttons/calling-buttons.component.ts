@@ -7,19 +7,19 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class CallingButtonsComponent {
   @Input()
-  public disableScheduling: boolean = false
+  public disableScheduling = false
 
   @Input()
-  public isOfficeHours: boolean = true
+  public isOfficeHours = true
 
   @Input()
-  public officeHoursTimezone: string = ''
+  public officeHoursTimezone = ''
 
   @Input()
   public officeHoursText: string[] = []
 
   @Input()
-  public disabled: boolean = false
+  public disabled = false
 
   @Output()
   public callNowClick = new EventEmitter()
@@ -38,7 +38,6 @@ export class CallingButtonsComponent {
   public onCallNowClick() {
     if (this.isOfficeHours && !this.disabled) {
       this.callNowClick.emit()
-    } else {
     }
   }
 
