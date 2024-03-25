@@ -1,9 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppCommonModule } from 'src/app/common/app-common.module';
-
 
 import { LanguageSwitchComponent } from './language-switch.component';
+import { FixturesModule } from 'src/app/testing/fixtures.module';
 
 describe('LanguageSwitchComponent', () => {
   let component: LanguageSwitchComponent;
@@ -11,13 +9,8 @@ describe('LanguageSwitchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-    CommonModule,
-    AppCommonModule,
-    LanguageSwitchComponent,
-]
-})
-    .compileComponents();
+      imports: [LanguageSwitchComponent, FixturesModule],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LanguageSwitchComponent);
     component = fixture.componentInstance;

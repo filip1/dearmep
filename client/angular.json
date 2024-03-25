@@ -28,6 +28,7 @@
             },
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "statsJson": true,
             "polyfills": [
               "zone.js"
             ],

@@ -27,10 +27,6 @@ import { SelectMEPComponent } from './components/select-mep/select-mep.component
 import { TitleComponent } from './components/title/title.component';
 import { NgClass, AsyncPipe } from '@angular/common';
 import { ResponsiveDirective } from './common/directives/responsive.directive';
-import { HttpClientModule } from '@angular/common/http';
-import { ApiModule } from './api/api.module';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'dmep-root',

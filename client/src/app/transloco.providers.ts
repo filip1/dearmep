@@ -1,12 +1,9 @@
 import {
-  TRANSLOCO_LOADER,
   Translation,
   TranslocoLoader,
-  TRANSLOCO_CONFIG,
   translocoConfig,
-  TranslocoModule,
 } from '@ngneat/transloco';
-import { Injectable, isDevMode, NgModule } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { Observable, map, mergeMap, of } from 'rxjs';
 import { ApiService } from './api/services';
 import { ObjectUtil } from './common/util/object.util';

@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppCommonModule } from 'src/app/common/app-common.module';
 
 import { MEPDetailComponent } from './mep-detail.component';
 
@@ -9,9 +8,8 @@ describe('MEPDetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [AppCommonModule, MEPDetailComponent]
-})
-    .compileComponents();
+      imports: [MEPDetailComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MEPDetailComponent);
     component = fixture.componentInstance;

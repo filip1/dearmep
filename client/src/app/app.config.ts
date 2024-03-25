@@ -17,7 +17,6 @@ import {
   translocoConfigFactory,
 } from './transloco.providers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ShadowRootOverlayContainer } from './common/material/shadow-root-overlay-container';
 import { MAT_ICON_DEFAULT_OPTIONS } from '@angular/material/icon';
@@ -55,6 +54,10 @@ export const appConfig: ApplicationConfig = {
     { provide: TRANSLOCO_LOADER, useClass: TranslocoHttpLoader },
 
     provideHttpClient(),
-    importProvidersFrom(ApiModule.forRoot({ rootUrl: '' }), TranslocoModule, BrowserAnimationsModule),
+    importProvidersFrom(
+      ApiModule.forRoot({ rootUrl: '' }),
+      TranslocoModule,
+      BrowserAnimationsModule
+    ),
   ],
 };
