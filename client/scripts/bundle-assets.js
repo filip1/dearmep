@@ -2,9 +2,7 @@ const fs = require('fs-extra');
 const concat = require('concat');
 (async function build() {
   const files = [
-    './dist/dear-mep/runtime.js',
     './dist/dear-mep/polyfills.js',
- //   './dist/dear-mep/scripts.js',
     './dist/dear-mep/main.js',
   ]
   await fs.remove('./dist/dear-mep-bundle')
