@@ -1,7 +1,11 @@
 <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dmep-lang-select">
   <mat-label>{{ 'languages.language' | transloco }}</mat-label>
   <mat-select [value]="selectedLanguage" (valueChange)="setLanguage($event)">
-    <mat-select-trigger *ngIf="selectedLanguage">{{ 'languages.' + selectedLanguage | transloco }}</mat-select-trigger>
-    <mat-option [value]="lang" *ngFor="let lang of availableLanguages">{{ 'languages.' + lang | transloco }}</mat-option>
+    @if (selectedLanguage) {
+<mat-select-trigger>{{ 'languages.' + selectedLanguage | transloco }}</mat-select-trigger>
+}
+    @for (lang of availableLanguages; track lang) {
+<mat-option [value]="lang">{{ 'languages.' + lang | transloco }}</mat-option>
+}
   </mat-select>
 </mat-form-field>

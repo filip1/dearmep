@@ -3,6 +3,8 @@
   <p [transloco]="model.body"></p>
 </div>
 <div mat-dialog-actions>
-  <button *ngIf="model.buttonCancelText" mat-button (click)="onCancelClick()" cdkFocusInitial [transloco]="model.buttonCancelText"></button>
+  @if (model.buttonCancelText) {
+<button mat-button (click)="onCancelClick()" cdkFocusInitial [transloco]="model.buttonCancelText"></button>
+}
   <button mat-button [mat-dialog-close]="{ click: model.buttonAcceptText }" cdkFocusInitial [transloco]="model.buttonAcceptText"></button>
 </div>

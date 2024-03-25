@@ -1,17 +1,21 @@
 <mat-form-field appearance="outline" subscriptSizing="dynamic">
   <mat-label>{{ 'select-mep.country' | transloco }}</mat-label>
   <mat-select [value]="selectedCountry" (valueChange)="onSelectCountry($event)">
-    <mat-select-trigger *ngIf="selectedCountry">
+    @if (selectedCountry) {
+<mat-select-trigger>
       <div class="dmep-country-option">
         <span [classList]="'flag:' + selectedCountry"></span>
         <span>{{ 'countries.' + selectedCountry | transloco }}</span>
       </div>
     </mat-select-trigger>
-    <mat-option [value]="country.shortCode" *ngFor="let country of countries$ | async">
+}
+    @for (country of countries$ | async; track country) {
+<mat-option [value]="country.shortCode">
       <div class="dmep-country-option">
         <span [classList]="'flag:' + country.shortCode"></span>
         <span>{{ country.name }}</span>
       </div>
     </mat-option>
+}
   </mat-select>
 </mat-form-field>

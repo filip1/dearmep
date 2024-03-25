@@ -4,7 +4,9 @@
   <div class="dmep-popover">
     <h3 transloco="call.office-hours.title"></h3>
     <p transloco="call.office-hours.description" class="office-hours-description"></p>
-    <p *ngFor="let hours of officeHoursText">{{ hours }}</p>
+    @for (hours of officeHoursText; track hours) {
+<p>{{ hours }}</p>
+}
     <p class="office-hours-timezone">{{ officeHoursTimezone }}</p>
   </div>
 </ng-template>
@@ -18,16 +20,20 @@
       {{ 'call.call-now-btn.subtitle' | transloco }}
     </span>
   </button>
-  <mat-error *ngIf="!isOfficeHours" class="dmep-error-hint" (click)="officeHoursPopoverOpen = true">
+  @if (!isOfficeHours) {
+<mat-error class="dmep-error-hint" (click)="officeHoursPopoverOpen = true">
     <mat-icon [inline]="true">info</mat-icon>
     <span>{{ "call.call-now-btn.outOfOfficeHoursHint" | transloco }}</span>
   </mat-error>
+}
 </div>
 
-<div class="dmep-btn-container" *ngIf="!disableScheduling">
+@if (!disableScheduling) {
+<div class="dmep-btn-container">
   <button mat-stroked-button class="dmep-call-later-btn dmep-btn dmep-btn-secondary" (click)="onCallLaterClick()" [disabled]="disabled">
     <span class="btn-content">
       {{ 'call.call-later-btn.title' | transloco }}
     </span>
   </button>
 </div>
+}
