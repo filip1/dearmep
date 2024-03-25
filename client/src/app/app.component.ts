@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { delay, filter, map, Observable, timer } from 'rxjs';
 import { BaseUrlService } from './common/services/base-url.service';
 import { CallingStep } from './model/calling-step.enum';
@@ -18,41 +27,45 @@ import { SelectMEPComponent } from './components/select-mep/select-mep.component
 import { TitleComponent } from './components/title/title.component';
 import { NgClass, AsyncPipe } from '@angular/common';
 import { ResponsiveDirective } from './common/directives/responsive.directive';
+import { HttpClientModule } from '@angular/common/http';
+import { ApiModule } from './api/api.module';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
-    selector: 'dmep-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    encapsulation: ViewEncapsulation.ShadowDom,
-    standalone: true,
-    imports: [
-        ResponsiveDirective,
-        CdkOverlayOrigin,
-        NgClass,
-        TitleComponent,
-        SelectMEPComponent,
-        TalkingPointsComponent,
-        LanguageSwitchComponent,
-        CallingComponent,
-        FooterComponent,
-        CdkConnectedOverlay,
-        MatIcon,
-        AsyncPipe,
-        TranslocoModule,
-        SafePipe,
-    ],
+  selector: 'dmep-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  encapsulation: ViewEncapsulation.ShadowDom,
+  standalone: true,
+  imports: [
+    ResponsiveDirective,
+    CdkOverlayOrigin,
+    NgClass,
+    TitleComponent,
+    SelectMEPComponent,
+    TalkingPointsComponent,
+    LanguageSwitchComponent,
+    CallingComponent,
+    FooterComponent,
+    CdkConnectedOverlay,
+    MatIcon,
+    AsyncPipe,
+    TranslocoModule,
+    SafePipe,
+  ],
 })
 export class AppComponent implements OnInit, OnChanges, AfterViewInit {
-  public styleUrl$?: Observable<string>
-  public flagsStyleUrl$?: Observable<string>
-  public shouldDisplayTalkingPoints$?: Observable<boolean>
-  public shouldDisplayTitle$?: Observable<boolean>
-  public shouldDisplayMEP$?: Observable<boolean>
-  public showMaintenanceOverlay = false
-  public maintenanceOverlayDismissable = false
+  public styleUrl$?: Observable<string>;
+  public flagsStyleUrl$?: Observable<string>;
+  public shouldDisplayTalkingPoints$?: Observable<boolean>;
+  public shouldDisplayTitle$?: Observable<boolean>;
+  public shouldDisplayMEP$?: Observable<boolean>;
+  public showMaintenanceOverlay = false;
+  public maintenanceOverlayDismissable = false;
 
-  @ViewChild("maintenanceOverlay")
-  public maintenanceOverlay: CdkConnectedOverlay | undefined
+  @ViewChild('maintenanceOverlay')
+  public maintenanceOverlay: CdkConnectedOverlay | undefined;
 
   /**
    * 'hostUrl' defines the url of the DearMEP-Backend.
@@ -60,8 +73,8 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
    * Only absolute urls are allowed.
    */
   // eslint-disable-next-line @angular-eslint/no-input-rename
-  @Input("host")
-  public hostUrl?: string
+  @Input('host')
+  public hostUrl?: string;
 
   /**
    * 'assetsUrl' defines the location of all static assets such as stylesheets, fonts, ... .
@@ -70,8 +83,8 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
    * The default value is './static' ('{hostUlr}/static')
    */
   // eslint-disable-next-line @angular-eslint/no-input-rename
-  @Input("assets")
-  public assetsUrl = "./static"
+  @Input('assets')
+  public assetsUrl = './static';
 
   /**
    * 'apiUrl' defines the url of the DearMEP-API.
@@ -81,8 +94,8 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
    * It is not required to add the prefix '/api/v1' here since that is already built into the API-Client.
    */
   // eslint-disable-next-line @angular-eslint/no-input-rename
-  @Input("api")
-  public apiUrl = "./"
+  @Input('api')
+  public apiUrl = './';
 
   /**
    * This parameter hides the call-scheduling functionality. By default scheduling is enabled.
@@ -95,10 +108,10 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
    * The getter 'disableScheduling' converts this value into a boolean accordinly.
    */
   @Input()
-  public 'disable-scheduling': '' | undefined = undefined
+  public 'disable-scheduling': '' | undefined = undefined;
 
   public get disableScheduling(): boolean {
-    return this.convertBooleanAttribute(this['disable-scheduling'])
+    return this.convertBooleanAttribute(this['disable-scheduling']);
   }
 
   /**
@@ -112,10 +125,10 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
    * The getter 'disableCalling' converts this value into a boolean accordinly.
    */
   @Input()
-  public 'disable-calling': '' | undefined = undefined
+  public 'disable-calling': '' | undefined = undefined;
 
   public get disableCalling(): boolean {
-    return this.convertBooleanAttribute(this['disable-calling'])
+    return this.convertBooleanAttribute(this['disable-calling']);
   }
 
   /**
@@ -130,82 +143,105 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
    * Country-Codes can be found here: https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
    */
   // eslint-disable-next-line @angular-eslint/no-input-rename
-  @Input("default-country")
-  public defaultCountry?: string
+  @Input('default-country')
+  public defaultCountry?: string;
 
   constructor(
     private readonly baseUrlService: BaseUrlService,
     private readonly routingStateManagerService: RoutingStateManagerService,
     private readonly l10nService: L10nService,
-    private readonly configService: ConfigService,
-  ) { }
+    private readonly configService: ConfigService
+  ) {}
 
   public ngOnInit() {
     if (!this.hostUrl) {
-      console.error(`DearMEP: Missing required attirbute 'host'. The attribute describes the URL of the DearMEP-Backend. Without the Attribute the DearMEP-Client cannot connect to the backend. Example: <dear-mep host="https://dearmep.example.org"></dear-mep>`)
+      console.error(
+        `DearMEP: Missing required attirbute 'host'. The attribute describes the URL of the DearMEP-Backend. Without the Attribute the DearMEP-Client cannot connect to the backend. Example: <dear-mep host="https://dearmep.example.org"></dear-mep>`
+      );
     } else if (!UrlUtil.isAbsolute(this.hostUrl)) {
-      console.error(`DearMEP: Invalid attirbute 'host'. Only absolute URLs are allowed for this option.`)
+      console.error(
+        `DearMEP: Invalid attirbute 'host'. Only absolute URLs are allowed for this option.`
+      );
     }
 
-    this.styleUrl$ = this.baseUrlService.toAbsoluteAssetUrl$("./dear-mep-inner.css")
-    this.flagsStyleUrl$ = this.baseUrlService.toAbsoluteAssetUrl$("./flags.css")
-
-    this.shouldDisplayTalkingPoints$ = this.routingStateManagerService.getStep$().pipe(
-      map(step => step !== CallingStep.Home && step !== CallingStep.HomeAuthenticated)
+    this.styleUrl$ = this.baseUrlService.toAbsoluteAssetUrl$(
+      './dear-mep-inner.css'
     );
-    this.shouldDisplayTitle$ = this.routingStateManagerService.getStep$().pipe(
-      map(step => step === CallingStep.Home || step === CallingStep.HomeAuthenticated || step == CallingStep.UpdateCallSchedule)
-    );
-    this.shouldDisplayMEP$ = this.routingStateManagerService.getStep$().pipe(
-      map(step => step !== CallingStep.UpdateCallSchedule)
-    )
+    this.flagsStyleUrl$ =
+      this.baseUrlService.toAbsoluteAssetUrl$('./flags.css');
 
-    this.l10nService.setDefaultCountry(this.defaultCountry?.toUpperCase())
+    this.shouldDisplayTalkingPoints$ = this.routingStateManagerService
+      .getStep$()
+      .pipe(
+        map(
+          (step) =>
+            step !== CallingStep.Home && step !== CallingStep.HomeAuthenticated
+        )
+      );
+    this.shouldDisplayTitle$ = this.routingStateManagerService
+      .getStep$()
+      .pipe(
+        map(
+          (step) =>
+            step === CallingStep.Home ||
+            step === CallingStep.HomeAuthenticated ||
+            step == CallingStep.UpdateCallSchedule
+        )
+      );
+    this.shouldDisplayMEP$ = this.routingStateManagerService
+      .getStep$()
+      .pipe(map((step) => step !== CallingStep.UpdateCallSchedule));
+
+    this.l10nService.setDefaultCountry(this.defaultCountry?.toUpperCase());
   }
 
   public ngAfterViewInit() {
-    this.configService.getConfig$().pipe(
-      delay(50),
-    ).subscribe({
-      next: config => {
-        this.showMaintenanceOverlay = !!config.features.maintenance?.active
-        this.maintenanceOverlayDismissable = !!config.features.maintenance?.message?.dismissable
-      }
-    })
+    this.configService
+      .getConfig$()
+      .pipe(delay(50))
+      .subscribe({
+        next: (config) => {
+          this.showMaintenanceOverlay = !!config.features.maintenance?.active;
+          this.maintenanceOverlayDismissable =
+            !!config.features.maintenance?.message?.dismissable;
+        },
+      });
 
     // make sure the overlay is positioned correctly after the content has been rendered
     timer(500)
       .pipe(filter(() => this.showMaintenanceOverlay))
-      .subscribe({ next: () => this.maintenanceOverlay?.overlayRef?.updatePosition() })
+      .subscribe({
+        next: () => this.maintenanceOverlay?.overlayRef?.updatePosition(),
+      });
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes["hostUrl"] || changes["assetsUrl"]) {
-      const assetsUrl = UrlUtil.toAbsolute(
-        this.assetsUrl,
-        this.hostUrl
-      )
-      this.baseUrlService.setAssetsUrl(assetsUrl)
+    if (changes['hostUrl'] || changes['assetsUrl']) {
+      const assetsUrl = UrlUtil.toAbsolute(this.assetsUrl, this.hostUrl);
+      this.baseUrlService.setAssetsUrl(assetsUrl);
     }
-    if (changes["hostUrl"] || changes["apiUrl"]) {
-      const apiUrl = UrlUtil.toAbsolute(
-        this.apiUrl,
-        this.hostUrl
-      )
-      this.baseUrlService.setAPIUrl(apiUrl)
+    if (changes['hostUrl'] || changes['apiUrl']) {
+      const apiUrl = UrlUtil.toAbsolute(this.apiUrl, this.hostUrl);
+      this.baseUrlService.setAPIUrl(apiUrl);
     }
-    if (changes["defaultCountry"]) {
-      this.l10nService.setDefaultCountry(this.defaultCountry?.toUpperCase())
+    if (changes['defaultCountry']) {
+      this.l10nService.setDefaultCountry(this.defaultCountry?.toUpperCase());
     }
   }
 
   public onMaintenanceOverlayDismissClick() {
     if (this.maintenanceOverlayDismissable) {
-      this.showMaintenanceOverlay = false
+      this.showMaintenanceOverlay = false;
     }
   }
 
-  private convertBooleanAttribute(attrValue: string | null | undefined): boolean {
-    return !(attrValue === null || attrValue === undefined || attrValue.toLowerCase() === "false");
+  private convertBooleanAttribute(
+    attrValue: string | null | undefined
+  ): boolean {
+    return !(
+      attrValue === null ||
+      attrValue === undefined ||
+      attrValue.toLowerCase() === 'false'
+    );
   }
 }
