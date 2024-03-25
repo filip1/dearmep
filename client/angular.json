@@ -97,10 +97,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "DearMEP:build:production"
+              "buildTarget": "DearMEP:build:production"
             },
             "development": {
-              "browserTarget": "DearMEP:build:development"
+              "buildTarget": "DearMEP:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -108,7 +108,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "DearMEP:build"
+            "buildTarget": "DearMEP:build"
           }
         },
         "test": {

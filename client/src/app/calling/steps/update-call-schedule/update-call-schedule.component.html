@@ -3,52 +3,90 @@
   <dmep-country-select></dmep-country-select>
 </div>
 
-<p transloco="schedule.description" class="dmep-schedule-call-description description"></p>
+<p
+  transloco="schedule.description"
+  class="dmep-schedule-call-description description"
+></p>
 
 <div class="dmep-schedule-select-day">
-  <mat-button-toggle-group name="favoriteColor" aria-label="Favorite Color" [formControl]="selectedDayFormControl">
-    <mat-button-toggle [value]="day" *ngFor="let day of availableDays"
-      [class.dmep-schedule-day-selected]="isTimeSelectedForDay(day)">{{ ('schedule.days-short' | transloco)[day]
-      }}</mat-button-toggle>
+  <mat-button-toggle-group
+    name="favoriteColor"
+    aria-label="Favorite Color"
+    [hideMultipleSelectionIndicator]="true"
+    [hideSingleSelectionIndicator]="true"
+    [formControl]="selectedDayFormControl"
+  >
+    <mat-button-toggle
+      [value]="day"
+      *ngFor="let day of availableDays"
+      [class.dmep-schedule-day-selected]="isTimeSelectedForDay(day)"
+      >{{ ("schedule.days-short" | transloco)[day] }}</mat-button-toggle
+    >
   </mat-button-toggle-group>
 </div>
 
 <div class="dmep-selected-day-container" *ngIf="selectedDayFormControl.value">
   <div class="dmep-selected-day" *ngIf="selectedDayFormControl.value">
     <span>
-      {{ ('schedule.days' | transloco)[selectedDayFormControl.value] }}
+      {{ ("schedule.days" | transloco)[selectedDayFormControl.value] }}
     </span>
 
     <mat-form-field appearance="outline" class="dmep-schedule-select-time">
-      <mat-select [formControl]="getSelectTimeFormControl()" [compareWith]="compareTimes">
-        <mat-option [value]="time" *ngFor="let time of getTimes()">{{ formatTimeOfDay(time) }}</mat-option>
+      <mat-select
+        [formControl]="getSelectTimeFormControl()"
+        [compareWith]="compareTimes"
+      >
+        <mat-option [value]="time" *ngFor="let time of getTimes()">{{
+          formatTimeOfDay(time)
+        }}</mat-option>
       </mat-select>
-      <mat-hint transloco="schedule.timezone" [translocoParams]="{ zone: localTimeZone }"></mat-hint>
-      <mat-icon matSuffix *ngIf="getSelectTimeFormControl().value"
-        (click)="removeSelectedTime(); $event.stopPropagation()">close</mat-icon>
+      <mat-hint
+        transloco="schedule.timezone"
+        [translocoParams]="{ zone: localTimeZone }"
+      ></mat-hint>
+      <mat-icon
+        matSuffix
+        *ngIf="getSelectTimeFormControl().value"
+        (click)="removeSelectedTime(); $event.stopPropagation()"
+        >close</mat-icon
+      >
     </mat-form-field>
   </div>
 </div>
 
-<p class="dmep-schedule-as-text dmep-description-sm" [innerHtml]="getSelectedTimesAsText()"></p>
+<p
+  class="dmep-schedule-as-text dmep-description-sm"
+  [innerHtml]="getSelectedTimesAsText()"
+></p>
 
-<ng-template cdkConnectedOverlay [cdkConnectedOverlayHasBackdrop]="true"
-  cdkConnectedOverlayBackdropClass="dmep-popover-backdrop" (backdropClick)="scheduleUpdatedPopoverOpen = false"
-  [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="scheduleUpdatedPopoverOpen">
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="dmep-popover-backdrop"
+  (backdropClick)="scheduleUpdatedPopoverOpen = false"
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="scheduleUpdatedPopoverOpen"
+>
   <div class="dmep-popover dmep-popover-success">
     <mat-icon>done</mat-icon>
-    <p>The schedule was successfully updated! </p>
+    <p>The schedule was successfully updated!</p>
   </div>
 </ng-template>
 
 <div class="dmep-btn-container">
-  <button mat-stroked-button color="primary" class="dmep-schedule-call-btn dmep-btn dmep-btn-primary"
-    cdkOverlayOrigin #trigger="cdkOverlayOrigin"
-    [disabled]="!canUpdateSchedule()" (click)="onScheduleClick()">
+  <button
+    mat-stroked-button
+    color="primary"
+    class="dmep-schedule-call-btn dmep-btn dmep-btn-primary"
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin"
+    [disabled]="!canUpdateSchedule()"
+    (click)="onScheduleClick()"
+  >
     <span class="btn-content">
-      <strong>{{ 'schedule.schedule-btn.title' | transloco }}</strong>
-      <br>
-      {{ 'schedule.schedule-btn.subtitle' | transloco }}
+      <strong>{{ "schedule.schedule-btn.title" | transloco }}</strong>
+      <br />
+      {{ "schedule.schedule-btn.subtitle" | transloco }}
     </span>
   </button>
 </div>

@@ -1,5 +1,4 @@
 <div class="container">
-
   <ng-container *ngIf="(isAuthenticated$ | async) === false">
     <h2 transloco="call.home.title" class="calling-title"></h2>
 
@@ -11,12 +10,18 @@
   <ng-container *ngIf="isAuthenticated$ | async">
     <h2 transloco="call.home.titleAuthenticated" class="calling-title"></h2>
 
-    <p class="description"
-      [innerHTML]="'call.home.youHaveAlreadySignedIn' | transloco: { number: authenticatedNumberHtml$ | async }"></p>
+    <p
+      class="description"
+      [innerHTML]="
+        'call.home.youHaveAlreadySignedIn'
+          | transloco : { number: authenticatedNumberHtml$ | async }
+      "
+    ></p>
 
     <p class="not-your-number description">
-      <a (click)="onReauthenticateClick(); $event.preventDefault()" href="#">{{ 'call.home.notYourNumber' | transloco
-        }}</a>
+      <a (click)="onReauthenticateClick(); $event.preventDefault()" href="#">
+        {{ "call.home.notYourNumber" | transloco }}
+      </a>
     </p>
   </ng-container>
 
@@ -24,7 +29,7 @@
     (callNowClick)="onCallNowClick()"
     (callLaterClick)="onCallLaterClick()"
     [disableScheduling]="disableScheduling"
-    [isOfficeHours]="(isOfficeHours$ | async) || true"
+    [isOfficeHours]="!!(isOfficeHours$ | async)"
     [officeHoursTimezone]="officeHoursTimezone"
     [officeHoursText]="(officeHoursText$ | async) || []"
   ></dmep-calling-buttons>
