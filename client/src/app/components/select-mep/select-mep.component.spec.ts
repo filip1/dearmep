@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TestingModule } from 'src/app/testing/testing.module';
+
 import { ComponentsModule } from '../components.module';
 
 import { SelectMEPComponent } from './select-mep.component';
@@ -10,10 +10,9 @@ describe('SelectMEPComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ 
-        ComponentsModule,
-        TestingModule,  
-      ],
+      imports: [
+    ComponentsModule,
+],
 
     })
     .compileComponents();

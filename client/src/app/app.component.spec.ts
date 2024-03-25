@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppModule } from './app.module';
-import { TestingModule } from './testing/testing.module';
+
 import { getTranslocoModule } from './testing/transloco-testing.module';
 
 describe('AppComponent', () => {
@@ -11,10 +11,9 @@ describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        AppModule,
-        TestingModule,
-        getTranslocoModule(),
-      ],
+    AppModule,
+    getTranslocoModule(),
+],
     }).compileComponents();
     fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges()

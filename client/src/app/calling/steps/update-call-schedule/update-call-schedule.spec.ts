@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppCommonModule } from 'src/app/common/app-common.module';
 import { ComponentsModule } from 'src/app/components/components.module';
-import { TestingModule } from 'src/app/testing/testing.module';
+
 import { UpdateCallScheduleComponent } from './update-call-schedule.component';
 
 
@@ -12,11 +12,10 @@ describe('UpdateCallScheduleComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
     imports: [
-        AppCommonModule,
-        TestingModule,
-        ComponentsModule,
-        UpdateCallScheduleComponent,
-    ]
+    AppCommonModule,
+    ComponentsModule,
+    UpdateCallScheduleComponent,
+]
 })
     .compileComponents();
 

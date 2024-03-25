@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppCommonModule } from 'src/app/common/app-common.module';
 import { ComponentsModule } from 'src/app/components/components.module';
-import { TestingModule } from 'src/app/testing/testing.module';
+
 
 import { VerifyNumberComponent } from './verify-number.component';
 
@@ -12,11 +12,10 @@ describe('VerifyNumerComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
     imports: [
-        AppCommonModule,
-        ComponentsModule,
-        TestingModule,
-        VerifyNumberComponent
-    ]
+    AppCommonModule,
+    ComponentsModule,
+    VerifyNumberComponent
+]
 })
     .compileComponents();
 
