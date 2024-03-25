@@ -9,9 +9,8 @@ describe('MEPDetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ AppCommonModule ],
-      declarations: [ MEPDetailComponent ]
-    })
+    imports: [AppCommonModule, MEPDetailComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(MEPDetailComponent);

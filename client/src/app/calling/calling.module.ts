@@ -12,22 +12,20 @@ import { UpdateCallScheduleComponent } from './steps/update-call-schedule/update
 
 
 @NgModule({
-  declarations: [
-    CallingComponent,
-    HomeStepComponent,
-    VerifyNumberComponent,
-    SetupStepComponent,
-    FeedbackStepComponent,
-    UpdateCallScheduleComponent,
-  ],
-  imports: [
-    CommonModule,
-    ComponentsModule,
-    AppCommonModule,
-    ComponentsModule,
-  ],
-  exports: [
-    CallingComponent,
-  ]
+    imports: [
+        CommonModule,
+        ComponentsModule,
+        AppCommonModule,
+        ComponentsModule,
+        CallingComponent,
+        HomeStepComponent,
+        VerifyNumberComponent,
+        SetupStepComponent,
+        FeedbackStepComponent,
+        UpdateCallScheduleComponent,
+    ],
+    exports: [
+        CallingComponent,
+    ]
 })
 export class CallingModule { }

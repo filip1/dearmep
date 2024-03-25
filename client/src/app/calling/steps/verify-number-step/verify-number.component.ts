@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, ValidatorFn, Validators, ReactiveFormsModule } from '@angular/forms';
 import { VerificationStep } from './verification-step.enum';
 import { PhoneNumber } from 'src/app/model/phone-number.model';
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService, TranslocoModule } from '@ngneat/transloco';
 import { BaseUrlService } from 'src/app/common/services/base-url.service';
 import { ApiService } from 'src/app/api/services';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
@@ -18,11 +18,21 @@ import { CallingService } from 'src/app/services/calling/calling.service';
 import { ErrorService } from 'src/app/services/error/error.service';
 import { MarkupUtil } from 'src/app/common/util/markup.util';
 import { OfficeHoursService } from 'src/app/services/office-hours/office-hours.service';
+import { AsyncPipe } from '@angular/common';
+import { CallingButtonsComponent } from '../../../components/calling-buttons/calling-buttons.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { PhoneNumberInputComponent } from '../../../components/phone-number-input/phone-number-input.component';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-  selector: 'dmep-verify-number',
-  templateUrl: './verify-number.component.html',
-  styleUrls: ['./verify-number.component.scss']
+    selector: 'dmep-verify-number',
+    templateUrl: './verify-number.component.html',
+    styleUrls: ['./verify-number.component.scss'],
+    standalone: true,
+    imports: [TranslocoModule, MatFormField, MatLabel, PhoneNumberInputComponent, ReactiveFormsModule, MatError, MatCheckbox, MatButton, MatInput, MatIcon, CallingButtonsComponent, AsyncPipe]
 })
 export class VerifyNumberComponent implements OnInit, OnDestroy {
   private phoneNumberSentToServerForValidation?: string  // The number that correponds to the below error as string => error is not relevant if number changed

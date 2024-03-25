@@ -15,35 +15,33 @@ import { ErrorModalComponent } from './error-modal/error-modal.component';
 import { CallingButtonsComponent } from './calling-buttons/calling-buttons.component';
 
 @NgModule({
-  declarations: [
-    SelectMEPComponent,
-    TitleComponent,
-    MEPDetailComponent,
-    LanguageSwitchComponent,
-    TalkingPointsComponent,
-    FooterComponent,
-    CountrySelectComponent,
-    PhoneNumberInputComponent,
-    SocialIconComponent,
-    ErrorModalComponent,
-    CallingButtonsComponent,
-  ],
-  imports: [
-    AppCommonModule,
-    CommonModule,
-    TranslocoModule,
-  ],
-  exports: [
-    SelectMEPComponent,
-    TitleComponent,
-    MEPDetailComponent,
-    LanguageSwitchComponent,
-    FooterComponent,
-    TalkingPointsComponent,
-    CountrySelectComponent,
-    PhoneNumberInputComponent,
-    ErrorModalComponent,
-    CallingButtonsComponent,
-  ]
+    imports: [
+        AppCommonModule,
+        CommonModule,
+        TranslocoModule,
+        SelectMEPComponent,
+        TitleComponent,
+        MEPDetailComponent,
+        LanguageSwitchComponent,
+        TalkingPointsComponent,
+        FooterComponent,
+        CountrySelectComponent,
+        PhoneNumberInputComponent,
+        SocialIconComponent,
+        ErrorModalComponent,
+        CallingButtonsComponent,
+    ],
+    exports: [
+        SelectMEPComponent,
+        TitleComponent,
+        MEPDetailComponent,
+        LanguageSwitchComponent,
+        FooterComponent,
+        TalkingPointsComponent,
+        CountrySelectComponent,
+        PhoneNumberInputComponent,
+        ErrorModalComponent,
+        CallingButtonsComponent,
+    ]
 })
 export class ComponentsModule { }

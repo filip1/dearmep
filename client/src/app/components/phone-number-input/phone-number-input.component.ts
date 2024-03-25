@@ -1,14 +1,16 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, ElementRef, HostBinding, Inject, Input, OnDestroy, OnInit, Optional, Self, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormControl, NgControl } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, FormControl, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormField, MatFormFieldControl, MAT_FORM_FIELD } from '@angular/material/form-field';
-import { MatSelect } from '@angular/material/select';
+import { MatSelect, MatSelectTrigger } from '@angular/material/select';
 import { TranslocoService } from '@ngneat/transloco';
 import { combineLatest, Subject, takeUntil } from 'rxjs';
 import { PhoneNumber } from 'src/app/model/phone-number.model';
 import { AppConfig } from 'src/app/services/config/app-config.model';
 import { ConfigService } from 'src/app/services/config/config.service';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
+import { MatInput } from '@angular/material/input';
+import { MatOption } from '@angular/material/core';
 
 interface Country {
   name: string
@@ -23,10 +25,12 @@ interface Country {
  * done but does not implement the complete functionality of a FormControl.
  */
 @Component({
-  selector: 'dmep-phone-number-input',
-  templateUrl: './phone-number-input.component.html',
-  styleUrls: ['./phone-number-input.component.css'],
-  providers: [{ provide: MatFormFieldControl, useExisting: PhoneNumberInputComponent }]
+    selector: 'dmep-phone-number-input',
+    templateUrl: './phone-number-input.component.html',
+    styleUrls: ['./phone-number-input.component.css'],
+    providers: [{ provide: MatFormFieldControl, useExisting: PhoneNumberInputComponent }],
+    standalone: true,
+    imports: [ReactiveFormsModule, MatSelect, MatSelectTrigger, MatOption, MatInput]
 })
 export class PhoneNumberInputComponent implements ControlValueAccessor, MatFormFieldControl<PhoneNumber>, OnInit, OnDestroy {
   static nextId = 0;

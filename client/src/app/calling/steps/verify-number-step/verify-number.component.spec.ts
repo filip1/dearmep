@@ -11,13 +11,13 @@ describe('VerifyNumerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ 
+    imports: [
         AppCommonModule,
         ComponentsModule,
-        TestingModule
-      ],
-      declarations: [ VerifyNumberComponent ]
-    })
+        TestingModule,
+        VerifyNumberComponent
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(VerifyNumberComponent);

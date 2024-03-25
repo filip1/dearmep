@@ -6,13 +6,41 @@ import { RoutingStateManagerService } from './services/routing/routing-state-man
 import { UrlUtil } from './common/util/url.util';
 import { L10nService } from './services/l10n/l10n.service';
 import { ConfigService } from './services/config/config.service';
-import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { SafePipe } from './common/pipes/safe.pipe';
+import { TranslocoModule } from '@ngneat/transloco';
+import { MatIcon } from '@angular/material/icon';
+import { FooterComponent } from './components/footer/footer.component';
+import { CallingComponent } from './calling/calling.component';
+import { LanguageSwitchComponent } from './components/language-switch/language-switch.component';
+import { TalkingPointsComponent } from './components/talking-points/talking-points.component';
+import { SelectMEPComponent } from './components/select-mep/select-mep.component';
+import { TitleComponent } from './components/title/title.component';
+import { NgClass, AsyncPipe } from '@angular/common';
+import { ResponsiveDirective } from './common/directives/responsive.directive';
 
 @Component({
-  selector: 'dmep-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  encapsulation: ViewEncapsulation.ShadowDom,
+    selector: 'dmep-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    encapsulation: ViewEncapsulation.ShadowDom,
+    standalone: true,
+    imports: [
+        ResponsiveDirective,
+        CdkOverlayOrigin,
+        NgClass,
+        TitleComponent,
+        SelectMEPComponent,
+        TalkingPointsComponent,
+        LanguageSwitchComponent,
+        CallingComponent,
+        FooterComponent,
+        CdkConnectedOverlay,
+        MatIcon,
+        AsyncPipe,
+        TranslocoModule,
+        SafePipe,
+    ],
 })
 export class AppComponent implements OnInit, OnChanges, AfterViewInit {
   public styleUrl$?: Observable<string>

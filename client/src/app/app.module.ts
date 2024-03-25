@@ -46,27 +46,25 @@ function appInitializerFactory(configService: ConfigService, baseUrlService: Bas
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    TranslocoRootModule,
-    ApiModule.forRoot({ rootUrl: '' }),
-    AppCommonModule,
-    ComponentsModule,
-    CallingModule,
-  ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: BaseUrlInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: RetryInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: TimeoutInterceptor, multi: true },
-    { provide: APP_INITIALIZER, useFactory: appInitializerFactory, deps: [ ConfigService, BaseUrlService ], multi: true }
-  ],
-  bootstrap: [],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        TranslocoRootModule,
+        ApiModule.forRoot({ rootUrl: '' }),
+        AppCommonModule,
+        ComponentsModule,
+        CallingModule,
+        AppComponent,
+    ],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: BaseUrlInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: RetryInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: TimeoutInterceptor, multi: true },
+        { provide: APP_INITIALIZER, useFactory: appInitializerFactory, deps: [ConfigService, BaseUrlService], multi: true }
+    ],
+    bootstrap: [],
 })
 export class AppModule implements DoBootstrap {
   constructor(private readonly injector: Injector) {}

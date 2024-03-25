@@ -11,13 +11,13 @@ describe('UpdateCallScheduleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ 
+    imports: [
         AppCommonModule,
         TestingModule,
         ComponentsModule,
-      ],
-      declarations: [ UpdateCallScheduleComponent ]
-    })
+        UpdateCallScheduleComponent,
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(UpdateCallScheduleComponent);

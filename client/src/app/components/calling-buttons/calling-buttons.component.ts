@@ -1,9 +1,23 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatError } from '@angular/material/form-field';
+import { MatButton } from '@angular/material/button';
+import { TranslocoModule } from '@ngneat/transloco';
+import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 
 @Component({
-  selector: 'dmep-calling-buttons',
-  templateUrl: './calling-buttons.component.html',
-  styleUrls: ['./calling-buttons.component.scss'],
+    selector: 'dmep-calling-buttons',
+    templateUrl: './calling-buttons.component.html',
+    styleUrls: ['./calling-buttons.component.scss'],
+    standalone: true,
+    imports: [
+        CdkConnectedOverlay,
+        TranslocoModule,
+        CdkOverlayOrigin,
+        MatButton,
+        MatError,
+        MatIcon,
+    ],
 })
 export class CallingButtonsComponent {
   @Input()

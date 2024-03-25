@@ -1,10 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
+import { TranslocoModule } from '@ngneat/transloco';
+import { MatOption } from '@angular/material/core';
+import { MatSelect, MatSelectTrigger } from '@angular/material/select';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 @Component({
-  selector: 'dmep-language-switch',
-  templateUrl: './language-switch.component.html',
-  styleUrls: ['./language-switch.component.scss']
+    selector: 'dmep-language-switch',
+    templateUrl: './language-switch.component.html',
+    styleUrls: ['./language-switch.component.scss'],
+    standalone: true,
+    imports: [MatFormField, MatLabel, MatSelect, MatSelectTrigger, MatOption, TranslocoModule]
 })
 export class LanguageSwitchComponent implements OnInit {
   public availableLanguages?: string[]

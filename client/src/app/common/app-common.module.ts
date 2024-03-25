@@ -7,23 +7,21 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ToAbsolutePipe } from './pipes/to-absolute.pipe';
 
 @NgModule({
-  declarations: [
-    SafePipe,
-    ResponsiveDirective,
-    ToAbsolutePipe,
-  ],
-  imports: [
-    MaterialModule,
-    TranslocoModule,
-    ReactiveFormsModule,
-  ],
-  exports: [
-    SafePipe,
-    MaterialModule,
-    TranslocoModule,
-    ResponsiveDirective,
-    ReactiveFormsModule,
-    ToAbsolutePipe,
-  ]
+    imports: [
+        MaterialModule,
+        TranslocoModule,
+        ReactiveFormsModule,
+        SafePipe,
+        ResponsiveDirective,
+        ToAbsolutePipe,
+    ],
+    exports: [
+        SafePipe,
+        MaterialModule,
+        TranslocoModule,
+        ResponsiveDirective,
+        ReactiveFormsModule,
+        ToAbsolutePipe,
+    ]
 })
 export class AppCommonModule { }

@@ -9,11 +9,11 @@ describe('FooterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        getTranslocoModule()
-      ],
-      declarations: [ FooterComponent ]
-    })
+    imports: [
+        getTranslocoModule(),
+        FooterComponent
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(FooterComponent);
