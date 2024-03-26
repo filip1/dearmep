@@ -1,9 +1,9 @@
 <span transloco="talkingPoints.title" class="dmep-talking-points-title"></span>
 <div class="dmep-talking-points" *transloco="let t">
   @for (talkingPoint of t('talkingPoints.points'); track talkingPoint) {
-<div class="dmep-talking-point">
-    <h3>{{ talkingPoint.title }}</h3>
-    <p>{{ talkingPoint.body }}</p>
-  </div>
-}
+    <div class="dmep-talking-point">
+      <h3>{{ talkingPoint.title }}</h3>
+      <p>{{ talkingPoint.body }}</p>
+    </div>
+  }
 </div>

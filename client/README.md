@@ -44,9 +44,14 @@ Run `npx ng generate component component-name` to generate a new component. You 
 
 Run `npm run build` to build the project. The build artifacts will be stored in the `dist/dear-mep-bundle/` directory.
 
-## Lint
+## Format & Lint
+
+Run `npm run format` to format the whole project using [prettier](https://prettier.io/).
 
 Run `npm run lint` or `npm run lint:fix` to lint (and fix) the code.
+
+> **VSCode:**
+> If you are using VSCode, install the [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension and set `"editor.formatOnSave": true` in the settings.
 
 ## Running unit tests
 

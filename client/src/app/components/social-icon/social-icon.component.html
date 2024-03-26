@@ -1,38 +1,51 @@
 @if (usePopover()) {
-
-  <a (click)="togglePopover()" [matTooltip]="getText()" matTooltipPosition="above" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+  <a
+    (click)="togglePopover()"
+    [matTooltip]="getText()"
+    matTooltipPosition="above"
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin">
     @if (!useSvgIcon()) {
-<mat-icon>
-      {{ getIcon() }}
-    </mat-icon>
-}
+      <mat-icon>
+        {{ getIcon() }}
+      </mat-icon>
+    }
     @if (useSvgIcon()) {
-<mat-icon [svgIcon]="getIcon()"></mat-icon>
-}
+      <mat-icon [svgIcon]="getIcon()"></mat-icon>
+    }
   </a>
-  <ng-template cdkConnectedOverlay [cdkConnectedOverlayHasBackdrop]="true" cdkConnectedOverlayBackdropClass="dmep-popover-backdrop" (backdropClick)="popoverIsOpen = false" [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="popoverIsOpen">
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayHasBackdrop]="true"
+    cdkConnectedOverlayBackdropClass="dmep-popover-backdrop"
+    (backdropClick)="popoverIsOpen = false"
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="popoverIsOpen">
     <div class="dmep-popover">
       <mat-icon>
         {{ getIcon() }}
       </mat-icon>
       <p>
-        <a [href]="getTarget() | safe: 'url'" [matTooltip]="getText()">{{ getText() }}</a>
+        <a [href]="getTarget() | safe: 'url'" [matTooltip]="getText()">{{
+          getText()
+        }}</a>
       </p>
     </div>
   </ng-template>
-
 }
 @if (!usePopover()) {
-
-  <a target="_blank" [href]="getTarget()" [matTooltip]="getText()" matTooltipPosition="above" >
+  <a
+    target="_blank"
+    [href]="getTarget()"
+    [matTooltip]="getText()"
+    matTooltipPosition="above">
     @if (!useSvgIcon()) {
-<mat-icon>
-      {{ getIcon() }}
-    </mat-icon>
-}
+      <mat-icon>
+        {{ getIcon() }}
+      </mat-icon>
+    }
     @if (useSvgIcon()) {
-<mat-icon [svgIcon]="getIcon()"></mat-icon>
-}
+      <mat-icon [svgIcon]="getIcon()"></mat-icon>
+    }
   </a>
-
 }

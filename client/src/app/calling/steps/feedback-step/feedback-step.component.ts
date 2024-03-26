@@ -14,50 +14,66 @@ import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
 import { TranslocoModule } from '@ngneat/transloco';
 
 @Component({
-    selector: 'dmep-feedback-step',
-    templateUrl: './feedback-step.component.html',
-    styleUrls: ['./feedback-step.component.scss'],
-    standalone: true,
-    imports: [TranslocoModule, MatRadioGroup, ReactiveFormsModule, MatRadioButton, MatCheckbox, MatFormField, MatLabel, MatInput, MatButton]
+  selector: 'dmep-feedback-step',
+  templateUrl: './feedback-step.component.html',
+  styleUrls: ['./feedback-step.component.scss'],
+  standalone: true,
+  imports: [
+    TranslocoModule,
+    MatRadioGroup,
+    ReactiveFormsModule,
+    MatRadioButton,
+    MatCheckbox,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatButton,
+  ],
 })
 export class FeedbackStepComponent {
-  public readonly convincedYes = FeedbackConvinced.Yes
-  public readonly convincedLikeleyYes = FeedbackConvinced.LikelyYes
-  public readonly convincedLikeleyNo = FeedbackConvinced.LikelyNo
-  public readonly convincedNo = FeedbackConvinced.No
+  public readonly convincedYes = FeedbackConvinced.Yes;
+  public readonly convincedLikeleyYes = FeedbackConvinced.LikelyYes;
+  public readonly convincedLikeleyNo = FeedbackConvinced.LikelyNo;
+  public readonly convincedNo = FeedbackConvinced.No;
 
   public readonly formGroup = new FormGroup({
-    convinced: new FormControl<FeedbackConvinced | undefined>(undefined, { updateOn: "change" }),
+    convinced: new FormControl<FeedbackConvinced | undefined>(undefined, {
+      updateOn: 'change',
+    }),
     technicalProblems: new FormControl<boolean>(false, { updateOn: 'change' }),
-    additionalFeedback: new FormControl<string | undefined>(undefined, { updateOn: 'change' }),
-  })
+    additionalFeedback: new FormControl<string | undefined>(undefined, {
+      updateOn: 'change',
+    }),
+  });
 
   constructor(
     private readonly routingStateManager: RoutingStateManagerService,
     private readonly selectDestinationService: SelectDestinationService,
     private readonly feedbackService: FeedbackService,
-    private readonly errorService: ErrorService,
-  ) { }
+    private readonly errorService: ErrorService
+  ) {}
 
   public async submitClick() {
-    this.feedbackService.submitFeedback({
-      convinced: this.formGroup.value.convinced || undefined,
-      technical_problems: this.formGroup.value.technicalProblems || undefined,
-      additional: this.formGroup.value.additionalFeedback || undefined,
-    }).pipe(take(1))
-    .subscribe({
-      next: () => {
-        this.selectDestinationService.renewSuggestedDestination()
-        this.routingStateManager.returnHome()
-      },
-      error: (err) => {
-        this.errorService.displayUnknownError(err)
-      }
-    })
+    this.feedbackService
+      .submitFeedback({
+        convinced: this.formGroup.value.convinced || undefined,
+        technical_problems: this.formGroup.value.technicalProblems || undefined,
+        additional: this.formGroup.value.additionalFeedback || undefined,
+      })
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.selectDestinationService.renewSuggestedDestination();
+          this.routingStateManager.returnHome();
+        },
+        error: err => {
+          this.errorService.displayUnknownError(err);
+        },
+      });
   }
 
   public skipClick() {
-    this.selectDestinationService.renewSuggestedDestination()
-    this.routingStateManager.returnHome()
+    this.selectDestinationService.renewSuggestedDestination();
+    this.routingStateManager.returnHome();
   }
 }

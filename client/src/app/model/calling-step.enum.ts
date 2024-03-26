@@ -4,5 +4,5 @@ export enum CallingStep {
   Verify = 'verify',
   Setup = 'call-starting',
   Feedback = 'call-feedback',
-  UpdateCallSchedule = 'update-call-schedule'
+  UpdateCallSchedule = 'update-call-schedule',
 }

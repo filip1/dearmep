@@ -5,7 +5,12 @@
 
   span {
     // Text Decoration: More info here: https://stackoverflow.com/a/61361501
-    background: linear-gradient(0deg, var(--dmep-primary-color) 0%, var(--dmep-primary-color) 55%, rgba(0, 0, 0, 0) 55%);
+    background: linear-gradient(
+      0deg,
+      var(--dmep-primary-color) 0%,
+      var(--dmep-primary-color) 55%,
+      rgba(0, 0, 0, 0) 55%
+    );
     padding: 0 2rem 0.1rem 1rem;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;

@@ -1,88 +1,124 @@
 <h2 transloco="verification.title" class="dmep-verification-title"></h2>
 
-
 @switch (step) {
   @case (StepEnterNumber) {
-
-    <p transloco="verification.enterNumber.description" class="enter-number-description description"></p>
+    <p
+      transloco="verification.enterNumber.description"
+      class="enter-number-description description"></p>
 
     <mat-form-field appearance="outline" subscriptSizing="fixed">
-      <mat-label transloco="verification.enterNumber.numberFieldLabel"></mat-label>
-      <dmep-phone-number-input [formControl]="numberFormControl"></dmep-phone-number-input>
-      @if (numberFormControl.errors && numberFormControl.errors['isEmptyError']) {
-<mat-error transloco="verification.enterNumber.numberIsRequired"></mat-error>
-}
-      @if (numberFormControl.errors && numberFormControl.errors['isInvalidError']) {
-<mat-error transloco="verification.enterNumber.invalidNumber"></mat-error>
-}
-      @if (numberFormControl.errors && numberFormControl.errors['isNotAllowedError']) {
-<mat-error transloco="verification.enterNumber.numberNotAllowed"></mat-error>
-}
-      @if (numberFormControl.errors && numberFormControl.errors['isBlockedError']) {
-<mat-error transloco="verification.enterNumber.numberBlocked"></mat-error>
-}
-      @if (numberFormControl.errors && numberFormControl.errors['isTooManyAttempts']) {
-<mat-error transloco="verification.enterNumber.tooManyAttempts"></mat-error>
-}
+      <mat-label
+        transloco="verification.enterNumber.numberFieldLabel"></mat-label>
+      <dmep-phone-number-input
+        [formControl]="numberFormControl"></dmep-phone-number-input>
+      @if (
+        numberFormControl.errors && numberFormControl.errors['isEmptyError']
+      ) {
+        <mat-error
+          transloco="verification.enterNumber.numberIsRequired"></mat-error>
+      }
+      @if (
+        numberFormControl.errors && numberFormControl.errors['isInvalidError']
+      ) {
+        <mat-error
+          transloco="verification.enterNumber.invalidNumber"></mat-error>
+      }
+      @if (
+        numberFormControl.errors &&
+        numberFormControl.errors['isNotAllowedError']
+      ) {
+        <mat-error
+          transloco="verification.enterNumber.numberNotAllowed"></mat-error>
+      }
+      @if (
+        numberFormControl.errors && numberFormControl.errors['isBlockedError']
+      ) {
+        <mat-error
+          transloco="verification.enterNumber.numberBlocked"></mat-error>
+      }
+      @if (
+        numberFormControl.errors &&
+        numberFormControl.errors['isTooManyAttempts']
+      ) {
+        <mat-error
+          transloco="verification.enterNumber.tooManyAttempts"></mat-error>
+      }
     </mat-form-field>
 
     <section class="dmep-policy-section">
-      <mat-checkbox color="primary"
+      <mat-checkbox
+        color="primary"
         [checked]="acceptPolicy"
         (change)="acceptPolicy = $event.checked">
-        <div [innerHTML]="'verification.enterNumber.policy' | transloco: { policyLink: getPolicyLinkHtml() }"></div>
+        <div
+          [innerHTML]="
+            'verification.enterNumber.policy'
+              | transloco: { policyLink: getPolicyLinkHtml() }
+          "></div>
       </mat-checkbox>
     </section>
 
     <div class="dmep-btn-container">
-      <button mat-stroked-button class="dmep-send-code-btn dmep-btn-primary-sm" color="primary"
+      <button
+        mat-stroked-button
+        class="dmep-send-code-btn dmep-btn-primary-sm"
+        color="primary"
         (click)="onSendCodeClick()"
         [disabled]="!(acceptPolicy && numberFormControl.valid)">
         {{ 'verification.enterNumber.sendCode' | transloco }}
       </button>
     </div>
-
-  
-}
+  }
   @case (StepEnterCode) {
-
-
-    <p class="enter-code-description" [innerHTML]="'verification.enterCode.description' | transloco: { number: noWrap(serverValidatedPhoneNumber) }"></p>
+    <p
+      class="enter-code-description"
+      [innerHTML]="
+        'verification.enterCode.description'
+          | transloco: { number: noWrap(serverValidatedPhoneNumber) }
+      "></p>
 
     <p class="not-your-number description">
-      <a (click)="onEditNumberClick(); $event.preventDefault()" href="#">{{ 'verification.enterCode.notYourNumber' | transloco }}</a>
+      <a (click)="onEditNumberClick(); $event.preventDefault()" href="#">{{
+        'verification.enterCode.notYourNumber' | transloco
+      }}</a>
     </p>
 
-    <mat-form-field class="enter-code-form-field" appearance="outline" subscriptSizing="dynamic" [hideRequiredMarker]="true">
+    <mat-form-field
+      class="enter-code-form-field"
+      appearance="outline"
+      subscriptSizing="dynamic"
+      [hideRequiredMarker]="true">
       <mat-label transloco="verification.enterCode.codeFieldLabel"></mat-label>
-      <input type="text" matInput [formControl]="codeFormControl">
+      <input type="text" matInput [formControl]="codeFormControl" />
       @if (codeFormControl.errors) {
-<mat-error transloco="verification.enterCode.invalidCode"></mat-error>
-}
+        <mat-error transloco="verification.enterCode.invalidCode"></mat-error>
+      }
     </mat-form-field>
 
     <div class="dmep-btn-container">
-      <button mat-stroked-button class="dmep-verify-code-btn dmep-btn-primary-sm" color="primary"
+      <button
+        mat-stroked-button
+        class="dmep-verify-code-btn dmep-btn-primary-sm"
+        color="primary"
         (click)="onVerifyCodeClick()"
         [disabled]="!codeFormControl.valid">
         {{ 'verification.enterCode.verifyCode' | transloco }}
       </button>
     </div>
-  
-}
+  }
   @case (StepSuccess) {
-
-
     <div class="success-icon-container">
       <mat-icon class="success-icon" [inline]="false">check_circle</mat-icon>
     </div>
 
-    <p class="success-description" [innerHTML]="'verification.success.message' | transloco: { number: noWrap(serverValidatedPhoneNumber) }"></p>
-
-  
+    <p
+      class="success-description"
+      [innerHTML]="
+        'verification.success.message'
+          | transloco: { number: noWrap(serverValidatedPhoneNumber) }
+      "></p>
+  }
 }
-}
-
 
 <dmep-calling-buttons
   (callNowClick)="onCallNowClick()"
@@ -91,5 +127,4 @@
   [disableScheduling]="disableScheduling"
   [isOfficeHours]="(isOfficeHours$ | async) || true"
   [officeHoursTimezone]="officeHoursTimezone"
-  [officeHoursText]="(officeHoursText$ | async) || []"
-></dmep-calling-buttons>
+  [officeHoursText]="(officeHoursText$ | async) || []"></dmep-calling-buttons>

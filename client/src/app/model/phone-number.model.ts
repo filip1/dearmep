@@ -1,4 +1,4 @@
 export interface PhoneNumber {
-  callingCode: string
-  number: string
+  callingCode: string;
+  number: string;
 }

@@ -18,7 +18,7 @@ export class TranslocoHttpLoader implements TranslocoLoader {
 
   getTranslation(lang: string): Observable<Translation> {
     return this.configService.getConfig$().pipe(
-      mergeMap((c) => {
+      mergeMap(c => {
         // use strings from config if present in selected language otherwise load from API
         if (c.language.recommended === lang && c.frontend_strings) {
           return of(c);
@@ -26,7 +26,7 @@ export class TranslocoHttpLoader implements TranslocoLoader {
           return this.apiService.getFrontendStrings({ language: lang });
         }
       }),
-      map((r) => ObjectUtil.UnflattenObject(r.frontend_strings) as Translation)
+      map(r => ObjectUtil.UnflattenObject(r.frontend_strings) as Translation)
     );
   }
 }

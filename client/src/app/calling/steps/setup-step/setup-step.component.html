@@ -1,6 +1,11 @@
 <h2 transloco="callSetup.title" class="dmep-setup-title"></h2>
 
-<p [innerHTML]="'callSetup.description' | transloco: { mep: selectedDestinationNameHtml$ | async }" class="description"></p>
+<p
+  [innerHTML]="
+    'callSetup.description'
+      | transloco: { mep: selectedDestinationNameHtml$ | async }
+  "
+  class="description"></p>
 
 <div class="callback-icon-container">
   <mat-icon class="callback-icon">phone_callback</mat-icon>

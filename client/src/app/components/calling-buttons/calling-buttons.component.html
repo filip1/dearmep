@@ -1,39 +1,57 @@
-<ng-template cdkConnectedOverlay [cdkConnectedOverlayHasBackdrop]="true"
-  cdkConnectedOverlayBackdropClass="dmep-popover-backdrop" (backdropClick)="officeHoursPopoverOpen = false"
-  [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="officeHoursPopoverOpen">
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="dmep-popover-backdrop"
+  (backdropClick)="officeHoursPopoverOpen = false"
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="officeHoursPopoverOpen">
   <div class="dmep-popover">
     <h3 transloco="call.office-hours.title"></h3>
-    <p transloco="call.office-hours.description" class="office-hours-description"></p>
+    <p
+      transloco="call.office-hours.description"
+      class="office-hours-description"></p>
     @for (hours of officeHoursText; track hours) {
-<p>{{ hours }}</p>
-}
+      <p>{{ hours }}</p>
+    }
     <p class="office-hours-timezone">{{ officeHoursTimezone }}</p>
   </div>
 </ng-template>
 
-<div class="dmep-btn-container" cdkOverlayOrigin #trigger="cdkOverlayOrigin" (click)="onCallNowContainerClick()">
-  <button mat-stroked-button color="primary" class="dmep-call-now-btn dmep-btn dmep-btn-primary"
-    (click)="onCallNowClick()" [disabled]="!isOfficeHours || disabled">
+<div
+  class="dmep-btn-container"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+  (click)="onCallNowContainerClick()">
+  <button
+    mat-stroked-button
+    color="primary"
+    class="dmep-call-now-btn dmep-btn dmep-btn-primary"
+    (click)="onCallNowClick()"
+    [disabled]="!isOfficeHours || disabled">
     <span class="btn-content">
       <strong>{{ 'call.call-now-btn.title' | transloco }}</strong>
-      <br>
+      <br />
       {{ 'call.call-now-btn.subtitle' | transloco }}
     </span>
   </button>
   @if (!isOfficeHours) {
-<mat-error class="dmep-error-hint" (click)="officeHoursPopoverOpen = true">
-    <mat-icon [inline]="true">info</mat-icon>
-    <span>{{ "call.call-now-btn.outOfOfficeHoursHint" | transloco }}</span>
-  </mat-error>
-}
+    <mat-error class="dmep-error-hint" (click)="officeHoursPopoverOpen = true">
+      <mat-icon [inline]="true">info</mat-icon>
+      <span>{{ 'call.call-now-btn.outOfOfficeHoursHint' | transloco }}</span>
+    </mat-error>
+  }
 </div>
 
 @if (!disableScheduling) {
-<div class="dmep-btn-container">
-  <button mat-stroked-button class="dmep-call-later-btn dmep-btn dmep-btn-secondary" (click)="onCallLaterClick()" [disabled]="disabled">
-    <span class="btn-content">
-      {{ 'call.call-later-btn.title' | transloco }}
-    </span>
-  </button>
-</div>
+  <div class="dmep-btn-container">
+    <button
+      mat-stroked-button
+      class="dmep-call-later-btn dmep-btn dmep-btn-secondary"
+      (click)="onCallLaterClick()"
+      [disabled]="disabled">
+      <span class="btn-content">
+        {{ 'call.call-later-btn.title' | transloco }}
+      </span>
+    </button>
+  </div>
 }

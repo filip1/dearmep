@@ -6,18 +6,18 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 
 @Component({
-    selector: 'dmep-calling-buttons',
-    templateUrl: './calling-buttons.component.html',
-    styleUrls: ['./calling-buttons.component.scss'],
-    standalone: true,
-    imports: [
-        CdkConnectedOverlay,
-        TranslocoModule,
-        CdkOverlayOrigin,
-        MatButton,
-        MatError,
-        MatIcon,
-    ],
+  selector: 'dmep-calling-buttons',
+  templateUrl: './calling-buttons.component.html',
+  styleUrls: ['./calling-buttons.component.scss'],
+  standalone: true,
+  imports: [
+    CdkConnectedOverlay,
+    TranslocoModule,
+    CdkOverlayOrigin,
+    MatButton,
+    MatError,
+    MatIcon,
+  ],
 })
 export class CallingButtonsComponent {
   @Input()

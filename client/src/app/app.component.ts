@@ -170,7 +170,7 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
       .getStep$()
       .pipe(
         map(
-          (step) =>
+          step =>
             step !== CallingStep.Home && step !== CallingStep.HomeAuthenticated
         )
       );
@@ -178,7 +178,7 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
       .getStep$()
       .pipe(
         map(
-          (step) =>
+          step =>
             step === CallingStep.Home ||
             step === CallingStep.HomeAuthenticated ||
             step == CallingStep.UpdateCallSchedule
@@ -186,7 +186,7 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
       );
     this.shouldDisplayMEP$ = this.routingStateManagerService
       .getStep$()
-      .pipe(map((step) => step !== CallingStep.UpdateCallSchedule));
+      .pipe(map(step => step !== CallingStep.UpdateCallSchedule));
 
     this.l10nService.setDefaultCountry(this.defaultCountry?.toUpperCase());
   }
@@ -196,7 +196,7 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
       .getConfig$()
       .pipe(delay(50))
       .subscribe({
-        next: (config) => {
+        next: config => {
           this.showMaintenanceOverlay = !!config.features.maintenance?.active;
           this.maintenanceOverlayDismissable =
             !!config.features.maintenance?.message?.dismissable;

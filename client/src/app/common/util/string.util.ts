@@ -2,18 +2,22 @@ export class StringUtil {
   /***
    * Join list of strings together using a different delimiter for the last element
    */
-  public static JoinAnd(elements: string[], delimiter: string, lastDelimiter: string): string {
+  public static JoinAnd(
+    elements: string[],
+    delimiter: string,
+    lastDelimiter: string
+  ): string {
     if (!elements?.length) {
-      return ""
+      return '';
     }
 
-    const lastElement = elements[elements.length - 1]
-    const firstElements = elements.slice(undefined, -1)
+    const lastElement = elements[elements.length - 1];
+    const firstElements = elements.slice(undefined, -1);
 
     if (firstElements.length === 0) {
-      return lastElement
+      return lastElement;
     }
 
-    return [ firstElements.join(delimiter), lastElement ].join(lastDelimiter)
+    return [firstElements.join(delimiter), lastElement].join(lastDelimiter);
   }
 }

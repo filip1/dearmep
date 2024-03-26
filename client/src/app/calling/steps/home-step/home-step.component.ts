@@ -9,52 +9,52 @@ import { AsyncPipe } from '@angular/common';
 import { CallingButtonsComponent } from '../../../components/calling-buttons/calling-buttons.component';
 
 @Component({
-    selector: 'dmep-home-step',
-    templateUrl: './home-step.component.html',
-    styleUrls: ['./home-step.component.scss'],
-    standalone: true,
-    imports: [TranslocoModule, CallingButtonsComponent, AsyncPipe]
+  selector: 'dmep-home-step',
+  templateUrl: './home-step.component.html',
+  styleUrls: ['./home-step.component.scss'],
+  standalone: true,
+  imports: [TranslocoModule, CallingButtonsComponent, AsyncPipe],
 })
 export class HomeStepComponent {
-  public descriptions$
-  public isAuthenticated$
-  public authenticatedNumberHtml$
-  public officeHoursText$
-  public isOfficeHours$
-  public officeHoursTimezone
-
+  public descriptions$;
+  public isAuthenticated$;
+  public authenticatedNumberHtml$;
+  public officeHoursText$;
+  public isOfficeHours$;
+  public officeHoursTimezone;
 
   @Input()
-  public disableScheduling = false
+  public disableScheduling = false;
 
   constructor(
     private readonly routingStateManager: RoutingStateManagerService,
     private readonly translocoService: TranslocoService,
     private readonly authService: AuthenticationService,
-    private readonly officeHoursService: OfficeHoursService,
+    private readonly officeHoursService: OfficeHoursService
   ) {
-    this.descriptions$ = this.translocoService.selectTranslate('call.home.descriptions').pipe(
-      filter(d => Array.isArray(d))
-    )
-    this.isAuthenticated$ = authService.isAuthenticated$()
+    this.descriptions$ = this.translocoService
+      .selectTranslate('call.home.descriptions')
+      .pipe(filter(d => Array.isArray(d)));
+    this.isAuthenticated$ = authService.isAuthenticated$();
     this.authenticatedNumberHtml$ = authService.getAuthenticatedNumber$().pipe(
       filter(n => typeof n === 'string'),
-      map(n => MarkupUtil.NoWrap(n, 'dmep-nowrap dmep-bold')),
-    )
-    this.officeHoursText$ = this.officeHoursService.getOfficeHoursText$()
-    this.isOfficeHours$ = this.officeHoursService.inOfficeHours$()
-    this.officeHoursTimezone = this.officeHoursService.getOfficeHours().timezone
+      map(n => MarkupUtil.NoWrap(n, 'dmep-nowrap dmep-bold'))
+    );
+    this.officeHoursText$ = this.officeHoursService.getOfficeHoursText$();
+    this.isOfficeHours$ = this.officeHoursService.inOfficeHours$();
+    this.officeHoursTimezone =
+      this.officeHoursService.getOfficeHours().timezone;
   }
 
   public onCallNowClick() {
-    this.routingStateManager.callNow()
+    this.routingStateManager.callNow();
   }
 
   public onCallLaterClick() {
-    this.routingStateManager.scheduleCall()
+    this.routingStateManager.scheduleCall();
   }
 
   public onReauthenticateClick() {
-    this.authService.logout()
+    this.authService.logout();
   }
 }
