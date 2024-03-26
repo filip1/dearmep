@@ -5,8 +5,7 @@
   margin: 8px 0;
 }
 
-::ng-deep
-mat-radio-button .mdc-form-field {
+::ng-deep mat-radio-button .mdc-form-field {
   flex-direction: column;
   align-items: center;
   label {

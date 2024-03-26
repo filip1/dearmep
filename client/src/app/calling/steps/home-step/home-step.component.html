@@ -1,35 +1,30 @@
 <div class="container">
   @if ((isAuthenticated$ | async) === false) {
-
     <h2 transloco="call.home.title" class="calling-title"></h2>
 
     @for (description of descriptions$ | async; track description) {
-<p class="description">
-      {{ description.text }}
-    </p>
-}
-  
-}
+      <p class="description">
+        {{ description.text }}
+      </p>
+    }
+  }
 
   @if (isAuthenticated$ | async) {
-
     <h2 transloco="call.home.titleAuthenticated" class="calling-title"></h2>
 
     <p
       class="description"
       [innerHTML]="
         'call.home.youHaveAlreadySignedIn'
-          | transloco : { number: authenticatedNumberHtml$ | async }
-      "
-    ></p>
+          | transloco: { number: authenticatedNumberHtml$ | async }
+      "></p>
 
     <p class="not-your-number description">
       <a (click)="onReauthenticateClick(); $event.preventDefault()" href="#">
-        {{ "call.home.notYourNumber" | transloco }}
+        {{ 'call.home.notYourNumber' | transloco }}
       </a>
     </p>
-  
-}
+  }
 
   <dmep-calling-buttons
     (callNowClick)="onCallNowClick()"
@@ -37,6 +32,5 @@
     [disableScheduling]="disableScheduling"
     [isOfficeHours]="!!(isOfficeHours$ | async)"
     [officeHoursTimezone]="officeHoursTimezone"
-    [officeHoursText]="(officeHoursText$ | async) || []"
-  ></dmep-calling-buttons>
+    [officeHoursText]="(officeHoursText$ | async) || []"></dmep-calling-buttons>
 </div>

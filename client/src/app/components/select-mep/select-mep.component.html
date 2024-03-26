@@ -1,51 +1,65 @@
 <div class="dmep-card-container">
   @if (mepSelectionPossible$ | async) {
-<div class="dmep-destination-filter">
-    <mat-form-field appearance="outline" class="dmep-search-member-field" subscriptSizing="dynamic">
-      <mat-label>{{ 'select-mep.search.placeholder' | transloco }}</mat-label>
-      <mat-icon matPrefix>search</mat-icon>
-      @if (!autocompleteIsLoading) {
-<mat-icon matSuffix>expand_more</mat-icon>
-}
-      @if (autocompleteIsLoading) {
-<mat-spinner [diameter]="24" matSuffix></mat-spinner>
-}
-      <input type="text"
-        [placeholder]="'select-mep.search.placeholder' | transloco"
-        matInput
-        [matAutocomplete]="auto"
-        [formControl]="searchMEPFormControl"
-        #destinationSearchInput>
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="getMepName" hideSingleSelectionIndicator="true">
-        @for (mep of filteredMEPs | async; track mep) {
-<mat-option [value]="mep">
-          <div class="mep-search-result">
-            <span [classList]="'flag:' + mep.country"></span>
-            <span class="mep-name">{{ mep.name }}</span>
-            @for (group of mep.groups; track group) {
-
-              @if (group.logo) {
-<img [src]="group.logo | toAbsolute: 'api'" class="dmep-group-icon">
-}
-            
-}
-          </div>
-        </mat-option>
-}
-        @if ((filteredMEPs | async)?.length === 0) {
-<mat-option [disabled]="true">
-          {{ 'select-mep.autocomplete-empty' | transloco }}
-        </mat-option>
-}
-      </mat-autocomplete>
-    </mat-form-field>
-    <dmep-country-select></dmep-country-select>
-  </div>
-}
-  <dmep-mep-detail [allowChangeMEP]="mepSelectionPossible$ | async" [mep]="selectedMEP$ | async" (MEPChange)="renewSuggestion()"></dmep-mep-detail>
+    <div class="dmep-destination-filter">
+      <mat-form-field
+        appearance="outline"
+        class="dmep-search-member-field"
+        subscriptSizing="dynamic">
+        <mat-label>{{ 'select-mep.search.placeholder' | transloco }}</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        @if (!autocompleteIsLoading) {
+          <mat-icon matSuffix>expand_more</mat-icon>
+        }
+        @if (autocompleteIsLoading) {
+          <mat-spinner [diameter]="24" matSuffix></mat-spinner>
+        }
+        <input
+          type="text"
+          [placeholder]="'select-mep.search.placeholder' | transloco"
+          matInput
+          [matAutocomplete]="auto"
+          [formControl]="searchMEPFormControl"
+          #destinationSearchInput />
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          [displayWith]="getMepName"
+          hideSingleSelectionIndicator="true">
+          @for (mep of filteredMEPs | async; track mep) {
+            <mat-option [value]="mep">
+              <div class="mep-search-result">
+                <span [classList]="'flag:' + mep.country"></span>
+                <span class="mep-name">{{ mep.name }}</span>
+                @for (group of mep.groups; track group) {
+                  @if (group.logo) {
+                    <img
+                      [src]="group.logo | toAbsolute: 'api'"
+                      class="dmep-group-icon" />
+                  }
+                }
+              </div>
+            </mat-option>
+          }
+          @if ((filteredMEPs | async)?.length === 0) {
+            <mat-option [disabled]="true">
+              {{ 'select-mep.autocomplete-empty' | transloco }}
+            </mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+      <dmep-country-select></dmep-country-select>
+    </div>
+  }
+  <dmep-mep-detail
+    [allowChangeMEP]="mepSelectionPossible$ | async"
+    [mep]="selectedMEP$ | async"
+    (MEPChange)="renewSuggestion()"></dmep-mep-detail>
   <div class="dmep-portrait-credit">
     @if (selectedMEP$ | async) {
-<span [innerHTML]="'select-mep.portraitCreditHtml' | transloco: { id: (selectedMEP$ | async)?.id }"></span>
-}
+      <span
+        [innerHTML]="
+          'select-mep.portraitCreditHtml'
+            | transloco: { id: (selectedMEP$ | async)?.id }
+        "></span>
+    }
   </div>
 </div>

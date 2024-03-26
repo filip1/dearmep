@@ -10,4 +10,4 @@ import { environment } from './environments/environment';
     injector: app.injector,
   });
   customElements.define(environment.dmepTagName, appComponent);
-})().catch((err) => console.error(err));
+})().catch(err => console.error(err));

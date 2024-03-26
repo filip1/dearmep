@@ -1,5 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DomSanitizer, SafeHtml, SafeResourceUrl, SafeScript, SafeStyle, SafeUrl } from '@angular/platform-browser';
+import {
+  DomSanitizer,
+  SafeHtml,
+  SafeResourceUrl,
+  SafeScript,
+  SafeStyle,
+  SafeUrl,
+} from '@angular/platform-browser';
 
 /**
  * Safe pipe marks srings as trusted to avoid angular warnings regarding XSS.
@@ -8,16 +15,26 @@ import { DomSanitizer, SafeHtml, SafeResourceUrl, SafeScript, SafeStyle, SafeUrl
  * It must never be used with values that originate from user input in any way.
  */
 @Pipe({
-    name: 'safe',
-    pure: true,
-    standalone: true,
+  name: 'safe',
+  pure: true,
+  standalone: true,
 })
 export class SafePipe implements PipeTransform {
-  constructor(private readonly sanitizer: DomSanitizer) { }
+  constructor(private readonly sanitizer: DomSanitizer) {}
 
-  transform(value: string | undefined | null, type: string): SafeHtml | SafeStyle | SafeScript | SafeUrl | SafeResourceUrl | undefined | null {
+  transform(
+    value: string | undefined | null,
+    type: string
+  ):
+    | SafeHtml
+    | SafeStyle
+    | SafeScript
+    | SafeUrl
+    | SafeResourceUrl
+    | undefined
+    | null {
     if (!value) {
-      return value
+      return value;
     }
     switch (type) {
       case 'html':
@@ -31,7 +48,7 @@ export class SafePipe implements PipeTransform {
       case 'resourceUrl':
         return this.sanitizer.bypassSecurityTrustResourceUrl(value);
       default:
-        throw new Error(`Unknonw type: '${type}'`)
+        throw new Error(`Unknonw type: '${type}'`);
     }
   }
 }

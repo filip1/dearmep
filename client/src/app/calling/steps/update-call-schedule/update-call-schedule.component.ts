@@ -6,7 +6,11 @@ import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 // Change this import to enable optimizations as soon as https://github.com/marnusw/date-fns-tz/issues/193 is fixed
 import { addMinutes, isBefore } from 'date-fns/esm';
 import { Subject, take, takeUntil } from 'rxjs';
-import { OfficeHoursInterval, OfficeHoursResponse, Schedule } from 'src/app/api/models';
+import {
+  OfficeHoursInterval,
+  OfficeHoursResponse,
+  Schedule,
+} from 'src/app/api/models';
 import { ApiService } from 'src/app/api/services';
 import { AUTH_TOKEN_REQUIRED } from 'src/app/common/interceptors/auth.interceptor';
 import { StringUtil } from 'src/app/common/util/string.util';
@@ -23,35 +27,53 @@ import { MatIcon } from '@angular/material/icon';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { MatFormField, MatHint, MatSuffix } from '@angular/material/form-field';
-import { MatButtonToggleGroup, MatButtonToggle } from '@angular/material/button-toggle';
+import {
+  MatButtonToggleGroup,
+  MatButtonToggle,
+} from '@angular/material/button-toggle';
 import { CountrySelectComponent } from '../../../components/country-select/country-select.component';
 
 @Component({
-    selector: 'dmep-update-call-schedule',
-    templateUrl: './update-call-schedule.component.html',
-    styleUrls: ['./update-call-schedule.component.scss'],
-    standalone: true,
-    imports: [TranslocoModule, CountrySelectComponent, MatButtonToggleGroup, ReactiveFormsModule, MatButtonToggle, MatFormField, MatSelect, MatOption, MatHint, MatIcon, MatSuffix, CdkConnectedOverlay, MatButton, CdkOverlayOrigin]
+  selector: 'dmep-update-call-schedule',
+  templateUrl: './update-call-schedule.component.html',
+  styleUrls: ['./update-call-schedule.component.scss'],
+  standalone: true,
+  imports: [
+    TranslocoModule,
+    CountrySelectComponent,
+    MatButtonToggleGroup,
+    ReactiveFormsModule,
+    MatButtonToggle,
+    MatFormField,
+    MatSelect,
+    MatOption,
+    MatHint,
+    MatIcon,
+    MatSuffix,
+    CdkConnectedOverlay,
+    MatButton,
+    CdkOverlayOrigin,
+  ],
 })
 export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
-  private readonly destroyed$ = new Subject<void>()
+  private readonly destroyed$ = new Subject<void>();
 
-  public localTimeZone?: string
+  public localTimeZone?: string;
 
-  public availableTimes?: Map<DayOfWeek, TimeOfDay[]>
+  public availableTimes?: Map<DayOfWeek, TimeOfDay[]>;
 
-  public selectedCountry: string | undefined
+  public selectedCountry: string | undefined;
 
-  public availableDays
+  public availableDays;
 
-  public selectedDayFormControl = new FormControl<DayOfWeek>(DayOfWeek.Monday)
-  public selectedTimeFormControls
+  public selectedDayFormControl = new FormControl<DayOfWeek>(DayOfWeek.Monday);
+  public selectedTimeFormControls;
 
-  public scheduleUpdatedPopoverOpen = false
+  public scheduleUpdatedPopoverOpen = false;
 
-  private officeHours: OfficeHoursResponse
+  private officeHours: OfficeHoursResponse;
 
-  private language?: string
+  private language?: string;
 
   constructor(
     private readonly translocoService: TranslocoService,
@@ -59,206 +81,247 @@ export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
     private readonly l10nService: L10nService,
     private readonly routingStateManager: RoutingStateManagerService,
     private readonly officeHoursService: OfficeHoursService,
-    private readonly apiService: ApiService,
+    private readonly apiService: ApiService
   ) {
-    this.officeHours = officeHoursService.getOfficeHours()
-    this.availableDays = officeHoursService.getDays()
+    this.officeHours = officeHoursService.getOfficeHours();
+    this.availableDays = officeHoursService.getDays();
 
     this.selectedTimeFormControls = new Map(
-      this.availableDays.map((day) => [ day, new FormControl<TimeOfDay | null>({ value: null, disabled: true }) ])
-    )
+      this.availableDays.map(day => [
+        day,
+        new FormControl<TimeOfDay | null>({ value: null, disabled: true }),
+      ])
+    );
   }
 
   public ngOnInit(): void {
-    this.localTimeZone = this.timeService.getLocalTimeZone()
-    this.availableTimes = this.getTimesForDays()
+    this.localTimeZone = this.timeService.getLocalTimeZone();
+    this.availableTimes = this.getTimesForDays();
 
-    this.l10nService.getCountry$().pipe(
-      takeUntil(this.destroyed$),
-    ).subscribe({
-      next: (c) => this.selectedCountry = c
-    })
+    this.l10nService
+      .getCountry$()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: c => (this.selectedCountry = c),
+      });
 
-    this.apiService.getSchedule({}, new HttpContext().set(AUTH_TOKEN_REQUIRED, true)).pipe(
-      take(1)
-    ).subscribe({
-      next: (schedule) => {
-        for (const s of schedule.schedule) {
-          const d: DayOfWeek = s.day
-          let t = TimeUtil.ParseTimeOfDay(s.start_time)
-          t = this.convertTimeOfDayFromUTC(t)
-          const control = this.selectedTimeFormControls.get(d)
-          if (control) {
-            control.setValue(t)
+    this.apiService
+      .getSchedule({}, new HttpContext().set(AUTH_TOKEN_REQUIRED, true))
+      .pipe(take(1))
+      .subscribe({
+        next: schedule => {
+          for (const s of schedule.schedule) {
+            const d: DayOfWeek = s.day;
+            let t = TimeUtil.ParseTimeOfDay(s.start_time);
+            t = this.convertTimeOfDayFromUTC(t);
+            const control = this.selectedTimeFormControls.get(d);
+            if (control) {
+              control.setValue(t);
+            }
           }
-        }
-        for (const ctrl of this.selectedTimeFormControls.values()) {
-          ctrl.enable()
-        }
-      }
-    })
+          for (const ctrl of this.selectedTimeFormControls.values()) {
+            ctrl.enable();
+          }
+        },
+      });
 
-    this.l10nService.getLanguage$().pipe(
-      takeUntil(this.destroyed$),
-    ).subscribe({
-      next: (l) => this.language = l
-    })
+    this.l10nService
+      .getLanguage$()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: l => (this.language = l),
+      });
   }
 
   public ngOnDestroy(): void {
-    this.destroyed$.next()
-    this.destroyed$.complete()
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   public isTimeSelectedForDay(day: DayOfWeek) {
-    return !!this.selectedTimeFormControls.get(day)?.value
+    return !!this.selectedTimeFormControls.get(day)?.value;
   }
 
   public getSelectTimeFormControl() {
     if (!this.selectedDayFormControl.value) {
-      throw Error("no day selected")
+      throw Error('no day selected');
     }
-    const control = this.selectedTimeFormControls.get(this.selectedDayFormControl.value)
+    const control = this.selectedTimeFormControls.get(
+      this.selectedDayFormControl.value
+    );
     if (!control) {
-      throw Error("form control for day is not defined")
+      throw Error('form control for day is not defined');
     }
-    return control
+    return control;
   }
 
   public getTimes() {
-    const day = this.selectedDayFormControl.value
+    const day = this.selectedDayFormControl.value;
     if (!day) {
-      throw Error("no day selected")
+      throw Error('no day selected');
     }
-    return this.availableTimes?.get(day)
+    return this.availableTimes?.get(day);
   }
 
   public getSelectedTimesAsText() {
-    const timeSlots: string[] = []
+    const timeSlots: string[] = [];
     for (const day of this.availableDays) {
-      const control = this.selectedTimeFormControls.get(day)
+      const control = this.selectedTimeFormControls.get(day);
       if (control?.value) {
-        const nameOfDay = this.getNameOfDay(day)
-        const time = this.formatTimeOfDay(control.value)
-        const timeSlot = this.translocoService.translate("schedule.timeSlot", { dayOfWeek: nameOfDay, time })
-        const timeSlotBold = `<b>${timeSlot}</b>`
-        timeSlots.push(timeSlotBold)
+        const nameOfDay = this.getNameOfDay(day);
+        const time = this.formatTimeOfDay(control.value);
+        const timeSlot = this.translocoService.translate('schedule.timeSlot', {
+          dayOfWeek: nameOfDay,
+          time,
+        });
+        const timeSlotBold = `<b>${timeSlot}</b>`;
+        timeSlots.push(timeSlotBold);
       }
     }
 
     if (timeSlots.length === 0) {
-      return ""
+      return '';
     }
 
-    const delimiter = this.translocoService.translate("util.join.delimiter")
-    const lastDelimiter = this.translocoService.translate("util.join.lastDelimiter")
-    const timeSlotsString = StringUtil.JoinAnd(timeSlots, delimiter, lastDelimiter)
-    const countryName = this.translocoService.translate(`countries.${this.selectedCountry}`)
-    const countryStrBold = `<b>${ countryName }</b>`
+    const delimiter = this.translocoService.translate('util.join.delimiter');
+    const lastDelimiter = this.translocoService.translate(
+      'util.join.lastDelimiter'
+    );
+    const timeSlotsString = StringUtil.JoinAnd(
+      timeSlots,
+      delimiter,
+      lastDelimiter
+    );
+    const countryName = this.translocoService.translate(
+      `countries.${this.selectedCountry}`
+    );
+    const countryStrBold = `<b>${countryName}</b>`;
 
-    return this.translocoService.translate("schedule.scheduleAsText", { timeSlots: timeSlotsString, country: countryStrBold })
+    return this.translocoService.translate('schedule.scheduleAsText', {
+      timeSlots: timeSlotsString,
+      country: countryStrBold,
+    });
   }
 
   public removeSelectedTime() {
-    const control = this.getSelectTimeFormControl()
-    control.setValue(null)
-    control.markAsTouched()
+    const control = this.getSelectTimeFormControl();
+    control.setValue(null);
+    control.markAsTouched();
   }
 
   public canUpdateSchedule() {
     for (const v of this.selectedTimeFormControls.values()) {
       if (v.touched) {
-        return true
+        return true;
       }
     }
-    return false
+    return false;
   }
 
   public onScheduleClick() {
-    const schedule: Schedule[] = []
+    const schedule: Schedule[] = [];
     for (const day of this.availableDays) {
-      const control = this.selectedTimeFormControls.get(day)
-      let time = control?.value
+      const control = this.selectedTimeFormControls.get(day);
+      let time = control?.value;
       if (time) {
-        time = this.convertTimeOfDayToUTC(time)
+        time = this.convertTimeOfDayToUTC(time);
         schedule.push({
           day,
-          start_time: TimeUtil.StringifyTimeOfDay(time)
-        })
+          start_time: TimeUtil.StringifyTimeOfDay(time),
+        });
       }
     }
 
-    this.apiService.setSchedule({
-      body: {
-        language: this.language as string,
-        schedule,
-      },
-    }, new HttpContext().set(AUTH_TOKEN_REQUIRED, true)).pipe(
-      take(1)
-    ).subscribe({
-      next: () => {
-        this.scheduleUpdatedPopoverOpen = true
-        setTimeout(() => {
-          this.routingStateManager.returnHome()
-          this.scheduleUpdatedPopoverOpen = false
-        }, 2000)
-      }
-    })
+    this.apiService
+      .setSchedule(
+        {
+          body: {
+            language: this.language as string,
+            schedule,
+          },
+        },
+        new HttpContext().set(AUTH_TOKEN_REQUIRED, true)
+      )
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.scheduleUpdatedPopoverOpen = true;
+          setTimeout(() => {
+            this.routingStateManager.returnHome();
+            this.scheduleUpdatedPopoverOpen = false;
+          }, 2000);
+        },
+      });
   }
 
   public formatTimeOfDay(t: TimeOfDay): string {
-    const hour = t.hour.toString().padStart(2, "0")
-    const min = t.min.toString().padStart(2, "0")
-    return `${hour}:${min}`
+    const hour = t.hour.toString().padStart(2, '0');
+    const min = t.min.toString().padStart(2, '0');
+    return `${hour}:${min}`;
   }
 
   public compareTimes(a: TimeOfDay, b: TimeOfDay): boolean {
     if (!a || !b) {
-      return false
+      return false;
     }
-    return TimeUtil.TimeOfDayEquals(a, b)
+    return TimeUtil.TimeOfDayEquals(a, b);
   }
 
   private getNameOfDay(day: DayOfWeek): string {
-    const days = this.translocoService.translateObject<string[]>("schedule.days")
+    const days =
+      this.translocoService.translateObject<string[]>('schedule.days');
     if (days && days.length > day) {
-      return days[day]
+      return days[day];
     }
-    return ""
+    return '';
   }
 
   private getTimesForDays(): Map<DayOfWeek, TimeOfDay[]> {
-    const officeHours = this.officeHoursService.getOfficeHours()
-    return new Map(this.availableDays.map(d => [
-      d,
-      officeHours.weekdays[d].flatMap(interval => this.getAvailableTimes(interval)),
-    ]))
+    const officeHours = this.officeHoursService.getOfficeHours();
+    return new Map(
+      this.availableDays.map(d => [
+        d,
+        officeHours.weekdays[d].flatMap(interval =>
+          this.getAvailableTimes(interval)
+        ),
+      ])
+    );
   }
 
   private getAvailableTimes(interval: OfficeHoursInterval): TimeOfDay[] {
-    const result: TimeOfDay[] = []
+    const result: TimeOfDay[] = [];
 
-    const timezone = this.officeHours.timezone
-    let startTime = TimeUtil.TimeOfDayToTimestamp(TimeUtil.ParseTimeOfDay(interval.begin), new Date())
-    let endTime = TimeUtil.TimeOfDayToTimestamp(TimeUtil.ParseTimeOfDay(interval.end), new Date())
-    startTime = zonedTimeToUtc(startTime, timezone)
-    endTime = zonedTimeToUtc(endTime, timezone)
+    const timezone = this.officeHours.timezone;
+    let startTime = TimeUtil.TimeOfDayToTimestamp(
+      TimeUtil.ParseTimeOfDay(interval.begin),
+      new Date()
+    );
+    let endTime = TimeUtil.TimeOfDayToTimestamp(
+      TimeUtil.ParseTimeOfDay(interval.end),
+      new Date()
+    );
+    startTime = zonedTimeToUtc(startTime, timezone);
+    endTime = zonedTimeToUtc(endTime, timezone);
 
-    for (let time = startTime; isBefore(time, endTime); time = addMinutes(time, this.officeHours.call_schedule_interval)) {
-      result.push(TimeUtil.ToTimeOfDay(time))
+    for (
+      let time = startTime;
+      isBefore(time, endTime);
+      time = addMinutes(time, this.officeHours.call_schedule_interval)
+    ) {
+      result.push(TimeUtil.ToTimeOfDay(time));
     }
-    return result
+    return result;
   }
 
   private convertTimeOfDayToUTC(time: TimeOfDay): TimeOfDay {
-    let t = TimeUtil.TimeOfDayToTimestamp(time, new Date())
-    t = utcToZonedTime(t, "UTC")
-    return TimeUtil.ToTimeOfDay(t)
+    let t = TimeUtil.TimeOfDayToTimestamp(time, new Date());
+    t = utcToZonedTime(t, 'UTC');
+    return TimeUtil.ToTimeOfDay(t);
   }
 
   private convertTimeOfDayFromUTC(time: TimeOfDay): TimeOfDay {
-    let t = TimeUtil.TimeOfDayToTimestamp(time, new Date())
-    t = zonedTimeToUtc(t, "UTC")
-    return TimeUtil.ToTimeOfDay(t)
+    let t = TimeUtil.TimeOfDayToTimestamp(time, new Date());
+    t = zonedTimeToUtc(t, 'UTC');
+    return TimeUtil.ToTimeOfDay(t);
   }
 }

@@ -9,28 +9,33 @@ import { VerifyNumberComponent } from './steps/verify-number-step/verify-number.
 import { HomeStepComponent } from './steps/home-step/home-step.component';
 
 @Component({
-    selector: 'dmep-calling',
-    templateUrl: './calling.component.html',
-    styleUrls: ['./calling.component.scss'],
-    standalone: true,
-    imports: [HomeStepComponent, VerifyNumberComponent, SetupStepComponent, FeedbackStepComponent, UpdateCallScheduleComponent, AsyncPipe]
+  selector: 'dmep-calling',
+  templateUrl: './calling.component.html',
+  styleUrls: ['./calling.component.scss'],
+  standalone: true,
+  imports: [
+    HomeStepComponent,
+    VerifyNumberComponent,
+    SetupStepComponent,
+    FeedbackStepComponent,
+    UpdateCallScheduleComponent,
+    AsyncPipe,
+  ],
 })
 export class CallingComponent {
-  public readonly StepHome = CallingStep.Home
-  public readonly StepHomeAuthenticated = CallingStep.HomeAuthenticated
-  public readonly StepVerify = CallingStep.Verify
-  public readonly StepSetup = CallingStep.Setup
-  public readonly StepFeedback = CallingStep.Feedback
-  public readonly StepUpdateCallSchedule = CallingStep.UpdateCallSchedule
+  public readonly StepHome = CallingStep.Home;
+  public readonly StepHomeAuthenticated = CallingStep.HomeAuthenticated;
+  public readonly StepVerify = CallingStep.Verify;
+  public readonly StepSetup = CallingStep.Setup;
+  public readonly StepFeedback = CallingStep.Feedback;
+  public readonly StepUpdateCallSchedule = CallingStep.UpdateCallSchedule;
 
-  public readonly step$
+  public readonly step$;
 
   @Input()
-  public disableScheduling = false
+  public disableScheduling = false;
 
-  constructor(
-    routingStateManager: RoutingStateManagerService,
-  ) {
-    this.step$ = routingStateManager.getStep$()
+  constructor(routingStateManager: RoutingStateManagerService) {
+    this.step$ = routingStateManager.getStep$();
   }
 }

@@ -4,26 +4,24 @@ import { FeedbackSubmission } from 'src/app/api/models';
 import { ApiService } from 'src/app/api/services';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FeedbackService {
-  private feedbackToken?: string
+  private feedbackToken?: string;
 
-  constructor(
-    private readonly apiService: ApiService,
-  ) { }
+  constructor(private readonly apiService: ApiService) {}
 
   public setToken(token: string | undefined) {
-    this.feedbackToken = token
+    this.feedbackToken = token;
   }
 
   public submitFeedback(feedback: FeedbackSubmission) {
     if (!this.feedbackToken) {
-      return throwError(() => new Error("feedback token missing"))
+      return throwError(() => new Error('feedback token missing'));
     }
     return this.apiService.submitCallFeedback({
       token: this.feedbackToken,
       body: feedback,
-    })
+    });
   }
 }

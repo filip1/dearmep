@@ -1,19 +1,20 @@
 <div class="dmep-card-container">
-@switch (step$ | async) {
-  @case (StepHome) {
-<dmep-home-step [disableScheduling]="disableScheduling"></dmep-home-step>
-}
-  @case (StepVerify) {
-<dmep-verify-number [disableScheduling]="disableScheduling"></dmep-verify-number>
-}
-  @case (StepSetup) {
-<dmep-setup-step></dmep-setup-step>
-}
-  @case (StepFeedback) {
-<dmep-feedback-step></dmep-feedback-step>
-}
-  @case (StepUpdateCallSchedule) {
-<dmep-update-call-schedule></dmep-update-call-schedule>
-}
-}
+  @switch (step$ | async) {
+    @case (StepHome) {
+      <dmep-home-step [disableScheduling]="disableScheduling"></dmep-home-step>
+    }
+    @case (StepVerify) {
+      <dmep-verify-number
+        [disableScheduling]="disableScheduling"></dmep-verify-number>
+    }
+    @case (StepSetup) {
+      <dmep-setup-step></dmep-setup-step>
+    }
+    @case (StepFeedback) {
+      <dmep-feedback-step></dmep-feedback-step>
+    }
+    @case (StepUpdateCallSchedule) {
+      <dmep-update-call-schedule></dmep-update-call-schedule>
+    }
+  }
 </div>

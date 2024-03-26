@@ -7,26 +7,26 @@ import { Injectable } from '@angular/core';
  * embedding site (example: use key "dmep-language" instead of "language")
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LocalStorageService {
-  private readonly keyPrefix = "dmep"
+  private readonly keyPrefix = 'dmep';
 
   public setString(key: string, value?: string | undefined) {
-    const prefixedKey = this.prefixKey(key)
+    const prefixedKey = this.prefixKey(key);
     if (value === null || value === undefined) {
-      localStorage.removeItem(prefixedKey)
-      return
+      localStorage.removeItem(prefixedKey);
+      return;
     }
-    localStorage.setItem(prefixedKey, value)
+    localStorage.setItem(prefixedKey, value);
   }
 
   public getString(key: string): string | null {
-    const prefixedKey = this.prefixKey(key)
-    return localStorage.getItem(prefixedKey)
+    const prefixedKey = this.prefixKey(key);
+    return localStorage.getItem(prefixedKey);
   }
 
   private prefixKey(key: string): string {
-    return `${this.keyPrefix}-${key}`
+    return `${this.keyPrefix}-${key}`;
   }
 }

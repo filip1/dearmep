@@ -4,44 +4,42 @@ import { CallingStep } from 'src/app/model/calling-step.enum';
 import { AuthenticationService } from '../authentication/authentication.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RoutingStateManagerService {
-  private readonly step$ = new BehaviorSubject<CallingStep>(CallingStep.Home)
+  private readonly step$ = new BehaviorSubject<CallingStep>(CallingStep.Home);
 
-  public constructor(
-    private readonly authService: AuthenticationService,
-  ) { }
+  public constructor(private readonly authService: AuthenticationService) {}
 
   public getStep$() {
-    return this.step$.asObservable()
+    return this.step$.asObservable();
   }
 
   public callNow() {
     if (!this.authService.isAuthenticated()) {
-      this.goToVerify()
+      this.goToVerify();
     } else {
-      this.step$.next(CallingStep.Setup)
+      this.step$.next(CallingStep.Setup);
     }
   }
 
   public scheduleCall() {
     if (!this.authService.isAuthenticated()) {
-      this.goToVerify()
+      this.goToVerify();
     } else {
-      this.step$.next(CallingStep.UpdateCallSchedule)
+      this.step$.next(CallingStep.UpdateCallSchedule);
     }
   }
 
   public goToFeedback() {
-    this.step$.next(CallingStep.Feedback)
+    this.step$.next(CallingStep.Feedback);
   }
 
   public returnHome() {
-    this.step$.next(CallingStep.Home)
+    this.step$.next(CallingStep.Home);
   }
 
   private goToVerify() {
-    this.step$.next(CallingStep.Verify)
+    this.step$.next(CallingStep.Verify);
   }
 }

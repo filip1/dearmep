@@ -9,12 +9,8 @@ describe('FooterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        getTranslocoModule(),
-        FooterComponent
-    ]
-})
-    .compileComponents();
+      imports: [getTranslocoModule(), FooterComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FooterComponent);
     component = fixture.componentInstance;

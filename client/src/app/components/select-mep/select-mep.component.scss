@@ -26,8 +26,7 @@
   margin-right: auto;
 }
 
-::ng-deep
-mat-option .mdc-list-item__primary-text {
+::ng-deep mat-option .mdc-list-item__primary-text {
   width: 100%;
 }
 
@@ -43,8 +42,7 @@ mat-form-field mat-spinner {
   display: inline-flex;
 }
 
-::ng-deep
-.dmep-display-xs dmep-select-mep {
+::ng-deep .dmep-display-xs dmep-select-mep {
   .dmep-destination-filter {
     flex-direction: column-reverse;
   }

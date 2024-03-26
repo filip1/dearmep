@@ -2,39 +2,55 @@
   Optimization: This style is loaded quite late, might make sens to add <link rel="preload" ... /> to the host page.
 -->
 @if (styleUrl$ | async) {
-<link rel="stylesheet" [href]="styleUrl$ | async | safe: 'resourceUrl'" type="text/css">
+  <link
+    rel="stylesheet"
+    [href]="styleUrl$ | async | safe: 'resourceUrl'"
+    type="text/css" />
 }
 @if (flagsStyleUrl$ | async) {
-<link rel="stylesheet" [href]="flagsStyleUrl$ | async | safe: 'resourceUrl'"
-  type="text/css">
+  <link
+    rel="stylesheet"
+    [href]="flagsStyleUrl$ | async | safe: 'resourceUrl'"
+    type="text/css" />
 }
 
-<div class="dmep-app-container" dmepResponsive [breakpoints]="{ 'dmep-display-xs': 575, 'dmep-display-md': 991 }" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
-
-  <div class="dmep-app-layout" [ngClass]="{ 'dmep-talking-points-visible': shouldDisplayTalkingPoints$ | async, 'dmep-calling-disabled': disableCalling }">
+<div
+  class="dmep-app-container"
+  dmepResponsive
+  [breakpoints]="{ 'dmep-display-xs': 575, 'dmep-display-md': 991 }"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin">
+  <div
+    class="dmep-app-layout"
+    [ngClass]="{
+      'dmep-talking-points-visible': shouldDisplayTalkingPoints$ | async,
+      'dmep-calling-disabled': disableCalling
+    }">
     @if (shouldDisplayTitle$ | async) {
-<dmep-title class="dmep-layout-left"></dmep-title>
-}
+      <dmep-title class="dmep-layout-left"></dmep-title>
+    }
     @if (shouldDisplayMEP$ | async) {
-<dmep-select-mep class="dmep-layout-left"></dmep-select-mep>
-}
+      <dmep-select-mep class="dmep-layout-left"></dmep-select-mep>
+    }
     @if (shouldDisplayTalkingPoints$ | async) {
-<dmep-talking-points class="dmep-layout-left"></dmep-talking-points>
-}
+      <dmep-talking-points class="dmep-layout-left"></dmep-talking-points>
+    }
 
     <dmep-language-switch class="dmep-layout-right"></dmep-language-switch>
     @if (!disableCalling) {
-<dmep-calling class="dmep-layout-right" [disableScheduling]="disableScheduling"></dmep-calling>
-}
-
+      <dmep-calling
+        class="dmep-layout-right"
+        [disableScheduling]="disableScheduling"></dmep-calling>
+    }
   </div>
 
   <dmep-footer></dmep-footer>
 
   @if (showMaintenanceOverlay) {
-<div class="dmep-overlay-backdrop" (click)="onMaintenanceOverlayDismissClick()"></div>
-}
-
+    <div
+      class="dmep-overlay-backdrop"
+      (click)="onMaintenanceOverlayDismissClick()"></div>
+  }
 </div>
 
 <!-- Maintenance mode overlay -->
@@ -44,12 +60,23 @@
   [cdkConnectedOverlayOrigin]="trigger"
   [cdkConnectedOverlayOpen]="showMaintenanceOverlay"
   [cdkConnectedOverlayHasBackdrop]="false"
-  [cdkConnectedOverlayPositions]="[ { originX: 'center', originY: 'center', overlayX: 'center', overlayY: 'center' } ]"
->
+  [cdkConnectedOverlayPositions]="[
+    {
+      originX: 'center',
+      originY: 'center',
+      overlayX: 'center',
+      overlayY: 'center'
+    }
+  ]">
   <div class="dmep-popover dmep-maintenance-message">
     @if (maintenanceOverlayDismissable) {
-<mat-icon [inline]="true" class="dmep-maintenance-message-dismiss-btn" (click)="onMaintenanceOverlayDismissClick()">close</mat-icon>
-}
+      <mat-icon
+        [inline]="true"
+        class="dmep-maintenance-message-dismiss-btn"
+        (click)="onMaintenanceOverlayDismissClick()"
+        >close</mat-icon
+      >
+    }
     <p [innerHTML]="'maintenance.message' | transloco | safe: 'html'"></p>
   </div>
 </ng-template>

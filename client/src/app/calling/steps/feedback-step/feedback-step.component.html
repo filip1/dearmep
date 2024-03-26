@@ -1,24 +1,53 @@
 <h2 transloco="feedback.title" class="dmep-feedback-title"></h2>
 
-<label id="convincing-question-label" transloco="feedback.convincingQuestion"></label>
-<br>
-<mat-radio-group aria-labelledby="convincing-question-label" class="convincing-question-group dmep-inner-card-container"
-  color="primary" [formControl]="formGroup.controls.convinced">
-  <mat-radio-button [value]="convincedYes">{{ "feedback.convincingQuestionFeedback.yes" | transloco }} </mat-radio-button>
-  <mat-radio-button [value]="convincedLikeleyYes">{{ "feedback.convincingQuestionFeedback.likelyYes" | transloco }}</mat-radio-button>
-  <mat-radio-button [value]="convincedLikeleyNo">{{ "feedback.convincingQuestionFeedback.likelyNo" | transloco }}</mat-radio-button>
-  <mat-radio-button [value]="convincedNo">{{ "feedback.convincingQuestionFeedback.no" | transloco }}</mat-radio-button>
+<label
+  id="convincing-question-label"
+  transloco="feedback.convincingQuestion"></label>
+<br />
+<mat-radio-group
+  aria-labelledby="convincing-question-label"
+  class="convincing-question-group dmep-inner-card-container"
+  color="primary"
+  [formControl]="formGroup.controls.convinced">
+  <mat-radio-button [value]="convincedYes"
+    >{{ 'feedback.convincingQuestionFeedback.yes' | transloco }}
+  </mat-radio-button>
+  <mat-radio-button [value]="convincedLikeleyYes">{{
+    'feedback.convincingQuestionFeedback.likelyYes' | transloco
+  }}</mat-radio-button>
+  <mat-radio-button [value]="convincedLikeleyNo">{{
+    'feedback.convincingQuestionFeedback.likelyNo' | transloco
+  }}</mat-radio-button>
+  <mat-radio-button [value]="convincedNo">{{
+    'feedback.convincingQuestionFeedback.no' | transloco
+  }}</mat-radio-button>
 </mat-radio-group>
 
-<mat-checkbox color="primary" [formControl]="formGroup.controls.technicalProblems">{{ "feedback.technicalProblemsQuestion" | transloco }}</mat-checkbox>
+<mat-checkbox
+  color="primary"
+  [formControl]="formGroup.controls.technicalProblems"
+  >{{ 'feedback.technicalProblemsQuestion' | transloco }}</mat-checkbox
+>
 
-<mat-form-field class="" appearance="outline" subscriptSizing="dynamic" class="dmep-additional-feedback-field">
+<mat-form-field
+  class=""
+  appearance="outline"
+  subscriptSizing="dynamic"
+  class="dmep-additional-feedback-field">
   <mat-label transloco="feedback.additionalFeedbackQuestion"></mat-label>
-  <textarea matInput [placeholder]="'feedback.additionalFeedbackPlaceholder' | transloco" [formControl]="formGroup.controls.additionalFeedback" ></textarea>
+  <textarea
+    matInput
+    [placeholder]="'feedback.additionalFeedbackPlaceholder' | transloco"
+    [formControl]="formGroup.controls.additionalFeedback"></textarea>
 </mat-form-field>
 
 <div class="dmep-btn-container">
-  <button mat-stroked-button [disabled]="!formGroup.dirty" class="dmep-submit-feedback-btn dmep-btn dmep-btn-primary-sm" color="primary" (click)="submitClick()">
+  <button
+    mat-stroked-button
+    [disabled]="!formGroup.dirty"
+    class="dmep-submit-feedback-btn dmep-btn dmep-btn-primary-sm"
+    color="primary"
+    (click)="submitClick()">
     <span class="btn-content">
       {{ 'feedback.submit' | transloco }}
     </span>
@@ -26,7 +55,11 @@
 </div>
 
 <div class="dmep-btn-container">
-  <button mat-stroked-button class="dmep-skip-feedback-btn dmep-btn dmep-btn-secondary-sm" color="primary" (click)="skipClick()">
+  <button
+    mat-stroked-button
+    class="dmep-skip-feedback-btn dmep-btn dmep-btn-secondary-sm"
+    color="primary"
+    (click)="skipClick()">
     <span class="btn-content">
       {{ 'feedback.skip' | transloco }}
     </span>

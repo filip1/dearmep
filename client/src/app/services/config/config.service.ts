@@ -121,12 +121,12 @@ export class ConfigService {
         'accept-language': acceptedLanguage,
       })
       .pipe(
-        map((c) => {
+        map(c => {
           const config = c as AppConfig;
           config.availableCallingCodes = this.availableCallingCodes;
           return config;
         }),
-        tap((c) => {
+        tap(c => {
           this.config = c;
           this.language = c.language.recommended;
           this.availableLanguages = c.language.available;

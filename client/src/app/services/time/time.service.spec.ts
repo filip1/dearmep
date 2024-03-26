@@ -6,13 +6,13 @@ describe('TimeService', () => {
   let service: TimeService;
 
   beforeEach(() => {
-    service = new TimeService()
+    service = new TimeService();
   });
 
   it('should return current timezone', () => {
-    const tz = service.getLocalTimeZone()
-    const tzOffset = getTimezoneOffset(tz)
-    const now = new Date()
-    expect(tzOffset).toBe(now.getTimezoneOffset() * 60 * 1000 * -1)
+    const tz = service.getLocalTimeZone();
+    const tzOffset = getTimezoneOffset(tz);
+    const now = new Date();
+    expect(tzOffset).toBe(now.getTimezoneOffset() * 60 * 1000 * -1);
   });
 });

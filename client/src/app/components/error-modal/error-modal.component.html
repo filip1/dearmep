@@ -4,7 +4,15 @@
 </div>
 <div mat-dialog-actions>
   @if (model.buttonCancelText) {
-<button mat-button (click)="onCancelClick()" cdkFocusInitial [transloco]="model.buttonCancelText"></button>
-}
-  <button mat-button [mat-dialog-close]="{ click: model.buttonAcceptText }" cdkFocusInitial [transloco]="model.buttonAcceptText"></button>
+    <button
+      mat-button
+      (click)="onCancelClick()"
+      cdkFocusInitial
+      [transloco]="model.buttonCancelText"></button>
+  }
+  <button
+    mat-button
+    [mat-dialog-close]="{ click: model.buttonAcceptText }"
+    cdkFocusInitial
+    [transloco]="model.buttonAcceptText"></button>
 </div>

@@ -2,23 +2,24 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { BaseUrlService } from '../services/base-url.service';
 
 @Pipe({
-    name: 'toAbsolute',
-    pure: true,
-    standalone: true,
+  name: 'toAbsolute',
+  pure: true,
+  standalone: true,
 })
 export class ToAbsolutePipe implements PipeTransform {
-  constructor(
-    private readonly baseUrlService: BaseUrlService,
-  ) { }
+  constructor(private readonly baseUrlService: BaseUrlService) {}
 
-  transform(url: string | undefined, type: "asset" | "api"): string | undefined {
+  transform(
+    url: string | undefined,
+    type: 'asset' | 'api'
+  ): string | undefined {
     if (!url) {
-      return url
+      return url;
     }
-    if (type === "asset") {
-      return this.baseUrlService.toAbsoluteAssetUrl(url)
+    if (type === 'asset') {
+      return this.baseUrlService.toAbsoluteAssetUrl(url);
     } else {
-      return this.baseUrlService.toAbsoluteAPIUrl(url)
+      return this.baseUrlService.toAbsoluteAPIUrl(url);
     }
   }
 }
