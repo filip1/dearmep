@@ -1,9 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppCommonModule } from 'src/app/common/app-common.module';
-import { ComponentsModule } from 'src/app/components/components.module';
-import { TestingModule } from 'src/app/testing/testing.module';
-
 import { VerifyNumberComponent } from './verify-number.component';
+import { FixturesModule } from 'src/app/testing/fixtures.module';
 
 describe('VerifyNumerComponent', () => {
   let component: VerifyNumberComponent;
@@ -11,14 +8,8 @@ describe('VerifyNumerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ 
-        AppCommonModule,
-        ComponentsModule,
-        TestingModule
-      ],
-      declarations: [ VerifyNumberComponent ]
-    })
-    .compileComponents();
+      imports: [VerifyNumberComponent, FixturesModule],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(VerifyNumberComponent);
     component = fixture.componentInstance;

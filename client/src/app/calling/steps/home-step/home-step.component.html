@@ -1,13 +1,18 @@
 <div class="container">
-  <ng-container *ngIf="(isAuthenticated$ | async) === false">
+  @if ((isAuthenticated$ | async) === false) {
+
     <h2 transloco="call.home.title" class="calling-title"></h2>
 
-    <p *ngFor="let description of descriptions$ | async" class="description">
+    @for (description of descriptions$ | async; track description) {
+<p class="description">
       {{ description.text }}
     </p>
-  </ng-container>
+}
+  
+}
 
-  <ng-container *ngIf="isAuthenticated$ | async">
+  @if (isAuthenticated$ | async) {
+
     <h2 transloco="call.home.titleAuthenticated" class="calling-title"></h2>
 
     <p
@@ -23,7 +28,8 @@
         {{ "call.home.notYourNumber" | transloco }}
       </a>
     </p>
-  </ng-container>
+  
+}
 
   <dmep-calling-buttons
     (callNowClick)="onCallNowClick()"

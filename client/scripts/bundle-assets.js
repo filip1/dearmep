@@ -1,15 +1,26 @@
-const fs = require('fs-extra');
-const concat = require('concat');
-(async function build() {
-  const files = [
-    './dist/dear-mep/runtime.js',
-    './dist/dear-mep/polyfills.js',
- //   './dist/dear-mep/scripts.js',
-    './dist/dear-mep/main.js',
-  ]
-  await fs.remove('./dist/dear-mep-bundle')
-  await fs.ensureDir('./dist/dear-mep-bundle')
-  await concat(files, './dist/dear-mep-bundle/dear-mep.js');
+import { build } from 'vite';
+import { fileURLToPath } from 'url'
+import fs from 'fs-extra'
+import path from 'path'
+
+(async function bundle() {
+  const root = fileURLToPath(new URL('.', import.meta.url))
+
+  await build({
+    root: root,
+    build: {
+      emptyOutDir: true,
+      rollupOptions: {
+        output: {
+            entryFileNames: "dear-mep.js"
+        },
+        input: path.resolve(root, './dear-mep.js')
+    },
+    chunkSizeWarningLimit: 10000,
+    outDir: path.resolve(root, "../dist/dear-mep-bundle")
+    }
+  })
+
   await fs.copyFile('./dist/dear-mep/dear-mep-inner.css', './dist/dear-mep-bundle/dear-mep-inner.css')
   await fs.copyFile('./dist/dear-mep/dear-mep.css', './dist/dear-mep-bundle/dear-mep.css')
 

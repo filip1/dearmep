@@ -8,11 +8,16 @@ import { ErrorService } from 'src/app/services/error/error.service';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
 import { SelectDestinationService } from 'src/app/services/select-destination/select-destination.service';
+import { AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { TranslocoModule } from '@ngneat/transloco';
 
 @Component({
-  selector: 'dmep-setup-step',
-  templateUrl: './setup-step.component.html',
-  styleUrls: ['./setup-step.component.scss']
+    selector: 'dmep-setup-step',
+    templateUrl: './setup-step.component.html',
+    styleUrls: ['./setup-step.component.scss'],
+    standalone: true,
+    imports: [TranslocoModule, MatIcon, AsyncPipe]
 })
 export class SetupStepComponent implements OnInit {
   public readonly selectedDestinationNameHtml$

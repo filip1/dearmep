@@ -1,3 +1,4 @@
 export const environment = {
-  disableOfficeHoursCheck: false
+  dmepTagName: 'dear-mep',
+  disableOfficeHoursCheck: false,
 };

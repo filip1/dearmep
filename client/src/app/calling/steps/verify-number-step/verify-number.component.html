@@ -1,17 +1,29 @@
 <h2 transloco="verification.title" class="dmep-verification-title"></h2>
 
-<ng-container [ngSwitch]="step">
-  <ng-container *ngSwitchCase="StepEnterNumber">
+
+@switch (step) {
+  @case (StepEnterNumber) {
+
     <p transloco="verification.enterNumber.description" class="enter-number-description description"></p>
 
     <mat-form-field appearance="outline" subscriptSizing="fixed">
       <mat-label transloco="verification.enterNumber.numberFieldLabel"></mat-label>
       <dmep-phone-number-input [formControl]="numberFormControl"></dmep-phone-number-input>
-      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isEmptyError']" transloco="verification.enterNumber.numberIsRequired"></mat-error>
-      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isInvalidError']" transloco="verification.enterNumber.invalidNumber"></mat-error>
-      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isNotAllowedError']" transloco="verification.enterNumber.numberNotAllowed"></mat-error>
-      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isBlockedError']" transloco="verification.enterNumber.numberBlocked"></mat-error>
-      <mat-error *ngIf="numberFormControl.errors && numberFormControl.errors['isTooManyAttempts']" transloco="verification.enterNumber.tooManyAttempts"></mat-error>
+      @if (numberFormControl.errors && numberFormControl.errors['isEmptyError']) {
+<mat-error transloco="verification.enterNumber.numberIsRequired"></mat-error>
+}
+      @if (numberFormControl.errors && numberFormControl.errors['isInvalidError']) {
+<mat-error transloco="verification.enterNumber.invalidNumber"></mat-error>
+}
+      @if (numberFormControl.errors && numberFormControl.errors['isNotAllowedError']) {
+<mat-error transloco="verification.enterNumber.numberNotAllowed"></mat-error>
+}
+      @if (numberFormControl.errors && numberFormControl.errors['isBlockedError']) {
+<mat-error transloco="verification.enterNumber.numberBlocked"></mat-error>
+}
+      @if (numberFormControl.errors && numberFormControl.errors['isTooManyAttempts']) {
+<mat-error transloco="verification.enterNumber.tooManyAttempts"></mat-error>
+}
     </mat-form-field>
 
     <section class="dmep-policy-section">
@@ -30,8 +42,10 @@
       </button>
     </div>
 
-  </ng-container>
-  <ng-container *ngSwitchCase="StepEnterCode">
+  
+}
+  @case (StepEnterCode) {
+
 
     <p class="enter-code-description" [innerHTML]="'verification.enterCode.description' | transloco: { number: noWrap(serverValidatedPhoneNumber) }"></p>
 
@@ -42,7 +56,9 @@
     <mat-form-field class="enter-code-form-field" appearance="outline" subscriptSizing="dynamic" [hideRequiredMarker]="true">
       <mat-label transloco="verification.enterCode.codeFieldLabel"></mat-label>
       <input type="text" matInput [formControl]="codeFormControl">
-      <mat-error *ngIf="codeFormControl.errors" transloco="verification.enterCode.invalidCode"></mat-error>
+      @if (codeFormControl.errors) {
+<mat-error transloco="verification.enterCode.invalidCode"></mat-error>
+}
     </mat-form-field>
 
     <div class="dmep-btn-container">
@@ -52,8 +68,10 @@
         {{ 'verification.enterCode.verifyCode' | transloco }}
       </button>
     </div>
-  </ng-container>
-  <ng-container *ngSwitchCase="StepSuccess">
+  
+}
+  @case (StepSuccess) {
+
 
     <div class="success-icon-container">
       <mat-icon class="success-icon" [inline]="false">check_circle</mat-icon>
@@ -61,8 +79,10 @@
 
     <p class="success-description" [innerHTML]="'verification.success.message' | transloco: { number: noWrap(serverValidatedPhoneNumber) }"></p>
 
-  </ng-container>
-</ng-container>
+  
+}
+}
+
 
 <dmep-calling-buttons
   (callNowClick)="onCallNowClick()"

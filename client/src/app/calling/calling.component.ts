@@ -1,11 +1,19 @@
 import { Component, Input } from '@angular/core';
 import { CallingStep } from '../model/calling-step.enum';
 import { RoutingStateManagerService } from '../services/routing/routing-state-manager.service';
+import { AsyncPipe } from '@angular/common';
+import { UpdateCallScheduleComponent } from './steps/update-call-schedule/update-call-schedule.component';
+import { FeedbackStepComponent } from './steps/feedback-step/feedback-step.component';
+import { SetupStepComponent } from './steps/setup-step/setup-step.component';
+import { VerifyNumberComponent } from './steps/verify-number-step/verify-number.component';
+import { HomeStepComponent } from './steps/home-step/home-step.component';
 
 @Component({
-  selector: 'dmep-calling',
-  templateUrl: './calling.component.html',
-  styleUrls: ['./calling.component.scss']
+    selector: 'dmep-calling',
+    templateUrl: './calling.component.html',
+    styleUrls: ['./calling.component.scss'],
+    standalone: true,
+    imports: [HomeStepComponent, VerifyNumberComponent, SetupStepComponent, FeedbackStepComponent, UpdateCallScheduleComponent, AsyncPipe]
 })
 export class CallingComponent {
   public readonly StepHome = CallingStep.Home

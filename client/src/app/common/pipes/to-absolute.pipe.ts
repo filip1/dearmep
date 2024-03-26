@@ -2,8 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { BaseUrlService } from '../services/base-url.service';
 
 @Pipe({
-  name: 'toAbsolute',
-  pure: true,
+    name: 'toAbsolute',
+    pure: true,
+    standalone: true,
 })
 export class ToAbsolutePipe implements PipeTransform {
   constructor(

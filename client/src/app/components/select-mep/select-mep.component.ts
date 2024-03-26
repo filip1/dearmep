@@ -1,16 +1,28 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
 import { debounceTime, distinctUntilChanged, filter, map, Observable, shareReplay, startWith, switchMap, tap } from 'rxjs';
 import { DestinationRead, DestinationSearchResult } from 'src/app/api/models';
 import { CallingStep } from 'src/app/model/calling-step.enum';
 import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
 import { SelectDestinationService } from 'src/app/services/select-destination/select-destination.service';
+import { AsyncPipe } from '@angular/common';
+import { ToAbsolutePipe } from '../../common/pipes/to-absolute.pipe';
+import { TranslocoModule } from '@ngneat/transloco';
+import { MEPDetailComponent } from '../mep-detail/mep-detail.component';
+import { CountrySelectComponent } from '../country-select/country-select.component';
+import { MatOption } from '@angular/material/core';
+import { MatInput } from '@angular/material/input';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
 
 @Component({
-  selector: 'dmep-select-mep',
-  templateUrl: './select-mep.component.html',
-  styleUrls: ['./select-mep.component.scss']
+    selector: 'dmep-select-mep',
+    templateUrl: './select-mep.component.html',
+    styleUrls: ['./select-mep.component.scss'],
+    standalone: true,
+    imports: [MatFormField, MatLabel, MatIcon, MatPrefix, MatSuffix, MatProgressSpinner, MatInput, MatAutocompleteTrigger, ReactiveFormsModule, MatAutocomplete, MatOption, CountrySelectComponent, MEPDetailComponent, TranslocoModule, ToAbsolutePipe, AsyncPipe]
 })
 export class SelectMEPComponent implements OnInit {
   public mepSelectionPossible$?: Observable<boolean>

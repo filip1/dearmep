@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomeStepComponent } from './home-step.component';
+import { FixturesModule } from 'src/app/testing/fixtures.module';
 
 describe('HomeStepComponent', () => {
   let component: HomeStepComponent;
@@ -8,10 +9,8 @@ describe('HomeStepComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HomeStepComponent ]
-    })
-    .compileComponents();
-
+      imports: [HomeStepComponent, FixturesModule],
+    }).compileComponents();
     fixture = TestBed.createComponent(HomeStepComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

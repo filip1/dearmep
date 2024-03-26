@@ -9,7 +9,8 @@ import { ChangeDetectorRef, Directive, ElementRef, Input, OnInit } from '@angula
  * on actual component size.
  */
 @Directive({
-  selector: '[dmepResponsive]'
+    selector: '[dmepResponsive]',
+    standalone: true
 })
 export class ResponsiveDirective implements OnInit {
   private resizeObserver?: ResizeObserver;

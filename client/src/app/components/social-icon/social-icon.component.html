@@ -1,9 +1,14 @@
-<ng-container *ngIf="usePopover()">
+@if (usePopover()) {
+
   <a (click)="togglePopover()" [matTooltip]="getText()" matTooltipPosition="above" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
-    <mat-icon *ngIf="!useSvgIcon()">
+    @if (!useSvgIcon()) {
+<mat-icon>
       {{ getIcon() }}
     </mat-icon>
-    <mat-icon *ngIf="useSvgIcon()" [svgIcon]="getIcon()"></mat-icon>
+}
+    @if (useSvgIcon()) {
+<mat-icon [svgIcon]="getIcon()"></mat-icon>
+}
   </a>
   <ng-template cdkConnectedOverlay [cdkConnectedOverlayHasBackdrop]="true" cdkConnectedOverlayBackdropClass="dmep-popover-backdrop" (backdropClick)="popoverIsOpen = false" [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="popoverIsOpen">
     <div class="dmep-popover">
@@ -15,12 +20,19 @@
       </p>
     </div>
   </ng-template>
-</ng-container>
-<ng-container *ngIf="!usePopover()">
+
+}
+@if (!usePopover()) {
+
   <a target="_blank" [href]="getTarget()" [matTooltip]="getText()" matTooltipPosition="above" >
-    <mat-icon *ngIf="!useSvgIcon()">
+    @if (!useSvgIcon()) {
+<mat-icon>
       {{ getIcon() }}
     </mat-icon>
-    <mat-icon *ngIf="useSvgIcon()" [svgIcon]="getIcon()"></mat-icon>
+}
+    @if (useSvgIcon()) {
+<mat-icon [svgIcon]="getIcon()"></mat-icon>
+}
   </a>
-</ng-container>
+
+}

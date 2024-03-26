@@ -1,9 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppCommonModule } from 'src/app/common/app-common.module';
-import { ComponentsModule } from 'src/app/components/components.module';
-import { TestingModule } from 'src/app/testing/testing.module';
-import { UpdateCallScheduleComponent } from './update-call-schedule.component';
 
+import { UpdateCallScheduleComponent } from './update-call-schedule.component';
+import { FixturesModule } from 'src/app/testing/fixtures.module';
 
 describe('UpdateCallScheduleComponent', () => {
   let component: UpdateCallScheduleComponent;
@@ -11,14 +9,8 @@ describe('UpdateCallScheduleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ 
-        AppCommonModule,
-        TestingModule,
-        ComponentsModule,
-      ],
-      declarations: [ UpdateCallScheduleComponent ]
-    })
-    .compileComponents();
+      imports: [UpdateCallScheduleComponent, FixturesModule],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(UpdateCallScheduleComponent);
     component = fixture.componentInstance;

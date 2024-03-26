@@ -30,6 +30,12 @@ Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The appl
 
 Run `npm run build` and `npm run start:test-page`. Navigate to `http://localhost:8080` to see a test-page with an embeded version of DearMEP
 
+### Analyze bundle size
+
+Run `npm run build` to build the application if you have not already done so.
+
+Open [esbuild Bundle Size Analyzer](https://esbuild.github.io/analyze/) and upload the file `dist/dear-mep/stats.json`.
+
 ## Code scaffolding
 
 Run `npx ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.

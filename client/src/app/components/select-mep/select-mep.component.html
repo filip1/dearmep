@@ -1,10 +1,15 @@
 <div class="dmep-card-container">
-  <div class="dmep-destination-filter" *ngIf="mepSelectionPossible$ | async">
+  @if (mepSelectionPossible$ | async) {
+<div class="dmep-destination-filter">
     <mat-form-field appearance="outline" class="dmep-search-member-field" subscriptSizing="dynamic">
       <mat-label>{{ 'select-mep.search.placeholder' | transloco }}</mat-label>
       <mat-icon matPrefix>search</mat-icon>
-      <mat-icon matSuffix *ngIf="!autocompleteIsLoading">expand_more</mat-icon>
-      <mat-spinner [diameter]="24" matSuffix *ngIf="autocompleteIsLoading"></mat-spinner>
+      @if (!autocompleteIsLoading) {
+<mat-icon matSuffix>expand_more</mat-icon>
+}
+      @if (autocompleteIsLoading) {
+<mat-spinner [diameter]="24" matSuffix></mat-spinner>
+}
       <input type="text"
         [placeholder]="'select-mep.search.placeholder' | transloco"
         matInput
@@ -12,24 +17,35 @@
         [formControl]="searchMEPFormControl"
         #destinationSearchInput>
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="getMepName" hideSingleSelectionIndicator="true">
-        <mat-option [value]="mep" *ngFor="let mep of filteredMEPs | async">
+        @for (mep of filteredMEPs | async; track mep) {
+<mat-option [value]="mep">
           <div class="mep-search-result">
             <span [classList]="'flag:' + mep.country"></span>
             <span class="mep-name">{{ mep.name }}</span>
-            <ng-container *ngFor="let group of mep.groups">
-              <img *ngIf="group.logo" [src]="group.logo | toAbsolute: 'api'" class="dmep-group-icon">
-            </ng-container>
+            @for (group of mep.groups; track group) {
+
+              @if (group.logo) {
+<img [src]="group.logo | toAbsolute: 'api'" class="dmep-group-icon">
+}
+            
+}
           </div>
         </mat-option>
-        <mat-option [disabled]="true" *ngIf="(filteredMEPs | async)?.length === 0">
+}
+        @if ((filteredMEPs | async)?.length === 0) {
+<mat-option [disabled]="true">
           {{ 'select-mep.autocomplete-empty' | transloco }}
         </mat-option>
+}
       </mat-autocomplete>
     </mat-form-field>
     <dmep-country-select></dmep-country-select>
   </div>
+}
   <dmep-mep-detail [allowChangeMEP]="mepSelectionPossible$ | async" [mep]="selectedMEP$ | async" (MEPChange)="renewSuggestion()"></dmep-mep-detail>
   <div class="dmep-portrait-credit">
-    <span *ngIf="selectedMEP$ | async" [innerHTML]="'select-mep.portraitCreditHtml' | transloco: { id: (selectedMEP$ | async)?.id }"></span>
+    @if (selectedMEP$ | async) {
+<span [innerHTML]="'select-mep.portraitCreditHtml' | transloco: { id: (selectedMEP$ | async)?.id }"></span>
+}
   </div>
 </div>

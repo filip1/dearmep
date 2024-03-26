@@ -1,7 +1,7 @@
 import { HttpContext } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { TranslocoService } from '@ngneat/transloco';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { TranslocoService, TranslocoModule } from '@ngneat/transloco';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 // Change this import to enable optimizations as soon as https://github.com/marnusw/date-fns-tz/issues/193 is fixed
 import { addMinutes, isBefore } from 'date-fns/esm';
@@ -17,11 +17,21 @@ import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { OfficeHoursService } from 'src/app/services/office-hours/office-hours.service';
 import { RoutingStateManagerService } from 'src/app/services/routing/routing-state-manager.service';
 import { TimeService } from 'src/app/services/time/time.service';
+import { MatButton } from '@angular/material/button';
+import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { MatIcon } from '@angular/material/icon';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatFormField, MatHint, MatSuffix } from '@angular/material/form-field';
+import { MatButtonToggleGroup, MatButtonToggle } from '@angular/material/button-toggle';
+import { CountrySelectComponent } from '../../../components/country-select/country-select.component';
 
 @Component({
-  selector: 'dmep-update-call-schedule',
-  templateUrl: './update-call-schedule.component.html',
-  styleUrls: ['./update-call-schedule.component.scss']
+    selector: 'dmep-update-call-schedule',
+    templateUrl: './update-call-schedule.component.html',
+    styleUrls: ['./update-call-schedule.component.scss'],
+    standalone: true,
+    imports: [TranslocoModule, CountrySelectComponent, MatButtonToggleGroup, ReactiveFormsModule, MatButtonToggle, MatFormField, MatSelect, MatOption, MatHint, MatIcon, MatSuffix, CdkConnectedOverlay, MatButton, CdkOverlayOrigin]
 })
 export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
   private readonly destroyed$ = new Subject<void>()
