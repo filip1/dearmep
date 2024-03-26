@@ -1,10 +1,11 @@
 {
   "name": "dear-mep",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:test-page": "http-server ./test-page -p 8080",
+    "start:test-page": "concurrently --kill-others 'http-server ./test-page -p 8080' 'http-server ./dist/dear-mep -p 8082 --cors * --gzip'",
     "build": "npm run build:ng && npm run build:bundle",
     "build:ng": "ng build",
     "build:bundle": "node ./scripts/bundle-assets.js",
@@ -33,7 +34,6 @@
     "@fontsource/roboto": "^4.5.8",
     "@ngneat/transloco": "^4.2.2",
     "@ngneat/transloco-locale": "^4.0.0",
-    "concat": "^1.0.3",
     "country-flag-icons": "^1.5.6",
     "date-fns": "^2.29.3",
     "date-fns-tz": "^2.0.0",
@@ -55,6 +55,7 @@
     "@types/jasmine": "~4.3.0",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
+    "concurrently": "^8.2.2",
     "cypress": "^13.6.4",
     "eslint": "^8.57.0",
     "http-server": "^14.1.1",

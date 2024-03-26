@@ -6,7 +6,11 @@ import {
 import { appInitializerFactory } from './app.initializer';
 import { ConfigService } from './services/config/config.service';
 import { BaseUrlService } from './common/services/base-url.service';
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { AuthInterceptor } from './common/interceptors/auth.interceptor';
 import { BaseUrlInterceptor } from './common/interceptors/base-url.interceptor';
 import { RetryInterceptor } from './common/interceptors/retry.interceptor';
@@ -53,7 +57,7 @@ export const appConfig: ApplicationConfig = {
     },
     { provide: TRANSLOCO_LOADER, useClass: TranslocoHttpLoader },
 
-    provideHttpClient(),
+    provideHttpClient(withInterceptorsFromDi()),
     importProvidersFrom(
       ApiModule.forRoot({ rootUrl: '' }),
       TranslocoModule,

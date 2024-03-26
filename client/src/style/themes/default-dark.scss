@@ -75,4 +75,3 @@ $app-theme: mat.define-dark-theme((color: (
 @include mat.progress-spinner-theme($app-theme);
 @include mat.dialog-theme($app-theme);
 @include mat.snack-bar-theme($app-theme);
-
