@@ -132,3 +132,11 @@ This is required for the geolocation to work.
 
 For nginx, and if you’re using `dearmep serve`, check out [Uvicorn’s best practices](https://www.uvicorn.org/deployment/#running-behind-nginx).
 `dearmep serve` currently doesn’t support listening to a Unix domain socket, so please use a normal TCP HTTP connection instead (e.g. `proxy_pass http://localhost:8000/;`).
+
+## Prometheus Metrics
+
+DearMEP exports [Prometheus](https://prometheus.io/) metrics on the usual `/metrics` endpoint, providing you with insight about the health of the system as well as statistics.
+The [available metrics](../doc/metrics.md) are documented on a separate page.
+
+Note that you probably don't want to allow public access to these metrics.
+They don't contain user data, but do expose information about the phone numbers DearMEP itself is using to call people, which destination is being called how often and for how long, as well as cost statistics.

@@ -11,7 +11,7 @@ SchedulerTask = Callable[[], None]
 
 _logger = getLogger(__name__)
 scheduler_exceptions_total = Counter(
-    name="scheduler_exceptions",
+    name="scheduler_exceptions_total",
     documentation="Number of exceptions in scheduler tasks",
     labelnames=("task_name",),
 )
