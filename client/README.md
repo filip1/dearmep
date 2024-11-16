@@ -1,62 +1,116 @@
-# DearMEP
+# DearMEP Client
 
-## Embeding
+This Project contains the client implementation of DearMEP.
 
-**DearMEP** is embeded into arbitrary html pages using the following code snippet:
+## Embedding DearMEP
 
-    <link rel="stylesheet" href="https://dear-mep-server.org/static/dear-mep.css" />
-    <dear-mep host="https://dear-mep-server.org/"></dear-mep>
-    <script src="https://dear-mep-server.org/static/dear-mep.js" async></script>
+The **DearMEP** Client component can be embedded into any HTML page using the following code snippet:
 
-## Installing dependencies
+```html
+<link rel="stylesheet" href="https://dear-mep-server.org/static/dear-mep.css" />
+<dear-mep host="https://dear-mep-server.org/"></dear-mep>
+<script src="https://dear-mep-server.org/static/dear-mep.js" async></script>
+```
 
-Run `npm install` to install dependencies for local development.
+## Installing Dependencies
+
+To set up the project for local development, run:
+
+```bash
+npm install
+```
 
 ## Generating the API Client
 
-Before the frontend can be built it is neccessary to generate the the API-Client.
+Before building the frontend, you must generate the API client. Follow these steps:
 
-To do so, first get the current OpenAPI specification from the backend using one of the methods described [here](../server/README.md#retrieving-the-openapi-specification). Store the content in a file named `openapi.json` in the root of the repository.
+1. Retrieve the current OpenAPI specification from the backend using one of the methods described [here](../server/README.md#retrieving-the-openapi-specification).
+2. Save the specification as a file named `openapi.json` in the root directory of the repository.
+3. Generate the API client by running:
 
-After that the API client can simpy be generated using the command `npm run generate-client`.
+   ```bash
+   npm run generate-client
+   ```
 
-> **_NOTE:_** it is necessary to repeat these steps whenever API changes occur, you will run into build errors otherwise.
+> **Note:** You must regenerate the client whenever there are API changes, or you may encounter build errors.
 
-## Development server
+## Running the Development Server
 
-Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+To start the development server, run:
 
-## Serve Embeding-Test-Page
+```bash
+npm start
+```
 
-Run `npm run build` and `npm run start:test-page`. Navigate to `http://localhost:8080` to see a test-page with an embeded version of DearMEP
+Navigate to [http://localhost:4200](http://localhost:4200/). The application will automatically reload if you make changes to the source files.
 
-### Analyze bundle size
+## Serving the Embedding Test Page
 
-Run `npm run build` to build the application if you have not already done so.
+To serve a test page showcasing an embedded version of DearMEP:
 
-Open [esbuild Bundle Size Analyzer](https://esbuild.github.io/analyze/) and upload the file `dist/dear-mep/stats.json`.
+1. Build the project:
 
-## Code scaffolding
+   ```bash
+   npm run build
+   ```
 
-Run `npx ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+2. Start the test server:
 
-## Build
+   ```bash
+   npm run start:test-page
+   ```
 
-Run `npm run build` to build the project. The build artifacts will be stored in the `dist/dear-mep-bundle/` directory.
+3. Navigate to [http://localhost:8080](http://localhost:8080).
 
-## Format & Lint
+## Analyzing Bundle Size
 
-Run `npm run format` to format the whole project using [prettier](https://prettier.io/).
+To analyze the bundle size:
 
-Run `npm run lint` or `npm run lint:fix` to lint (and fix) the code.
+1. Build the application (if not already done):
 
-> **VSCode:**
-> If you are using VSCode, install the [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension and set `"editor.formatOnSave": true` in the settings.
+   ```bash
+   npm run build
+   ```
 
-## Running unit tests
+2. Open the [esbuild Bundle Size Analyzer](https://esbuild.github.io/analyze/) and upload the file located at `dist/dear-mep/stats.json`.
 
-Run `npm test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Code Scaffolding
 
-## Running end-to-end tests
+To generate a new component, use:
 
-Run `npx ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```bash
+npx ng generate component component-name
+```
+
+You can also generate other entities:
+
+```bash
+ng generate directive|pipe|service|class|guard|interface|enum|module
+```
+
+## Building the Project
+
+To build the project, run:
+
+```bash
+npm run build
+```
+
+The build artifacts will be stored in the `dist/dear-mep-bundle/` directory.
+
+## Formatting & Linting
+
+- **Format Code**: Run the following command to format the project using [Prettier](https://prettier.io/):
+
+  ```bash
+  npm run format
+  ```
+
+- **Lint Code**: Run the following commands to lint (and fix) the code:
+
+  ```bash
+  npm run lint
+  npm run lint:fix
+  ```
+
+> **VSCode Users**: If you're using VSCode, install the [Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and enable `"editor.formatOnSave": true` in your settings for automatic formatting on save.
