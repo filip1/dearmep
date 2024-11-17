@@ -1,15 +1,15 @@
 # DearMEP Client
 
-This Project contains the client implementation of DearMEP. The client is built as a Web-Component using Angular Elements.
+This project contains the client implementation of DearMEP. The client is built as a **Web Component** using **Angular Elements**.
 
-This implementation is designed to support general use cases for DearMEP. It offers a degree of configurability, allowing customization of certain visual elements. For specialized use cases it is always possible to develop a custom implementation to better fit specific needs.
+This implementation supports general use cases for DearMEP and provides a degree of configurability, allowing for the customization of certain visual elements. For specialized use cases, you can always develop a custom implementation tailored to specific requirements.
 
 ## Features
 
-- Multi-Language support
-- Stores user-preferences in Local Storage
-- Configurable and Themeable
-- Styles are isolated from the host-page using shadow DOM
+- Multi-language support
+- Stores user preferences in local storage
+- Configurable and themeable
+- Styles are isolated from the host page using the Shadow DOM
 
 ## Embedding DearMEP
 
@@ -21,70 +21,60 @@ The **DearMEP** client component can be embedded into any HTML page using the fo
 <script src="https://dear-mep-server.org/static/dear-mep.js" async></script>
 ```
 
-> **Note:**
-> In order to be able to add the client to a certain page the URL of the Page needs to be whitelisted in the CORS-Configuration of the DearMEP Server.
+### Important Notes
+- Ensure that the page’s URL is whitelisted in the **CORS configuration** of the DearMEP server for successful embedding.
+- If the embedding page uses **Content Security Policy (CSP)** headers, make sure that the DearMEP script is not blocked.
 
-> **Note:**
-> If the embedding page uses CSP-Headers for security purposes, make sure that the DearMEP script is not blocked.
+If DearMEP does not appear on the page, check the browser console and developer tools for errors.
 
-If DearMEP does not show up on the page check the browser console and dev-tools for errors.
+Alternatively to embedding, the client can also run as a **standalone page**, where the backend provides a simple HTML page containing the client snippet.
 
-Alternatively the client can also run as a standalone page. In this case the Backend provides a simple HTML-Page containing the client-snipped.
-
-## Configuration
+## Configuration Options
 
 There are multiple ways to configure the client:
 
-**Attributes**
+### 1. HTML Attributes
 
-Attributes are configured per embedding page. The following Attributes can be set on the `<dear-mep>` element:
+Attributes can be set directly on the `<dear-mep>` element to control various behaviors:
 
+| Attribute               | Description                                                                                                                                                                                   |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `host`*                 | **(Required)** The URL of the DearMEP server. Only absolute URLs are allowed.                                                                                                                 |
+| `api`                   | The URL of the API server, if it is hosted separately from the main DearMEP server. Relative URLs are interpreted in relation to `host`.                                                      |
+| `assets`                | The URL of the assets server if static assets are hosted separately from the API server. Relative URLs are interpreted in relation to `host`.                                                |
+| `default-country`       | Fallback country if the user's location cannot be determined (e.g., due to VPN/TOR). Uses ISO 639-1 Alpha-2 codes (e.g., "DE" for Germany).                                                   |
+| `disable-calling`       | Hides the calling functionality if present.                                                                                                                                                   |
+| `disable-scheduling`    | Hides the schedule-call functionality if present.                                                                                                                                             |
 
-| Attribute | Description |
-| --------- | ----------- |
-| host\*                   | The URL of the DearMEP-Server. This attribute is required! Only absolute URLs are allowed. |
-| api                      | The URL of the dear-mep API-Server. This attribute is used if the API-Server is hosted separately from the server that provides hosts static assets. Relative URLs are interpreted in relation to *host*.                                                                                                                |
-| assets                   | The URL of the Assets-Server. This attribute is used if the static assets are hosted separately from the API-Server. Relative URLs are interpreted in relation to *host*.                                                                                                                                                |
-| default&#8209;country    | If the user has not (yet) selected a country and the server cannot determine the country (because a VPN or TOR is used for example), this country will be used as fallback. It makes sense for a german campaign to use "DE" for example. Use two-letter country codes according to ISO 639-1 Alpha-2 ("DE", "AT", ...). |
-| disable&#8209;calling    | If this attribute is present the calling functionality is hidden.                                                                                                                                                                                                                                                        |
-| disable&#8209;scheduling | If this attribute is present the schedule-call functionality is hidden.                                                                                                                                                                                                                                                  |
-
-
-*(\*) Required Attributes*
-
-Example:
-
+**Example:**
 ```html
 <dear-mep host="https://chatcontrol.dearmep.eu/" default-country="DE"></dear-mep>
 ```
 
-A more detailed technical description of the different attributes can be found in the source code in [app.component.ts](../client/src/app/app.component.ts).
+For a detailed technical description, refer to the source code in [app.component.ts](../client/src/app/app.component.ts).
 
-**Server**
+### 2. Server Configuration
 
-On startup the client loads configurations from the server. These include enabled features as well as the localization strings visible in the UI.
+On startup, the client loads configurations from the server, including enabled features and localization strings. These configurations are set in the server’s config file (see: [example-config.yaml](../server/dearmep/example-config.yaml)).
 
-These values are configured in the config file of the server (see: [example-config.yaml](../server/dearmep/example-config.yaml)).
+### 3. Build-Time Configuration
 
-**Build-Time**
-
-Some aspects of the client can be configured at build-time. This allows for different configurations in different environments such as *development* or *production*. This is done in the file [environment.ts](client/src/environments/environment.ts).
+Certain aspects of the client can be configured at build-time, allowing different settings for environments such as *development* or *production*. This is managed in [environment.ts](client/src/environments/environment.ts).
 
 ## Styling and Theming
 
-The Styles for the client are built using SCSS. They are provided in two separate stylesheets `dear-mep.css` and `dear-mep-inner.css`.
+The styles for the client are built using **SCSS** and are split into two stylesheets: `dear-mep.css` and `dear-mep-inner.css`.
 
-`dear-mep.css` is loaded into the host-page via the link-tag in the embed-snipped. It
-contains rules that are applied outside of the shadow root.
+- `dear-mep.css` is loaded into the host page using a `<link>` tag and applies styles outside of the shadow root.
+- `dear-mep-inner.css` is loaded within the Shadow DOM, ensuring that these styles are isolated from the host page.
 
-`dear-mep-inner.css` is loaded via a link-tag that is generated inside of the shadow root as part of the client.
-The shadow DOM ensures that these styles do not leak out into the host-page.
+### Theming
 
-**Theming**
+For details on customizing the appearance of the DearMEP client, refer to the [theming documentation](../doc/theming.md).
 
-Read more about how the DearMEP client can be customized visually in the documentation for [theming](../doc/theming.md).
+## Development Instructions
 
-## Installing Dependencies
+### Installing Dependencies
 
 To set up the project for local development, run:
 
@@ -92,23 +82,23 @@ To set up the project for local development, run:
 npm install
 ```
 
-## Generating the API Client
+### Generating the API Client
 
-Before building the frontend, you must generate the API client. Follow these steps:
+Before building the frontend, generate the API client:
 
-1. Retrieve the current OpenAPI specification from the backend using one of the methods described [here](../server/README.md#retrieving-the-openapi-specification).
-2. Save the specification as a file named `openapi.json` in the root directory of the repository.
-3. Generate the API client by running:
+1. Retrieve the current OpenAPI specification from the backend as described [here](../server/README.md#retrieving-the-openapi-specification).
+2. Save the specification as `openapi.json` in the root directory.
+3. Run:
 
    ```bash
    npm run generate-client
    ```
 
-> **Note:** You must regenerate the client whenever there are API changes, or you may encounter build errors.
+> **Note:** Regenerate the client whenever there are API changes to avoid build errors.
 
-## Running the Development Server
+### Running the Development Server
 
-To start the development server, run:
+To start the development server:
 
 ```bash
 npm start
@@ -116,9 +106,9 @@ npm start
 
 Navigate to [http://localhost:4200](http://localhost:4200/). The application will automatically reload if you make changes to the source files.
 
-## Serving the Embedding Test Page
+### Serving the Embedding Test Page
 
-To serve a test page showcasing an embedded version of DearMEP:
+To test the embedded client:
 
 1. Build the project:
 
@@ -132,29 +122,29 @@ To serve a test page showcasing an embedded version of DearMEP:
    npm run start:test-page
    ```
 
-3. Navigate to [http://localhost:8080](http://localhost:8080).
+3. Access the test page at [http://localhost:8080](http://localhost:8080).
 
 ## Analyzing Bundle Size
 
 To analyze the bundle size:
 
-1. Build the application (if not already done):
+1. Build the application:
 
    ```bash
    npm run build
    ```
 
-2. Open the [esbuild Bundle Size Analyzer](https://esbuild.github.io/analyze/) and upload the file located at `dist/dear-mep/stats.json`.
+2. Use the [esbuild Bundle Size Analyzer](https://esbuild.github.io/analyze/) and upload `dist/dear-mep/stats.json`.
 
 ## Code Scaffolding
 
-To generate a new component, use:
+To generate a new component:
 
 ```bash
 npx ng generate component component-name
 ```
 
-You can also generate other entities:
+Other entities can also be generated using:
 
 ```bash
 ng generate directive|pipe|service|class|guard|interface|enum|module
@@ -162,27 +152,27 @@ ng generate directive|pipe|service|class|guard|interface|enum|module
 
 ## Building the Project
 
-To build the project, run:
+To build the project:
 
 ```bash
 npm run build
 ```
 
-The build artifacts will be stored in the `dist/dear-mep-bundle/` directory.
+The build artifacts will be stored in `dist/dear-mep-bundle/`.
 
 ## Formatting & Linting
 
-- **Format Code**: Run the following command to format the project using [Prettier](https://prettier.io/):
+- **Format the code** using [Prettier](https://prettier.io/):
 
   ```bash
   npm run format
   ```
 
-- **Lint Code**: Run the following commands to lint (and fix) the code:
+- **Lint the code** and automatically fix issues:
 
   ```bash
   npm run lint
   npm run lint:fix
   ```
 
-> **VSCode Users**: If you're using VSCode, install the [Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and enable `"editor.formatOnSave": true` in your settings for automatic formatting on save.
+> **VSCode Users**: If you’re using VSCode, install the [Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and enable `"editor.formatOnSave": true` in your settings for auto-formatting.
