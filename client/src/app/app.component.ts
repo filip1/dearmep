@@ -75,7 +75,7 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
   /**
    * 'assetsUrl' defines the location of all static assets such as stylesheets, fonts, ... .
    * Both absolute and relative values are allowed.
-   * Relative urls are interpretet in relation to the 'hostUrl'
+   * Relative urls are interpreted in relation to the 'hostUrl'
    * The default value is './static' ('{hostUlr}/static')
    */
   // eslint-disable-next-line @angular-eslint/no-input-rename
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
   /**
    * 'apiUrl' defines the url of the DearMEP-API.
    * Both absolute and relative values are allowed.
-   * Relative urls are interpretet in relation to the 'hostUrl'
+   * Relative urls are interpreted in relation to the 'hostUrl'
    * The default is 'hostUrl'
    * It is not required to add the prefix '/api/v1' here since that is already built into the API-Client.
    */
