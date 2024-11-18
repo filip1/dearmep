@@ -41,7 +41,7 @@ The current theme used in the client is defined in [`default-dark.scss`](../clie
 If you wish to build a new theme for Angular Material components:
 
 1. Modify the SCSS files as needed.
-2. Compile the SCSS as part of the application build process. The theme is included in the [dear-mep-inner.scss](client/src/style/dear-mep-inner.scss) file.
+2. Compile the SCSS as part of the application build process. The theme is included in the [dear-mep-inner.scss](../client/src/style/dear-mep-inner.scss) file.
 
 > **Note**: When creating a custom theme, it's recommended to replace the existing stylesheet rather than loading an additional theme on top of it. This avoids duplicating styles, which can lead to performance issues.
 
