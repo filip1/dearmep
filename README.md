@@ -71,5 +71,5 @@ This project is licensed under the **AGPL License**. See the [LICENSE](LICENSE) 
 
 ---
 
-👥 Meet the Team
+## 👥 Meet the Team
 To learn more about the people behind this project, visit our [team page](https://dearmep.eu/team/).
