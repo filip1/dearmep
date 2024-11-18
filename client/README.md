@@ -59,7 +59,7 @@ On startup, the client loads configurations from the server, including enabled f
 
 ### 3. Build-Time Configuration
 
-Certain aspects of the client can be configured at build-time, allowing different settings for environments such as *development* or *production*. This is managed in [environment.ts](client/src/environments/environment.ts).
+Certain aspects of the client can be configured at build-time, allowing different settings for environments such as *development* or *production*. This is managed in [environment.ts](./src/environments/environment.ts).
 
 ## Styling and Theming
 
