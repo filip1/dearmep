@@ -37,6 +37,9 @@ jobs:
         run: |
           poetry run dearmep dump openapi > openapi.json
           poetry run dearmep dump erd dearmep-erd.svg
+          # Copy the OpenAPI spec to be deployed to GitHub pages.
+          mkdir ../.github-pages
+          cp openapi.json ../.github-pages
       - name: Collect OpenAPI spec & ERD as an artifact
         if: ${{ matrix.python-version == '3.12' }}
         uses: actions/upload-artifact@v3
@@ -55,6 +58,11 @@ jobs:
           path: |
             server/coverage.xml
             server/report.xml
+      - name: Prepare OpenAPI spec for GitHub Pages
+        if: ${{ matrix.python-version == '3.12' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .github-pages
 
   frontend:
     needs: backend  # Because of the OpenAPI spec.
@@ -142,3 +150,26 @@ jobs:
           (umask 0077; printf "machine $NEXTCLOUD_HOST login $NEXTCLOUD_SHARE_ID\\n" >> ~/.netrc)
           cd dist
           find . -type f -exec curl --netrc --upload-file '{}' "$NEXTCLOUD_BASE" \;
+
+  deploy:
+    needs: build  # Technically, it only needs "backend", but we want the build to succeed first.
+
+    # TODO: Enable once this is no longer just a PR.
+    # if: github.ref_name == 'main'
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.pages_deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: pages_deployment
+        uses: actions/deploy-pages@v4
