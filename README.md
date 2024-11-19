@@ -59,7 +59,7 @@ More details can be found [here](./client/README.md).
 
 ### Setting Up a New Instance
 
-Setting up a new instance requires additional steps, including configuring the server and preparing a list of MEPs. This repository includes example configurations and scripts to simplify the process. Additionally, you’ll need an account with [46Elks](https://46elks.com/), which serves as the calling provider.
+Setting up a new instance requires additional steps, including configuring the server and preparing a list of MEPs. This repository includes example configurations and scripts to simplify the process. Additionally, you’ll need an account with [46elks](https://46elks.com/), which serves as the calling provider.
 
 Further setup instructions are available [here](./server/README.md).
 
