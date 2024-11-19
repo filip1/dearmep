@@ -16,9 +16,9 @@ This implementation supports general use cases for DearMEP and provides a degree
 The **DearMEP** client component can be embedded into any HTML page using the following code snippet:
 
 ```html
-<link rel="stylesheet" href="https://dear-mep-server.org/static/dear-mep.css" />
-<dear-mep host="https://dear-mep-server.org/"></dear-mep>
-<script src="https://dear-mep-server.org/static/dear-mep.js" async></script>
+<link rel="stylesheet" href="https://example.org/static/dear-mep.css" />
+<dear-mep host="https://example.org/"></dear-mep>
+<script src="https://example.org/static/dear-mep.js" async></script>
 ```
 
 ### Important Notes
@@ -48,7 +48,7 @@ Attributes can be set directly on the `<dear-mep>` element to control various be
 
 **Example:**
 ```html
-<dear-mep host="https://chatcontrol.dearmep.eu/" default-country="DE"></dear-mep>
+<dear-mep host="https://example.org/" default-country="DE"></dear-mep>
 ```
 
 For a detailed technical description, refer to the source code in [app.component.ts](../client/src/app/app.component.ts).
