@@ -22,12 +22,12 @@ The **DearMEP** client component can be embedded into any HTML page using the fo
 ```
 
 ### Important Notes
-- Ensure that the page’s URL is whitelisted in the **CORS configuration** of the DearMEP server for successful embedding.
+- Ensure that the page’s URL is allowed in the **CORS configuration** of the DearMEP server for successful embedding (via `api.cors.origins`, see [example-config.yaml](../server/dearmep/example-config.yaml)).
 - If the embedding page uses **Content Security Policy (CSP)** headers, make sure that the DearMEP script is not blocked.
 
 If DearMEP does not appear on the page, check the browser console and developer tools for errors.
 
-Alternatively to embedding, the client can also run as a **standalone page**, where the backend provides a simple HTML page containing the client snippet.
+Alternatively to embedding, the client can also run as a **standalone page**, where the backend provides a simple HTML page containing the client snippet. See [Serving Static Files](../server/README.md#serving-static-files-eg-the-client) for details.
 
 ## Configuration Options
 
@@ -39,7 +39,7 @@ Attributes can be set directly on the `<dear-mep>` element to control various be
 
 | Attribute               | Description                                                                                                                                                                                   |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `host`*                 | **(Required)** The URL of the DearMEP server. Only absolute URLs are allowed.                                                                                                                 |
+| `host`                  | **(Required)** The URL of the DearMEP server. Only absolute URLs are allowed.                                                                                                                 |
 | `api`                   | The URL of the API server, if it is hosted separately from the main DearMEP server. Relative URLs are interpreted in relation to `host`.                                                      |
 | `assets`                | The URL of the assets server if static assets are hosted separately from the API server. Relative URLs are interpreted in relation to `host`.                                                |
 | `default-country`       | Fallback country if the user's location cannot be determined (e.g., due to VPN/TOR). Uses ISO 639-1 Alpha-2 codes (e.g., "DE" for Germany).                                                   |
@@ -86,7 +86,7 @@ npm install
 
 Before building the frontend, generate the API client:
 
-1. Retrieve the current OpenAPI specification from the backend as described [here](../server/README.md#retrieving-the-openapi-specification).
+1. Retrieve the current OpenAPI specification from the backend as described in [Retrieving the OpenAPI specification](../server/README.md#retrieving-the-openapi-specification).
 2. Save the specification as `openapi.json` in the root directory.
 3. Run:
 
