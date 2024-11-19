@@ -43,6 +43,7 @@ phonenumbers = "^8.13.22"
 pytz = "^2023.3.post1"
 alembic = "^1.12.1"
 fastapi-restful = "^0.5.0"
+pydantic = ">=1.10.16,<2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "<1.0"
