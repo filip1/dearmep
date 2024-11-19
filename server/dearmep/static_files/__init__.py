@@ -42,9 +42,19 @@ def mount_if_configured(app: FastAPI, path: str):
     if settings.demo_page:
         @app.get(
             "/", operation_id="getDemoHTML",
+            summary="Get Demo HTML",
             response_class=HTMLResponse,
         )
         async def get_demo_html(req: Request):
+            """
+            Return a HTML page that can be used to demo the application.
+
+            This is only available if the environment variable
+            `DEARMEP_DEMO_PAGE` is set to `y` when starting the application.
+            Additionally, `DEARMEP_STATIC_FILES_DIR` needs to be configured, or
+            static files need to be embedded in the application (which is the
+            case for official releases).
+            """
             return demo_html(
                 protocol="http" if req.url.scheme.lower() == "http"
                 else "https",
