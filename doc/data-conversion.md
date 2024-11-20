@@ -160,21 +160,68 @@ downloading portraits ━━━━━━━━━━━━━━━━━━━�
 This command downloaded the (placeholder) portrait for the (non-existing) MEP with ID `0` and saved it as `portraits/placeholder.jpg`.
 You could of course use a completely different image as the placeholder, if you wanted to.
 
-Now we have all we need to import a Destination Stream with portraits.
+We now have everything we need to display the MEPs and their portraits on the website.
+However, we still lack one important thing.
+
+
+## European Parliament MEP name audio
+
+When DearMEP connects a User to a Destination, especially on a scheduled call where the User did not interactively choose their Destination, we need some way to announce the person's name on the phone.
+In other words, for each MEP, we need an audio file with their name.
+
+### Downloading MEP name audio
+
+Luckily, the European Parliament provides that as well, and DearMEP has a command to download these files:
+
+```console
+$ mkdir names
+$ dearmep convert europarl.name-audio --filename-template names/'{id}.mp3' --existing skip --not-found ignore 96750
+downloading name audio ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+$ ls names
+96750.mp3
+```
+
+As you can see, it's basically the same as the portraits we did before.
+This also means that we can use the long `in2csv … | csvgrep … | csvcut … | tail … | xargs …` line from before and just replace the `dearmep` invocation to download all names.
+
+Again, it's pretty likely that for some MEPs there won't be a name audio available (yet).
+Instead of using a placeholder, you should probably record all of the missing names yourself.
+
+However, in contrast to the portraits, the name audio requires us to take yet another step.
+
+### Converting the audio files
+
+DearMEP's phone call subsystem will create new audio files on the fly that are a concatenation of shorter building blocks.
+To do that efficiently, all of the files have to be in the same format.
+DearMEP, being open source, prefers open formats.
+Therefore, `dearmep convert audio` exists to convert an input file to 44.1 kHz mono [Ogg Vorbis](https://en.wikipedia.org/wiki/Vorbis).
+(We would prefer [Opus](https://en.wikipedia.org/wiki/Opus_(audio_format)) even more, but our phone provider 46elks doesn't support it.)
+
+If you have [ffmpeg](https://ffmpeg.org/) installed (which you need anyway to run DearMEP's phone feature), you can simply execute a command like
+
+```console
+$ dearmep convert audio names/*.mp3
+names/96750.ogg
+```
+
+to convert the files.
+
+Now we finally have all we need to import a Destination Stream with portraits and name audio.
 
 
 ## Importing a Destination Stream
 
-This section expects you to bring a [Destination Stream JSON](#converting-the-mep-dump-to-a-destination-stream) and a [directory with portrait images](#downloading-mep-portraits).
+This section expects you to bring a [Destination Stream JSON](#converting-the-mep-dump-to-a-destination-stream), a [directory with portrait images](#downloading-mep-portraits), and a [directory with name audio](#downloading-mep-name-audio).
 Go back to the previous sections if you don’t have these.
-(Although technically you can run the import without any portraits or placeholder images.)
+(Although technically you can run the import without any portraits, placeholder images, or audio.)
 
 ### Setting up the database
 
 DearMEP uses a relational database to keep track of all the information it needs.
 You can either use a database server like [PostgreSQL](https://www.postgresql.org/) or [MariaDB](https://mariadb.org/), or use a local [SQLite](https://www.sqlite.org/) database file.
-The latter is significantly easier to setup and maintain, but performs worse and cannot run in any kind of clustered or load-balanced environment.
+The latter is significantly easier to setup and maintain, but performs slightly worse and cannot run in any kind of clustered or load-balanced environment.
 For this tutorial, we like to keep things easy, so we’re going with SQLite.
+We have been running a campaign with SQLite with no problems though, don't underestimate it.
 
 To access the database, DearMEP needs to know where it’s located, and we’re using a [YAML](https://en.wikipedia.org/wiki/YAML) config file to provide that information.
 DearMEP can provide you with an example config to customize:
@@ -231,7 +278,7 @@ This will change in the future.
 The actual import command is rather simple:
 
 ```console
-$ dearmep import destinations --portrait-template 'portraits/{id}.jpg' --fallback-portrait portraits/placeholder.jpg dearmep-destinations.json
+$ dearmep import destinations --portrait-template 'portraits/{id}.jpg' --fallback-portrait portraits/placeholder.jpg --name-audio-template 'names/{id}.ogg' dearmep-destinations.json
 reading and converting JSON ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
 $ ls -lh dearmep.sqlite
 -rw-r--r-- 1 scy scy 44M Jul  8 14:25 dearmep.sqlite
@@ -239,6 +286,7 @@ $ ls -lh dearmep.sqlite
 
 * `--portrait-template` basically corresponds to the `--filename-template` option of the `dearmep convert europarl.portraits` command: It tells the importer how to derive a portrait filename from the MEP ID.
 * `--fallback-portrait` will be used if the filename that resulted from `--portrait-template` does not exist.
+* `--name-audio-template` works like `--portrait-template`, but for the audio files containing the MEP names.
 * `dearmep-destinations.json` points to the Destination Stream to import.
 
 There is also a `--logo-template` option to specify where to find Destination Group logos (e.g. for parties or parliamentary groups), it works similar to the `--portrait-template` option.
