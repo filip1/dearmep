@@ -21,6 +21,8 @@ The **DearMEP** client component can be embedded into any HTML page using the fo
 <script src="https://example.org/static/dear-mep.js" async></script>
 ```
 
+Replace `https://example.org/` with the URL to your DearMEP instance, i.e. where the [server](../server/README.md) is running.
+
 ### Important Notes
 - Ensure that the page’s URL is allowed in the **CORS configuration** of the DearMEP server for successful embedding (via `api.cors.origins`, see [example-config.yaml](../server/dearmep/example-config.yaml)).
 - If the embedding page uses **Content Security Policy (CSP)** headers, make sure that the DearMEP script is not blocked.
