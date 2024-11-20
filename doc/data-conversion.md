@@ -206,14 +206,52 @@ names/96750.ogg
 
 to convert the files.
 
-Now we finally have all we need to import a Destination Stream with portraits and name audio.
+Are we done?
+No, we're _still_ lacking one small ingredient: group logos.
+
+
+## Group Logos
+
+Each Member of Parliament is usually associated to (at least) two groups:
+
+* their political party (from their home country) and
+* a parliamentary group, i.e. a group usually consisting of members from several parties, with similar ideologies.
+
+There are often over 200 parties represented in the European Parliament; collecting all of their logos would be tedious.
+(Also, don't forget that some MEPs don't belong to any political party, they are independent.)
+
+However, there are only around 10 parliamentary groups.
+Providing a logo for them allows DearMEP to display it alongside MEPs and in search results, which is helpful for users.
+
+The parliamentary groups usually don't change often, but for copyright reasons, we don't distribute their logos with DearMEP.
+You'll have to supply them yourself.
+
+To get a list of the groups (which can include characters like `/`) and the file names (which shouldn't), you can extract that information from the Destination Stream we've created above.
+We need to filter for objects of type `group`, then select only parliamentary groups (thus excluding parties) and retrieve the two fields we're interested in:
+
+```console
+$ in2csv -f ndjson dearmep-destinations.json | csvgrep -c _dearmep_type -m group | csvgrep -c type -m parl_group | csvcut -c long_name,short_name,logo | csvlook
+| long_name                                                                                | short_name | logo          |
+| ---------------------------------------------------------------------------------------- | ---------- | ------------- |
+| Group of the Greens/European Free Alliance                                               | Verts/ALE  | Verts_ALE.png |
+| European Conservatives and Reformists Group                                              | ECR        | ECR.png       |
+| Group of the European People's Party (Christian Democrats)                               | PPE        | PPE.png       |
+| Group of the Progressive Alliance of Socialists and Democrats in the European Parliament | S&D        | S_D.png       |
+| Renew Europe Group                                                                       | RE         | RE.png        |
+| Non-attached Members                                                                     |            | NA.png        |
+| The Left group in the European Parliament - GUE/NGL                                      | GUE/NGL    | GUE_NGL.png   |
+| Identity and Democracy Group                                                             | ID         | ID.png        |
+```
+
+As you can see, DearMEP suggests PNG files, but SVGs would probably work, too.
+Get these logos from somewhere, place them in a sensible location (e.g. a `logos` subdirectory), and we finally have all we need to import a Destination Stream.
 
 
 ## Importing a Destination Stream
 
-This section expects you to bring a [Destination Stream JSON](#converting-the-mep-dump-to-a-destination-stream), a [directory with portrait images](#downloading-mep-portraits), and a [directory with name audio](#downloading-mep-name-audio).
+This section expects you to bring a [Destination Stream JSON](#converting-the-mep-dump-to-a-destination-stream), a [directory with portrait images](#downloading-mep-portraits), a [directory with group logos](#group-logos), and a [directory with name audio](#downloading-mep-name-audio).
 Go back to the previous sections if you don’t have these.
-(Although technically you can run the import without any portraits, placeholder images, or audio.)
+(Although technically you can run the import without any images or audio.)
 
 ### Setting up the database
 
@@ -273,12 +311,12 @@ The `dearmep import destinations` command takes a Destination Stream (and possib
 **Note:**
 Right now, the command is designed to import into an **empty** database **only**.
 Importing the same stream twice will not work, as all of the IDs already exist, causing the import to stop with uniqueness constraint errors.
-This will change in the future.
+This will probably change in the future.
 
 The actual import command is rather simple:
 
 ```console
-$ dearmep import destinations --portrait-template 'portraits/{id}.jpg' --fallback-portrait portraits/placeholder.jpg --name-audio-template 'names/{id}.ogg' dearmep-destinations.json
+$ dearmep import destinations --portrait-template 'portraits/{id}.jpg' --fallback-portrait portraits/placeholder.jpg --logo-template 'logos/{filename}' --name-audio-template 'names/{id}.ogg' dearmep-destinations.json
 reading and converting JSON ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
 $ ls -lh dearmep.sqlite
 -rw-r--r-- 1 scy scy 44M Jul  8 14:25 dearmep.sqlite
@@ -286,12 +324,18 @@ $ ls -lh dearmep.sqlite
 
 * `--portrait-template` basically corresponds to the `--filename-template` option of the `dearmep convert europarl.portraits` command: It tells the importer how to derive a portrait filename from the MEP ID.
 * `--fallback-portrait` will be used if the filename that resulted from `--portrait-template` does not exist.
+* When importing a group, `--logo-template` will be evaluated into a file name; if that file exists, it will be used as the group logo. If it doesn't, that group won't have a logo. `{filename}` corresponds to the `logo` field in the stream.
 * `--name-audio-template` works like `--portrait-template`, but for the audio files containing the MEP names.
 * `dearmep-destinations.json` points to the Destination Stream to import.
 
-There is also a `--logo-template` option to specify where to find Destination Group logos (e.g. for parties or parliamentary groups), it works similar to the `--portrait-template` option.
+The placeholders in the `--<something>-template` options will be replaced as explained in `dearmep import destinations --help`.
+For example, `--portrait-template` understands `{filename}` (which will be replaced with the value in the `portrait` field in the Destination object in the stream), and `{id}` (which will be replaced by the Destination object's ID).
 
-And, as you can see, the database is now filled and ready to use.
+Different options support different placeholders, for example to allow you to use different file names than the ones suggested in the stream.
+For example, if you wanted to use SVG logos instead of PNG, you could either replace the file names in the stream, or use something like `--logo-template 'logos/{short_name}.svg'`.
+Do note that the `short_name` contains characters like `/` and `&` though, which might make this troublesome.
+
+Finally, after running the import command, the database is now filled and ready to use.
 You could run `dearmep serve` and then access <http://localhost:8000/api/v1/destination/suggested> to retrieve a Destination that DearMEP is suggesting you to contact.
 
 ----
