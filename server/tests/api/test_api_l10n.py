@@ -18,7 +18,7 @@ def test_l10n(
 ):
     override_client_addr(fastapi_app, "2a01:4f8::1")
     res = client.get(
-        "/api/v1/localization",
+        "/api/v1/frontend-setup",
         headers={
             "Accept-Language": "tlh;q=1, en;q=0.8",
         }
@@ -64,16 +64,16 @@ def test_l10n(
 def test_l10n_without_addr_override(client: TestClient):
     # Do a request without overriding the address, mainly for coverage of the
     # real address dependable.
-    res = client.get("/api/v1/localization")
+    res = client.get("/api/v1/frontend-setup")
     assert res.status_code == status.HTTP_200_OK
 
 
 def test_l10n_ratelimit(fastapi_app: FastAPI, client: TestClient):
     override_client_addr(fastapi_app, "2a01:abc::1")
     for _ in range(5):
-        res = client.get("/api/v1/localization")
+        res = client.get("/api/v1/frontend-setup")
         assert res.status_code == status.HTTP_200_OK
-    res = client.get("/api/v1/localization")
+    res = client.get("/api/v1/frontend-setup")
     assert res.status_code == status.HTTP_429_TOO_MANY_REQUESTS
 
 
@@ -85,11 +85,11 @@ def test_l10n_ratelimit_v6(fastapi_app: FastAPI, client: TestClient):
         if i % 5 == 0:
             new_addr = f"2a01:abc::{i // 5 + 1}"
             override_client_addr(fastapi_app, new_addr)
-        res = client.get("/api/v1/localization")
+        res = client.get("/api/v1/frontend-setup")
         assert res.status_code == status.HTTP_200_OK
-    res = client.get("/api/v1/localization")
+    res = client.get("/api/v1/frontend-setup")
     assert res.status_code == status.HTTP_429_TOO_MANY_REQUESTS
     # With a different /64 it should still work though.
     override_client_addr(fastapi_app, "2a01:abc:0:1::1")
-    res = client.get("/api/v1/localization")
+    res = client.get("/api/v1/frontend-setup")
     assert res.status_code == status.HTTP_200_OK
