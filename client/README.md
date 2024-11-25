@@ -1,62 +1,180 @@
-# DearMEP
+# DearMEP Client
 
-## Embeding
+This project contains the client implementation of DearMEP. The client is built as a **Web Component** using **Angular Elements**.
 
-**DearMEP** is embeded into arbitrary html pages using the following code snippet:
+This implementation supports general use cases for DearMEP and provides a degree of configurability, allowing for the customization of certain visual elements. For specialized use cases, you can always develop a custom implementation tailored to specific requirements.
 
-    <link rel="stylesheet" href="https://dear-mep-server.org/static/dear-mep.css" />
-    <dear-mep host="https://dear-mep-server.org/"></dear-mep>
-    <script src="https://dear-mep-server.org/static/dear-mep.js" async></script>
+## Features
 
-## Installing dependencies
+- Multi-language support
+- Stores user preferences in local storage
+- Configurable and themeable
+- Styles are isolated from the host page using the Shadow DOM
 
-Run `npm install` to install dependencies for local development.
+## Embedding DearMEP
 
-## Generating the API Client
+The **DearMEP** client component can be embedded into any HTML page using the following code snippet:
 
-Before the frontend can be built it is neccessary to generate the the API-Client.
+```html
+<link rel="stylesheet" href="https://example.org/static/dear-mep.css" />
+<dear-mep host="https://example.org/"></dear-mep>
+<script src="https://example.org/static/dear-mep.js" async></script>
+```
 
-To do so, first get the current OpenAPI specification from the backend using one of the methods described [here](../server/README.md#retrieving-the-openapi-specification). Store the content in a file named `openapi.json` in the root of the repository.
+Replace `https://example.org/` with the URL to your DearMEP instance, i.e. where the [server](../server/README.md) is running.
 
-After that the API client can simpy be generated using the command `npm run generate-client`.
+### Important Notes
+- Ensure that the page’s URL is allowed in the **CORS configuration** of the DearMEP server for successful embedding (via `api.cors.origins`, see [example-config.yaml](../server/dearmep/example-config.yaml)).
+- If the embedding page uses **Content Security Policy (CSP)** headers, make sure that the DearMEP script is not blocked.
 
-> **_NOTE:_** it is necessary to repeat these steps whenever API changes occur, you will run into build errors otherwise.
+If DearMEP does not appear on the page, check the browser console and developer tools for errors.
 
-## Development server
+Alternatively to embedding, the client can also run as a **standalone page**, where the backend provides a simple HTML page containing the client snippet. See [Serving Static Files](../server/README.md#serving-static-files-eg-the-client) for details.
 
-Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Configuration Options
 
-## Serve Embeding-Test-Page
+There are multiple ways to configure the client:
 
-Run `npm run build` and `npm run start:test-page`. Navigate to `http://localhost:8080` to see a test-page with an embeded version of DearMEP
+### 1. HTML Attributes
 
-### Analyze bundle size
+Attributes can be set directly on the `<dear-mep>` element to control various behaviors:
 
-Run `npm run build` to build the application if you have not already done so.
+| Attribute               | Description                                                                                                                                                                                   |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `host`                  | **(Required)** The URL of the DearMEP server. Only absolute URLs are allowed.                                                                                                                 |
+| `api`                   | The URL of the API server, if it is hosted separately from the main DearMEP server. Relative URLs are interpreted in relation to `host`.                                                      |
+| `assets`                | The URL of the assets server if static assets are hosted separately from the API server. Relative URLs are interpreted in relation to `host`.                                                |
+| `default-country`       | Fallback country if the user's location cannot be determined (e.g., due to VPN/TOR). Uses ISO 639-1 Alpha-2 codes (e.g., "DE" for Germany).                                                   |
+| `disable-calling`       | Hides the calling functionality if present.                                                                                                                                                   |
+| `disable-scheduling`    | Hides the schedule-call functionality if present.                                                                                                                                             |
 
-Open [esbuild Bundle Size Analyzer](https://esbuild.github.io/analyze/) and upload the file `dist/dear-mep/stats.json`.
+**Example:**
+```html
+<dear-mep host="https://example.org/" default-country="DE"></dear-mep>
+```
 
-## Code scaffolding
+For a detailed technical description, refer to the source code in [app.component.ts](../client/src/app/app.component.ts).
 
-Run `npx ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### 2. Server Configuration
 
-## Build
+On startup, the client loads configurations from the server, including enabled features and localization strings. These configurations are set in the server’s config file (see: [example-config.yaml](../server/dearmep/example-config.yaml)).
 
-Run `npm run build` to build the project. The build artifacts will be stored in the `dist/dear-mep-bundle/` directory.
+### 3. Build-Time Configuration
 
-## Format & Lint
+Certain aspects of the client can be configured at build-time, allowing different settings for environments such as *development* or *production*. This is managed in [environment.ts](./src/environments/environment.ts).
 
-Run `npm run format` to format the whole project using [prettier](https://prettier.io/).
+## Styling and Theming
 
-Run `npm run lint` or `npm run lint:fix` to lint (and fix) the code.
+The styles for the client are built using **SCSS** and are split into two stylesheets: `dear-mep.css` and `dear-mep-inner.css`.
 
-> **VSCode:**
-> If you are using VSCode, install the [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension and set `"editor.formatOnSave": true` in the settings.
+- `dear-mep.css` is loaded into the host page using a `<link>` tag and applies styles outside of the shadow root.
+- `dear-mep-inner.css` is loaded within the Shadow DOM, ensuring that these styles are isolated from the host page.
 
-## Running unit tests
+### Theming
 
-Run `npm test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+For details on customizing the appearance of the DearMEP client, refer to the [theming documentation](../doc/theming.md).
 
-## Running end-to-end tests
+## Development Instructions
 
-Run `npx ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### Installing Dependencies
+
+To set up the project for local development, run:
+
+```bash
+npm install
+```
+
+### Generating the API Client
+
+Before building the frontend, generate the API client:
+
+1. Retrieve the current OpenAPI specification from the backend as described in [Retrieving the OpenAPI specification](../server/README.md#retrieving-the-openapi-specification).
+2. Save the specification as `openapi.json` in the root directory.
+3. Run:
+
+   ```bash
+   npm run generate-client
+   ```
+
+> **Note:** Regenerate the client whenever there are API changes to avoid build errors.
+
+### Running the Development Server
+
+To start the development server:
+
+```bash
+npm start
+```
+
+Navigate to [http://localhost:4200](http://localhost:4200/). The application will automatically reload if you make changes to the source files.
+
+### Serving the Embedding Test Page
+
+To test the embedded client:
+
+1. Build the project:
+
+   ```bash
+   npm run build
+   ```
+
+2. Start the test server:
+
+   ```bash
+   npm run start:test-page
+   ```
+
+3. Access the test page at [http://localhost:8080](http://localhost:8080).
+
+## Analyzing Bundle Size
+
+To analyze the bundle size:
+
+1. Build the application:
+
+   ```bash
+   npm run build
+   ```
+
+2. Use the [esbuild Bundle Size Analyzer](https://esbuild.github.io/analyze/) and upload `dist/dear-mep/stats.json`.
+
+## Code Scaffolding
+
+To generate a new component:
+
+```bash
+npx ng generate component component-name
+```
+
+Other entities can also be generated using:
+
+```bash
+ng generate directive|pipe|service|class|guard|interface|enum|module
+```
+
+## Building the Project
+
+To build the project:
+
+```bash
+npm run build
+```
+
+The build artifacts will be stored in `dist/dear-mep-bundle/`.
+
+## Formatting & Linting
+
+- **Format the code** using [Prettier](https://prettier.io/):
+
+  ```bash
+  npm run format
+  ```
+
+- **Lint the code** and automatically fix issues:
+
+  ```bash
+  npm run lint
+  npm run lint:fix
+  ```
+
+> **VSCode Users**: If you’re using VSCode, install the [Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and enable `"editor.formatOnSave": true` in your settings for auto-formatting.
