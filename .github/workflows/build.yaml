@@ -154,8 +154,8 @@ jobs:
   deploy:
     needs: build  # Technically, it only needs "backend", but we want the build to succeed first.
 
-    # TODO: Enable once this is no longer just a PR.
-    # if: github.ref_name == 'main'
+    # Only update the web-hosted version on the main branch.
+    if: github.ref_name == 'main'
 
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
