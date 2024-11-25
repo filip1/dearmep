@@ -5,7 +5,7 @@ This document talks about the design of DearMEP’s [Destination](glossary.md#de
 **Please note:**
 This is a **draft** (i.e. not fully written) of a **design document** (i.e. not fully implemented).
 Do not expect DearMEP to behave like this yet; this document is merely a basis for discussion.
-In this document, we use the terms Member of European Parliament (MEP), politican and Destination interchangably. 
+In this document, we use the terms Member of European Parliament (MEP), politician and Destination interchangeably.
 
 # Design goals
 
@@ -15,7 +15,7 @@ In this document, we use the terms Member of European Parliament (MEP), politica
 * In other words, we want to contact those who are probably still unsure, or who can likely be convinced by arguments from their voters. We say that these Destinations have a high _Swayability_.
 * We want to use our Users’ time as efficient as the campaign’s money wisely.
 * We aim to connect Users to Destinations from the country they’ll be voting in, because this gives the Destination an incentive to listen to what the User has to say, and also because the User is most likely somewhat invested in that country.
-* There is a limit to the amount of phone calls a Destination should recive in order to be respectful of the time of their office. We should not overtax people, even if they have a high Swayability.
+* There is a limit to the amount of phone calls a Destination should receive in order to be respectful of the time of their office. We should not overtax people, even if they have a high Swayability.
 * If possible, our Users should not feel disheartened by their experience, but motivated to keep going.
 * The same User should not be contacting the same Destination in a short period of time.
 
@@ -29,11 +29,13 @@ These factors can be divided into _static_ and _dynamic_ ones.
 
 Static factors are usually determined at the start of the campaign and don’t change often, although they can be updated during the course of the campaign.
 They are usually calculated by a human, in a process that is somewhat manual, even though there might be automation and tools to assist with it.
-For example, an initial score for each Member of Parliament could be determined by looking at the parliamentary group they belong to, their country, as well as past votes or public statements by that person. For example, a Green politician could be assumed to generally vote for climate issues and might already be convinced to support a certain issue. 
+For example, an initial score for each Member of Parliament could be determined by looking at the parliamentary group they belong to, their country, as well as past votes or public statements by that person.
+For example, a Green politician could be assumed to generally vote for climate issues and might already be convinced to support a certain issue.
 For certain politicians, the campaign managers might even want to manually adjust the score.
 
 This process can be handled well by a spreadsheet containing each of the MPs, probably augmented by voting results and manual scores.
-DearMEP’s [converters](data-conversion.md), combined with tools like [csvkit](https://csvkit.readthedocs.io/), can help in generating raw data for the spreadsheet, and then read the results (e.g. after some custom formulas designed by the campaign have been applied) back into the system. Past voting behaviour is generally available in machine readable format on the [website of the European Parliament](https://www.europarl.europa.eu/plenary/en/votes.html?tab=votes)
+DearMEP’s [converters](data-conversion.md), combined with tools like [csvkit](https://csvkit.readthedocs.io/), can help in generating raw data for the spreadsheet, and then read the results (e.g. after some custom formulas designed by the campaign have been applied) back into the system.
+Past voting behavior is generally available in machine readable format on the [website of the European Parliament](https://www.europarl.europa.eu/plenary/en/votes.html?tab=votes)
 
 The most important static factor is called **Base Endorsement**.
 This is a value between 0 and 1, where 0 means “is firmly committed to opposing the campaign” and 1 means “will support the campaign with absolute certainty”.
@@ -73,7 +75,8 @@ They might get overwhelmed, while other persons with a still high, but slightly 
 
 Instead, the Priority should only be a large factor in the selection process, but a certain randomness should be applied, too.
 Also, some Destinations should be outright ignored:
-Those blocked by no-contact timeouts (because they have been called very recently), those that are above or below a certain Endorsement threshold (“is already guaranteed to (not) support us”), etc. Another factor might also be how often a Destination was unsuccessfully called (some MEPs simply never pick up their phone).
+Those blocked by no-contact timeouts (because they have been called very recently), those that are above or below a certain Endorsement threshold (“is already guaranteed to (not) support us”), etc.
+Another factor might also be how often a Destination was unsuccessfully called (some MEPs simply never pick up their phone).
 
 There are several algorithms that could be used:
 
