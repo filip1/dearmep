@@ -5,12 +5,13 @@ from pathlib import Path
 from typing import Optional
 
 import defusedxml.ElementTree as ET  # type: ignore[import]
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Path as PathParam, status
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markdown_it import MarkdownIt
 from markupsafe import Markup
+from typing_extensions import Annotated
 
 from .config import ENV_PREFIX, Settings
 
@@ -77,9 +78,29 @@ def mount_if_configured(app: FastAPI, prefix: str):
 
     @app.get(
         prefix + "/{path:path}/{lang}/", operation_id="getMarkdownDoc",
-        summary="Get Markdown document",
+        summary="Get Markdown Document",
+        responses={
+            404: {"description": "Document Not Found"},
+        },
     )
-    def get_markdown_doc(path: str, lang: str):
+    def get_markdown_doc(
+        path: Annotated[str, PathParam(
+            description="Name of the document. Will be mapped to a directory "
+            "in the `docs` directory of the `DEARMEP_MARKDOWN_FILES_DIR`.",
+        )],
+        lang: Annotated[str, PathParam(
+            description="Language to retrieve the document in. Will be mapped "
+            "to an actual file like `en.md` inside of the `path` "
+            "corresponding to the requested document.",
+        )],
+    ):
+        """
+        Serve a Markdown document from the server, converted to HTML.
+
+        This is only available if the environment variable
+        `DEARMEP_MARKDOWN_FILES_DIR` is configured. See _Serving Markdown
+        Files_ in the documentation for details.
+        """
         lang = lang.lower()
         try:
             abs_path = Path(markdown_dir, DOCS_DIR, path, f"{lang}.md") \
@@ -87,6 +108,7 @@ def mount_if_configured(app: FastAPI, prefix: str):
         except FileNotFoundError:
             raise_404(path)
         if not str(abs_path).startswith(str(Path(markdown_dir, DOCS_DIR))):
+            # Prevent escaping from the DOCS_DIR.
             raise_404(path)
 
         doc = get_doc(abs_path)

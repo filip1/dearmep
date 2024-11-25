@@ -189,6 +189,8 @@ A running DearMEP server will provide its OpenAPI specification at `/openapi.jso
 
 To quickly dump the OpenAPI spec to stdout, use `dearmep dump openapi`.
 
+You can also view the specification of the `main` branch (i.e. the current development version) online, [in ReDoc](https://redocly.github.io/redoc/?url=https://akvorrat.github.io/dearmep/openapi.json) or [in Swagger UI](https://validator.swagger.io/?url=https://akvorrat.github.io/dearmep/openapi.json).
+
 ## Running Behind a Reverse Proxy
 
 If you run DearMEP behind a reverse proxy like [Caddy](https://caddyserver.com/), [nginx](https://nginx.org/) or [Træfik](https://traefik.io/traefik/), make sure to provide the remote client’s original IP address via the `X-Forwarded-For` header.

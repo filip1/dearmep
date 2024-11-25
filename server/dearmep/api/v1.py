@@ -270,6 +270,7 @@ def get_blob_contents(
 
 @router.get(
     "/destinations/country/{country}", operation_id="getDestinationsByCountry",
+    summary="Get Destinations by Country",
     response_model=SearchResult[DestinationSearchResult],
     responses=rate_limit_response,  # type: ignore[arg-type]
     dependencies=(simple_rate_limit,),
@@ -286,6 +287,7 @@ def get_destinations_by_country(
 
 @router.get(
     "/destinations/name", operation_id="getDestinationsByName",
+    summary="Get Destinations by Name",
     response_model=SearchResult[DestinationSearchResult],
     responses=rate_limit_response,  # type: ignore[arg-type]
     dependencies=(simple_rate_limit,),
@@ -332,6 +334,7 @@ def get_destinations_by_name(
 
 @router.get(
     "/destinations/id/{id}", operation_id="getDestinationByID",
+    summary="Get Destination by ID",
     response_model=DestinationRead,
     responses=rate_limit_response,  # type: ignore[arg-type]
     dependencies=(simple_rate_limit,),
@@ -339,6 +342,7 @@ def get_destinations_by_name(
 def get_destination_by_id(
     id: DestinationID,
 ) -> DestinationRead:
+    """Return a single Destination by its ID."""
     with get_session() as session:
         try:
             dest = query.get_destination_by_id(session, id)
@@ -358,6 +362,10 @@ def get_suggested_destination(
 ):
     """
     Return a suggested destination to contact, possibly limited by country.
+
+    If you specify a `country`, and there is no Destination in that country, or
+    they are all unavailable, a Destination from a different country may be
+    returned instead.
     """
     with get_session() as session:
         try:
@@ -571,6 +579,19 @@ def verify_number(
 def get_feedback_context(
     token: FeedbackToken,
 ) -> FeedbackContext:
+    """
+    Retrieve basic information about a feedback token and its associated call.
+
+    Provide the token retrieved from the _Initiate Call_ endpoint.
+
+    This should be used by the frontend for several things:
+
+    * Remind the User of who they had called.
+    * Refuse feedback if the token has already been used or has expired.
+    * Display the feedback form in the language that had been used in the call.
+      (The interaction might take place on a completely new browser, e.g. on
+      the User's phone.)
+    """
     with get_session() as session:
         try:
             feedback = query.get_user_feedback_by_token(session, token=token)
@@ -598,6 +619,13 @@ def submit_call_feedback(
     token: FeedbackToken,
     submission: FeedbackSubmission,
 ):
+    """
+    Submit User feedback about a call.
+
+    Provide the token retrieved from the _Initiate Call_ endpoint. This ensures
+    that every feedback submission is associated to a call, and that there
+    cannot be more than one submission for that call.
+    """
     with get_session() as session:
         try:
             feedback = query.get_user_feedback_by_token(session, token=token)
@@ -626,7 +654,7 @@ def get_schedule(
     claims: Annotated[JWTClaims, Depends(authtoken.validate_token)],
 ):
     """
-    Returns the schedule of the User.
+    Returns the schedule of the User, i.e. when the system should call them.
     """
     with get_session() as session:
         return ScheduleResponse(schedule=query.get_schedule(
@@ -646,6 +674,12 @@ def set_schedule(
 ):
     """
     Set the schedule of the User.
+
+    Note that this completely replaces the existing schedule. If you omit some
+    days of the week when calling this endpoint, these days will lose their
+    schedule, if they had one. You cannot change only a selection of days.
+    Instead, use the _Get Schedule_ endpoint beforehand to get the User's
+    complete schedule, modify that, and send it back here.
     """
     with get_session() as session:
         query.set_schedule(

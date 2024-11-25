@@ -97,7 +97,7 @@ class CallStateResponse(BaseModel):
     feedback_token: Optional[FeedbackToken] = Field(
         description="The token that can be used to submit call feedback. Will "
         "only be returned when initially creating the call, not in the _Get "
-        "Call State_ endpoint.",
+        "Call State_ endpoint.",  # FIXME: should be a separate model then
         example="TDLXSBTB",
     )
     state: CallState
@@ -158,7 +158,7 @@ MediaListItem = Union[int, str]
 class OutsideHoursResponse(BaseModel):
     error: Literal["OUTSIDE_HOURS"] = Field(
         "OUTSIDE_HOURS",
-        description="The system currently does not allow calls, because the"
+        description="The system currently does not allow calls, because the "
         "Destinations are probably out of office right now. Ask the User to "
         "try again later.",
     )
@@ -742,11 +742,14 @@ class Schedule(BaseModel):
     this you should also check that.
     """
     day: WeekdayNumber = Field(
-        description="The day of the week on which the schedule should be "
-        "active.",
+        description="The day of the week of this schedule entry. There can be "
+        "only one entry per day (this might change in the future). We are "
+        "using ISO 8601 weekday numbers: 1 is Monday, 7 is Sunday.",
     )
     start_time: time = Field(
-        description="The time at which the schedule should start.",
+        description="The time around which the user would like to be called. "
+        "Time values are specified in UTC.",
+        example="14:15:00",
     )
 
 
