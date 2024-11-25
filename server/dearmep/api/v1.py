@@ -129,41 +129,6 @@ def _get_localization(
     )
 
 
-@router.get(
-    "/localization", operation_id="getLocalization",
-    response_model=LocalizationResponse,
-    responses=rate_limit_response,  # type: ignore[arg-type]
-    dependencies=(computational_rate_limit,),
-    deprecated=True,
-)
-def get_localization(
-    frontend_strings: bool = Query(
-        False,
-        description="Whether to also include all frontend translation strings "
-        "for the detected language. If you don’t request this, the "
-        "`frontend_strings` field in the response will be `null` to save "
-        "bandwidth.",
-    ),
-    client_addr: str = Depends(client_addr),
-    accept_language: str = Header(""),
-):
-    """
-    Based on the user’s IP address and `Accept-Language` header, suggest a
-    country and language from the ones available in the campaign.
-
-    See the `/frontend-strings` endpoint for additional information on the
-    `frontend_strings` field.
-
-    **Deprecated:** Use `/frontend-setup` instead. It expects the same input
-    parameters, but provides more information, e.g. office hours.
-    """
-    return _get_localization(
-        frontend_strings=frontend_strings,
-        client_addr=client_addr,
-        accept_language=accept_language,
-    )
-
-
 # TODO: Add caching headers, this is pretty static data.
 @router.get(
     "/frontend-strings/{language}", operation_id="getFrontendStrings",
