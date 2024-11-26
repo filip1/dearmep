@@ -1,3 +1,9 @@
+# SPDX-FileCopyrightText: © 2023 Jörn Bethune
+# SPDX-FileCopyrightText: © 2023 Tim Weber
+# SPDX-FileCopyrightText: © 2023 iameru
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from abc import ABC, abstractmethod
 from typing import Union
 

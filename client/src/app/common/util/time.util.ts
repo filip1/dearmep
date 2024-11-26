@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2023 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { parse, set } from 'date-fns';
 import { DayOfWeek } from 'src/app/model/day-of-week.enum';
 import { TimeOfDay } from 'src/app/model/time-of-day';

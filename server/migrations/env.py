@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 iameru
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config

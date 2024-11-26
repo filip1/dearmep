@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: © 2023 Tim Weber
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Data Protection & Privacy
 
 This document outlines the data DearMEP collects, or is planning to collect, mainly from the perspective of a User of the system (see the [glossary](glossary.md)).

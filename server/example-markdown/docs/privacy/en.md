@@ -1,3 +1,11 @@
+<!--
+SPDX-FileCopyrightText: © 2023 Hugo Peixoto
+SPDX-FileCopyrightText: © 2023 Thomas Lohninger
+SPDX-FileCopyrightText: © 2023 Tim Weber
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # DearMEP CSAR Privacy Policy
 
 Your privacy is important to us, so we take our duty to inform you which of your data we use in which way very seriously.

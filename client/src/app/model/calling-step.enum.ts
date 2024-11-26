@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2023 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 export enum CallingStep {
   Home = 'home',
   HomeAuthenticated = 'home-unauthenticated',

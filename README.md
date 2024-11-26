@@ -1,3 +1,10 @@
+<!--
+SPDX-FileCopyrightText: © 2022 Tim Weber
+SPDX-FileCopyrightText: © 2024 Tobias Mühlberger
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # ☎️ DearMEP
 
 > **Empowering citizens to directly and easily reach out to their Members of the European Parliament (MEPs), amplifying public voices in critical legislative debates.**

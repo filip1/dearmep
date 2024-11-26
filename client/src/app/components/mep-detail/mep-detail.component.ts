@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2023 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DestinationRead } from 'src/app/api/models';
 import { ToAbsolutePipe } from '../../common/pipes/to-absolute.pipe';

@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: © 2023 Tim Weber
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Interactive Voice Response (IVR)
 
 DearMEP's phone feature includes an [IVR](https://en.wikipedia.org/wiki/Interactive_voice_response) menu to guide Users through the process.

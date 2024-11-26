@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2023 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { getTranslocoModule } from '../testing/transloco-testing.module';
 import { CallingComponent } from './calling.component';

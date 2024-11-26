@@ -1,3 +1,9 @@
+# SPDX-FileCopyrightText: © 2022 Tim Weber
+# SPDX-FileCopyrightText: © 2023 Jörn Bethune
+# SPDX-FileCopyrightText: © 2023 iameru
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 [tool.poetry]
 name = "DearMEP"
 version = "4.0.0-dev.9999999999"

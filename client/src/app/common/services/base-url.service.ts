@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2023 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter, map, Observable } from 'rxjs';
 import { UrlUtil } from '../util/url.util';

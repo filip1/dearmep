@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2024 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatError } from '@angular/material/form-field';

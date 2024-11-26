@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2023 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /***
  * Names the days of the week
  * Weekdays are numbered according to ISO 8601, i.e. 1 is Monday, 7 is Sunday

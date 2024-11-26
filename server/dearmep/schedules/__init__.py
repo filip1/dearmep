@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: © 2023 iameru
+# SPDX-FileCopyrightText: © 2024 Tim Weber
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from logging import getLogger
 from typing import Callable, List, Tuple
 

@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: © 2023 Jörn Bethune
+# SPDX-FileCopyrightText: © 2023 Tim Weber
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from datetime import datetime, timezone
 from typing_extensions import Annotated
 

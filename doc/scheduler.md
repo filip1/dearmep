@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: © 2023 iameru
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Scheduler
 
 The scheduler handles background tasks of the application. It is logically

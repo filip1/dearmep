@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 iameru
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 """inital alembic database state
 
 Revision ID: 8d7e440490bf

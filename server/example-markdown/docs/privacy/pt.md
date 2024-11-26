@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: © 2023 Hugo Peixoto
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Política de Privacidade do DearMEP CSAR
 
 A tua privacidade é importante para nós. Levamos muito a sério o nosso dever de te informar como usamos os teus dados.

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2023 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CallingStep } from 'src/app/model/calling-step.enum';

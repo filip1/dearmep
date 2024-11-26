@@ -1,3 +1,10 @@
+<!--
+SPDX-FileCopyrightText: © 2023 Tim Weber
+SPDX-FileCopyrightText: © 2023 iameru
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Converting data for use in DearMEP
 
 This document aims to give you some pointers on where to get the data required to set up DearMEP, and how to convert it into a format

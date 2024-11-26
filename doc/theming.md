@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: © 2024 Tobias Mühlberger
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Theming the Client
 
 The appearance of the DearMEP client can be customized using CSS, allowing you to adjust its look and feel to better fit your needs.

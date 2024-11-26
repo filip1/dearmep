@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2023 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
 import { FeedbackSubmission } from 'src/app/api/models';

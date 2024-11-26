@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: © 2023 Tim Weber
+# SPDX-FileCopyrightText: © 2023 iameru
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from __future__ import annotations
 from argparse import _SubParsersAction, ArgumentParser
 from mimetypes import guess_type

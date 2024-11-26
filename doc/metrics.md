@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: © 2024 Tim Weber
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # DearMEP Prometheus Metrics
 
 The [DearMEP backend](../server) exports a number of [Prometheus](https://prometheus.io/) metrics in order to allow admins to gain insight about the health of the system, as well as some general statistics.

@@ -1,3 +1,13 @@
+<!--
+SPDX-FileCopyrightText: © 2022 Tim Weber
+SPDX-FileCopyrightText: © 2023 Thomas Lohninger
+SPDX-FileCopyrightText: © 2023 Tobias Mühlberger
+SPDX-FileCopyrightText: © 2023 axfr2200
+SPDX-FileCopyrightText: © 2023 muminpappa
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Datenschutzerklärung für DearMEP CSAR
 
 Ihre Privatsphäre liegt uns am Herzen. Deshalb nehmen wir die Verpflichtung Sie über die Verwendung Ihrer Daten zu informieren sehr ernst.

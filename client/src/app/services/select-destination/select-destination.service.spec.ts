@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2024 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { TestBed } from '@angular/core/testing';
 import { SelectDestinationService } from './select-destination.service';
 import { getTranslocoModule } from 'src/app/testing/transloco-testing.module';

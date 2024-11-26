@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2023 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 // ***********************************************
 // This example namespace declaration will help
 // with Intellisense and code completion in your

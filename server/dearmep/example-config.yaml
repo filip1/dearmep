@@ -1,3 +1,15 @@
+# SPDX-FileCopyrightText: © 2022 Tim Weber
+# SPDX-FileCopyrightText: © 2023 Hugo Peixoto
+# SPDX-FileCopyrightText: © 2023 Jörn Bethune
+# SPDX-FileCopyrightText: © 2023 Philipp Aaron Becker
+# SPDX-FileCopyrightText: © 2023 Thomas Lohninger
+# SPDX-FileCopyrightText: © 2023 Tobias Mühlberger
+# SPDX-FileCopyrightText: © 2023 aura
+# SPDX-FileCopyrightText: © 2023 axfr2200
+# SPDX-FileCopyrightText: © 2023 iameru
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 # Options ending in `_duration`, `_interval` or `_timeout` (or simply named `duration`, `interval` or
 # `timeout`) should be specified in seconds, unless noted otherwise.
 

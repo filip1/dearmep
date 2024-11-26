@@ -1,3 +1,10 @@
+<!--
+SPDX-FileCopyrightText: © 2023 Tim Weber
+SPDX-FileCopyrightText: © 2023 Tobias Mühlberger
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # DearMEP Client
 
 This project contains the client implementation of DearMEP. The client is built as a **Web Component** using **Angular Elements**.
