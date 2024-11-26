@@ -8,7 +8,7 @@ format='spdx-symbol'
 
 annotate() {
 	path="$1"; shift
-	git log --follow --no-rename-empty --diff-filter=r --date=format:%Y --format='format:%ad %aN' -- "$path" | sort | uniq -c | sort -nr -k 1,1 | sort -ns -k 2,2 | uniq -f 2 | while read -r count year author; do
+	git log --follow --no-rename-empty --diff-filter=r --date=format:%Y --format='format:%ad %aN' -- "$path" | sort -n -k 1 | sort -s -k 2 | uniq -c -f 1 | sort -snr -k 1,1 | while read -r count year author; do
 		printf 'reuse annotate --fallback-dot-license --license %s --copyright-prefix %s %s --year %s --copyright "%s"\n' "$license" "$format" "$path" "$year" "$author"
 	done
 }
