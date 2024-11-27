@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: © 2024 Tim Weber
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Selecting Destinations
 
 This document talks about the design of DearMEP’s [Destination](glossary.md#destination) selection and [Swayability](glossary.md#swayability) calculation.

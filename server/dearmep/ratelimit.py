@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: © 2022 Tim Weber
+# SPDX-FileCopyrightText: © 2023 Jörn Bethune
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import ipaddress
 import logging
 from time import time

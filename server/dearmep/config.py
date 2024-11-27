@@ -1,3 +1,10 @@
+# SPDX-FileCopyrightText: © 2022 Tim Weber
+# SPDX-FileCopyrightText: © 2023 Jörn Bethune
+# SPDX-FileCopyrightText: © 2023 Philipp Aaron Becker
+# SPDX-FileCopyrightText: © 2023 iameru
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import logging
 from datetime import date, datetime, time, timedelta, timezone
 from functools import lru_cache

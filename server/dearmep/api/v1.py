@@ -1,3 +1,10 @@
+# SPDX-FileCopyrightText: © 2022 Tim Weber
+# SPDX-FileCopyrightText: © 2023 Jörn Bethune
+# SPDX-FileCopyrightText: © 2023 Philipp Aaron Becker
+# SPDX-FileCopyrightText: © 2023 iameru
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from datetime import datetime
 from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 from typing_extensions import Annotated

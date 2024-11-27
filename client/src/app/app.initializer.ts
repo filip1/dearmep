@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2024 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { environment } from 'src/environments/environment';
 import { BaseUrlService } from './common/services/base-url.service';
 import { UrlUtil } from './common/util/url.util';

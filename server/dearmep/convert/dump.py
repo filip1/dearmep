@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 Tim Weber
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import json
 from typing import IO, Any, Dict, Iterable, Optional, Type
 

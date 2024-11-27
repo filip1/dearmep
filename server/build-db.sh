@@ -1,4 +1,10 @@
 #!/bin/sh
+
+# SPDX-FileCopyrightText: © 2023 Tim Weber
+# SPDX-FileCopyrightText: © 2023 iameru
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 set -e
 
 ME='build-db.sh'

@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: © 2023 axfr2200
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # DearMEP CSAR integritetspolicy
 
 Din integritet är viktig för oss, så vi följer vår skyldighet att informera dig om vilka av dina uppgifter vi använder på vilket sätt.

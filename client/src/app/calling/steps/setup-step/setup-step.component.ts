@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2023 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { Component, OnInit } from '@angular/core';
 import { Observable, combineLatest, filter, map, take } from 'rxjs';
 import {

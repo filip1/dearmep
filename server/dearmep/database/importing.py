@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 Tim Weber
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from __future__ import annotations
 from pathlib import Path
 from typing import Callable, Dict, Iterable, Optional, Set, Type

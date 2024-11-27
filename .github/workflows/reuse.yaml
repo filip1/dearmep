@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: © 2024 Tim Weber
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+name: REUSE
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  reuse:
+    runs-on: ubuntu-latest
+    name: Copyright & License Check
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+      - name: Install REUSE tool
+        run: |
+          python -m pip install reuse
+      - name: Run reuse lint
+        run: |
+          reuse lint

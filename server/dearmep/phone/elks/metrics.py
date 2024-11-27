@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: © 2023 Tim Weber
+# SPDX-FileCopyrightText: © 2023 iameru
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from prometheus_client import Counter, Summary
 
 from ...models import UserPhone

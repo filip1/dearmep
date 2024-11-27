@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: © 2023 Tim Weber
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from datetime import date
 from io import BufferedReader
 import json

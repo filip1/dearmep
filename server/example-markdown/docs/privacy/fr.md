@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: © 2023 aura
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # DearMEP CSAR (Règlement en vue de prévenir et de combattre les abus sexuels sur enfants) Règles de confidentialité
 
 Car votre vie privée est importante pour nous, nous prenons donc très sérieux notre devoir de vous informer sur notre façon d'utiliser vos données.

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2024 Tobias Mühlberger
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { NgModule } from '@angular/core';
 import { ConfigService } from '../services/config/config.service';
 import { ApiService } from '../api/services';
