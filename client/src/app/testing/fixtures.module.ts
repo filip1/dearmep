@@ -8,11 +8,16 @@ import { ApiService } from '../api/services';
 import { LocalStorageService } from '../services/local-storage/local-storage.service';
 import { testingConfig } from './testing-config';
 import { Subject } from 'rxjs';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 
 @NgModule({
   exports: [HttpClientTestingModule, NoopAnimationsModule],
+  imports: [NoopAnimationsModule],
   providers: [
     {
       provide: ConfigService,
@@ -31,7 +36,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
         return configService;
       },
     },
+    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClientTesting(),
   ],
-  imports: [HttpClientTestingModule, NoopAnimationsModule],
 })
 export class FixturesModule {}
