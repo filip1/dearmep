@@ -3,9 +3,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {
-  APP_INITIALIZER,
   ApplicationConfig,
   importProvidersFrom,
+  inject,
+  provideAppInitializer,
 } from '@angular/core';
 import { appInitializerFactory } from './app.initializer';
 import { ConfigService } from './services/config/config.service';
@@ -36,12 +37,13 @@ import {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: appInitializerFactory,
-      deps: [ConfigService, BaseUrlService],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+      const initializerFn = appInitializerFactory(
+        inject(ConfigService),
+        inject(BaseUrlService)
+      );
+      return initializerFn();
+    }),
 
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: BaseUrlInterceptor, multi: true },

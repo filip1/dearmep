@@ -9,7 +9,6 @@ import { TranslocoModule } from '@ngneat/transloco';
   selector: 'dmep-talking-points',
   templateUrl: './talking-points.component.html',
   styleUrls: ['./talking-points.component.scss'],
-  standalone: true,
   imports: [TranslocoModule],
 })
 export class TalkingPointsComponent {}

@@ -56,7 +56,6 @@ interface Country {
   providers: [
     { provide: MatFormFieldControl, useExisting: PhoneNumberInputComponent },
   ],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatSelect,

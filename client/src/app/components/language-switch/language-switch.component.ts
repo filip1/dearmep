@@ -13,7 +13,6 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
   selector: 'dmep-language-switch',
   templateUrl: './language-switch.component.html',
   styleUrls: ['./language-switch.component.scss'],
-  standalone: true,
   imports: [
     MatFormField,
     MatLabel,

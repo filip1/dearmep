@@ -16,7 +16,6 @@ import { HomeStepComponent } from './steps/home-step/home-step.component';
   selector: 'dmep-calling',
   templateUrl: './calling.component.html',
   styleUrls: ['./calling.component.scss'],
-  standalone: true,
   imports: [
     HomeStepComponent,
     VerifyNumberComponent,

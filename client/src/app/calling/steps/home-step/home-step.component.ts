@@ -16,7 +16,6 @@ import { CallingButtonsComponent } from '../../../components/calling-buttons/cal
   selector: 'dmep-home-step',
   templateUrl: './home-step.component.html',
   styleUrls: ['./home-step.component.scss'],
-  standalone: true,
   imports: [TranslocoModule, CallingButtonsComponent, AsyncPipe],
 })
 export class HomeStepComponent {

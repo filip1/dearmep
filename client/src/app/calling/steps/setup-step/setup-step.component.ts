@@ -28,7 +28,6 @@ import { TranslocoModule } from '@ngneat/transloco';
   selector: 'dmep-setup-step',
   templateUrl: './setup-step.component.html',
   styleUrls: ['./setup-step.component.scss'],
-  standalone: true,
   imports: [TranslocoModule, MatIcon, AsyncPipe],
 })
 export class SetupStepComponent implements OnInit {

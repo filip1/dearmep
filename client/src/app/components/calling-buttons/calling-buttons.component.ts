@@ -13,7 +13,6 @@ import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
   selector: 'dmep-calling-buttons',
   templateUrl: './calling-buttons.component.html',
   styleUrls: ['./calling-buttons.component.scss'],
-  standalone: true,
   imports: [
     CdkConnectedOverlay,
     TranslocoModule,

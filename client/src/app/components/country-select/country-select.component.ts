@@ -31,7 +31,6 @@ interface Country {
   selector: 'dmep-country-select',
   templateUrl: './country-select.component.html',
   styleUrls: ['./country-select.component.scss'],
-  standalone: true,
   imports: [
     MatFormField,
     MatLabel,

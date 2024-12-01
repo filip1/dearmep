@@ -41,7 +41,6 @@ import { CountrySelectComponent } from '../../../components/country-select/count
   selector: 'dmep-update-call-schedule',
   templateUrl: './update-call-schedule.component.html',
   styleUrls: ['./update-call-schedule.component.scss'],
-  standalone: true,
   imports: [
     TranslocoModule,
     CountrySelectComponent,

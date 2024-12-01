@@ -19,7 +19,6 @@ import { TranslocoModule } from '@ngneat/transloco';
   selector: 'dmep-error-modal',
   templateUrl: './error-modal.component.html',
   styleUrls: ['./error-modal.component.scss'],
-  standalone: true,
   imports: [
     MatDialogTitle,
     TranslocoModule,
