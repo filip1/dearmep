@@ -30,7 +30,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     class="dmep-app-layout"
     [ngClass]="{
       'dmep-talking-points-visible': shouldDisplayTalkingPoints$ | async,
-      'dmep-calling-disabled': disableCalling
+      'dmep-calling-disabled': disableCalling,
     }">
     @if (shouldDisplayTitle$ | async) {
       <dmep-title class="dmep-layout-left"></dmep-title>
@@ -71,8 +71,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       originX: 'center',
       originY: 'center',
       overlayX: 'center',
-      overlayY: 'center'
-    }
+      overlayY: 'center',
+    },
   ]">
   <div class="dmep-popover dmep-maintenance-message">
     @if (maintenanceOverlayDismissable) {
