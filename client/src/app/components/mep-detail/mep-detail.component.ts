@@ -14,7 +14,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   selector: 'dmep-mep-detail',
   templateUrl: './mep-detail.component.html',
   styleUrls: ['./mep-detail.component.scss'],
-  standalone: true,
   imports: [
     MatProgressSpinner,
     MatIconButton,

@@ -13,7 +13,6 @@ import { CdkOverlayOrigin, CdkConnectedOverlay } from '@angular/cdk/overlay';
   selector: 'dmep-social-icon',
   templateUrl: './social-icon.component.html',
   styleUrls: ['./social-icon.component.scss'],
-  standalone: true,
   imports: [
     CdkOverlayOrigin,
     MatTooltip,

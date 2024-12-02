@@ -44,7 +44,6 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
   selector: 'dmep-verify-number',
   templateUrl: './verify-number.component.html',
   styleUrls: ['./verify-number.component.scss'],
-  standalone: true,
   imports: [
     TranslocoModule,
     MatFormField,

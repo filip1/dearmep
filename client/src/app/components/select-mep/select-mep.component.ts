@@ -43,7 +43,6 @@ import {
   selector: 'dmep-select-mep',
   templateUrl: './select-mep.component.html',
   styleUrls: ['./select-mep.component.scss'],
-  standalone: true,
   imports: [
     MatFormField,
     MatLabel,

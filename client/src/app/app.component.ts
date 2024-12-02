@@ -37,7 +37,6 @@ import { ResponsiveDirective } from './common/directives/responsive.directive';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom,
-  standalone: true,
   imports: [
     ResponsiveDirective,
     CdkOverlayOrigin,

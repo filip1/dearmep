@@ -21,7 +21,6 @@ import { TranslocoModule } from '@ngneat/transloco';
   selector: 'dmep-feedback-step',
   templateUrl: './feedback-step.component.html',
   styleUrls: ['./feedback-step.component.scss'],
-  standalone: true,
   imports: [
     TranslocoModule,
     MatRadioGroup,

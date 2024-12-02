@@ -9,7 +9,6 @@ import { TranslocoModule } from '@ngneat/transloco';
   selector: 'dmep-title',
   templateUrl: './title.component.html',
   styleUrls: ['./title.component.scss'],
-  standalone: true,
   imports: [TranslocoModule],
 })
 export class TitleComponent {}
