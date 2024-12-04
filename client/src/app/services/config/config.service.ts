@@ -7,8 +7,11 @@ import { AppConfig } from './app-config.model';
 import {
   BehaviorSubject,
   Observable,
+  filter,
   firstValueFrom,
   map,
+  publishReplay,
+  share,
   shareReplay,
   tap,
 } from 'rxjs';
@@ -52,7 +55,7 @@ export class ConfigService {
     SE: '+46',
   };
 
-  private config$: Observable<AppConfig>;
+  private config$ = new BehaviorSubject<AppConfig | undefined>(undefined);
   private config?: AppConfig;
 
   private language: string | undefined;
@@ -64,15 +67,15 @@ export class ConfigService {
     private readonly localStorageService: LocalStorageService
   ) {
     const userSelectedLanguage = this.getSelectedLanguage();
-    this.config$ = this.getServerConfig$(userSelectedLanguage);
+    this.getServerConfig$(userSelectedLanguage);
   }
 
   public getConfig$(): Observable<AppConfig> {
-    return this.config$;
+    return this.config$.pipe(filter(c => !!c));
   }
 
   public setConfig(config: AppConfig) {
-    this.config$ = new BehaviorSubject(config);
+    this.config$.next(config);
     this.config = config;
   }
 
@@ -116,10 +119,8 @@ export class ConfigService {
     this.localStorageService.setString(this.countryStorageKey, country);
   }
 
-  private getServerConfig$(
-    acceptedLanguage: string | undefined
-  ): Observable<AppConfig> {
-    return this.apiService
+  private getServerConfig$(acceptedLanguage: string | undefined) {
+    this.apiService
       .getFrontendSetup({
         frontend_strings: true,
         'accept-language': acceptedLanguage,
@@ -129,13 +130,16 @@ export class ConfigService {
           const config = c as AppConfig;
           config.availableCallingCodes = this.availableCallingCodes;
           return config;
-        }),
-        tap(c => {
-          this.config = c;
+        })
+      )
+      .subscribe({
+        next: c => {
+          this.setConfig(c);
           this.language = c.language.recommended;
           this.availableLanguages = c.language.available;
-        }),
-        shareReplay({ bufferSize: 1, refCount: false })
-      );
+        },
+        error: e =>
+          console.error('ERROR: Failed to load config from server!', e),
+      });
   }
 }
