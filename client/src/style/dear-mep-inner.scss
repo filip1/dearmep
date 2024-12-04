@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-@import 'dear-mep';
-@import 'themes/variables';
+@use 'dear-mep';
+@use 'themes/variables';
 
 :host {
   // avoid bleeding style from light-dom into shadow-dom
