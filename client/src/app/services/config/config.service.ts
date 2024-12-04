@@ -4,17 +4,7 @@
 
 import { Injectable } from '@angular/core';
 import { AppConfig } from './app-config.model';
-import {
-  BehaviorSubject,
-  Observable,
-  filter,
-  firstValueFrom,
-  map,
-  publishReplay,
-  share,
-  shareReplay,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, Observable, filter, firstValueFrom, map } from 'rxjs';
 import { ApiService } from 'src/app/api/services';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 
