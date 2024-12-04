@@ -7,10 +7,10 @@ import { AppConfig } from './app-config.model';
 import {
   BehaviorSubject,
   Observable,
+  filter,
   firstValueFrom,
   map,
-  shareReplay,
-  tap,
+  take,
 } from 'rxjs';
 import { ApiService } from 'src/app/api/services';
 import { LocalStorageService } from '../local-storage/local-storage.service';
@@ -52,7 +52,7 @@ export class ConfigService {
     SE: '+46',
   };
 
-  private config$: Observable<AppConfig>;
+  private config$ = new BehaviorSubject<AppConfig | undefined>(undefined);
   private config?: AppConfig;
 
   private language: string | undefined;
@@ -64,15 +64,15 @@ export class ConfigService {
     private readonly localStorageService: LocalStorageService
   ) {
     const userSelectedLanguage = this.getSelectedLanguage();
-    this.config$ = this.getServerConfig$(userSelectedLanguage);
+    this.getServerConfig$(userSelectedLanguage);
   }
 
   public getConfig$(): Observable<AppConfig> {
-    return this.config$;
+    return this.config$.pipe(filter(c => !!c));
   }
 
   public setConfig(config: AppConfig) {
-    this.config$ = new BehaviorSubject(config);
+    this.config$.next(config);
     this.config = config;
   }
 
@@ -93,7 +93,7 @@ export class ConfigService {
 
   // This method is called during the app bootstrap process
   public async initialize(): Promise<void> {
-    await firstValueFrom(this.config$); // subscribing to config$ will trigger the http request
+    await firstValueFrom(this.getConfig$());
   }
 
   public getSelectedLanguage(): string | undefined {
@@ -116,26 +116,28 @@ export class ConfigService {
     this.localStorageService.setString(this.countryStorageKey, country);
   }
 
-  private getServerConfig$(
-    acceptedLanguage: string | undefined
-  ): Observable<AppConfig> {
-    return this.apiService
+  private getServerConfig$(acceptedLanguage: string | undefined) {
+    this.apiService
       .getFrontendSetup({
         frontend_strings: true,
         'accept-language': acceptedLanguage,
       })
       .pipe(
+        take(1),
         map(c => {
           const config = c as AppConfig;
           config.availableCallingCodes = this.availableCallingCodes;
           return config;
-        }),
-        tap(c => {
-          this.config = c;
+        })
+      )
+      .subscribe({
+        next: c => {
           this.language = c.language.recommended;
           this.availableLanguages = c.language.available;
-        }),
-        shareReplay({ bufferSize: 1, refCount: false })
-      );
+          this.setConfig(c);
+        },
+        error: e =>
+          console.error('ERROR: Failed to load config from server!', e),
+      });
   }
 }
