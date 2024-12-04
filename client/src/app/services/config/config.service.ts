@@ -4,7 +4,14 @@
 
 import { Injectable } from '@angular/core';
 import { AppConfig } from './app-config.model';
-import { BehaviorSubject, Observable, filter, firstValueFrom, map } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  filter,
+  firstValueFrom,
+  map,
+  take,
+} from 'rxjs';
 import { ApiService } from 'src/app/api/services';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 
@@ -86,7 +93,7 @@ export class ConfigService {
 
   // This method is called during the app bootstrap process
   public async initialize(): Promise<void> {
-    await firstValueFrom(this.config$); // subscribing to config$ will trigger the http request
+    await firstValueFrom(this.getConfig$());
   }
 
   public getSelectedLanguage(): string | undefined {
@@ -116,6 +123,7 @@ export class ConfigService {
         'accept-language': acceptedLanguage,
       })
       .pipe(
+        take(1),
         map(c => {
           const config = c as AppConfig;
           config.availableCallingCodes = this.availableCallingCodes;
@@ -124,9 +132,9 @@ export class ConfigService {
       )
       .subscribe({
         next: c => {
-          this.setConfig(c);
           this.language = c.language.recommended;
           this.availableLanguages = c.language.available;
+          this.setConfig(c);
         },
         error: e =>
           console.error('ERROR: Failed to load config from server!', e),
