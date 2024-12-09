@@ -199,7 +199,7 @@ class ContactBase(SQLModel):
         index=True,
         description="Which type of Contact this is. Can be any string that "
         "makes sense for the campaign. Some suggested values are: " +
-        ", ".join(map(lambda k: f"`{k}`", CONTACT_TYPES)),
+        ", ".join(f"`{k}`" for k in CONTACT_TYPES),
         **_example(CONTACT_TYPES[0]),
     )
     group: Optional[str] = Field(
