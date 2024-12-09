@@ -9,7 +9,8 @@ from pathlib import Path
 from typing import Optional
 
 import defusedxml.ElementTree as ET  # type: ignore[import]
-from fastapi import FastAPI, HTTPException, Path as PathParam, status
+from fastapi import FastAPI, HTTPException, status
+from fastapi import Path as PathParam
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader, select_autoescape

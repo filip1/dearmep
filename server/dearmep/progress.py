@@ -79,7 +79,7 @@ class DummyTask(BaseTask):
     @classmethod
     def if_no(cls, existing_task: Optional[BaseTask] = None) -> BaseTask:
         """Return `existing_task` or, if `None`, a new `DummyTask`."""
-        return existing_task if existing_task else cls("Dummy")
+        return existing_task or cls("Dummy")
 
 
 class RichTask(BaseTask):
@@ -129,7 +129,7 @@ class RichTask(BaseTask):
 
 class BaseTaskFactory:
     def create_task(self, description: str, **kwargs) -> BaseTask:
-        raise NotImplementedError()
+        raise NotImplementedError
 
 
 class DummyTaskFactory(BaseTaskFactory):

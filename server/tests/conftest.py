@@ -106,7 +106,7 @@ def with_example_destinations(session: Session):
         country="at",
     ))
     session.commit()
-    yield session
+    return session
 
 
 @pytest.fixture
@@ -164,4 +164,4 @@ def fastapi_app(fastapi_factory: FactoryType):
 @pytest.fixture
 def client(fastapi_app: FastAPI, session: Session):
     Limit.reset_all_limits()
-    yield TestClient(fastapi_app)
+    return TestClient(fastapi_app)

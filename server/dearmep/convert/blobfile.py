@@ -37,13 +37,13 @@ class BlobOrFile:
             return f"Blob obj {self._obj.id}"
         if isinstance(self._obj, int):
             return f"Blob ref {self._obj}"
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def __repr__(self) -> str:
         if isinstance(self._obj, Blob):
             return (
                 f"BlobOrFile(Blob(id={self._obj.id}, name={self._obj.name}))")
-        return f"BlobOrFile({repr(self._obj)})"
+        return f"BlobOrFile({self._obj!r})"
 
     @classmethod
     def from_medialist_item(
@@ -56,7 +56,7 @@ class BlobOrFile:
             return cls(Path(item))
         if isinstance(item, int):
             return cls(item, session=session)
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def as_medialist_item(self) -> MediaListItem:
         if isinstance(self._obj, Path):
@@ -67,7 +67,7 @@ class BlobOrFile:
             return int(self._obj.id)
         if isinstance(self._obj, int):
             return self._obj
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @contextmanager
     def get_path(
@@ -101,7 +101,7 @@ class BlobOrFile:
         elif isinstance(self._obj, Blob):
             blob = self._obj
         else:
-            raise NotImplementedError()
+            raise NotImplementedError
 
         with NamedTemporaryFile("wb+", prefix=f"blob.{blob.id}.") as fobj:
             fobj.write(blob.data)

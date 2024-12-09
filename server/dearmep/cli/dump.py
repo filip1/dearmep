@@ -37,7 +37,7 @@ def fake_config(patch: Optional[Dict] = None):
         if not is_config_missing(e):
             raise
         # Use the builtin config instead.
-        environ[ENV_PREFIX+"CONFIG"] = str(
+        environ[ENV_PREFIX + "CONFIG"] = str(
             included_file("example-config.yaml"))
         s = Settings()
     if patch:

@@ -32,7 +32,7 @@ def new_session() -> requests.Session:
 
 
 def session_or_new(session: Optional[requests.Session]) -> requests.Session:
-    return session if session else new_session()
+    return session or new_session()
 
 
 def _permanent_download_error(e: Exception) -> bool:
@@ -154,7 +154,7 @@ class MassDownloader:
         for i in range(self._jobs):
             thread = Thread(
                 target=self._queue_worker,
-                name=f"MassDownloadWorker{i+1}",
+                name=f"MassDownloadWorker{i + 1}",
                 daemon=True,
             )
             workers.append(thread)

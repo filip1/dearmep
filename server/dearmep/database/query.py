@@ -216,7 +216,7 @@ def base_endorsement_scoring(base_score: float) -> float:
                 base_score - center
             ) * steepness
         ) ** 3
-    ) * (1-minimum) + minimum
+    ) * (1 - minimum) + minimum
 
 
 def feedback_scoring(feedback_sum: Optional[int]) -> float:
@@ -231,7 +231,7 @@ def feedback_scoring(feedback_sum: Optional[int]) -> float:
     rc = Config.get().recommender
     threshold = rc.n_clear_feedback_threshold
     return 1 / (
-        1 + (abs(feedback_sum / (threshold*8)) * 3) ** 4
+        1 + (abs(feedback_sum / (threshold * 8)) * 3) ** 4
     )
 
 
@@ -315,7 +315,7 @@ def get_recommended_destination(
             func.max(DestinationSelectionLog.timestamp).label("max_timestamp")
         )
         .where(
-            col(DestinationSelectionLog.event).in_(CALL_INITIATED+CALL_ENDED)
+            col(DestinationSelectionLog.event).in_(CALL_INITIATED + CALL_ENDED)
         )
         .group_by(DestinationSelectionLog.destination_id)
         .subquery()
@@ -370,13 +370,13 @@ def get_recommended_destination(
                 "numeric_feedback",
                 case(
                     (UserFeedback.convinced ==
-                     FeedbackConvinced.YES,            2),
+                     FeedbackConvinced.YES, 2),
                     (UserFeedback.convinced ==
-                     FeedbackConvinced.LIKELY_YES,     1),
+                     FeedbackConvinced.LIKELY_YES, 1),
                     (UserFeedback.convinced ==
-                     FeedbackConvinced.LIKELY_NO,     -1),
+                     FeedbackConvinced.LIKELY_NO, -1),
                     (UserFeedback.convinced ==
-                     FeedbackConvinced.NO,            -2),
+                     FeedbackConvinced.NO, -2),
                 )
             )
         ).label("numeric_feedback_sum")
@@ -393,7 +393,7 @@ def get_recommended_destination(
         _logger.debug(f"feedback scores: {feedback_scores}")
 
     merged_scores = {
-        key: (base_endorsement_scores[key] + feedback_scores[key])/2  # average
+        key: (base_endorsement_scores[key] + feedback_scores[key]) / 2  # average
         if key in feedback_scores  # if feedack existed
         else base_endorsement_scores[key]  # else: keep base_endorsement_score
         for key in base_endorsement_scores
@@ -745,7 +745,7 @@ def get_medialist_by_id(
     id: UUID4,
 ) -> MediaList:
     if not (mlist := session.get(MediaList, str(id))):
-        raise NotFound(f"no such medialist: `{str(id)}`")
+        raise NotFound(f"no such medialist: `{id!s}`")
     return mlist
 
 

@@ -20,7 +20,7 @@ def metrics_lines_func(client: TestClient) -> Iterable[str]:
 
 @pytest.fixture
 def metrics_lines(client: TestClient):
-    yield list(metrics_lines_func(client))
+    return list(metrics_lines_func(client))
 
 
 def test_python_info_in_metrics(metrics_lines: Iterable[str]):

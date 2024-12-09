@@ -34,8 +34,7 @@ def tabular_class(ctx: Context):
     format = ctx.args.output_format
     if format == "csv":
         return CSVStreamTabular
-    else:
-        return Tabular
+    return Tabular
 
 
 def convert_audio(ctx: Context):

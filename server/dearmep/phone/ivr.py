@@ -64,12 +64,12 @@ def main_menu(
 
 def arguments(*, destination_id: str) -> List[str]:
     """ IVR read arguments """
-    _arguments = ["argument_1", "argument_2", "argument_3", "argument_4",
+    arguments_ = ["argument_1", "argument_2", "argument_3", "argument_4",
                   "argument_5", "argument_6", "argument_7", "argument_8",
                   ]
-    shuffle(_arguments)
+    shuffle(arguments_)
     return ["arguments_campaign_intro", "arguments_choice_cancel_1",
-            destination_id, "arguments_choice_cancel_2", *_arguments,
+            destination_id, "arguments_choice_cancel_2", *arguments_,
             "arguments_end"]
 
 

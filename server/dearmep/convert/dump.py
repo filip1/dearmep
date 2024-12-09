@@ -49,7 +49,7 @@ def parse_dump_obj(data: Dict[str, Any], e_pref: str = "") -> DumpableModels:
     if TYPE_KEY not in data:
         raise DumpFormatException(f"{e_pref}missing '{TYPE_KEY}'")
     linetype = data[TYPE_KEY]
-    modeltype = STR2TYPE.get(linetype, None)
+    modeltype = STR2TYPE.get(linetype)
     if not modeltype:
         raise DumpFormatException(
             f"{e_pref}unknown type '{linetype}'")
