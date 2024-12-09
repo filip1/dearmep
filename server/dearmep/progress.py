@@ -216,12 +216,12 @@ class FlexiReader:
         self,
         input: Union[IO, Path],
         *,
-        reconfigure: Dict[str, Any] = {},
+        reconfigure: Optional[Dict[str, Any]] = None,
     ):
         self._input = input
         self._orig_stream: Optional[IO] = None
         self._stream: Optional[IO] = None
-        self._reconfigure = reconfigure
+        self._reconfigure = reconfigure or {}
         self._did_open: bool = False
         self._task: Optional[BaseTask] = None
 
@@ -232,7 +232,7 @@ class FlexiReader:
         *names: str,
         positional: bool = True,
         required: bool = False,
-        constructor_args: Dict[str, Any] = {},
+        constructor_args: Optional[Dict[str, Any]] = None,
         **kwargs,
     ):
         """Create an `ArgumentParser` argument that becomes a `FlexiReader`."""
@@ -264,9 +264,11 @@ class FlexiReader:
         filename: Union[str, Path],
         *,
         dash_stdin: bool = False,
-        constructor_args: Dict[str, Any] = {},
+        constructor_args: Optional[Dict[str, Any]] = None,
     ) -> FlexiReader:
         """Create a new FlexiReader, interpreting str argument as file name."""
+        if constructor_args is None:
+            constructor_args = {}
         if filename == "-" and dash_stdin:
             return cls(cls._stdin(), **constructor_args)
         return cls(Path(filename), **constructor_args)
@@ -347,7 +349,7 @@ class FlexiStrReader(FlexiReader):
         self,
         input: Union[IO[str], Path],
         *,
-        reconfigure: Dict[str, Any] = {},
+        reconfigure: Optional[Dict[str, Any]] = None,
     ):
         super().__init__(input, reconfigure=reconfigure)
 

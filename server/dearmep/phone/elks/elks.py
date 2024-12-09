@@ -238,7 +238,7 @@ def mount_router(app: FastAPI, prefix: str):
         return None
 
     def prepare_response(
-            valid_input: List[int] = [],
+            valid_input: Optional[List[int]] = None,
             invalid_next: str = "",
             language: str = "en",
             timeout: int = timeout,

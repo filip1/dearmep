@@ -156,7 +156,7 @@ class L10nEntry(BaseModel):
 
     def apply(
         self,
-        placeholders: Dict[str, Any] = {},
+        placeholders: Optional[Dict[str, Any]] = None,
         language: str = "",
     ) -> str:
         l10nconfig = Config.get().l10n
@@ -165,7 +165,7 @@ class L10nEntry(BaseModel):
         # TODO: Use a context-set language?
         lang = Language(language) if language else l10nconfig.default_language
 
-        return self.for_language(lang).format(**placeholders)
+        return self.for_language(lang).format(**(placeholders or {}))
 
     def for_language(self, language: Language) -> str:
         # If the entry is a simple string, use that.
