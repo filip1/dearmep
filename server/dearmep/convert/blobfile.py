@@ -7,11 +7,22 @@ from __future__ import annotations
 from contextlib import contextmanager
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Generator, List, Optional, Sequence, Tuple, Union
+from typing import (
+    TYPE_CHECKING,
+    Generator,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Union,
+)
 
-from ..database.connection import Session
 from ..database.models import Blob, BlobID
-from ..models import MediaListItem
+
+
+if TYPE_CHECKING:
+    from ..database.connection import Session
+    from ..models import MediaListItem
 
 
 class BlobOrFile:
