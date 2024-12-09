@@ -89,7 +89,6 @@ def run(args, passthru=False, **kwargs) -> subprocess.CompletedProcess:
             "stdout": None if passthru else subprocess.DEVNULL,
             "stderr": None if passthru else subprocess.DEVNULL,
             **kwargs,
-        },
+        }, check=True,
     )
-    completed.check_returncode()
     return completed  # type: ignore[no-any-return]
