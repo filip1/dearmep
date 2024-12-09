@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import logging
+import sys
 from typing import TYPE_CHECKING, Mapping
 
 
@@ -12,6 +13,7 @@ if TYPE_CHECKING:
     from argparse import ArgumentParser, _SubParsersAction
 
     from . import Context
+
 from ..config import APP_NAME, Config, L10nEntry
 
 
@@ -51,8 +53,8 @@ def cmd_translations(ctx: Context):
     }) or had_error
 
     if had_error:
-        exit(1)
-    exit(0)
+        sys.exit(1)
+    sys.exit(0)
 
 
 def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):
