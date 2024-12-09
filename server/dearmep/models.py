@@ -276,7 +276,7 @@ class UserInCallResponse(BaseModel):
     )
 
 
-class UserPhone(str):
+class UserPhone(str):  # noqa: FURB189
     """A User’s phone number, hashed & peppered.
 
     Since we do not want to store our users’ phone numbers in the database
