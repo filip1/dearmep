@@ -118,12 +118,11 @@ def get_destinations_by_country(
     session: Session,
     country: CountryCode,
 ) -> List[Destination]:
-    dests = session.exec(
+    return session.exec(
         select(Destination)
         .where(Destination.country == country)
         .order_by(Destination.sort_name)
     ).all()
-    return dests
 
 
 def get_destinations_by_name(
@@ -150,8 +149,7 @@ def get_destinations_by_name(
             raise ValueError("country needs to be set")
         stmt = stmt.where(Destination.country == country)
     stmt = stmt.order_by(Destination.sort_name)
-    dests = session.exec(stmt).all()
-    return dests
+    return session.exec(stmt).all()
 
 
 def log_destination_selection(

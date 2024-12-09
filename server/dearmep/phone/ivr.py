@@ -29,13 +29,12 @@ def prepare_medialist(session: Session, playlist: List[str], language: str
         languages=(language, "en", ""),  # " " string needed
         suffix=".ogg",
     )
-    medialist_id = query.store_medialist(
+    return query.store_medialist(
         format="ogg",
         mimetype="audio/ogg",
         items=medialist,
         session=session
     )
-    return medialist_id
 
 
 def _group_filename(group_id: str):

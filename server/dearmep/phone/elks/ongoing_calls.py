@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from datetime import datetime
+from typing import cast
 
 from sqlalchemy import and_, select
 from sqlalchemy.exc import NoResultFound
@@ -24,14 +25,13 @@ def get_call(
         session: Session,
 ) -> Call:
     try:
-        call = (session.query(Call)
+        return cast("Call", session.query(Call)
                 .filter(Call.provider_call_id == callid)
                 .filter(Call.provider == provider)
                 .options(
                 joinedload(Call.destination)
                 .joinedload(Destination.contacts)
                 ).one())
-        return call  # type: ignore
     except NoResultFound:
         raise CallError(f"Call {callid=}, {provider=} not found")
 
@@ -57,15 +57,13 @@ def destination_is_in_call(destination_id: str, session: Session):
             col(Call.connected_at).isnot(None),
         )
     ).exists()
-    in_call = session.query(stmt).scalar()
-    return in_call
+    return session.query(stmt).scalar()
 
 
 def user_is_in_call(user_id: UserPhone, session: Session):
     """ returns True if the user is in a call """
     stmt = select(Call).where(Call.user_id == user_id).exists()
-    in_call = session.query(stmt).scalar()
-    return in_call
+    return session.query(stmt).scalar()
 
 
 def add_call(
