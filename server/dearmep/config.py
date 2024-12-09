@@ -449,7 +449,7 @@ class Config(BaseModel):
             return cls.load_dict(yaml_dict)
 
     @classmethod
-    def set_patch(cls, patch: Optional[Dict]):
+    def set_patch(cls, patch: Optional[Dict]) -> None:
         cls._patch = patch
 
     @classmethod

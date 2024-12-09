@@ -127,7 +127,7 @@ class Limit:
             )
 
     @classmethod
-    def allow_unlimited(cls, subnets: Set[IPNetwork]):
+    def allow_unlimited(cls, subnets: Set[IPNetwork]) -> None:
         """
         Exclude specific IP subnets from the limits.
         """

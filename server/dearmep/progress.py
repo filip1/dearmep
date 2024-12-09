@@ -234,7 +234,7 @@ class FlexiReader:
         required: bool = False,
         constructor_args: Optional[Dict[str, Any]] = None,
         **kwargs,
-    ):
+    ) -> None:
         """Create an `ArgumentParser` argument that becomes a `FlexiReader`."""
         if not names:
             names = ("input",) if positional else ("-i", "--input")
