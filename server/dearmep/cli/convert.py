@@ -56,7 +56,7 @@ def convert_audio(ctx: Context):
             input,
             out_path,
         )
-        print(out_path)
+        print(out_path)  # noqa: T201
 
 
 def parltrack_meps(ctx: Context):
@@ -67,7 +67,7 @@ def parltrack_meps(ctx: Context):
             include_inactive=ctx.args.include_inactive,
             lz_compressed=ctx.args.lz,
         )):
-            print(output)
+            print(output)  # noqa: T201
 
 
 def europarl_portraits(ctx: Context):

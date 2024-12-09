@@ -35,7 +35,7 @@ def run(ctx: Context):  # noqa: ARG001
         versions[pkg] = metadata.version(pkg)
     longest_pkg_name_len = max(len(pkg_name) for pkg_name in versions)
     for component, version in versions.items():
-        print(f"{component.ljust(longest_pkg_name_len)} {version}")
+        print(f"{component.ljust(longest_pkg_name_len)} {version}")  # noqa: T201
 
 
 def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):  # noqa: ARG001

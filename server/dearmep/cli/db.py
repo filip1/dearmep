@@ -57,7 +57,7 @@ def cmd_store_blob(ctx: Context):
                 session.commit()
             except IntegrityError:
                 raise Exception(f"blob named {name} already exists") from None
-            print(blob.id)
+            print(blob.id)  # noqa: T201
 
 
 def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):

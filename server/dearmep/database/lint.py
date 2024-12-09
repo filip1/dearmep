@@ -52,8 +52,8 @@ def print_all_issues(session: Session):
     all = all_issues(session)
 
     if not len(all):
-        print("No issues found.")
+        print("No issues found.")  # noqa: T201
         return
 
     for issue in all_issues(session):
-        print(issue)
+        print(issue)  # noqa: T201

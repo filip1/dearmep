@@ -47,7 +47,7 @@ def fake_config(patch: Optional[Dict] = None):
 
 
 def dump_included_file(name: str):
-    print(included_file(name).read_text())
+    print(included_file(name).read_text())  # noqa: T201
 
 
 def dump_erd(ctx: Context):
@@ -75,7 +75,7 @@ def dump_log_config(ctx: Context):  # noqa: ARG001
 def dump_openapi(ctx: Context):
     fake_config()
     app = create_app()
-    print(json.dumps(app.openapi(), indent=None if ctx.args.compact else 2))
+    print(json.dumps(app.openapi(), indent=None if ctx.args.compact else 2))  # noqa: T201
 
 
 def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):
