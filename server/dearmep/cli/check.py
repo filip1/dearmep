@@ -49,7 +49,7 @@ def cmd_translations(ctx: Context):
     had_error = check_entries("frontend", cfg.l10n.frontend_strings.__root__)
     had_error = check_entries("backend", {
         fname: getattr(cfg.l10n.strings, fname)
-        for fname in cfg.l10n.strings.__fields__.keys()
+        for fname in cfg.l10n.strings.__fields__
     }) or had_error
 
     if had_error:
