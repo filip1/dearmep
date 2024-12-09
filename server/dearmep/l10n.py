@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import logging
+import operator
 import re
 from pathlib import Path
 from typing import List, Optional, Sequence, Union
@@ -55,7 +56,7 @@ def parse_accept_language(spec: str) -> List[str]:
 
         pairs.append((lang, q))
 
-    pairs.sort(reverse=True, key=lambda pair: pair[1])
+    pairs.sort(reverse=True, key=operator.itemgetter(1))
     # Cut off the q-value, the caller is probably not interested in it.
     return [pair[0] for pair in pairs]
 
