@@ -69,7 +69,7 @@ class Limit:
     not_limited_ip_networks: Set[IPNetwork] = set()
 
     @staticmethod
-    def reset_all_limits():
+    def reset_all_limits() -> None:
         limits_storage.reset()
 
     def __init__(self, limit_name: Literal["simple", "computational", "sms"]):
