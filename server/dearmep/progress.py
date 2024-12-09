@@ -281,7 +281,7 @@ class FlexiReader:
 
     def _prepare(self, open_flags: str) -> Tuple[IO, bool]:
         if self._stream is not None:
-            raise IOError("context was already entered")
+            raise OSError("context was already entered")
         if isinstance(self._input, Path):
             stream = self._input.open(open_flags)
             self._did_open = True  # we need to close it on exit
@@ -310,7 +310,7 @@ class FlexiReader:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self._stream is None:
-            raise IOError("context was never entered")
+            raise OSError("context was never entered")
         self._stream.close()
         if self._did_open:  # we need to close it again
             self._did_open = False
