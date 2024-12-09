@@ -50,14 +50,14 @@ class Importer:
         ) if fallback_portrait else None
 
     def _create_destination(self, input: DestinationDump) -> Destination:
-        contacts = list(
+        contacts = [
             Contact.from_orm(contact)
             for contact in input.contacts
-        )
-        groups = list(
+        ]
+        groups = [
             self._groups[group_id]
             for group_id in input.groups
-        )
+        ]
         dest = Destination.from_orm(input)
         dest.contacts = contacts
         dest.groups = groups
