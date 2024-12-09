@@ -305,7 +305,6 @@ def get_recommended_destination(
 
     # subquery selecting all the latest timestamps of
     # all CALL events (CALL_INITIATED + CALL_ENDED)
-    # from sqlalchemy import select
 
     max_timestamps_subquery = (
         select(  # type: ignore[call-overload]
