@@ -54,7 +54,6 @@ def build_queue() -> None:
 
 def handle_queue() -> None:
 
-    now = datetime.now()
     with get_session() as session:
         queued_call = query.get_next_queued_call(session)
         if queued_call is None:
