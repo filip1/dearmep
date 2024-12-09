@@ -5,8 +5,16 @@
 import json
 import re
 from datetime import date
-from io import BufferedReader
-from typing import Any, Dict, Generator, Iterable, List, Union, cast
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Dict,
+    Generator,
+    Iterable,
+    List,
+    Union,
+    cast,
+)
 
 from countryguess import guess_country  # type: ignore[import]
 
@@ -18,6 +26,10 @@ from ...database.models import (
     DumpableModels,
 )
 from ...progress import BaseTaskFactory, FlexiBytesReader
+
+
+if TYPE_CHECKING:
+    from io import BufferedReader
 
 
 TODAY = date.today()

@@ -5,12 +5,13 @@
 from __future__ import annotations
 
 import sys
-from argparse import ArgumentParser, _SubParsersAction
 from importlib import metadata
 from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
+    from argparse import ArgumentParser, _SubParsersAction
+
     from . import Context
 from .. import __version__
 from ..config import APP_NAME

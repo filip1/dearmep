@@ -7,7 +7,6 @@ from __future__ import annotations
 import json
 import logging
 import sys
-from argparse import ArgumentParser, _SubParsersAction
 from os import environ
 from typing import TYPE_CHECKING, Dict, Optional
 
@@ -15,6 +14,8 @@ from pydantic import ValidationError
 
 
 if TYPE_CHECKING:
+    from argparse import ArgumentParser, _SubParsersAction
+
     from . import Context
 from ..config import (
     APP_NAME,

@@ -5,7 +5,6 @@
 
 from __future__ import annotations
 
-from argparse import ArgumentParser, _SubParsersAction
 from mimetypes import guess_type
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -14,6 +13,8 @@ from sqlalchemy.exc import IntegrityError
 
 
 if TYPE_CHECKING:
+    from argparse import ArgumentParser, _SubParsersAction
+
     from . import Context
 from ..config import APP_NAME, Config
 from ..database import lint, query

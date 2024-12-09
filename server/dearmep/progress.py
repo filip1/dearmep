@@ -8,7 +8,6 @@ import os
 import stat
 import sys
 import warnings
-from argparse import ArgumentParser
 from collections.abc import Sized
 from functools import partial
 from io import BufferedReader, TextIOWrapper, UnsupportedOperation
@@ -16,6 +15,7 @@ from numbers import Real
 from pathlib import Path
 from typing import (
     IO,
+    TYPE_CHECKING,
     Any,
     Callable,
     Dict,
@@ -30,6 +30,10 @@ from typing import (
 
 from rich.progress import Progress as RichProgress
 from rich.progress import Task as _RichTask
+
+
+if TYPE_CHECKING:
+    from argparse import ArgumentParser
 
 
 class BaseTask:

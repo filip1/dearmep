@@ -6,12 +6,13 @@ from __future__ import annotations
 
 import csv
 import logging
-from argparse import ArgumentParser, _SubParsersAction
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
+    from argparse import ArgumentParser, _SubParsersAction
+
     from . import Context
 from ..config import APP_NAME, CMD_NAME, Config
 from ..convert import dump

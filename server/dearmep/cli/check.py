@@ -5,11 +5,12 @@
 from __future__ import annotations
 
 import logging
-from argparse import ArgumentParser, _SubParsersAction
 from typing import TYPE_CHECKING, Mapping
 
 
 if TYPE_CHECKING:
+    from argparse import ArgumentParser, _SubParsersAction
+
     from . import Context
 from ..config import APP_NAME, Config, L10nEntry
 

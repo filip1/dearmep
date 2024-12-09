@@ -11,7 +11,7 @@ import json
 import re
 import secrets
 from base64 import b64encode
-from datetime import datetime, time
+from datetime import datetime, time  # noqa: TC003
 from hashlib import sha256
 from ipaddress import IPv4Network, IPv6Network
 from typing import (

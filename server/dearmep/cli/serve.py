@@ -4,13 +4,14 @@
 
 from __future__ import annotations
 
-from argparse import ArgumentParser, _SubParsersAction
 from typing import TYPE_CHECKING
 
 import uvicorn
 
 
 if TYPE_CHECKING:
+    from argparse import ArgumentParser, _SubParsersAction
+
     from . import Context
 from ..config import APP_NAME, CMD_NAME, ENV_PREFIX, included_file
 
