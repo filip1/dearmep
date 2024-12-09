@@ -5,7 +5,7 @@
 import subprocess
 from contextlib import ExitStack, contextmanager
 from tempfile import NamedTemporaryFile
-from typing import IO, Generator, Iterable
+from typing import IO, Generator, Iterable, Sequence
 
 from .blobfile import BlobOrFile
 
@@ -77,18 +77,16 @@ def concat(
         yield output
 
 
-def run(args, passthru=False, **kwargs) -> subprocess.CompletedProcess:
+def run(args: Sequence[str], passthru=False) -> subprocess.CompletedProcess:
     """Run an ffmpeg subprocess."""
-    completed = subprocess.run((  # type: ignore[call-overload]
+    return subprocess.run((
         "ffmpeg",
         "-hide_banner",  # be less verbose
         "-nostdin",  # noninteractive
         "-y",  # allow overwriting output file
         *args,
-    ), **{
-            "stdout": None if passthru else subprocess.DEVNULL,
-            "stderr": None if passthru else subprocess.DEVNULL,
-            **kwargs,
-        }, check=True,
+    ),
+        stdout=None if passthru else subprocess.DEVNULL,
+        stderr=None if passthru else subprocess.DEVNULL,
+        check=True,
     )
-    return completed  # type: ignore[no-any-return]
