@@ -5,9 +5,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Callable, Dict, Iterable, Optional, Set, Type
-
-from sqlmodel import Session, SQLModel
+from typing import TYPE_CHECKING, Callable, Dict, Iterable, Optional, Set, Type
 
 from ..convert.audio import audio2blob
 from ..convert.dump import DumpFormatException
@@ -22,6 +20,10 @@ from .models import (
     DumpableModels,
     SwayabilityImport,
 )
+
+
+if TYPE_CHECKING:
+    from sqlmodel import Session, SQLModel
 
 
 class Importer:

@@ -28,12 +28,12 @@ from typing import (
     overload,
 )
 
-from rich.progress import Progress as RichProgress
-from rich.progress import Task as _RichTask
-
 
 if TYPE_CHECKING:
     from argparse import ArgumentParser
+
+    from rich.progress import Progress as RichProgress
+    from rich.progress import Task as _RichTask
 
 
 class BaseTask:

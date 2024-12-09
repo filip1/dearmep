@@ -6,11 +6,15 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
+from typing import TYPE_CHECKING
 
-from sqlalchemy.future import Engine
 from sqlmodel import MetaData, Session, SQLModel, create_engine, select, text
 
 from ..config import Config
+
+
+if TYPE_CHECKING:
+    from sqlalchemy.future import Engine
 
 
 class NotThreadsafe(Exception):

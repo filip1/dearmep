@@ -7,10 +7,13 @@ from __future__ import annotations
 import csv
 import sys
 from itertools import chain
-from typing import Any, Iterable, List, Mapping, Optional
+from typing import TYPE_CHECKING, Any, Iterable, List, Mapping, Optional
 
-from rich.console import Console
 from rich.table import Table
+
+
+if TYPE_CHECKING:
+    from rich.console import Console
 
 
 class Tabular:
