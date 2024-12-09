@@ -491,9 +491,9 @@ def is_config_missing(e: ValidationError):
     """Check whether e means that the config is missing."""
     cfg_errs = (err for err in e.errors() if err["loc"] == ("config_file",))
     for err in cfg_errs:
-        if err["type"] in (
+        if err["type"] in {
             "value_error.path.not_exists", "value_error.path.not_a_file",
-        ):
+        }:
             return True
     return False
 

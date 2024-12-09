@@ -104,7 +104,7 @@ def group_to_group(group: Dict[str, str]) -> Dict[str, str]:
 
 def convert_contact(type: str, contact: str) -> str:
     # Parltrack uses phone/fax numbers starting with `00` instead of `+`.
-    if type in ("Phone", "Fax") and contact.startswith("00"):
+    if type in {"Phone", "Fax"} and contact.startswith("00"):
         return f"+{contact[2:]}"
     # No conversion necessary.
     return contact
