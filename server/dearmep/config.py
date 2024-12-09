@@ -317,10 +317,7 @@ class OfficeHoursConfig(BaseModel):
 
         # Check whether we're in the configured interval.
         time = now.time()
-        if time < self.begin or time >= self.end:
-            return False
-
-        return True
+        return not (time < self.begin or time >= self.end)
 
 
 class TelephonyConfig(BaseModel):
