@@ -122,13 +122,13 @@ def convert_person(raw_mep: Dict[str, Any]) -> Iterable[DumpableModels]:
     # Get the current group & constituency.
     group = next((
         group
-        for group in cast(List[Dict[str, str]], raw_mep.get("Groups", []))
+        for group in cast("List[Dict[str, str]]", raw_mep.get("Groups", []))
         if is_current(group)
     ), None)
     constituency = next((
         constituency
         for constituency in cast(
-            List[Dict[str, str]], raw_mep.get("Constituencies", []))
+            "List[Dict[str, str]]", raw_mep.get("Constituencies", []))
         if is_current(constituency)
     ), None)
 

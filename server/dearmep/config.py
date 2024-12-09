@@ -293,7 +293,7 @@ class OfficeHoursConfig(BaseModel):
         If a weekday has no office hours, it will not be in the return value.
         """
         return {
-            cast(WeekdayNumber, daynum): [
+            cast("WeekdayNumber", daynum): [
                 OfficeHoursInterval(begin=self.begin, end=self.end),
             ]
             for daynum in range(1, 8)

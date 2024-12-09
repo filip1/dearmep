@@ -71,7 +71,7 @@ def escape_for_like(value: str) -> str:
 
 def get_available_countries(session: Session) -> List[str]:
     countries = session.exec(select(Destination.country).distinct()).all()
-    return cast(List[str], countries) \
+    return cast("List[str]", countries) \
         if isinstance(countries, List) and len(countries) \
         and isinstance(countries[0], str) \
         else []
@@ -800,11 +800,11 @@ def get_currently_scheduled_calls(
         ScheduledCall.day == now.isoweekday(),
         and_(
             col(ScheduledCall.postponed_to).is_not(None),
-            cast(datetime, ScheduledCall.postponed_to) <= now,
+            cast("datetime", ScheduledCall.postponed_to) <= now,
         ),
         or_(
             col(ScheduledCall.last_postpone_queued_at).is_(None),
-            cast(date, ScheduledCall.last_postpone_queued_at) < now.date(),
+            cast("date", ScheduledCall.last_postpone_queued_at) < now.date(),
         ),
     ).order_by(ScheduledCall.postponed_to)).all()
 
@@ -817,7 +817,7 @@ def get_currently_scheduled_calls(
         ),
         or_(
             col(ScheduledCall.last_queued_at).is_(None),
-            cast(date, ScheduledCall.last_queued_at) < now.date(),
+            cast("date", ScheduledCall.last_queued_at) < now.date(),
         ),
     ).order_by(ScheduledCall.start_time)).all()
 
