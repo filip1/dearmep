@@ -37,7 +37,7 @@ class BlobOrFile:
         blob_or_file: Union[Blob, BlobID, Path],
         *,
         session: Optional[Session] = None,
-    ):
+    ) -> None:
         self._session = session
         self._obj = blob_or_file
 

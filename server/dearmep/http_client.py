@@ -68,7 +68,7 @@ class MassDownloader:
         skip_existing: bool = False,
         accept_error_codes: Union[None, Literal[True], Set[int]] = None,
         ignore_error_codes: Union[None, Literal[True], Set[int]] = None,
-    ):
+    ) -> None:
         self._jobs = jobs
         self._session = session_or_new(session)
         self._task = DummyTask.if_no(task)

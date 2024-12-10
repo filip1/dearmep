@@ -23,7 +23,7 @@ from . import check, convert, db, dump, importing, serve, version
 
 
 class Context:
-    def __init__(self, *, args: Namespace, raw_stdout: bool = False):
+    def __init__(self, *, args: Namespace, raw_stdout: bool = False) -> None:
         self.args = args
         # Let the Console run on stderr if we need stdout for raw data.
         self.console = Console(stderr=raw_stdout)

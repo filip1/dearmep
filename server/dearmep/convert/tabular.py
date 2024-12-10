@@ -21,7 +21,7 @@ class Tabular:
         self,
         *headers: str,
         rows: Optional[Iterable[Iterable]] = None,
-    ):
+    ) -> None:
         self._headers = tuple(headers)
         self._rows: List[tuple] = []
         if rows is not None:
@@ -80,7 +80,7 @@ class CSVStreamTabular(Tabular):
         self,
         *headers: str,
         rows: Optional[Iterable[Iterable]] = None,
-    ):
+    ) -> None:
         super().__init__(*headers, rows=rows)
         self._csvw = csv.writer(sys.stdout)
         self._csvw.writerow(self._headers)

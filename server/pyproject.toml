@@ -152,6 +152,10 @@ ignore = [
 	"UP007",    # suggests X | Y annotations, which can confuse Python < 3.10
 ]
 
+[tool.ruff.lint.flake8-annotations]
+# Allow __init__ to omit the `-> None` return type declaration.
+mypy-init-return = true
+
 [tool.ruff.lint.flake8-bugbear]
 # Allow FastAPI's request data type hints as default arguments in functions.
 extend-immutable-calls = ["fastapi.Form", "fastapi.Query"]

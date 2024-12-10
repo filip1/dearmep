@@ -44,16 +44,17 @@ class BaseTask:
         description: str,
         *,
         total: Union[Sized, float, None] = None,
-    ):
+    ) -> None:
         self._description = description
         self._total: Optional[float] = len(total) if isinstance(total, Sized) \
             else (total if isinstance(total, Real) else None)
         self._completed = 0.
 
-    def __enter__(self):
+    # FIXME: Add `Self` type annotation.
+    def __enter__(self):  # noqa: ANN204
         return self
 
-    def __exit__(self, exc_type: Optional[Type], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]):
+    def __exit__(self, exc_type: Optional[Type], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> Literal[False]:
         if exc_val is None:
             self.done()
         return False
@@ -94,7 +95,7 @@ class RichTask(BaseTask):
         description: str,
         progress: RichProgress,
         total: Union[Sized, float, None] = None,
-    ):
+    ) -> None:
         super().__init__(description, total=total)
         self._progress = progress
         self._id = progress.add_task(self._description, total=self._total)
@@ -144,7 +145,7 @@ class DummyTaskFactory(BaseTaskFactory):
 
 
 class RichTaskFactory(BaseTaskFactory):
-    def __init__(self, progress: RichProgress):
+    def __init__(self, progress: RichProgress) -> None:
         self._progress = progress
 
     def create_task(self, description: str, **kwargs) -> RichTask:
@@ -220,7 +221,7 @@ class FlexiReader:
         input: Union[IO, Path],
         *,
         reconfigure: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         self._input = input
         self._orig_stream: Optional[IO] = None
         self._stream: Optional[IO] = None
@@ -317,7 +318,7 @@ class FlexiReader:
 
         return stream, can_tell
 
-    def __exit__(self, exc_type: Optional[Type], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]):
+    def __exit__(self, exc_type: Optional[Type], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> Literal[False]:
         if self._stream is None:
             raise OSError("context was never entered")
         self._stream.close()
@@ -354,7 +355,7 @@ class FlexiStrReader(FlexiReader):
         input: Union[IO[str], Path],
         *,
         reconfigure: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         super().__init__(input, reconfigure=reconfigure)
 
     def __enter__(self) -> TrackingStrReader:
