@@ -24,7 +24,7 @@ def all_issues(session: Session) -> List[str]:
         *,
         message: str,
         formatter: Callable,
-    ):
+    ) -> None:
         if not len(problem_items):
             return
 

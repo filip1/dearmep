@@ -66,7 +66,7 @@ def help_if_no_subcommand(parser: ArgumentParser) -> None:
     Passed to command parsers; they can set this as the default if they require
     a subcommand. If none was supplied, this function prints the help.
     """
-    def exit_help(ctx: Context):  # noqa: ARG001
+    def exit_help(ctx: Context) -> None:  # noqa: ARG001
         parser.print_help(stderr)
         exit(127)
     parser.set_defaults(func=exit_help)

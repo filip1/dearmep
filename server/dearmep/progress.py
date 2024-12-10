@@ -64,7 +64,7 @@ class BaseTask:
         return self._completed
 
     @completed.setter
-    def completed(self, completed: float):
+    def completed(self, completed: float) -> None:
         self._completed = completed
 
     def done(self) -> None:
@@ -75,7 +75,7 @@ class BaseTask:
         return self._total
 
     @total.setter
-    def total(self, total: Optional[float]):
+    def total(self, total: Optional[float]) -> None:
         self._total = total
 
 
@@ -112,7 +112,7 @@ class RichTask(BaseTask):
         return self._task.completed
 
     @completed.setter
-    def completed(self, completed: float):
+    def completed(self, completed: float) -> None:
         self._progress.update(self._id, completed=completed)
 
     def done(self) -> None:
@@ -127,7 +127,7 @@ class RichTask(BaseTask):
         return self._task.total
 
     @total.setter
-    def total(self, total: Optional[float]):
+    def total(self, total: Optional[float]) -> None:
         self._progress.update(self._id, total=total)
 
 

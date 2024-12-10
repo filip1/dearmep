@@ -6,7 +6,7 @@ import dataclasses
 import logging
 from functools import lru_cache
 from pathlib import Path
-from typing import Optional
+from typing import NoReturn, Optional
 
 import defusedxml.ElementTree as ET  # type: ignore[import]
 from fastapi import FastAPI, HTTPException, status
@@ -75,7 +75,7 @@ def mount_if_configured(app: FastAPI, prefix: str) -> None:
     )
     template = jinja_env.get_template(TEMPLATE_NAME)
 
-    def raise_404(path: str):
+    def raise_404(path: str) -> NoReturn:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"file not found: {path}",

@@ -132,7 +132,7 @@ def rollcallvote_votes(ctx: Context) -> None:
 
 
 def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:
-    def rcv_template(parser: ArgumentParser, func: Callable):
+    def rcv_template(parser: ArgumentParser, func: Callable) -> None:
         FlexiBytesReader.add_as_argument(parser)
         parser.add_argument(
             "-f", "--output-format",
@@ -148,7 +148,7 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:
         *,
         default_pattern: str,
         can_save_notfound: bool,
-    ):
+    ) -> None:
         parser.add_argument(
             "-f", "--filename-template", metavar="TEMPLATE",
             default=default_pattern,

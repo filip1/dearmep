@@ -184,7 +184,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
         ))
 
     # helpers
-    def verify_origin(request: Request):
+    def verify_origin(request: Request) -> None:
         """ Makes sure the request is coming from a 46elks IP """
         client_ip = None if request.client is None else request.client.host
         if client_ip not in provider_cfg.allowed_ips:
@@ -749,7 +749,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
         cost: Optional[int] = Form(default=None),  # in 100 = 1 cent
         duration: Optional[int] = Form(default=None),  # in sec  # noqa: ARG001
         legs: Optional[Json] = Form(default=None)  # noqa: ARG001
-    ):
+    ) -> None:
         """
         Handles the hangup and cleanup of calls
         Always gets called in the end of calls, no matter their outcome.

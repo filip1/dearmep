@@ -100,7 +100,7 @@ class MassDownloader:
             res.raise_for_status()
         return res.content
 
-    def _download(self, url: str, dest: Path):
+    def _download(self, url: str, dest: Path) -> None:
         """Load URL's contents and save at destination."""
         if not dest.parent.is_dir():
             raise FileNotFoundError(f'"{dest.parent}" is not a directory')
@@ -121,7 +121,7 @@ class MassDownloader:
             raise FileExistsError(f'"{dest}" already exists')
         dest.write_bytes(content)
 
-    def _queue_worker(self):
+    def _queue_worker(self) -> None:
         """Single thread processing the queue."""
         while self._should_run:
             try:
