@@ -19,7 +19,6 @@ from fastapi import (
 )
 from fastapi.responses import FileResponse
 from pydantic import UUID4, Json
-from sqlmodel import Session
 
 from ...config import Config, Language
 from ...convert import blobfile, ffmpeg
