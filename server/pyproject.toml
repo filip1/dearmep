@@ -64,6 +64,7 @@ types-pillow = "^9.5"
 types-requests = "^2.31"
 types-pytz = "^2023.3.1.1"
 ruff = "^0.8.2"
+types-defusedxml = "^0.7"
 
 [tool.poetry.extras]
 convert = ["csvkit", "visidata", "xlsxwriter"]

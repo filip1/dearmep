@@ -2022,6 +2022,17 @@ files = [
 ]
 
 [[package]]
+name = "types-defusedxml"
+version = "0.7.0.20240218"
+description = "Typing stubs for defusedxml"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "types-defusedxml-0.7.0.20240218.tar.gz", hash = "sha256:05688a7724dc66ea74c4af5ca0efc554a150c329cb28c13a64902cab878d06ed"},
+    {file = "types_defusedxml-0.7.0.20240218-py3-none-any.whl", hash = "sha256:2b7f3c5ca14fdbe728fab0b846f5f7eb98c4bd4fd2b83d25f79e923caa790ced"},
+]
+
+[[package]]
 name = "types-ipaddress"
 version = "1.0.8"
 description = "Typing stubs for ipaddress"
@@ -2492,4 +2503,4 @@ specs = ["eralchemy2"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "e933489ad2c257fe7f5398f1356d0f876fb3488aa749d929d300769bc6f44207"
+content-hash = "0d66624d62fc99e57d500113407217d262e6c2ebe41ef259156df163ffe2ead5"

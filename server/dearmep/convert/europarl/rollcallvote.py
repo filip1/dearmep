@@ -5,7 +5,7 @@
 from typing import Type, TypeVar
 from xml.dom import pulldom
 
-from defusedxml.pulldom import parse as pulldom_parse  # type: ignore[import]
+from defusedxml.pulldom import parse as pulldom_parse
 
 from ...progress import BaseTaskFactory, FlexiBytesReader
 from ..tabular import Tabular

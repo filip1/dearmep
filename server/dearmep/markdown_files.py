@@ -8,7 +8,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import NoReturn, Optional
 
-import defusedxml.ElementTree as ET  # type: ignore[import]
+import defusedxml.ElementTree as ET
 from fastapi import FastAPI, HTTPException, status
 from fastapi import Path as PathParam
 from fastapi.responses import HTMLResponse
