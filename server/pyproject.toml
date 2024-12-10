@@ -152,6 +152,10 @@ ignore = [
 	"UP007",    # suggests X | Y annotations, which can confuse Python < 3.10
 ]
 
+[tool.ruff.lint.flake8-bugbear]
+# Allow FastAPI's request data type hints as default arguments in functions.
+extend-immutable-calls = ["fastapi.Form", "fastapi.Query"]
+
 [tool.ruff.lint.isort]
 # Two blank lines after the imports.
 lines-after-imports = 2
