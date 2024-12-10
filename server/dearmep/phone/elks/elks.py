@@ -170,7 +170,7 @@ def start_elks_call(
     return CallState.CALLING_USER
 
 
-def mount_router(app: FastAPI, prefix: str) -> None:
+def mount_router(app: FastAPI, prefix: str) -> None:  # noqa: C901
     """ Mount the 46elks router to the app """
 
     # configuration and instantiation at mount time

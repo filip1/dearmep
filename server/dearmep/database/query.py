@@ -233,7 +233,7 @@ def feedback_scoring(feedback_sum: Optional[int]) -> float:
     )
 
 
-def get_recommended_destination(
+def get_recommended_destination(  # noqa: C901
     session: Session,
     *,
     country: Optional[CountryCode] = None,
