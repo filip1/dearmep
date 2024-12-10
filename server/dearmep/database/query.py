@@ -275,8 +275,8 @@ def get_recommended_destination(
         )
 
     # cut off by base_endorsement
-    MAX_ENDORSEMENT_CUTOFF = rc.endorsement_cutoff.max
-    MIN_ENDORSEMENT_CUTOFF = rc.endorsement_cutoff.min
+    MAX_ENDORSEMENT_CUTOFF = rc.endorsement_cutoff.max  # noqa: N806
+    MIN_ENDORSEMENT_CUTOFF = rc.endorsement_cutoff.min  # noqa: N806
     stmt_destinations = stmt_destinations.where(
         Destination.base_endorsement <= MAX_ENDORSEMENT_CUTOFF,
         Destination.base_endorsement >= MIN_ENDORSEMENT_CUTOFF,
@@ -287,7 +287,7 @@ def get_recommended_destination(
     # outter joining with CALL_ENDED events as last event per destination
 
     # events designating a call is initiated
-    CALL_INITIATED = [
+    CALL_INITIATED = [  # noqa: N806
         DestinationSelectionLogEvent.CALLING_DESTINATION,
         DestinationSelectionLogEvent.CALLING_USER,
         DestinationSelectionLogEvent.DESTINATION_CONNECTED,
@@ -295,7 +295,7 @@ def get_recommended_destination(
     ]
 
     # events designating a call has ended
-    CALL_ENDED = [
+    CALL_ENDED = [  # noqa: N806
         DestinationSelectionLogEvent.CALL_ABORTED,
         DestinationSelectionLogEvent.CALLING_DESTINATION_FAILED,
         DestinationSelectionLogEvent.FINISHED_CALL,
@@ -401,7 +401,7 @@ def get_recommended_destination(
 
     # only applies for suggestion events, otherwise looking up the latest
     # suggestion is useless.
-    SUGGEST_EVENTS = [
+    SUGGEST_EVENTS = [  # noqa: N806
         DestinationSelectionLogEvent.WEB_SUGGESTED,
         DestinationSelectionLogEvent.IVR_SUGGESTED,
     ]
@@ -415,7 +415,7 @@ def get_recommended_destination(
             merged_scores[latest_log.destination_id] = 0.00001
 
     # destination was called recently
-    SOFT_COOL_DOWN_CALL_DURATION_MINUTES = (
+    SOFT_COOL_DOWN_CALL_DURATION_MINUTES = (  # noqa: N806
         rc.soft_cool_down_call_timeout
     )
     recent_cutoff = datetime.utcnow() - \
@@ -433,7 +433,7 @@ def get_recommended_destination(
 
     # caller called destination already
     if user_id:
-        SOFT_COOL_DOWN_CALLER_CALLED_DESTINATION_DURATION_HOURS = 24
+        SOFT_COOL_DOWN_CALLER_CALLED_DESTINATION_DURATION_HOURS = 24  # noqa: N806
         recently_talked_cutoff = datetime.utcnow() - \
             timedelta(
                 hours=SOFT_COOL_DOWN_CALLER_CALLED_DESTINATION_DURATION_HOURS
