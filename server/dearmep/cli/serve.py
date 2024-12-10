@@ -21,7 +21,7 @@ LOG_LEVELS = ("critical", "error", "warning", "info", "debug")
 DEFAULT_LOG_LEVEL = "info"
 
 
-def serve(ctx: Context):
+def serve(ctx: Context) -> None:
     uvicorn.run(
         "dearmep.main:create_app",
         factory=True,
@@ -34,7 +34,7 @@ def serve(ctx: Context):
     )
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):  # noqa: ARG001
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:  # noqa: ARG001
     parser: ArgumentParser = subparsers.add_parser(
         "serve",
         help="run an HTTP server",

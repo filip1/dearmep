@@ -26,7 +26,7 @@ ADDITIONAL_PACKAGES = (
 )
 
 
-def run(ctx: Context):  # noqa: ARG001
+def run(ctx: Context) -> None:  # noqa: ARG001
     versions = {
         APP_NAME: __version__,
         "Python": sys.version.replace("\n", " "),
@@ -38,7 +38,7 @@ def run(ctx: Context):  # noqa: ARG001
         print(f"{component.ljust(longest_pkg_name_len)} {version}")  # noqa: T201
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):  # noqa: ARG001
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:  # noqa: ARG001
     parser: ArgumentParser = subparsers.add_parser(
         "version",
         help="show version information",

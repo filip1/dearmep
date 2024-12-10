@@ -34,7 +34,7 @@ def demo_html(
     )
 
 
-def mount_if_configured(app: FastAPI, path: str):
+def mount_if_configured(app: FastAPI, path: str) -> None:
     settings = Settings()
     static_files_dir = settings.static_files_dir
     if static_files_dir is None:

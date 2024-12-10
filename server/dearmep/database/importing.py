@@ -112,7 +112,7 @@ class Importer:
         self._groups[dg.id] = dg
         return dg
 
-    def import_dump(self, session: Session, objs: Iterable[DumpableModels]):
+    def import_dump(self, session: Session, objs: Iterable[DumpableModels]) -> None:
         self._groups = {}
         for obj in objs:
             obj_type = type(obj)

@@ -484,7 +484,7 @@ class Settings(BaseSettings):
         return None if v == "" else v
 
 
-def is_config_missing(e: ValidationError):
+def is_config_missing(e: ValidationError) -> bool:
     """Check whether e means that the config is missing."""
     cfg_errs = (err for err in e.errors() if err["loc"] == ("config_file",))
     for err in cfg_errs:

@@ -29,7 +29,7 @@ class Context:
         self.raw_stdout = raw_stdout
         self.dummy_factory = DummyTaskFactory()
 
-    def setup_logging(self, level: int = logging.INFO):
+    def setup_logging(self, level: int = logging.INFO) -> None:
         def ignore_uninteresting(r: logging.LogRecord) -> int:
             ratelimit_backoff = re.compile(
                 r"^Backing off .+\(ratelimit.exception.RateLimitException")
@@ -59,7 +59,7 @@ class Context:
             yield RichTaskFactory(progress)
 
 
-def help_if_no_subcommand(parser: ArgumentParser):
+def help_if_no_subcommand(parser: ArgumentParser) -> None:
     """Convenience function that prints help and exits.
 
     Passed to command parsers; they can set this as the default if they require
@@ -71,7 +71,7 @@ def help_if_no_subcommand(parser: ArgumentParser):
     parser.set_defaults(func=exit_help)
 
 
-def run():
+def run() -> None:
     load_dotenv()
     parser = ArgumentParser(
         prog=CMD_NAME.lower(),

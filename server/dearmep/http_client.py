@@ -170,13 +170,13 @@ class MassDownloader:
                 except Empty:
                     break
 
-    def add(self, url: str, dest: Path):
+    def add(self, url: str, dest: Path) -> None:
         """Enqueue a URL to download to a location."""
         self._queue.put((url, dest))
         if self._task.total is not None:
             self._task.total += 1
 
-    def start(self):
+    def start(self) -> None:
         """Start the processing of downloads in a background thread."""
         self._mgmt_thread = Thread(
             target=self._manage,
@@ -187,7 +187,7 @@ class MassDownloader:
         self._should_run = True
         self._mgmt_thread.start()
 
-    def stop(self, wait: bool = True):
+    def stop(self, wait: bool = True) -> None:
         """Stop processing downloads, optionally waiting for queue to empty."""
         try:
             if wait:

@@ -25,7 +25,7 @@ from ..progress import FlexiBytesReader, FlexiStrReader
 _logger = logging.getLogger(__name__)
 
 
-def import_destinations(ctx: Context):
+def import_destinations(ctx: Context) -> None:
     Config.load()
     input: FlexiBytesReader = ctx.args.input
 
@@ -47,7 +47,7 @@ def import_destinations(ctx: Context):
         session.commit()
 
 
-def import_swayability(ctx: Context):
+def import_swayability(ctx: Context) -> None:
     Config.load()
     input: FlexiStrReader = ctx.args.input
 
@@ -67,7 +67,7 @@ def import_swayability(ctx: Context):
             f"{', '.join(ignored)}")
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "import",
         help=f"import data into the {APP_NAME} database",

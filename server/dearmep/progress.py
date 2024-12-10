@@ -56,7 +56,7 @@ class BaseTask:
             self.done()
         return False
 
-    def advance(self, amount: float = 1.):
+    def advance(self, amount: float = 1.) -> None:
         self._completed += amount
 
     @property
@@ -67,7 +67,7 @@ class BaseTask:
     def completed(self, completed: float):
         self._completed = completed
 
-    def done(self):
+    def done(self) -> None:
         pass
 
     @property
@@ -104,7 +104,7 @@ class RichTask(BaseTask):
                 return task
         raise KeyError(f"did not find task with id {self._id}")
 
-    def advance(self, amount: float = 1.):
+    def advance(self, amount: float = 1.) -> None:
         self._progress.advance(self._id, amount)
 
     @property
@@ -115,7 +115,7 @@ class RichTask(BaseTask):
     def completed(self, completed: float):
         self._progress.update(self._id, completed=completed)
 
-    def done(self):
+    def done(self) -> None:
         total = self._task.total
         if total is None:
             self.total = self._task.completed
@@ -323,7 +323,7 @@ class FlexiReader:
             self._orig_stream.close()
         return False
 
-    def set_task(self, task: BaseTask):
+    def set_task(self, task: BaseTask) -> None:
         self._task = task
 
 

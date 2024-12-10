@@ -59,7 +59,7 @@ def audio2blob(
 def convert_file(
     input: Path,
     output: Path,
-):
+) -> None:
     ffmpeg.run((
         "-i", str(input),
         *IMPORT_OPTS,

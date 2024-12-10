@@ -57,7 +57,7 @@ def send_sms(
     user_phone_number: str,
     from_title: str,
     message: str,
-):
+) -> None:
     provider_cfg = Config.get().telephony.provider
     auth = (
         provider_cfg.username,
@@ -163,7 +163,7 @@ def start_elks_call(
     return CallState.CALLING_USER
 
 
-def mount_router(app: FastAPI, prefix: str):
+def mount_router(app: FastAPI, prefix: str) -> None:
     """ Mount the 46elks router to the app """
 
     # configuration and instantiation at mount time

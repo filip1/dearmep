@@ -38,7 +38,7 @@ def tabular_class(ctx: Context):
     return Tabular
 
 
-def convert_audio(ctx: Context):
+def convert_audio(ctx: Context) -> None:
     args = ctx.args
     for input in args.input:
         out_path = Path(input).with_suffix(f".{AUDIO_EXTENSION}")
@@ -59,7 +59,7 @@ def convert_audio(ctx: Context):
         print(out_path)  # noqa: T201
 
 
-def parltrack_meps(ctx: Context):
+def parltrack_meps(ctx: Context) -> None:
     with ctx.task_factory() as tf:
         for output in dump.dump_iter_json(mep.convert_meps(
             ctx.args.input,
@@ -70,7 +70,7 @@ def parltrack_meps(ctx: Context):
             print(output)  # noqa: T201
 
 
-def europarl_portraits(ctx: Context):
+def europarl_portraits(ctx: Context) -> None:
     ctx.setup_logging()
     ids = set(ctx.args.ID)
     with ctx.task_factory() as tf:
@@ -90,7 +90,7 @@ def europarl_portraits(ctx: Context):
     )
 
 
-def europarl_name_audio(ctx: Context):
+def europarl_name_audio(ctx: Context) -> None:
     ctx.setup_logging()
     ids = set(ctx.args.ID)
     with ctx.task_factory() as tf:
@@ -110,7 +110,7 @@ def europarl_name_audio(ctx: Context):
     )
 
 
-def rollcallvote_topics(ctx: Context):
+def rollcallvote_topics(ctx: Context) -> None:
     with ctx.task_factory() as tf:
         table = rollcallvote.list_topics(
             ctx.args.input,
@@ -120,7 +120,7 @@ def rollcallvote_topics(ctx: Context):
     table.print_to_console(ctx.console)
 
 
-def rollcallvote_votes(ctx: Context):
+def rollcallvote_votes(ctx: Context) -> None:
     with ctx.task_factory() as tf:
         table = rollcallvote.list_votes(
             ctx.args.input,
@@ -131,7 +131,7 @@ def rollcallvote_votes(ctx: Context):
     table.print_to_console(ctx.console)
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:
     def rcv_template(parser: ArgumentParser, func: Callable):
         FlexiBytesReader.add_as_argument(parser)
         parser.add_argument(

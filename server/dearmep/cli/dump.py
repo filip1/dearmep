@@ -31,7 +31,7 @@ from ..main import create_app
 _logger = logging.getLogger(__name__)
 
 
-def fake_config(patch: Optional[Dict] = None):
+def fake_config(patch: Optional[Dict] = None) -> None:
     try:
         s = Settings()
     except ValidationError as e:
@@ -46,11 +46,11 @@ def fake_config(patch: Optional[Dict] = None):
     Config.load_yaml_file(s.config_file)
 
 
-def dump_included_file(name: str):
+def dump_included_file(name: str) -> None:
     print(included_file(name).read_text())  # noqa: T201
 
 
-def dump_erd(ctx: Context):
+def dump_erd(ctx: Context) -> None:
     try:
         from eralchemy2 import render_er
 
@@ -64,21 +64,21 @@ def dump_erd(ctx: Context):
     render_er(get_metadata(), ctx.args.outfile)
 
 
-def dump_example_config(ctx: Context):  # noqa: ARG001
+def dump_example_config(ctx: Context) -> None:  # noqa: ARG001
     dump_included_file("example-config.yaml")
 
 
-def dump_log_config(ctx: Context):  # noqa: ARG001
+def dump_log_config(ctx: Context) -> None:  # noqa: ARG001
     dump_included_file("logging.yaml")
 
 
-def dump_openapi(ctx: Context):
+def dump_openapi(ctx: Context) -> None:
     fake_config()
     app = create_app()
     print(json.dumps(app.openapi(), indent=None if ctx.args.compact else 2))  # noqa: T201
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "dump",
         help="dump example files & specifications",

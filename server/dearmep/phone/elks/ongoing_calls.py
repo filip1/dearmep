@@ -36,13 +36,13 @@ def get_call(
         raise CallError(f"Call {callid=}, {provider=} not found")
 
 
-def remove_call(call: Call, session: Session):
+def remove_call(call: Call, session: Session) -> None:
     """ removes a call from the database """
     session.delete(call)
     session.commit()
 
 
-def connect_call(call: Call, session: Session):
+def connect_call(call: Call, session: Session) -> None:
     """ sets a call as connected in database """
     call.connected_at = datetime.now()
     session.add(call)

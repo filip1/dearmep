@@ -29,7 +29,7 @@ def download_media(
     skip_existing: bool = False,
     not_found: NotFoundReaction = "stop",
     task: Optional[BaseTask] = None,
-):
+) -> None:
     downloader = MassDownloader(
         jobs=jobs,
         overwrite=overwrite,

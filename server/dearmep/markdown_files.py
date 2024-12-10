@@ -51,7 +51,7 @@ def get_doc(path: Path) -> Document:
     )
 
 
-def mount_if_configured(app: FastAPI, prefix: str):
+def mount_if_configured(app: FastAPI, prefix: str) -> None:
     settings = Settings()
     markdown_dir_setting = settings.markdown_files_dir
     if markdown_dir_setting is None:

@@ -159,7 +159,7 @@ def log_destination_selection(
     event: DestinationSelectionLogEvent,
     user_id: Optional[UserPhone] = None,
     call_id: Optional[str] = None,
-):
+) -> None:
     session.add(DestinationSelectionLog(
         destination=destination,
         event=event,
@@ -763,7 +763,7 @@ def set_schedule(
     phone_number: PhoneNumber,
     language: Language,
     schedules: List[Schedule],
-):
+) -> None:
     session.exec(
         delete(ScheduledCall)
         .where(
@@ -832,7 +832,7 @@ def mark_scheduled_calls_queued(
     session: Session,
     calls: CurrentlyScheduledCalls,
     now: datetime,
-):
+) -> None:
     """Timestamps to 'now' for calls."""
     for call in calls.regular:
         call.last_queued_at = now

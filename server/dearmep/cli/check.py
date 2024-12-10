@@ -20,7 +20,7 @@ from ..config import APP_NAME, Config, L10nEntry
 _logger = logging.getLogger(__name__)
 
 
-def cmd_translations(ctx: Context):
+def cmd_translations(ctx: Context) -> None:
     def check_entries(section: str, entries: Mapping[str, L10nEntry]) -> bool:
         had_error = False
         for key, entry_model in entries.items():
@@ -57,7 +57,7 @@ def cmd_translations(ctx: Context):
     sys.exit(0)
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "check",
         help="health checks on the system and configuration",

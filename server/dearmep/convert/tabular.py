@@ -51,10 +51,10 @@ class Tabular:
 
         return cls(*headers, rows=converter())
 
-    def append(self, *row: Any):
+    def append(self, *row: Any) -> None:
         self.extend(row)
 
-    def extend(self, *rows: Iterable):
+    def extend(self, *rows: Iterable) -> None:
         num_headers = len(self._headers)
         for row_num, row in enumerate(rows, 1):
             values = tuple(row)
@@ -65,7 +65,7 @@ class Tabular:
                 )
             self._rows.append(values)
 
-    def print_to_console(self, console: Console):
+    def print_to_console(self, console: Console) -> None:
         console.print(self.to_rich_table())
 
     def to_rich_table(self, **kwargs) -> Table:
@@ -85,7 +85,7 @@ class CSVStreamTabular(Tabular):
         self._csvw = csv.writer(sys.stdout)
         self._csvw.writerow(self._headers)
 
-    def extend(self, *rows: Iterable):
+    def extend(self, *rows: Iterable) -> None:
         num_headers = len(self._headers)
         for row_num, row in enumerate(rows, 1):
             values = tuple(row)
@@ -96,6 +96,6 @@ class CSVStreamTabular(Tabular):
                 )
             self._csvw.writerow(row)
 
-    def print_to_console(self, console: Console):
+    def print_to_console(self, console: Console) -> None:
         # We have already printed our stuff, nothing to do here.
         pass

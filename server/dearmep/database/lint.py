@@ -48,7 +48,7 @@ def all_issues(session: Session) -> List[str]:
     return issues
 
 
-def print_all_issues(session: Session):
+def print_all_issues(session: Session) -> None:
     all = all_issues(session)
 
     if not len(all):

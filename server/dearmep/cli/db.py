@@ -22,13 +22,13 @@ from ..database.connection import get_session
 from ..database.models import Blob
 
 
-def cmd_lint(ctx: Context):  # noqa: ARG001
+def cmd_lint(ctx: Context) -> None:  # noqa: ARG001
     Config.load()
     with get_session() as session:
         lint.print_all_issues(session)
 
 
-def cmd_store_blob(ctx: Context):
+def cmd_store_blob(ctx: Context) -> None:
     Config.load()
     if ctx.args.name and len(ctx.args.files) > 1:
         raise Exception("--name can only be used with a single input file")
@@ -60,7 +60,7 @@ def cmd_store_blob(ctx: Context):
             print(blob.id)  # noqa: T201
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand):
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "db",
         help="manage the database",

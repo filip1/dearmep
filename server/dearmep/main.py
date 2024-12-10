@@ -27,7 +27,7 @@ from .phone import elks
 _logger = logging.getLogger(__name__)
 
 
-def require_operation_id(app: FastAPI):
+def require_operation_id(app: FastAPI) -> None:
     """
     Require all routes in the app to have the OpenAPI `operationId` field set.
 
@@ -43,7 +43,7 @@ def require_operation_id(app: FastAPI):
             )
 
 
-def require_working_database():
+def require_working_database() -> None:
     """Require a database session to be obtainable.
 
     This will crash, for example, when using a non-threadsafe SQLite.
@@ -52,7 +52,7 @@ def require_working_database():
         pass
 
 
-def setup_cors(app: FastAPI, config: Config):
+def setup_cors(app: FastAPI, config: Config) -> None:
     allowed_origins = config.api.cors.origins
     app.add_middleware(
         CORSMiddleware,

@@ -625,7 +625,7 @@ def get_feedback_context(
 def submit_call_feedback(
     token: FeedbackToken,
     submission: FeedbackSubmission,
-):
+) -> None:
     """
     Submit User feedback about a call.
 
