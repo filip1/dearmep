@@ -79,7 +79,7 @@ def get_group(
         get_group.known[id] = new_group  # type: ignore[attr-defined]
         yield new_group
 
-    return id
+    return id  # noqa: B901
 
 
 def constituency_to_group(const: Dict[str, str]) -> Dict[str, str]:
