@@ -55,7 +55,7 @@ def get_numbers(
         auth=auth
     )
     if response.status_code != 200:  # noqa: PLR2004
-        raise Exception(
+        raise Exception(  # noqa: TRY002
             "Could not fetch numbers from 46elks. "
             f"Their http status: {response.status_code}")
 

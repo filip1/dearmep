@@ -31,7 +31,7 @@ def cmd_lint(ctx: Context) -> None:  # noqa: ARG001
 def cmd_store_blob(ctx: Context) -> None:
     Config.load()
     if ctx.args.name and len(ctx.args.files) > 1:
-        raise Exception("--name can only be used with a single input file")
+        raise ValueError("--name can only be used with a single input file")
     for file in ctx.args.files:
         name = ctx.args.name or file.name
         mime = ctx.args.mime or guess_type(file, strict=False)[0]
@@ -56,7 +56,7 @@ def cmd_store_blob(ctx: Context) -> None:
             try:
                 session.commit()
             except IntegrityError:
-                raise Exception(f"blob named {name} already exists") from None
+                raise ValueError(f"blob named {name} already exists") from None
             print(blob.id)  # noqa: T201
 
 
