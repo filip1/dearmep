@@ -79,7 +79,7 @@ def concat(
 
 def run(args: Sequence[str], passthru: bool = False) -> subprocess.CompletedProcess:
     """Run an ffmpeg subprocess."""
-    return subprocess.run((
+    return subprocess.run((  # noqa: S603
         "ffmpeg",
         "-hide_banner",  # be less verbose
         "-nostdin",  # noninteractive
