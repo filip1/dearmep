@@ -63,7 +63,9 @@ def test_find_preferred_language(
 
 
 def test_find_preferred_with_no_available_languages():
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError, match="there should be at least one available language",
+    ):
         l10n.find_preferred_language(prefs=["de-DE", "*"], available=[])
 
 
