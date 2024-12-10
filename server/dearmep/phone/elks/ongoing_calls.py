@@ -71,7 +71,7 @@ def add_call(
     provider_call_id: str,
     destination_id: str,
     user_language: Language,
-    user_id,
+    user_id: str,
     type: CallType,
     started_at: datetime,
     session: Session,

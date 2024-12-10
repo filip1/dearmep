@@ -342,7 +342,7 @@ class UserPhone(str):  # noqa: FURB189
     country_codes: Tuple[CountryCode, ...]
     structured: Structured
 
-    def __new__(cls, value) -> UserPhone:
+    def __new__(cls, value: str) -> UserPhone:
         # Ensure that we're being initialized from a string.
         if not isinstance(value, str):
             value = str(value)

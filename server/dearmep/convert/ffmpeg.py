@@ -77,7 +77,7 @@ def concat(
         yield output
 
 
-def run(args: Sequence[str], passthru=False) -> subprocess.CompletedProcess:
+def run(args: Sequence[str], passthru: bool = False) -> subprocess.CompletedProcess:
     """Run an ffmpeg subprocess."""
     return subprocess.run((
         "ffmpeg",

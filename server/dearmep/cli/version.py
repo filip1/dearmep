@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import sys
 from importlib import metadata
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
 
 if TYPE_CHECKING:
@@ -38,7 +38,7 @@ def run(ctx: Context) -> None:  # noqa: ARG001
         print(f"{component.ljust(longest_pkg_name_len)} {version}")  # noqa: T201
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:  # noqa: ARG001
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand: Callable) -> None:  # noqa: ARG001
     parser: ArgumentParser = subparsers.add_parser(
         "version",
         help="show version information",

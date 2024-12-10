@@ -23,6 +23,7 @@ from typing import (
     Literal,
     Optional,
     Tuple,
+    Type,
     TypeVar,
     Union,
     overload,
@@ -31,6 +32,7 @@ from typing import (
 
 if TYPE_CHECKING:
     from argparse import ArgumentParser
+    from types import TracebackType
 
     from rich.progress import Progress as RichProgress
     from rich.progress import Task as _RichTask
@@ -51,7 +53,7 @@ class BaseTask:
     def __enter__(self):
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: Optional[Type], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]):
         if exc_val is None:
             self.done()
         return False
@@ -315,13 +317,14 @@ class FlexiReader:
 
         return stream, can_tell
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: Optional[Type], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]):
         if self._stream is None:
             raise OSError("context was never entered")
         self._stream.close()
         if self._did_open:  # we need to close it again
             self._did_open = False
-            self._orig_stream.close()
+            if self._orig_stream:
+                self._orig_stream.close()
         return False
 
     def set_task(self, task: BaseTask) -> None:

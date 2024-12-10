@@ -8,7 +8,7 @@ import json
 import logging
 import sys
 from os import environ
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Callable, Dict, Optional
 
 from pydantic import ValidationError
 
@@ -78,7 +78,7 @@ def dump_openapi(ctx: Context) -> None:
     print(json.dumps(app.openapi(), indent=None if ctx.args.compact else 2))  # noqa: T201
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand: Callable) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "dump",
         help="dump example files & specifications",

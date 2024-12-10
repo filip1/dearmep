@@ -76,7 +76,7 @@ class Limit:
         self.limit_name = limit_name
         self.limits: Optional[Dict[str, limits.RateLimitItem]] = None
 
-    def __call__(self, request: Request, addr_str=Depends(client_addr)):
+    def __call__(self, request: Request, addr_str: str = Depends(client_addr)):
         if self.limits is None:
             # First call, we need to get the values from the Config.
             rate_limits: IPRateLimits = getattr(

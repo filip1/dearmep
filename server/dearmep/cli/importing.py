@@ -7,7 +7,7 @@ from __future__ import annotations
 import csv
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
 
 if TYPE_CHECKING:
@@ -67,7 +67,7 @@ def import_swayability(ctx: Context) -> None:
             f"{', '.join(ignored)}")
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand: Callable) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "import",
         help=f"import data into the {APP_NAME} database",

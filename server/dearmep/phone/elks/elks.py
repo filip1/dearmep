@@ -24,8 +24,9 @@ from sqlmodel import Session
 from ...config import Config, Language
 from ...convert import blobfile, ffmpeg
 from ...database import query
-from ...database.connection import get_session
+from ...database.connection import Session, get_session
 from ...database.models import (
+    Call,
     Destination,
     DestinationSelectionLogEvent,
     ScheduledCall,
@@ -213,7 +214,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
             return None
         return parl_group[0].id
 
-    def sanity_check(result, why, call, session) -> Optional[dict]:
+    def sanity_check(result: str, why: Optional[str], call: Call, session: Session) -> Optional[dict]:
         """
         Checks if no input by user.
             Either we are on voice mail OR user did not enter a number and

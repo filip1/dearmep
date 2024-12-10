@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import logging
 import sys
-from typing import TYPE_CHECKING, Mapping
+from typing import TYPE_CHECKING, Callable, Mapping
 
 
 if TYPE_CHECKING:
@@ -57,7 +57,7 @@ def cmd_translations(ctx: Context) -> None:
     sys.exit(0)
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand: Callable) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "check",
         help="health checks on the system and configuration",

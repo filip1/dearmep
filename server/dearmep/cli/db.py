@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from mimetypes import guess_type
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
 from sqlalchemy.exc import IntegrityError
 
@@ -60,7 +60,7 @@ def cmd_store_blob(ctx: Context) -> None:
             print(blob.id)  # noqa: T201
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand) -> None:
+def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand: Callable) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "db",
         help="manage the database",
