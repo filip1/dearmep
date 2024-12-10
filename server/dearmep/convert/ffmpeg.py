@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-import subprocess
+import subprocess  # noqa: S404
 from contextlib import ExitStack, contextmanager
 from tempfile import NamedTemporaryFile
 from typing import IO, Generator, Iterable, Sequence
