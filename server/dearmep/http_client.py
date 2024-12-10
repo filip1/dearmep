@@ -66,8 +66,8 @@ class MassDownloader:
         task: Optional[BaseTask] = None,
         overwrite: bool = False,
         skip_existing: bool = False,
-        accept_error_codes: Union[None, Literal[True], Set[int]] = None,
-        ignore_error_codes: Union[None, Literal[True], Set[int]] = None,
+        accept_error_codes: Union[Literal[True], Set[int], None] = None,
+        ignore_error_codes: Union[Literal[True], Set[int], None] = None,
     ) -> None:
         self._jobs = jobs
         self._session = session_or_new(session)

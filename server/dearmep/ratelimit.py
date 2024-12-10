@@ -16,7 +16,7 @@ from .config import Config, IPRateLimits
 from .models import IPNetwork
 
 
-NETSIZES: Dict[str, Union[None, Tuple[int, int]]] = {
+NETSIZES: Dict[str, Union[Tuple[int, int], None]] = {
     "ip": None,
     "small_block": (24, 64),
     "large_block": (16, 48),
