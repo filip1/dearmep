@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from typing import Type, TypeVar
-from xml.dom import pulldom
+from xml.dom import pulldom  # noqa: S409
 
 from defusedxml.pulldom import parse as pulldom_parse
 
