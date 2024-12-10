@@ -8,7 +8,7 @@
 import logging
 import random
 import re
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from secrets import randbelow
 from typing import Callable, Dict, List, NamedTuple, Optional, Union, cast
 
@@ -263,6 +263,7 @@ def get_recommended_destination(
     - caller called destination already.
     """
     rc = Config.get().recommender
+    now = datetime.now(tz=timezone.utc)
 
     # select all destinations
     stmt_destinations = select(Destination)
@@ -418,7 +419,7 @@ def get_recommended_destination(
     SOFT_COOL_DOWN_CALL_DURATION_MINUTES = (  # noqa: N806
         rc.soft_cool_down_call_timeout
     )
-    recent_cutoff = datetime.utcnow() - \
+    recent_cutoff = now - \
         timedelta(minutes=SOFT_COOL_DOWN_CALL_DURATION_MINUTES)
 
     destination_logs_recent_calls = session.exec(
@@ -434,7 +435,7 @@ def get_recommended_destination(
     # caller called destination already
     if user_id:
         SOFT_COOL_DOWN_CALLER_CALLED_DESTINATION_DURATION_HOURS = 24  # noqa: N806
-        recently_talked_cutoff = datetime.utcnow() - \
+        recently_talked_cutoff = now - \
             timedelta(
                 hours=SOFT_COOL_DOWN_CALLER_CALLED_DESTINATION_DURATION_HOURS
             )
