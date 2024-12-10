@@ -31,15 +31,15 @@ def build_concat_listfile(
     to allow ffmpeg to access them. These files will also be deleted once you
     leave the context.
     """
-    with NamedTemporaryFile("wb", prefix="fflist.", suffix=".txt") as clist:
-        with ExitStack() as stack:
-            # Write the list of inputs to the concat list file.
-            clist.write(build_concat_list(
-                str(stack.enter_context(file.get_path()))
-                for file in files
-            ))
-            clist.flush()
-            yield clist
+    with NamedTemporaryFile("wb", prefix="fflist.", suffix=".txt") as clist, \
+    ExitStack() as stack:
+        # Write the list of inputs to the concat list file.
+        clist.write(build_concat_list(
+            str(stack.enter_context(file.get_path()))
+            for file in files
+        ))
+        clist.flush()
+        yield clist
 
 
 @contextmanager

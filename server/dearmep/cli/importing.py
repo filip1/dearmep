@@ -36,14 +36,14 @@ def import_destinations(ctx: Context) -> None:
             logo_template=ctx.args.logo_template,
             name_audio_template=ctx.args.name_audio_template,
         )
-        with ctx.task_factory() as tf:
-            with tf.create_task("reading and converting JSON") as task:
-                input.set_task(task)
-                with input as input_stream:
-                    importer.import_dump(
-                        session,
-                        dump.read_dump_json(input_stream),
-                    )
+        with ctx.task_factory() as tf, \
+        tf.create_task("reading and converting JSON") as task:
+            input.set_task(task)
+            with input as input_stream:
+                importer.import_dump(
+                    session,
+                    dump.read_dump_json(input_stream),
+                )
         session.commit()
 
 
@@ -51,16 +51,15 @@ def import_swayability(ctx: Context) -> None:
     Config.load()
     input: FlexiStrReader = ctx.args.input
 
-    with get_session() as session:
-        with ctx.task_factory() as tf:
-            with tf.create_task("reading and importing CSV") as task:
-                input.set_task(task)
-                with input as input_stream:
-                    csvr = csv.DictReader(input_stream)
-                    ignored = db_importing.import_swayability(session, map(
-                        SwayabilityImport.parse_obj, csvr
-                    ), ignore_unknown=ctx.args.ignore_unknown)
-                session.commit()
+    with get_session() as session, ctx.task_factory() as tf, \
+    tf.create_task("reading and importing CSV") as task:
+        input.set_task(task)
+        with input as input_stream:
+            csvr = csv.DictReader(input_stream)
+            ignored = db_importing.import_swayability(session, map(
+                SwayabilityImport.parse_obj, csvr
+            ), ignore_unknown=ctx.args.ignore_unknown)
+        session.commit()
     if ignored:
         _logger.warning(
             "Ignored the following IDs which were not found in the database: "
