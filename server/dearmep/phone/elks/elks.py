@@ -70,6 +70,7 @@ def send_sms(
     )
     response = requests.post(
         url="https://api.46elks.com/a1/sms",
+        timeout=10,
         auth=auth,
         data={
             "from": from_title,
@@ -124,6 +125,7 @@ def start_elks_call(
 
     response = requests.post(
         url="https://api.46elks.com/a1/calls",
+        timeout=10,
         auth=auth,
         data={
             "to": user_phone_number,

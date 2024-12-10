@@ -51,6 +51,7 @@ def get_numbers(
 
     response = requests.get(
         url="https://api.46elks.com/a1/numbers",
+        timeout=10,
         auth=auth
     )
     if response.status_code != 200:  # noqa: PLR2004
