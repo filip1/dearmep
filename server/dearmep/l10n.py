@@ -85,9 +85,7 @@ def find_preferred_language(
     if not len(available):
         raise ValueError("there should be at least one available language")
 
-    for preference in prefs:
-        preference = preference.lower()
-
+    for preference in [pref.lower() for pref in prefs]:
         # Look for an exact match.
         for av in available:
             if preference == av.lower():
