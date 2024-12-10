@@ -437,7 +437,7 @@ class Config(BaseModel):
     def load_yaml_file(cls, filename: Path) -> "Config":
         with filename.open("r") as f:
             try:
-                yaml_dict = yaml.load(f, yaml.Loader)
+                yaml_dict = yaml.safe_load(f)
             except ParserError:
                 _logger.exception(
                     "There was an error loading your YAML config.",

@@ -143,7 +143,7 @@ def fastapi_app_func(factory: FactoryType):
 
     # Read the original config file as a Python object.
     with open(environ["DEARMEP_CONFIG"], encoding="utf-8") as f:
-        config_dict_orig = yaml.load(f, yaml.Loader)
+        config_dict_orig = yaml.safe_load(f)
     # Modify the MMDB.
     # TODO: This can probably be simplified using Config.set_patch().
     config_dict = deep_update(config_dict_orig, {
