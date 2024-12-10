@@ -53,7 +53,7 @@ def get_numbers(
         url="https://api.46elks.com/a1/numbers",
         auth=auth
     )
-    if response.status_code != 200:
+    if response.status_code != 200:  # noqa: PLR2004
         raise Exception(
             "Could not fetch numbers from 46elks. "
             f"Their http status: {response.status_code}")

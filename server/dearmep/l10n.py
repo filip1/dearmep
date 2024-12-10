@@ -138,7 +138,7 @@ def get_country(
     ):
         _logger.exception("could not determine country")
 
-    if isinstance(country, str) and 1 < len(country) < 4:
+    if isinstance(country, str) and 1 < len(country) < 4:  # noqa: PLR2004
         country = country.upper()
     else:
         # Doesn't look right, country should be an ISO-639 code.

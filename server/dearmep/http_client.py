@@ -49,7 +49,7 @@ def _permanent_download_error(e: Exception) -> bool:
             f"downloading {url} failed without a response, will retry")
         return False  # network error? server unreachable?
     code = res.status_code
-    permanent = (400 <= code < 500) and (code != 429)
+    permanent = (400 <= code < 500) and (code != 429)  # noqa: PLR2004
     if permanent:
         _logger.error(f"{code} when downloading {url}, giving up")
     else:

@@ -57,7 +57,7 @@ def test_default_language_in_language_list():
             default_language="fr",
         )
     errs = e_info.value.errors()
-    assert len(errs) == 3
+    assert len(errs) == 3  # noqa: PLR2004
     assert errs[0]["loc"] == ("default_language",)
     assert errs[0]["type"] == "value_error"
     assert errs[0]["msg"].find(" needs to be in the list of available ") != -1
