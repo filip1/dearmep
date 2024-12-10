@@ -508,7 +508,7 @@ def request_number_verification(
             PhoneNumberVerificationRejectedResponse(errors=errors))
 
     user = UserPhone(request.phone_number)
-    assert user.original_number  # sure, we just created it from one
+    assert user.original_number  # guarantee to mypy that this is not None  # noqa: S101
     number = user.format_number(user.original_number)
 
     # Check if the number is forbidden by policy.
