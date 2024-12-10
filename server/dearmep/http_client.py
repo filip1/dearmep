@@ -58,7 +58,7 @@ def _permanent_download_error(e: Exception) -> bool:
 
 
 class MassDownloader:
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         *,
         jobs: int = DEFAULT_MASS_DOWNLOAD_JOBS,

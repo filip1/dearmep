@@ -19,7 +19,7 @@ SAVE = "save"
 STOP = "stop"
 
 
-def download_media(
+def download_media(  # noqa: PLR0913
     mep_ids: Iterable[int],
     *,
     url_pattern: str,
@@ -46,7 +46,7 @@ def download_media(
     downloader.stop()
 
 
-def download_portraits(
+def download_portraits(  # noqa: PLR0913
     mep_ids: Iterable[int],
     *,
     filename_pattern: str,
@@ -68,7 +68,7 @@ def download_portraits(
     )
 
 
-def download_name_audio(
+def download_name_audio(  # noqa: PLR0913
     mep_ids: Iterable[int],
     *,
     filename_pattern: str,

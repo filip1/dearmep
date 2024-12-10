@@ -242,7 +242,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
             }
         return None
 
-    def prepare_response(
+    def prepare_response(  # noqa: PLR0913
             valid_input: Optional[List[int]] = None,
             invalid_next: str = "",
             language: str = "en",
@@ -302,7 +302,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
     )
 
     @router.post("/main_menu")
-    def main_menu(
+    def main_menu(  # noqa: PLR0913
         callid: str = Form(),
         direction: Literal["incoming", "outgoing"] = Form(),  # noqa: ARG001
         from_number: PhoneNumber = Form(alias="from"),  # noqa: ARG001
@@ -386,7 +386,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
         return response
 
     @router.post("/connect")
-    def connect(
+    def connect(  # noqa: PLR0913
         callid: str = Form(),
         direction: Literal["incoming", "outgoing"] = Form(),  # noqa: ARG001
         from_number: PhoneNumber = Form(alias="from"),  # noqa: ARG001
@@ -702,7 +702,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
             return response
 
     @router.post("/finalize_connect")
-    def finalize_connect(
+    def finalize_connect(  # noqa: PLR0913
         callid: str = Form(),
         direction: Literal["incoming", "outgoing"] = Form(),  # noqa: ARG001
         from_number: PhoneNumber = Form(alias="from"),
@@ -740,7 +740,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
             return connect
 
     @router.post("/hangup")
-    def hangup(
+    def hangup(  # noqa: PLR0913
         # Arguments always present, also failures
         direction: Literal["incoming", "outgoing"] = Form(),
         created: datetime = Form(),  # noqa: ARG001
