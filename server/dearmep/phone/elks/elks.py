@@ -304,7 +304,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:  # noqa: C901
     )
 
     @router.post("/main_menu")
-    def main_menu(  # noqa: PLR0913
+    def main_menu(  # noqa: PLR0911, PLR0913
         *,
         callid: str = Form(),
         direction: Literal["incoming", "outgoing"] = Form(),  # noqa: ARG001
