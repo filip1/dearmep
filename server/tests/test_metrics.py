@@ -37,8 +37,8 @@ def test_non_grouped_status_codes(client: TestClient):
     # metrics when doing the actual test.
     assert client.get("/metrics").status_code == status.HTTP_200_OK
 
-    mark = f'starlette_requests_total{{app_name="{APP_NAME}",method="GET",' \
-        + 'path="/metrics",status_code="200"} '
+    mark = (f'starlette_requests_total{{app_name="{APP_NAME}",method="GET",'
+            'path="/metrics",status_code="200"} ')
     assert [
         line
         for line in metrics_lines_func(client)
