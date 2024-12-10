@@ -68,8 +68,8 @@ class Tabular:
     def print_to_console(self, console: Console) -> None:
         console.print(self.to_rich_table())
 
-    def to_rich_table(self, **kwargs) -> Table:
-        t = Table(*self._headers, **kwargs)
+    def to_rich_table(self) -> Table:
+        t = Table(*self._headers)
         for row in self._rows:
             t.add_row(*row)
         return t

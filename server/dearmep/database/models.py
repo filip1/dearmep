@@ -128,7 +128,7 @@ def auto_timestamp_column_kwargs() -> Dict[str, Any]:
     }
 
 
-def auto_timestamp_column(**kwargs) -> Column:
+def auto_timestamp_column(**kwargs: Any) -> Column:
     """A timestamp column that will default to whenever the row is created.
 
     Note that this returns a `Column`, which will cause the field to be
