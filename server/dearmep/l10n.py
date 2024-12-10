@@ -22,7 +22,7 @@ _logger = logging.getLogger(__name__)
 Q_VALUE_RE = r"^(?:0(?:\.[0-9]{0,3})?|1(?:\.0{0,3})?)$"
 
 
-class LanguageNotAvailableException(Exception):
+class LanguageNotAvailableError(Exception):
     pass
 
 
@@ -78,8 +78,8 @@ def find_preferred_language(
     `de-de` would match `de-DE-1996`). Matching is case insensitive.
 
     If no preferred language is available, either return the fallback (if
-    specified), or raise a LanguageNotAvailableExecption. However, if there is
-    an asterisk `*` in the preferences, the first item in `available` will be
+    specified), or raise a LanguageNotAvailableError. However, if there is an
+    asterisk `*` in the preferences, the first item in `available` will be
     selected instead of the fallback or raising an exception.
     """
     if not len(available):
@@ -108,7 +108,7 @@ def find_preferred_language(
     if fallback is not None:
         return fallback
 
-    raise LanguageNotAvailableException(
+    raise LanguageNotAvailableError(
         "none of the preferred languages are available")
 
 

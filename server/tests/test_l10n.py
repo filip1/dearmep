@@ -48,7 +48,7 @@ def test_find_preferred_language(
     expected: Union[str, Literal[False]],
 ):
     if expected is False:  # parameter means "expect an exception"
-        with pytest.raises(l10n.LanguageNotAvailableException):
+        with pytest.raises(l10n.LanguageNotAvailableError):
             l10n.find_preferred_language(
                 prefs=prefs,
                 available=available,

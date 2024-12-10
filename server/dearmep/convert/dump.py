@@ -23,7 +23,7 @@ STR2TYPE: Dict[str, Type[DumpableModels]] = {
 TYPE2STR = {t: s for s, t in STR2TYPE.items()}
 
 
-class DumpFormatException(Exception):
+class DumpFormatError(Exception):
     pass
 
 
@@ -47,11 +47,11 @@ def dump_iter_json(models: Iterable[DumpableModels]) -> Iterable[str]:
 
 def parse_dump_obj(data: Dict[str, Any], e_pref: str = "") -> DumpableModels:
     if TYPE_KEY not in data:
-        raise DumpFormatException(f"{e_pref}missing '{TYPE_KEY}'")
+        raise DumpFormatError(f"{e_pref}missing '{TYPE_KEY}'")
     linetype = data[TYPE_KEY]
     modeltype = STR2TYPE.get(linetype)
     if not modeltype:
-        raise DumpFormatException(
+        raise DumpFormatError(
             f"{e_pref}unknown type '{linetype}'")
 
     del data[TYPE_KEY]
@@ -65,20 +65,20 @@ def read_dump_json(input: IO[bytes]) -> Iterable[DumpableModels]:
             continue
         data = json.loads(line)
         if not isinstance(data, dict):
-            raise DumpFormatException(f"line {lnum} is not an object")
+            raise DumpFormatError(f"line {lnum} is not an object")
 
         if version is None:
             if VERSION_KEY not in data:
-                raise DumpFormatException(
+                raise DumpFormatError(
                     "expected a dump version number as the first line")
             if not isinstance(data[VERSION_KEY], (int, float)):
-                raise DumpFormatException(
+                raise DumpFormatError(
                     "expected dump version number to be a number, got "
                     f"{data[VERSION_KEY]} ({type(data[VERSION_KEY])})"
                 )
             version = data[VERSION_KEY]
             if version > 1:
-                raise DumpFormatException(
+                raise DumpFormatError(
                     f"expected dump version 1, got {version}")
             continue  # to the next element
 

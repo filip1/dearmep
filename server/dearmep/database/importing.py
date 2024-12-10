@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Dict, Iterable, Optional, Set, Type
 
 from ..convert.audio import audio2blob
-from ..convert.dump import DumpFormatException
+from ..convert.dump import DumpFormatError
 from ..convert.image import image2blob
 from .models import (
     Contact,
@@ -94,7 +94,7 @@ class Importer:
     ) -> DestinationGroup:
         dg = DestinationGroup.from_orm(input)
         if dg.id in self._groups:
-            raise DumpFormatException(f"duplicate group: {dg.id}")
+            raise DumpFormatError(f"duplicate group: {dg.id}")
 
         if self._logo_tpl:
             logo_path = Path(self._logo_tpl.format(
@@ -117,7 +117,7 @@ class Importer:
         for obj in objs:
             obj_type = type(obj)
             if obj_type not in self._dump2db:
-                raise DumpFormatException(f"unknown type: {obj_type}")
+                raise DumpFormatError(f"unknown type: {obj_type}")
             model: SQLModel = self._dump2db[obj_type](obj)
             session.add(model)
 

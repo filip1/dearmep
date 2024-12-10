@@ -28,7 +28,7 @@ from sqlmodel import (
     text,
 )
 
-from ..config import Config, ConfigNotLoaded, Language
+from ..config import Config, ConfigNotLoadedError, Language
 from ..models import (
     CallType,
     CountryCode,
@@ -79,7 +79,7 @@ def _contact_filter():  # noqa: ANN202
     try:
         config = Config.get()
         tf = config.contact_timespan_filter
-    except ConfigNotLoaded:
+    except ConfigNotLoadedError:
         tf = None
 
     if tf:

@@ -62,7 +62,7 @@ if EMBEDDED_STATIC_DIR and not EMBEDDED_STATIC_DIR.is_dir():
     EMBEDDED_STATIC_DIR = None
 
 
-class ConfigNotLoaded(Exception):
+class ConfigNotLoadedError(Exception):
     pass
 
 
@@ -399,8 +399,8 @@ class Config(BaseModel):
     def get(cls) -> "Config":
         """Get the singleton configuration object instance."""
         if cls._instance is None:
-            raise ConfigNotLoaded("attempt to access config without loading "
-                                  "it first; this is a bug")
+            raise ConfigNotLoadedError("attempt to access config without "
+                                       "loading it first; this is a bug")
         return cls._instance
 
     @classmethod

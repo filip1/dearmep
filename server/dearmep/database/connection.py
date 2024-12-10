@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from sqlalchemy.future import Engine
 
 
-class NotThreadsafe(Exception):
+class NotThreadsafeError(Exception):
     """The selected database engine is not available in a threadsafe way."""
 
 
@@ -63,7 +63,7 @@ class AutoEngine:
                 where compile_options like 'THREADSAFE=%'
             """)).one()
             if res[0] != "THREADSAFE=1":
-                raise NotThreadsafe(
+                raise NotThreadsafeError(
                     "SQLite3 library needs to have been compiled with "
                     "SQLITE_THREADSAFE=1; instead it has been compiled with "
                     f"SQLITE_{res[0]}"

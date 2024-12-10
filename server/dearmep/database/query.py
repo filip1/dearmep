@@ -55,7 +55,7 @@ from .models import (
 _logger = logging.getLogger(__name__)
 
 
-class NotFound(Exception):
+class NotFound(Exception):  # noqa: N818
     pass
 
 
