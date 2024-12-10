@@ -140,7 +140,7 @@ class BaseTaskFactory:
 
 
 class DummyTaskFactory(BaseTaskFactory):
-    def create_task(self, description: str, **kwargs: Any) -> BaseTask:
+    def create_task(self, description: str, **kwargs: Any) -> BaseTask:  # noqa: PLR6301
         return DummyTask(description, **kwargs)
 
 

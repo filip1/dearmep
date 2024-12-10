@@ -32,7 +32,7 @@ class DeveloperPhoneService(AbstractPhoneService):
     Python logging framework at the INFO level.
     """
 
-    def send_sms(
+    def send_sms(  # noqa: PLR6301
         self,
         *,
         recipient: PhoneNumber,
@@ -44,7 +44,7 @@ class DeveloperPhoneService(AbstractPhoneService):
         """
         _logger.info(f"[SMS] {recipient}: {content}")
 
-    def establish_call(
+    def establish_call(  # noqa: PLR6301
         self,
         *,
         user_phone: PhoneNumber,

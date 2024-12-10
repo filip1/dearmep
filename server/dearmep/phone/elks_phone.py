@@ -21,7 +21,7 @@ from .elks import elks
 
 
 class ElksPhoneService(AbstractPhoneService):
-    def send_sms(
+    def send_sms(  # noqa: PLR6301
         self,
         *,
         recipient: PhoneNumber,
@@ -34,7 +34,7 @@ class ElksPhoneService(AbstractPhoneService):
             message=content,
         )
 
-    def establish_call(
+    def establish_call(  # noqa: PLR6301
         self,
         *,
         user_phone: PhoneNumber,
