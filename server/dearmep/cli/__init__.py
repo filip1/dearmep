@@ -9,6 +9,7 @@ import re
 from argparse import ArgumentParser, Namespace
 from contextlib import contextmanager
 from sys import exit, stderr
+from typing import Iterator
 
 from dotenv import load_dotenv
 from rich.console import Console
@@ -48,7 +49,7 @@ class Context:
         )
 
     @contextmanager
-    def task_factory(self):
+    def task_factory(self) -> Iterator[RichTaskFactory]:
         progress = Progress(
             console=self.console,
             # This needs to be False for commands that dump actual data to

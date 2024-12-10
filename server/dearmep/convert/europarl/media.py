@@ -55,8 +55,8 @@ def download_portraits(
     skip_existing: bool = False,
     not_found: NotFoundReaction = "stop",
     task: Optional[BaseTask] = None,
-):
-    return download_media(
+) -> None:
+    download_media(
         mep_ids,
         url_pattern=PORTRAIT_URL,
         filename_pattern=filename_pattern,
@@ -77,8 +77,8 @@ def download_name_audio(
     skip_existing: bool = False,
     not_found: NotFoundReaction = "stop",
     task: Optional[BaseTask] = None,
-):
-    return download_media(
+) -> None:
+    download_media(
         mep_ids,
         url_pattern=NAME_AUDIO_URL,
         filename_pattern=filename_pattern,

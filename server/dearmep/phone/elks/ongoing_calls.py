@@ -49,7 +49,7 @@ def connect_call(call: Call, session: Session) -> None:
     session.commit()
 
 
-def destination_is_in_call(destination_id: str, session: Session):
+def destination_is_in_call(destination_id: str, session: Session) -> bool:
     """ returns True if the destination is in a call """
     stmt = select(Call).where(
         and_(
@@ -57,13 +57,13 @@ def destination_is_in_call(destination_id: str, session: Session):
             col(Call.connected_at).isnot(None),
         )
     ).exists()
-    return session.query(stmt).scalar()
+    return bool(session.query(stmt).scalar())
 
 
-def user_is_in_call(user_id: UserPhone, session: Session):
+def user_is_in_call(user_id: UserPhone, session: Session) -> bool:
     """ returns True if the user is in a call """
     stmt = select(Call).where(Call.user_id == user_id).exists()
-    return session.query(stmt).scalar()
+    return bool(session.query(stmt).scalar())
 
 
 def add_call(

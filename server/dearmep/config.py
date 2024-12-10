@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import logging
-from datetime import date, datetime, time, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone, tzinfo
 from functools import lru_cache
 from pathlib import Path
 from typing import (
@@ -201,7 +201,7 @@ class L10nConfig(BaseModel):
         cls,
         v: Language,
         values: Dict[str, Any],
-    ):
+    ) -> Language:
         if "languages" in values and v not in values["languages"]:
             raise ValueError(
                 f"default language '{v}' needs to be in the list of available "
@@ -215,7 +215,7 @@ class L10nConfig(BaseModel):
         v: Union[FrontendStrings, L10nStrings],
         field: ModelField,
         values: Dict[str, Any],
-    ):
+    ) -> Union[FrontendStrings, L10nStrings]:
         if "default_language" not in values:
             # Validation of `default_language` probably failed, skip.
             return v
@@ -273,7 +273,7 @@ class OfficeHoursConfig(BaseModel):
             raise ValueError("`end` has to be after `begin`")
         return v
 
-    def timezone_obj(self):
+    def timezone_obj(self) -> tzinfo:
         """Return a timezone definition object for the configured timezone."""
         return pytz.timezone(self.timezone)
 
@@ -338,7 +338,7 @@ class EndorsementCutoffConfig(BaseModel):
     max: float = Field(ge=0, le=1, default=1)
 
     @validator("max")
-    def max_must_be_gt_min(cls, v, values):
+    def max_must_be_gt_min(cls, v: float, values) -> float:
         if v <= values["min"]:
             raise ValueError("max must be greater than min")
         return v
@@ -480,7 +480,9 @@ class Settings(BaseSettings):
         env_prefix = ENV_PREFIX
 
     @validator("static_files_dir", "markdown_files_dir", pre=True)
-    def empty_string_is_none(cls, v):
+    def empty_string_is_none(
+        cls, v: Optional[DirectoryPath]
+    ) -> Optional[DirectoryPath]:
         return None if v == "" else v
 
 

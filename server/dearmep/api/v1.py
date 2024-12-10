@@ -180,7 +180,7 @@ def _get_localization(
 )
 def get_frontend_strings(
     language: Language,
-):
+) -> FrontendStringsResponse:
     """
     Returns a list of translation strings, for the given language, to be used
     by the frontend code. If a string is not available in that language, it
@@ -263,7 +263,7 @@ def get_frontend_setup(
 )
 def get_blob_contents(
     name: str,
-):
+) -> Response:
     """
     Returns the contents of a blob, e.g. an image or audio file.
     """
@@ -366,7 +366,7 @@ def get_destination_by_id(
 )
 def get_suggested_destination(
     country: Optional[CountryCode] = None,
-):
+) -> DestinationRead:
     """
     Return a suggested destination to contact, possibly limited by country.
 
@@ -416,7 +416,7 @@ def get_suggested_destination(
 def initiate_call(
     request: InitiateCallRequest,
     claims: Annotated[JWTClaims, Depends(authtoken.validate_token)],
-):
+) -> Union[CallStateResponse, JSONResponse]:
     """
     Call the User and start an IVR interaction with them.
     """
@@ -463,7 +463,7 @@ def initiate_call(
 )
 def get_call_state(
     claims: Annotated[JWTClaims, Depends(authtoken.validate_token)],
-):
+) -> CallStateResponse:
     """
     Returns the state of the User’s latest call.
     """
@@ -659,7 +659,7 @@ def submit_call_feedback(
 )
 def get_schedule(
     claims: Annotated[JWTClaims, Depends(authtoken.validate_token)],
-):
+) -> ScheduleResponse:
     """
     Returns the schedule of the User, i.e. when the system should call them.
     """
@@ -678,7 +678,7 @@ def get_schedule(
 def set_schedule(
     claims: Annotated[JWTClaims, Depends(authtoken.validate_token)],
     submission: SetScheduleRequest,
-):
+) -> ScheduleResponse:
     """
     Set the schedule of the User.
 

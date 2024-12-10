@@ -158,7 +158,8 @@ class TrackingMixin:
             self._task.completed = tellfunc()
         return val
 
-    def init_tracking(
+    # TODO: Once we're at mypy ≥ 1.9, we can probably annotate `-> Self  here.
+    def init_tracking(  # noqa: ANN201
         self,
         *,
         task: Optional[BaseTask] = None,

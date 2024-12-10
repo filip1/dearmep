@@ -6,7 +6,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterator
 
 from sqlmodel import MetaData, Session, SQLModel, create_engine, select, text
 
@@ -85,7 +85,7 @@ def get_metadata() -> MetaData:
 
 
 @contextmanager
-def get_session():
+def get_session() -> Iterator[Session]:
     with Session(AutoEngine.get_engine()) as session:
         yield session
 

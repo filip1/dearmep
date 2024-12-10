@@ -41,7 +41,7 @@ def task_wrapper(func: SchedulerTask) -> SchedulerTask:
     return wrapped
 
 
-def get_background_tasks(config: Config):
+def get_background_tasks(config: Config) -> List:
     """
     Returns a list of configured background tasks to be run at startup.
     """
