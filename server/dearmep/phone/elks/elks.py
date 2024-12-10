@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Literal, Optional, Union
 
 import requests
@@ -535,9 +535,10 @@ def mount_router(app: FastAPI, prefix: str) -> None:
         [3]: forward to delete menu
         """
 
+        today = datetime.now(tz=timezone.utc).isoweekday()
+
         def _next_scheduled_weekday(schedule: List[ScheduledCall]) -> int:
             schedule = sorted(schedule, key=lambda x: x.day)
-            today = datetime.today().isoweekday()
             for scheduled_call in schedule:
                 if scheduled_call.day > today:
                     return scheduled_call.day
@@ -579,14 +580,14 @@ def mount_router(app: FastAPI, prefix: str) -> None:
             if len(schedule) > 1:
                 next_weekday = _next_scheduled_weekday(schedule)
                 playlist = ivr.postpone_menu(
-                    today=datetime.today().isoweekday(),
+                    today=today,
                     is_postponed=is_postponed,
                     others_scheduled=True,
                     next_day=next_weekday,
                 )
             else:
                 playlist = ivr.postpone_menu(
-                    today=datetime.today().isoweekday(),
+                    today=today,
                     is_postponed=is_postponed,
                     others_scheduled=False,
                 )
@@ -625,7 +626,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
                     result, why, call, session)):
                 return response
 
-            today = datetime.today().isoweekday()
+            today = datetime.now(tz=timezone.utc).isoweekday()
             schedule = query.get_schedule(session, to_number)
 
             if result == "1":
