@@ -8,7 +8,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import NoReturn, Optional
 
-import defusedxml.ElementTree as ET
+from defusedxml import ElementTree
 from fastapi import FastAPI, HTTPException, status
 from fastapi import Path as PathParam
 from fastapi.responses import HTMLResponse
@@ -43,7 +43,7 @@ md = MarkdownIt()
 def get_doc(path: Path) -> Document:
     markdown = path.read_text()
     html = md.render(markdown)
-    tree = ET.fromstring(f"<body>{html}</body>")  # needs a document element
+    tree = ElementTree.fromstring(f"<body>{html}</body>")  # needs a document element
     h1 = tree.find("h1")
     return Document(
         title=h1.text if h1 is not None else None,
