@@ -70,7 +70,8 @@ def _rel_join(join: str) -> _SARelationshipKWArgs:
     }
 
 
-def _contact_filter():
+# FIXME: Find out what the return type annotation should be here.
+def _contact_filter():  # noqa: ANN202
     predicates = [
         Contact.destination_id == Destination.id,  # usual join condition
     ]

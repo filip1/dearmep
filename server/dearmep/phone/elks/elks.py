@@ -25,7 +25,11 @@ from ...config import Config, Language
 from ...convert import blobfile, ffmpeg
 from ...database import query
 from ...database.connection import get_session
-from ...database.models import Destination, DestinationSelectionLogEvent
+from ...database.models import (
+    Destination,
+    DestinationSelectionLogEvent,
+    ScheduledCall,
+)
 from ...models import (
     CallState,
     CallType,
@@ -304,7 +308,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
         to_number: PhoneNumber = Form(alias="to"),
         result: str = Form(),
         why: Optional[str] = Form(default=None),
-    ):
+    ) -> dict:
         """
         Playback the intro in IVR
         Instant Calls: [1]connect [5]arguments
@@ -388,7 +392,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
         to_number: PhoneNumber = Form(alias="to"),  # noqa: ARG001
         result: str = Form(),
         why: Optional[str] = Form(default=None),
-    ):
+    ) -> dict:
         """
         User wants to get connected to MEP
         If MEP is available, we connect them.
@@ -519,7 +523,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
         to_number: PhoneNumber = Form(alias="to"),
         result: str = Form(),
         why: Optional[str] = Form(default=None),
-    ):
+    ) -> dict:
         """
         Playback the postpone in IVR
         [1]: postpone to later this day
@@ -527,7 +531,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
         [3]: forward to delete menu
         """
 
-        def _next_scheduled_weekday(schedule):
+        def _next_scheduled_weekday(schedule: List[ScheduledCall]) -> int:
             schedule = sorted(schedule, key=lambda x: x.day)
             today = datetime.today().isoweekday()
             for scheduled_call in schedule:
@@ -604,7 +608,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
             to_number: PhoneNumber = Form(alias="to"),
             result: str = Form(),
             why: Optional[str] = Form(default=None),
-    ):
+    ) -> dict:
         """
         Playback the delete menu in IVR
         [1]: delete all scheduled calls
@@ -666,7 +670,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
             to_number: PhoneNumber = Form(alias="to"),  # noqa: ARG001
             result: str = Form(),
             why: Optional[str] = Form(default=None),
-    ):
+    ) -> dict:
         """
         Playback the arguments in IVR
          [1]: connect
@@ -704,7 +708,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
         to_number: PhoneNumber = Form(alias="to"),  # noqa: ARG001
         result: str = Form(),
         why: Optional[str] = Form(default=None),
-    ):
+    ) -> dict:
         with get_session() as session:
             call = ongoing_calls.get_call(callid, provider, session)
             if (response := sanity_check(
@@ -823,7 +827,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:
                 session.commit()
 
     @router.get("/medialist/{medialist_id}/concat.ogg")
-    def get_concatenated_media(medialist_id: UUID4):
+    def get_concatenated_media(medialist_id: UUID4) -> FileResponse:
         """ Get a concatenated media list as a stream for 46 elks IVR """
 
         with get_session() as session:

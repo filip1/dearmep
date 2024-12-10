@@ -138,7 +138,7 @@ def _get_localization(
     frontend_strings: bool,
     client_addr: str,
     accept_language: str,
-):
+) -> LocalizationResponse:
     l10n_config = Config.get().l10n
     available_languages = l10n_config.languages
     default_language = l10n_config.default_language

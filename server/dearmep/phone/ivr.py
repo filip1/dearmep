@@ -37,7 +37,7 @@ def prepare_medialist(session: Session, playlist: List[str], language: str
     )
 
 
-def _group_filename(group_id: str):
+def _group_filename(group_id: str) -> str:
     return "group_" + re.sub(
         r"[^a-zA-Z]", "_",
         re.sub(r"^G:", "", group_id)

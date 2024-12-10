@@ -98,7 +98,7 @@ def mount_if_configured(app: FastAPI, prefix: str) -> None:
             "to an actual file like `en.md` inside of the `path` "
             "corresponding to the requested document.",
         )],
-    ):
+    ) -> HTMLResponse:
         """
         Serve a Markdown document from the server, converted to HTML.
 

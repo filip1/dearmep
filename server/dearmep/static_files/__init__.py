@@ -49,7 +49,7 @@ def mount_if_configured(app: FastAPI, path: str) -> None:
             summary="Get Demo HTML",
             response_class=HTMLResponse,
         )
-        async def get_demo_html(req: Request):
+        async def get_demo_html(req: Request) -> str:
             """
             Return a HTML page that can be used to demo the application.
 
