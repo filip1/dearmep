@@ -55,7 +55,7 @@ def list_votes(
     topic: str,
 ) -> T:
     table = table_class("PersID", "MEPID", "Group", "Name", "Vote")
-    with tf.create_task("parsing XML") as task:
+    with tf.create_task("parsing XML") as task:  # noqa: PLR1702
         input.set_task(task)
         with input as stream:
             doc = pulldom_parse(stream)
