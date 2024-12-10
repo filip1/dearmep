@@ -867,7 +867,7 @@ def call_is_postponed(
     return session.exec(select(ScheduledCall).filter(
         ScheduledCall.phone_number == phone_number,
         col(ScheduledCall.postponed_to).is_not(None),
-        ScheduledCall.last_postpone_queued_at == date.today(),
+        ScheduledCall.last_postpone_queued_at == datetime.now(tz=timezone.utc).date()
     )).one_or_none() is not None
 
 

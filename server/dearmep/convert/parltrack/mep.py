@@ -4,7 +4,7 @@
 
 import json
 import re
-from datetime import date
+from datetime import date, datetime, timezone
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     from io import BufferedReader
 
 
-TODAY = date.today()
+TODAY = datetime.now(tz=timezone.utc).date()
 
 CONTACT_MAP = {
     "Facebook": "facebook",
