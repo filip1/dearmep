@@ -48,12 +48,12 @@ def validate_token(
             options={"require_exp": True},
         )
         claims = JWTClaims.parse_obj(claims_dict)
-    except (JWTError, ValidationError):
+    except (JWTError, ValidationError) as e:
         raise HTTPException(
             status.HTTP_401_UNAUTHORIZED,
             "invalid JWT",
             headers={"WWW-Authenticate": "Bearer"},
-        )
+        ) from e
 
     if claims.exp <= datetime.now(timezone.utc):
         raise HTTPException(

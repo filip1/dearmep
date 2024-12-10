@@ -32,8 +32,8 @@ def get_call(
                 joinedload(Call.destination)
                 .joinedload(Destination.contacts)
                 ).one())
-    except NoResultFound:
-        raise CallError(f"Call {callid=}, {provider=} not found")
+    except NoResultFound as e:
+        raise CallError(f"Call {callid=}, {provider=} not found") from e
 
 
 def remove_call(call: Call, session: Session) -> None:
@@ -98,4 +98,4 @@ def get_mep_number(call: Call) -> str:
         return query[0].contact
     except IndexError:
         raise CallError(
-            f"Destination {call.destination_id} has no phone number to call")
+            f"Destination {call.destination_id} has no phone number to call") from None

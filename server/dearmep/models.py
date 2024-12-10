@@ -428,7 +428,7 @@ class UserPhone(str):  # noqa: FURB189
         try:
             parsed = phonenumbers.parse(number, region=None)
         except phonenumbers.NumberParseException as e:
-            raise ValueError(f"'{number}' could not be parsed: {e}")
+            raise ValueError(f"'{number}' could not be parsed: {e}") from e
         return parsed
 
     @property

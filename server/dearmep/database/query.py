@@ -86,8 +86,8 @@ def get_blob_by_id(session: Session, id: BlobID) -> Blob:
 def get_blob_by_name(session: Session, name: str) -> Blob:
     try:
         return session.exec(select(Blob).where(Blob.name == name)).one()
-    except NoResultFound:
-        raise NotFound(f"no blob named `{name}`")
+    except NoResultFound as e:
+        raise NotFound(f"no blob named `{name}`") from e
 
 
 def get_blobs_by_names(
@@ -886,9 +886,9 @@ def postpone_call(
             ScheduledCall.phone_number == phone_number,
             ScheduledCall.day == now.isoweekday(),
         )).one()
-    except NoResultFound:
+    except NoResultFound as e:
         raise NotFound("ScheduledCall to postpone not found. This can happen "
                        "if the User changes their schedule after the call was "
-                       "queued and they want to postpone.")
+                       "queued and they want to postpone.") from e
     call.postponed_to = postponed_to
     session.add(call)

@@ -271,7 +271,7 @@ def get_blob_contents(
         try:
             blob = query.get_blob_by_name(session, name)
         except query.NotFound as e:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
     return Response(blob.data, media_type=blob.mime_type)
 
 
@@ -354,7 +354,7 @@ def get_destination_by_id(
         try:
             dest = query.get_destination_by_id(session, id)
         except query.NotFound as e:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
         return destination_to_destinationread(dest)
 
 
@@ -390,9 +390,9 @@ def get_suggested_destination(
                         event=DestinationSelectionLogEvent.WEB_SUGGESTED,
                     )
                 except query.NotFound as e2:
-                    raise HTTPException(status.HTTP_404_NOT_FOUND, str(e2))
+                    raise HTTPException(status.HTTP_404_NOT_FOUND, str(e2)) from e2
             else:
-                raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+                raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
         session.commit()
         return destination_to_destinationread(dest)
 
@@ -431,7 +431,7 @@ def initiate_call(
                 request.destination_id,
             )
         except query.NotFound as e:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
 
         fb_token = query.create_feedback_token(
             session,
@@ -603,7 +603,7 @@ def get_feedback_context(
         try:
             feedback = query.get_user_feedback_by_token(session, token=token)
         except query.NotFound as e:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
         return FeedbackContext(
             expired=feedback.expires_at <= datetime.now(),
             used=feedback.feedback_entered_at is not None,
@@ -637,7 +637,7 @@ def submit_call_feedback(
         try:
             feedback = query.get_user_feedback_by_token(session, token=token)
         except query.NotFound as e:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
         if feedback.feedback_entered_at is not None:
             raise HTTPException(
                 status.HTTP_403_FORBIDDEN, "token has already been used")
