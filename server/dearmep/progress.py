@@ -306,7 +306,8 @@ class FlexiReader:
                 warnings.warn(
                     f"reconfiguration of stream {self._input} was requested "
                     f"({self._reconfigure}), but the stream does not support "
-                    "reconfiguration"
+                    "reconfiguration",
+                    stacklevel=3,
                 )
 
         # Check whether the stream supports tell().
