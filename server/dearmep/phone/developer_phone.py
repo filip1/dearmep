@@ -37,7 +37,7 @@ class DeveloperPhoneService(AbstractPhoneService):
         *,
         recipient: PhoneNumber,
         content: str,
-        sender: SMSSenderName,
+        sender: SMSSenderName,  # noqa: ARG002
     ) -> None:
         """
         Show a [SMS] log file message
@@ -48,10 +48,10 @@ class DeveloperPhoneService(AbstractPhoneService):
         self,
         *,
         user_phone: PhoneNumber,
-        type_of_call: CallType,
+        type_of_call: CallType,  # noqa: ARG002
         destination_id: DestinationID,
-        language: Language,
-        session: Session,
+        language: Language,  # noqa: ARG002
+        session: Session,  # noqa: ARG002
     ) -> Union[CallState, DestinationInCallResponse, UserInCallResponse]:
         _logger.info(f"[CALL] {user_phone} <-> {destination_id} simulated")
         return CallState.CALLING_USER
