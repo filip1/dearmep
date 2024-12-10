@@ -41,7 +41,7 @@ def parse_accept_language(spec: str) -> List[str]:
         lang = split[0].strip()
         # If the base language is empty (usually because the whole input string
         # is empty), it makes no sense to use it.
-        if lang == "":
+        if not lang:
             continue
 
         # To be future-proof, iterate over the other parts and look for one

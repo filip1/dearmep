@@ -88,7 +88,7 @@ class Limit:
         route: routing.APIRoute = request.scope["route"]
         prom_labels = (request.method, route.path)
 
-        if addr_str == "":
+        if not addr_str:
             _logger.warning("client address unknown, rate limiting skipped")
             return
 
