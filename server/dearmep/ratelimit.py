@@ -6,7 +6,7 @@
 import ipaddress
 import logging
 from time import time
-from typing import Dict, Literal, Optional, Set, Tuple, Union
+from typing import ClassVar, Dict, Literal, Optional, Set, Tuple, Union
 
 import limits
 from fastapi import Depends, HTTPException, Request, routing, status
@@ -66,7 +66,7 @@ def ip_network(
 class Limit:
     """Dependency for rate limiting calls of an endpoint."""
 
-    not_limited_ip_networks: Set[IPNetwork] = set()
+    not_limited_ip_networks: ClassVar[Set[IPNetwork]] = set()
 
     @staticmethod
     def reset_all_limits() -> None:

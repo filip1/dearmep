@@ -372,15 +372,15 @@ class Destination(DestinationBase, table=True):
 
 class DestinationDump(DestinationBase):
     sort_name: str
-    contacts: List[ContactDump] = []
-    groups: List[DestinationGroupID] = []
+    contacts: List[ContactDump] = []  # noqa: RUF012
+    groups: List[DestinationGroupID] = []  # noqa: RUF012
     portrait: Optional[str]
     name_audio: Optional[str]
 
 
 class DestinationRead(DestinationBase):
-    contacts: List[ContactListItem] = []
-    groups: List["DestinationGroupListItem"] = []
+    contacts: List[ContactListItem] = []  # noqa: RUF012
+    groups: List["DestinationGroupListItem"] = []  # noqa: RUF012
     portrait: Optional[str] = Field(
         description="URL path to the portrait image of this Destination, if "
         "any is available.",

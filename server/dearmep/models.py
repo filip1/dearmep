@@ -16,6 +16,7 @@ from hashlib import sha256
 from ipaddress import IPv4Network, IPv6Network
 from typing import (
     Any,
+    ClassVar,
     Dict,
     Generic,
     List,
@@ -334,7 +335,7 @@ class UserPhone(str):  # noqa: FURB189
             exclude=True,
         )
 
-    ALLOWED_TYPES = {
+    ALLOWED_TYPES: ClassVar[set] = {
         phonenumbers.PhoneNumberType.FIXED_LINE_OR_MOBILE,
         phonenumbers.PhoneNumberType.MOBILE,
     }
