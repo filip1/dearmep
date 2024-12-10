@@ -67,6 +67,7 @@ def user_is_in_call(user_id: UserPhone, session: Session) -> bool:
 
 
 def add_call(  # noqa: PLR0913
+    *,
     provider: str,
     provider_call_id: str,
     destination_id: str,
