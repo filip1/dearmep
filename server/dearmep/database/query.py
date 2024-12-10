@@ -544,7 +544,7 @@ def get_number_verification_count(
         incomplete_filter.append(
             NumberVerificationRequest.requested_at > func.coalesce(
                 last_successful,
-                datetime(2000, 1, 1),
+                datetime(2000, 1, 1),  # noqa: DTZ001
             ))
 
     complete_filter = [column("completed").is_(True)]
