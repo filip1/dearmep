@@ -30,15 +30,15 @@ def choose_from_number(
                      if n.number.startswith(
                          f"+{user_number_prefix}") == user_number_prefix]
     if number_prefix:
-        return choice(number_prefix)
+        return choice(number_prefix)  # noqa: S311
 
     # we fall back on language as the closest approximation to the users
     # country for now
     lang_numbers = [n for n in phone_numbers if n.country == user_language]
     if lang_numbers:
-        return choice(lang_numbers)
+        return choice(lang_numbers)  # noqa: S311
 
-    return choice(phone_numbers)
+    return choice(phone_numbers)  # noqa: S311
 
 
 def get_numbers(

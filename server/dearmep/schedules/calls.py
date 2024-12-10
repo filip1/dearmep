@@ -64,7 +64,7 @@ def handle_queue() -> None:
         try:
             destination = query.get_recommended_destination(
                 session,
-                country=choice(user_id.country_codes),
+                country=choice(user_id.country_codes),  # noqa: S311
                 event=DestinationSelectionLogEvent.IVR_SUGGESTED,
                 user_id=user_id,
             )

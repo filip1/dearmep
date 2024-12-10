@@ -464,7 +464,7 @@ def get_recommended_destination(
                 )
             )
         # select destination
-        final_dest_id = random.choices(
+        final_dest_id = random.choices(  # noqa: S311
             list(merged_scores.keys()),
             weights=list(merged_scores.values()),
             k=1,
