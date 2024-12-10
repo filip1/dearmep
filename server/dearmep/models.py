@@ -11,6 +11,7 @@ import json
 import re
 import secrets
 from base64 import b64encode
+from contextlib import suppress
 from datetime import datetime, time  # noqa: TC003
 from hashlib import sha256
 from ipaddress import IPv4Network, IPv6Network
@@ -351,10 +352,10 @@ class UserPhone(str):  # noqa: FURB189
         # Try parsing as a JSON dict, if it starts with {
         struct: Optional[UserPhone.Structured] = None
         if value.startswith("{"):
-            try:
+            # Suppressing the error is okay, the struct will stay None and
+            # number parsing occurs.
+            with suppress(json.JSONDecodeError):
                 struct = cls.Structured.parse_obj(json.loads(value))
-            except json.JSONDecodeError:
-                pass  # Ignore, struct will stay None, number parsing occurs.
         if not struct:
             # Try parsing as a raw phone number.
             number = cls.parse_number(value)
@@ -534,7 +535,7 @@ class UserPhone(str):  # noqa: FURB189
             try:
                 prefix = self.parse_number(pattern)
             except ValueError:
-                pass
+                return False
             if prefix and orig.startswith(self.format_number(prefix)):
                 return True
 
