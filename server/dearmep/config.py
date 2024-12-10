@@ -483,7 +483,7 @@ class Settings(BaseSettings):
     def empty_string_is_none(
         cls, v: Optional[DirectoryPath]
     ) -> Optional[DirectoryPath]:
-        return None if not v else v
+        return v or None
 
 
 def is_config_missing(e: ValidationError) -> bool:
