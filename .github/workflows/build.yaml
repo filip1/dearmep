@@ -32,7 +32,6 @@ jobs:
           poetry install --all-extras
       - name: Lint with Ruff
         run: poetry run ruff check --output-format github
-        continue-on-error: true  # temporary, until we've updated the codebase to Ruff's standards
       - name: Typecheck with mypy
         run: poetry run mypy
       - name: Test with pytest
