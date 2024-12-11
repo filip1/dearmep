@@ -96,8 +96,10 @@ exclude = [
 ]
 
 [tool.ruff.format]
-quote-style = "double"
+line-ending = "lf"
+# The following settings are the defaults anyway.
 indent-style = "space"
+quote-style = "double"
 
 [tool.ruff.lint]
 preview = true
