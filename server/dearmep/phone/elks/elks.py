@@ -362,7 +362,10 @@ def mount_router(app: FastAPI, prefix: str) -> None:  # noqa: C901, PLR0915
                             session, playlist, call.user_language
                         )
                         return {
-                            "play": f"{elks_url}/medialist/{medialist_id}/concat.ogg",
+                            "play": (
+                                f"{elks_url}/medialist/{medialist_id}/"
+                                "concat.ogg"
+                            ),
                         }
                     return forward_to("delete", session)
 

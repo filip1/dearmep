@@ -89,7 +89,7 @@ def run(
     passthru: bool = False,
 ) -> subprocess.CompletedProcess:
     """Run an ffmpeg subprocess."""
-    return subprocess.run(
+    return subprocess.run(  # noqa: S603
         (
             "ffmpeg",
             "-hide_banner",  # be less verbose

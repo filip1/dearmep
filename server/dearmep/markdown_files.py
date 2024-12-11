@@ -97,15 +97,16 @@ def mount_if_configured(app: FastAPI, prefix: str) -> None:
         path: Annotated[
             str,
             PathParam(
-                description="Name of the document. Will be mapped to a directory "
-                "in the `docs` directory of the `DEARMEP_MARKDOWN_FILES_DIR`.",
+                description="Name of the document. Will be mapped to a "
+                "directory in the `docs` directory of the "
+                "`DEARMEP_MARKDOWN_FILES_DIR`.",
             ),
         ],
         lang: Annotated[
             str,
             PathParam(
-                description="Language to retrieve the document in. Will be mapped "
-                "to an actual file like `en.md` inside of the `path` "
+                description="Language to retrieve the document in. Will be "
+                "mapped to an actual file like `en.md` inside of the `path` "
                 "corresponding to the requested document.",
             ),
         ],
