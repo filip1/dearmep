@@ -16,8 +16,9 @@ from ..config import ENV_PREFIX, Settings
 _logger = logging.getLogger(__name__)
 
 
-DEMO_TEMPLATE = Path(Path(__file__).parent, "demo.html") \
-    .read_text(encoding="utf-8")
+DEMO_TEMPLATE = Path(Path(__file__).parent, "demo.html").read_text(
+    encoding="utf-8"
+)
 
 
 def demo_html(
@@ -41,12 +42,15 @@ def mount_if_configured(app: FastAPI, path: str) -> None:
     if static_files_dir is None:
         _logger.info(
             f"{ENV_PREFIX}STATIC_FILES_DIR is unset, will not serve "
-            "static files")
+            "static files"
+        )
         return
 
     if settings.demo_page:
+
         @app.get(
-            "/", operation_id="getDemoHTML",
+            "/",
+            operation_id="getDemoHTML",
             summary="Get Demo HTML",
             response_class=HTMLResponse,
         )
@@ -61,7 +65,8 @@ def mount_if_configured(app: FastAPI, path: str) -> None:
             case for official releases).
             """
             return demo_html(
-                protocol="http" if req.url.scheme.lower() == "http"
+                protocol="http"
+                if req.url.scheme.lower() == "http"
                 else "https",
                 host=req.url.hostname or "localhost",
                 port=req.url.port,
@@ -71,4 +76,5 @@ def mount_if_configured(app: FastAPI, path: str) -> None:
     app.mount(path, StaticFiles(directory=static_files_dir), "static")
     _logger.info(
         f"will serve static files from {static_files_dir}, "
-        f"{'including' if settings.demo_page else 'but without'} demo page")
+        f"{'including' if settings.demo_page else 'but without'} demo page"
+    )

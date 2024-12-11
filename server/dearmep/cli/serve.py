@@ -35,7 +35,8 @@ def serve(ctx: Context) -> None:
 
 
 def add_parser(
-    subparsers: _SubParsersAction, help_if_no_subcommand: Callable,  # noqa: ARG001
+    subparsers: _SubParsersAction,
+    help_if_no_subcommand: Callable,  # noqa: ARG001
 ) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "serve",
@@ -49,8 +50,10 @@ def add_parser(
     parser.set_defaults(func=serve)
 
     parser.add_argument(
-        "--port", "-p",
-        type=int, default=DEFAULT_PORT,
+        "--port",
+        "-p",
+        type=int,
+        default=DEFAULT_PORT,
         help=f"TCP port number to use (default: {DEFAULT_PORT})",
     )
 
@@ -70,9 +73,11 @@ def add_parser(
     )
 
     parser.add_argument(
-        "--log-level", "-l",
+        "--log-level",
+        "-l",
         metavar="LEVEL",
-        choices=LOG_LEVELS, default=DEFAULT_LOG_LEVEL,
+        choices=LOG_LEVELS,
+        default=DEFAULT_LOG_LEVEL,
         help="only display messages at or above this level (default: "
         f"{DEFAULT_LOG_LEVEL}; choices: {', '.join(LOG_LEVELS)})",
     )

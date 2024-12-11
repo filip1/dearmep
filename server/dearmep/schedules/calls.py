@@ -26,7 +26,6 @@ queued_calls_total = Counter(
 
 
 def build_queue() -> None:
-
     now = datetime.now(timezone.utc)
     office_hours = Config.get().telephony.office_hours
     if not office_hours.open(now):
@@ -39,21 +38,22 @@ def build_queue() -> None:
                 QueuedCall(
                     phone_number=call.phone_number,
                     language=call.language,
-                ))
+                )
+            )
         for call in calls.postponed:
             session.add(
                 QueuedCall(
                     phone_number=call.phone_number,
                     language=call.language,
                     is_postponed=True,
-                ))
+                )
+            )
         queued_calls_total.inc(len(calls.regular) + len(calls.postponed))
         query.mark_scheduled_calls_queued(session, calls, now)
         session.commit()
 
 
 def handle_queue() -> None:
-
     with get_session() as session:
         queued_call = query.get_next_queued_call(session)
         if queued_call is None:

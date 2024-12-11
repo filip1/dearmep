@@ -24,13 +24,15 @@ from dearmep.config import (
 UTC = timezone.utc
 
 
-EXAMPLE_HOURS = OfficeHoursConfig.parse_obj({
-    "timezone": "Europe/Brussels",
-    "weekdays": (1, 2, 3, 4, 5),
-    "begin": "09:00",
-    "end": "18:00",
-    "call_schedule_interval": 15,
-})
+EXAMPLE_HOURS = OfficeHoursConfig.parse_obj(
+    {
+        "timezone": "Europe/Brussels",
+        "weekdays": (1, 2, 3, 4, 5),
+        "begin": "09:00",
+        "end": "18:00",
+        "call_schedule_interval": 15,
+    }
+)
 
 
 @pytest.fixture
@@ -42,12 +44,14 @@ def dummy_translation_strings() -> L10nStrings:
 
 @pytest.fixture
 def dummy_frontend_strings() -> FrontendStrings:
-    return FrontendStrings.parse_obj({
-        "title": L10nEntry.parse_obj("foo"),
-        "languages.de": "Deutsch",
-        "languages.en": "English",
-        "languages.fr": "Français",
-    })
+    return FrontendStrings.parse_obj(
+        {
+            "title": L10nEntry.parse_obj("foo"),
+            "languages.de": "Deutsch",
+            "languages.en": "English",
+            "languages.fr": "Français",
+        }
+    )
 
 
 def test_default_language_in_language_list():
@@ -72,7 +76,8 @@ def test_missing_translation_in_default_language(
 ):
     # Replace one of the dummies with one that only has French.
     dummy_translation_strings.phone_number_verification_sms = (
-        L10nEntry.parse_obj({"fr": "toto"}))
+        L10nEntry.parse_obj({"fr": "toto"})
+    )
     with pytest.raises(ValidationError) as e_info:
         L10nConfig(
             languages=["en", "fr"],
@@ -136,14 +141,38 @@ def test_invalid_config(fastapi_factory: Callable[[], FastAPI]):
         fastapi_factory()
 
 
-@pytest.mark.parametrize("now,open", (
-    (datetime(2023, 10, 26, 22, 0, tzinfo=UTC), False),  # Fri 00:00 Brussels
-    (datetime(2023, 10, 27, 6, 30, tzinfo=UTC), False),  # Fri 08:30 Brussels
-    (datetime(2023, 10, 27, 7, 00, tzinfo=UTC), True),  # Fri 09:00 Brussels
-    (datetime(2023, 10, 27, 9, 30, tzinfo=UTC), True),  # Fri 11:30 Brussels
-    (datetime(2023, 10, 27, 15, 59, tzinfo=UTC), True),  # Fri 17:59 Brussels
-    (datetime(2023, 10, 27, 16, 00, tzinfo=UTC), False),  # Fri 18:00 Brussels
-    (datetime(2023, 10, 28, 9, 30, tzinfo=UTC), False),  # Sat 11:30 Brussels
-))
+@pytest.mark.parametrize(
+    "now,open",
+    (
+        (
+            datetime(2023, 10, 26, 22, 0, tzinfo=UTC),
+            False,
+        ),  # Fri 00:00 Brussels
+        (
+            datetime(2023, 10, 27, 6, 30, tzinfo=UTC),
+            False,
+        ),  # Fri 08:30 Brussels
+        (
+            datetime(2023, 10, 27, 7, 00, tzinfo=UTC),
+            True,
+        ),  # Fri 09:00 Brussels
+        (
+            datetime(2023, 10, 27, 9, 30, tzinfo=UTC),
+            True,
+        ),  # Fri 11:30 Brussels
+        (
+            datetime(2023, 10, 27, 15, 59, tzinfo=UTC),
+            True,
+        ),  # Fri 17:59 Brussels
+        (
+            datetime(2023, 10, 27, 16, 00, tzinfo=UTC),
+            False,
+        ),  # Fri 18:00 Brussels
+        (
+            datetime(2023, 10, 28, 9, 30, tzinfo=UTC),
+            False,
+        ),  # Sat 11:30 Brussels
+    ),
+)
 def test_office_hours(now: datetime, open: bool):
     assert EXAMPLE_HOURS.open(now) is open

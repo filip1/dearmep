@@ -16,15 +16,19 @@ AUDIO_EXTENSION = "ogg"  # file extension
 AUDIO_SAMPLERATE = 44100
 IMPORT_OPTS = (
     "-filter:a",
-    ", ".join((
-        # normalize loudness
-        # "loudnorm",
-        # remove silence
-        "silenceremove=stop_periods=-1:stop_duration=1:stop_threshold=-50dB",
-    )),
+    ", ".join(
+        (
+            # normalize loudness
+            # "loudnorm",
+            # remove silence
+            "silenceremove=stop_periods=-1:stop_duration=1:stop_threshold=-50dB",
+        )
+    ),
     # loudnorm upsamples to 192k, bring it back down again
-    "-ar", str(AUDIO_SAMPLERATE),
-    "-ac", "1",  # mix down to mono -- beware of phase cancellation though
+    "-ar",
+    str(AUDIO_SAMPLERATE),
+    "-ac",
+    "1",  # mix down to mono -- beware of phase cancellation though
 )
 
 
@@ -37,7 +41,9 @@ def audio2blob(
 ) -> Blob:
     if convert:
         with NamedTemporaryFile(
-            "rb", prefix="audioconv.", suffix=f".{AUDIO_EXTENSION}",
+            "rb",
+            prefix="audioconv.",
+            suffix=f".{AUDIO_EXTENSION}",
         ) as temp:
             name = f"{path.stem}.{AUDIO_EXTENSION}"
             convert_file(path, Path(temp.name))
@@ -60,8 +66,11 @@ def convert_file(
     input: Path,
     output: Path,
 ) -> None:
-    ffmpeg.run((
-        "-i", str(input),
-        *IMPORT_OPTS,
-        str(output),
-    ))
+    ffmpeg.run(
+        (
+            "-i",
+            str(input),
+            *IMPORT_OPTS,
+            str(output),
+        )
+    )

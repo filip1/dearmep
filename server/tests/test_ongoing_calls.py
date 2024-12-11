@@ -15,7 +15,7 @@ from dearmep.phone.elks import ongoing_calls
 
 
 def test_ongoing_calls_interface(client: TestClient):
-    """ test the flow of a call """
+    """test the flow of a call"""
     with get_session() as session:
         provider = "46elks"
         provider_call_id = secrets.token_hex(10)
@@ -39,7 +39,6 @@ def test_ongoing_calls_interface(client: TestClient):
             session=session,
             started_at=datetime.datetime.now(datetime.timezone.utc),
             type="INSTANT",
-
         )
         # we find the call in the database
         call = ongoing_calls.get_call(provider_call_id, provider, session)

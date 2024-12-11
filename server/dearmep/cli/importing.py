@@ -36,8 +36,9 @@ def import_destinations(ctx: Context) -> None:
             logo_template=ctx.args.logo_template,
             name_audio_template=ctx.args.name_audio_template,
         )
-        with ctx.task_factory() as tf, \
-        tf.create_task("reading and converting JSON") as task:
+        with ctx.task_factory() as tf, tf.create_task(
+            "reading and converting JSON"
+        ) as task:
             input.set_task(task)
             with input as input_stream:
                 importer.import_dump(
@@ -51,23 +52,28 @@ def import_swayability(ctx: Context) -> None:
     Config.load()
     input: FlexiStrReader = ctx.args.input
 
-    with get_session() as session, ctx.task_factory() as tf, \
-    tf.create_task("reading and importing CSV") as task:
+    with get_session() as session, ctx.task_factory() as tf, tf.create_task(
+        "reading and importing CSV"
+    ) as task:
         input.set_task(task)
         with input as input_stream:
             csvr = csv.DictReader(input_stream)
-            ignored = db_importing.import_swayability(session, map(
-                SwayabilityImport.parse_obj, csvr
-            ), ignore_unknown=ctx.args.ignore_unknown)
+            ignored = db_importing.import_swayability(
+                session,
+                map(SwayabilityImport.parse_obj, csvr),
+                ignore_unknown=ctx.args.ignore_unknown,
+            )
         session.commit()
     if ignored:
         _logger.warning(
             "Ignored the following IDs which were not found in the database: "
-            f"{', '.join(ignored)}")
+            f"{', '.join(ignored)}"
+        )
 
 
 def add_parser(
-    subparsers: _SubParsersAction, help_if_no_subcommand: Callable,
+    subparsers: _SubParsersAction,
+    help_if_no_subcommand: Callable,
 ) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "import",
@@ -85,7 +91,9 @@ def add_parser(
     )
     FlexiBytesReader.add_as_argument(destinations)
     destinations.add_argument(
-        "-p", "--portrait-template", metavar="TEMPLATE",
+        "-p",
+        "--portrait-template",
+        metavar="TEMPLATE",
         help="template string to construct the path to the portrait image of "
         "the Destination, e.g. `portraits/{filename}`; available placeholders "
         "are {filename} (the name as given in the `portrait` field in the "
@@ -93,13 +101,17 @@ def add_parser(
         "given in the JSON)",
     )
     destinations.add_argument(
-        "-P", "--fallback-portrait", metavar="FILE",
+        "-P",
+        "--fallback-portrait",
+        metavar="FILE",
         type=Path,
         help="path to a file that will be used if the portrait specified in "
         "the dump cannot be found",
     )
     destinations.add_argument(
-        "-l", "--logo-template", metavar="TEMPLATE",
+        "-l",
+        "--logo-template",
+        metavar="TEMPLATE",
         help="template string to construct the path to the logo image of "
         "Destination groups, e.g. `logos/{filename}`; available placeholders "
         "are {filename} (the name as given in the `logo` field in the Group "
@@ -107,7 +119,9 @@ def add_parser(
         "{short_name} and {long_name} (as given in the JSON)",
     )
     destinations.add_argument(
-        "-a", "--name-audio-template", metavar="TEMPLATE",
+        "-a",
+        "--name-audio-template",
+        metavar="TEMPLATE",
         help="template string to construct the path to the spoken version of "
         "the Destination's name, e.g. `names/{filename}`; available "
         "placeholders are {filename} (the name as given in the `name_audio` "
@@ -126,7 +140,8 @@ def add_parser(
     )
     FlexiStrReader.add_as_argument(swayability)
     swayability.add_argument(
-        "--ignore-unknown", action="store_true",
+        "--ignore-unknown",
+        action="store_true",
         help="If the CSV contains IDs which are not found in the database, "
         "ignore these. If this option is not set, unknown IDs will instead "
         "cause the import to abort.",

@@ -86,26 +86,39 @@ def _contact_filter():  # noqa: ANN202
         # Convert the timespans to CASE expression tuples.
         today = func.current_date()
         cases = (
-            (or_(*(
-                and_(
-                    today >= span.start,
-                    today <= span.end,
-                )
-                for span in spans
-            )), group)
+            (
+                or_(
+                    *(
+                        and_(
+                            today >= span.start,
+                            today <= span.end,
+                        )
+                        for span in spans
+                    )
+                ),
+                group,
+            )
             for group, spans in tf.timespans.items()
         )
         # Add the logic to the join.
-        predicates.append(or_(
-            Contact.type.not_in(tf.types),
-            Contact.group == case(*cases, else_=tf.default),
-        ))
+        predicates.append(
+            or_(
+                Contact.type.not_in(tf.types),
+                Contact.group == case(*cases, else_=tf.default),
+            )
+        )
 
     return and_(*predicates)
 
 
 CONTACT_TYPES = (
-    "email", "facebook", "fax", "instagram", "phone", "twitter", "web",
+    "email",
+    "facebook",
+    "fax",
+    "instagram",
+    "phone",
+    "twitter",
+    "web",
 )
 
 
@@ -154,6 +167,7 @@ class ModifiedTimestampMixin(BaseModel):
 
 class Blob(SQLModel, ModifiedTimestampMixin, table=True):
     """A binary data object, e.g. an image or audio."""
+
     __tablename__ = "blobs"
     id: Optional[BlobID] = Field(
         None,
@@ -196,11 +210,12 @@ class Blob(SQLModel, ModifiedTimestampMixin, table=True):
 
 class ContactBase(SQLModel):
     """A single contact datum (e.g. website) belonging to a Destination."""
+
     type: str = Field(
         index=True,
         description="Which type of Contact this is. Can be any string that "
-        "makes sense for the campaign. Some suggested values are: " +
-        ", ".join(f"`{k}`" for k in CONTACT_TYPES),
+        "makes sense for the campaign. Some suggested values are: "
+        + ", ".join(f"`{k}`" for k in CONTACT_TYPES),
         **_example(CONTACT_TYPES[0]),
     )
     group: Optional[str] = Field(
@@ -227,7 +242,8 @@ class Contact(ContactBase, table=True):
         "Contact.",
     )
     destination_id: Optional[DestinationID] = Field(
-        foreign_key="destinations.id", index=True,
+        foreign_key="destinations.id",
+        index=True,
         description="The Destination this Contact belongs to.",
     )
     destination: "Destination" = Relationship(
@@ -246,17 +262,21 @@ class ContactListItem(ContactBase):
 
 class DestinationGroupLink(SQLModel, table=True):
     """Association between a Destination and a DestinationGroup."""
+
     __tablename__ = "dest_group_link"
     destination_id: DestinationID = Field(
-        foreign_key="destinations.id", primary_key=True,
+        foreign_key="destinations.id",
+        primary_key=True,
     )
     group_id: DestinationGroupID = Field(
-        foreign_key="dest_groups.id", primary_key=True,
+        foreign_key="dest_groups.id",
+        primary_key=True,
     )
 
 
 class DestinationBase(SQLModel):
     """A person (or entity) users are supposed to contact."""
+
     __tablename__ = "destinations"
     id: DestinationID = Field(
         primary_key=True,
@@ -276,7 +296,8 @@ class DestinationBase(SQLModel):
 
 
 class Call(SQLModel, table=True):
-    """A Call that is currently ongoing in our System """
+    """A Call that is currently ongoing in our System"""
+
     __tablename__ = "calls"
     __table_args__ = (
         UniqueConstraint("provider", "provider_call_id", name="unique_call"),
@@ -338,10 +359,11 @@ class Destination(DestinationBase, table=True):
         back_populates="destination",
         sa_relationship_kwargs={
             "primaryjoin": _contact_filter,
-        }
+        },
     )
     groups: List["DestinationGroup"] = Relationship(
-        back_populates="destinations", link_model=DestinationGroupLink,
+        back_populates="destinations",
+        link_model=DestinationGroupLink,
     )
     portrait_id: Optional[BlobID] = Field(
         None,
@@ -395,6 +417,7 @@ class ContactRead(ContactBase):
 
 class DestinationGroupBase(SQLModel):
     """A group to which Destinations may belong."""
+
     id: DestinationGroupID = Field(
         primary_key=True,
         description="An ID to uniquely identify this Group.",
@@ -414,8 +437,10 @@ class DestinationGroupBase(SQLModel):
     )
     long_name: str = Field(
         description="The long name of this group.",
-        **_example("Group of the Progressive Alliance of Socialists and "
-                   "Democrats in the European Parliament"),
+        **_example(
+            "Group of the Progressive Alliance of Socialists and "
+            "Democrats in the European Parliament"
+        ),
     )
 
 
@@ -428,7 +453,8 @@ class DestinationGroup(DestinationGroupBase, table=True):
     )
     logo: Optional[Blob] = Relationship()
     destinations: List[Destination] = Relationship(
-        back_populates="groups", link_model=DestinationGroupLink,
+        back_populates="groups",
+        link_model=DestinationGroupLink,
     )
 
 
@@ -485,7 +511,7 @@ class NumberVerificationRequest(SQLModel, table=True):
         False,
         description="Whether to ignore this entry, e.g. from counting the "
         "number of verification requests. To be set manually by the "
-        "administrator."
+        "administrator.",
     )
 
 
@@ -560,6 +586,7 @@ class DestinationSelectionLogEvent(str, enum.Enum):
 
 class DestinationSelectionLogBase(SQLModel):
     """Logs every time a destination has been selected for contacting."""
+
     id: Optional[int] = Field(
         primary_key=True,
         description="Auto-generated ID of this selection log.",
@@ -622,7 +649,8 @@ class UserFeedback(SQLModel, table=True):
         description="User who gave this feedback.",
     )
     destination_id: DestinationID = Field(
-        index=True, foreign_key="destinations.id",
+        index=True,
+        foreign_key="destinations.id",
         description="The Destination this feedback is about.",
     )
     destination: Destination = Relationship()
@@ -679,6 +707,7 @@ class ScheduledCall(SQLModel, table=True):
     Table of scheduled calls to be made by the scheduler. If you change this,
     check the Schedule model aswell.
     """
+
     __tablename__ = "scheduled_calls"
 
     phone_number: PhoneNumber = Field(
@@ -713,7 +742,6 @@ class CurrentlyScheduledCalls(NamedTuple):
 
 
 class QueuedCall(SQLModel, table=True):
-
     __tablename__ = "queued_calls"
 
     created_at: datetime = Field(
@@ -747,7 +775,8 @@ class MediaList(SQLModel, table=True):
     __tablename__ = "medialists"
     id: UUID4 = Field(
         sa_column=Column(
-            String, primary_key=True, default=lambda: str(uuid4())),
+            String, primary_key=True, default=lambda: str(uuid4())
+        ),
         description="ID of the media list.",
     )
     created_at: datetime = Field(

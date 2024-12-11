@@ -115,15 +115,21 @@ def blob_url() -> Iterable[BlobURLDep]:
 
 
 def destination_to_destinationread(dest: Destination) -> DestinationRead:
-    return DestinationRead.from_orm(dest, {
-        "portrait": blob_path(dest.portrait),
-        "groups": [
-            DestinationGroupListItem.from_orm(group, {
-                "logo": blob_path(group.logo),
-            })
-            for group in dest.groups
-        ],
-    })
+    return DestinationRead.from_orm(
+        dest,
+        {
+            "portrait": blob_path(dest.portrait),
+            "groups": [
+                DestinationGroupListItem.from_orm(
+                    group,
+                    {
+                        "logo": blob_path(group.logo),
+                    },
+                )
+                for group in dest.groups
+            ],
+        },
+    )
 
 
 def error_model(status_code: int, instance: BaseModel) -> JSONResponse:
@@ -155,9 +161,7 @@ def _get_localization(
         location = get_country(session, geo_db, client_addr)
 
     # Track localization results in Prometheus.
-    l10n_autodetect_total.labels(
-        recommended_lang, str(location.country)
-    ).inc()
+    l10n_autodetect_total.labels(recommended_lang, str(location.country)).inc()
 
     return LocalizationResponse(
         language=LanguageDetection(
@@ -167,13 +171,15 @@ def _get_localization(
         ),
         location=location,
         frontend_strings=all_frontend_strings(recommended_lang)
-        if frontend_strings else None,
+        if frontend_strings
+        else None,
     )
 
 
 # TODO: Add caching headers, this is pretty static data.
 @router.get(
-    "/frontend-strings/{language}", operation_id="getFrontendStrings",
+    "/frontend-strings/{language}",
+    operation_id="getFrontendStrings",
     response_model=FrontendStringsResponse,
     responses=rate_limit_response,  # type: ignore[arg-type]
     dependencies=(simple_rate_limit,),
@@ -198,7 +204,8 @@ def get_frontend_strings(
 
 
 @router.get(
-    "/frontend-setup", operation_id="getFrontendSetup",
+    "/frontend-setup",
+    operation_id="getFrontendSetup",
     response_model=FrontendSetupResponse,
     responses=rate_limit_response,  # type: ignore[arg-type]
     dependencies=(computational_rate_limit,),
@@ -249,14 +256,15 @@ def get_frontend_setup(
 
 # TODO: Add caching headers.
 @router.get(
-    "/blob/{name}", operation_id="getBlob",
+    "/blob/{name}",
+    operation_id="getBlob",
     response_class=Response,
     responses={
         **rate_limit_response,  # type: ignore[arg-type]
         200: {
             "content": {"application/octet-stream": {}},
             "description": "The contents of the named blob, with a matching "
-                           "mimetype set.",
+            "mimetype set.",
         },
     },
     dependencies=(simple_rate_limit,),
@@ -276,7 +284,8 @@ def get_blob_contents(
 
 
 @router.get(
-    "/destinations/country/{country}", operation_id="getDestinationsByCountry",
+    "/destinations/country/{country}",
+    operation_id="getDestinationsByCountry",
     summary="Get Destinations by Country",
     response_model=SearchResult[DestinationSearchResult],
     responses=rate_limit_response,  # type: ignore[arg-type]
@@ -293,7 +302,8 @@ def get_destinations_by_country(
 
 
 @router.get(
-    "/destinations/name", operation_id="getDestinationsByName",
+    "/destinations/name",
+    operation_id="getDestinationsByName",
     summary="Get Destinations by Name",
     response_model=SearchResult[DestinationSearchResult],
     responses=rate_limit_response,  # type: ignore[arg-type]
@@ -331,7 +341,8 @@ def get_destinations_by_name(
         )
     with get_session() as session:
         dests = query.get_destinations_by_name(
-            session, name,
+            session,
+            name,
             all_countries=all_countries,
             country=country,
             limit=limit,
@@ -340,7 +351,8 @@ def get_destinations_by_name(
 
 
 @router.get(
-    "/destinations/id/{id}", operation_id="getDestinationByID",
+    "/destinations/id/{id}",
+    operation_id="getDestinationByID",
     summary="Get Destination by ID",
     response_model=DestinationRead,
     responses=rate_limit_response,  # type: ignore[arg-type]
@@ -359,7 +371,8 @@ def get_destination_by_id(
 
 
 @router.get(
-    "/destinations/suggested", operation_id="getSuggestedDestination",
+    "/destinations/suggested",
+    operation_id="getSuggestedDestination",
     response_model=DestinationRead,
     responses=rate_limit_response,  # type: ignore[arg-type]
     dependencies=(computational_rate_limit,),
@@ -391,7 +404,8 @@ def get_suggested_destination(
                     )
                 except query.NotFound as e2:
                     raise HTTPException(
-                        status.HTTP_404_NOT_FOUND, str(e2)) from e2
+                        status.HTTP_404_NOT_FOUND, str(e2)
+                    ) from e2
             else:
                 raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
         session.commit()
@@ -423,7 +437,8 @@ def initiate_call(
     """
     if not Config.get().telephony.office_hours.open():
         return error_model(
-            status.HTTP_503_SERVICE_UNAVAILABLE, OutsideHoursResponse())
+            status.HTTP_503_SERVICE_UNAVAILABLE, OutsideHoursResponse()
+        )
 
     with get_session() as session:
         try:
@@ -448,8 +463,9 @@ def initiate_call(
             destination_id=request.destination_id,
             session=session,
         )
-        if isinstance(call_state,
-                      (DestinationInCallResponse, UserInCallResponse)):
+        if isinstance(
+            call_state, (DestinationInCallResponse, UserInCallResponse)
+        ):
             return error_model(status.HTTP_503_SERVICE_UNAVAILABLE, call_state)
 
     return CallStateResponse(state=call_state, feedback_token=fb_token)
@@ -469,24 +485,26 @@ def get_call_state(
     Returns the state of the User’s latest call.
     """
     with get_session() as session:
-
         user_id = UserPhone(claims.phone)
 
-        if (last_log := (
-            session.query(DestinationSelectionLog.event).filter(
-                DestinationSelectionLog.user_id == user_id
-            ).filter(
+        if last_log := (
+            session.query(DestinationSelectionLog.event)
+            .filter(DestinationSelectionLog.user_id == user_id)
+            .filter(
                 col(DestinationSelectionLog.event).in_(
-                    CallState.__members__.keys())
-            ).order_by(
-                col(DestinationSelectionLog.timestamp).desc()).first())):
-
+                    CallState.__members__.keys()
+                )
+            )
+            .order_by(col(DestinationSelectionLog.timestamp).desc())
+            .first()
+        ):
             return CallStateResponse(state=CallState[last_log.event.name])
         return CallStateResponse(state=CallState.NO_CALL)
 
 
 @router.post(
-    "/number-verification/request", operation_id="requestNumberVerification",
+    "/number-verification/request",
+    operation_id="requestNumberVerification",
     responses={
         **rate_limit_response,  # type: ignore[arg-type]
         400: {"model": PhoneNumberVerificationRejectedResponse},
@@ -503,10 +521,12 @@ def request_number_verification(
     number. Provide this code to the _Verify Number_ endpoint to receive a JWT
     proving that you have access to that number.
     """
+
     def reject(errors: List[PhoneRejectReason]) -> JSONResponse:
         return error_model(
             status.HTTP_400_BAD_REQUEST,
-            PhoneNumberVerificationRejectedResponse(errors=errors))
+            PhoneNumberVerificationRejectedResponse(errors=errors),
+        )
 
     user = UserPhone(request.phone_number)
     # The `assert` is just to guarantee to mypy that it's not None. Which we
@@ -521,15 +541,19 @@ def request_number_verification(
 
     with get_session() as session:
         result = query.get_new_sms_auth_code(
-            session, user=user, language=request.language)
+            session, user=user, language=request.language
+        )
         # Number could be rejected because of too many requests.
         if isinstance(result, PhoneRejectReason):
             return reject([result])
 
         config = Config.get()
-        message = config.l10n.strings.phone_number_verification_sms.apply({
-            "code": result,
-        }, request.language)
+        message = config.l10n.strings.phone_number_verification_sms.apply(
+            {
+                "code": result,
+            },
+            request.language,
+        )
 
         get_phone_service().send_sms(
             sender=config.telephony.sms_sender_name,
@@ -546,7 +570,8 @@ def request_number_verification(
 
 
 @router.post(
-    "/number-verification/verify", operation_id="verifyNumber",
+    "/number-verification/verify",
+    operation_id="verifyNumber",
     responses={
         **rate_limit_response,  # type: ignore[arg-type]
         400: {"model": SMSCodeVerificationFailedResponse},
@@ -566,11 +591,14 @@ def verify_number(
     with get_session() as session:
         user = UserPhone(request.phone_number)
         if not query.verify_sms_auth_code(
-            session, user=user, code=request.code,
+            session,
+            user=user,
+            code=request.code,
         ):
             return error_model(
                 status.HTTP_400_BAD_REQUEST,
-                SMSCodeVerificationFailedResponse())
+                SMSCodeVerificationFailedResponse(),
+            )
         response = authtoken.create_token(
             phone=request.phone_number,
         )
@@ -579,7 +607,8 @@ def verify_number(
 
 
 @router.get(
-    "/call/feedback/{token}", operation_id="getFeedbackContext",
+    "/call/feedback/{token}",
+    operation_id="getFeedbackContext",
     response_model=FeedbackContext,
     responses={
         **rate_limit_response,  # type: ignore[arg-type]
@@ -617,7 +646,8 @@ def get_feedback_context(
 
 
 @router.post(
-    "/call/feedback/{token}", operation_id="submitCallFeedback",
+    "/call/feedback/{token}",
+    operation_id="submitCallFeedback",
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
         **rate_limit_response,  # type: ignore[arg-type]
@@ -644,7 +674,8 @@ def submit_call_feedback(
             raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
         if feedback.feedback_entered_at is not None:
             raise HTTPException(
-                status.HTTP_403_FORBIDDEN, "token has already been used")
+                status.HTTP_403_FORBIDDEN, "token has already been used"
+            )
 
         feedback.feedback_entered_at = datetime.now(timezone.utc)
         feedback.convinced = submission.convinced
@@ -668,8 +699,9 @@ def get_schedule(
     Returns the schedule of the User, i.e. when the system should call them.
     """
     with get_session() as session:
-        return ScheduleResponse(schedule=query.get_schedule(
-            session, claims.phone))
+        return ScheduleResponse(
+            schedule=query.get_schedule(session, claims.phone)
+        )
 
 
 @router.put(
@@ -694,7 +726,9 @@ def set_schedule(
     """
     with get_session() as session:
         query.set_schedule(
-            session, claims.phone, submission.language, submission.schedule)
+            session, claims.phone, submission.language, submission.schedule
+        )
         session.commit()
-        return ScheduleResponse(schedule=query.get_schedule(
-            session, claims.phone))
+        return ScheduleResponse(
+            schedule=query.get_schedule(session, claims.phone)
+        )

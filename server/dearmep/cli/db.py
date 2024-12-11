@@ -61,7 +61,8 @@ def cmd_store_blob(ctx: Context) -> None:
 
 
 def add_parser(
-    subparsers: _SubParsersAction, help_if_no_subcommand: Callable,
+    subparsers: _SubParsersAction,
+    help_if_no_subcommand: Callable,
 ) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "db",
@@ -83,28 +84,36 @@ def add_parser(
         description="Store one or more static files in the database.",
     )
     store_blob.add_argument(
-        "--type", required=True,
+        "--type",
+        required=True,
         help="the type (category) of the blob, e.g. `logo`, `name_audio` etc.",
     )
     store_blob.add_argument(
-        "--mime", metavar="MIMETYPE",
+        "--mime",
+        metavar="MIMETYPE",
         help="the MIME type of the blob (default: guess from extension)",
     )
     store_blob.add_argument(
-        "--name", metavar="NAME",
+        "--name",
+        metavar="NAME",
         help="the file name to use when storing (default: keep original); may "
         "not be set when supplying multiple files as arguments",
     )
     store_blob.add_argument(
-        "--description", metavar="TEXT",
+        "--description",
+        metavar="TEXT",
         help="a helpful description to add to the blob",
     )
     store_blob.add_argument(
-        "--overwrite", action="store_true",
+        "--overwrite",
+        action="store_true",
         help="if there already is a blob with that name, overwrite it",
     )
     store_blob.add_argument(
-        "files", metavar="FILE", type=Path, nargs="+",
+        "files",
+        metavar="FILE",
+        type=Path,
+        nargs="+",
         help="name of the local file to read and store",
     )
     store_blob.set_defaults(func=cmd_store_blob)

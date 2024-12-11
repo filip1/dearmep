@@ -14,7 +14,4 @@ def get_text(node: Union["Element", "Text"]) -> str:
     if node.nodeType == node.TEXT_NODE:
         # This casting is plain ugly, but otherwise mypy doesn't know it's str.
         return str(cast("Text", node).data)
-    return "".join(
-        get_text(child)
-        for child in node.childNodes
-    )
+    return "".join(get_text(child) for child in node.childNodes)

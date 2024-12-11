@@ -75,7 +75,7 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
-packages = "dearmep"
+packages = ["dearmep", "tests"]
 python_version = "3.8"
 warn_return_any = true
 
@@ -96,8 +96,10 @@ exclude = [
 ]
 
 [tool.ruff.format]
-quote-style = "double"
+line-ending = "lf"
+# The following settings are the defaults anyway.
 indent-style = "space"
+quote-style = "double"
 
 [tool.ruff.lint]
 preview = true

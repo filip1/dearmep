@@ -12,10 +12,9 @@ from .blobfile import BlobOrFile
 
 def build_concat_list(files: Iterable[str]) -> bytes:
     """Build a "playlist" of files in ffmpeg's "concat" format."""
-    return "\n".join((
-        "ffconcat version 1.0",
-        *(f"file {file}" for file in files)
-    )).encode()
+    return "\n".join(
+        ("ffconcat version 1.0", *(f"file {file}" for file in files))
+    ).encode()
 
 
 @contextmanager
@@ -31,13 +30,15 @@ def build_concat_listfile(
     to allow ffmpeg to access them. These files will also be deleted once you
     leave the context.
     """
-    with NamedTemporaryFile("wb", prefix="fflist.", suffix=".txt") as clist, \
-    ExitStack() as stack:
+    with NamedTemporaryFile(
+        "wb", prefix="fflist.", suffix=".txt"
+    ) as clist, ExitStack() as stack:
         # Write the list of inputs to the concat list file.
-        clist.write(build_concat_list(
-            str(stack.enter_context(file.get_path()))
-            for file in files
-        ))
+        clist.write(
+            build_concat_list(
+                str(stack.enter_context(file.get_path())) for file in files
+            )
+        )
         clist.flush()
         yield clist
 
@@ -67,27 +68,35 @@ def concat(
     """
     with NamedTemporaryFile("rb", prefix="ffconcat.", delete=delete) as output:
         with build_concat_listfile(inputs) as clist:
-            run((
-                "-safe", "0",  # accept absolute paths
-                "-i", clist.name,  # input filename list
-                "-c", "copy",  # only copy streams, don't re-encode
-                "-f", out_format,  # specify the output format
-                output.name,
-            ))
+            run(
+                (
+                    "-safe",
+                    "0",  # accept absolute paths
+                    "-i",
+                    clist.name,  # input filename list
+                    "-c",
+                    "copy",  # only copy streams, don't re-encode
+                    "-f",
+                    out_format,  # specify the output format
+                    output.name,
+                )
+            )
         yield output
 
 
 def run(
-    args: Sequence[str], passthru: bool = False,
+    args: Sequence[str],
+    passthru: bool = False,
 ) -> subprocess.CompletedProcess:
     """Run an ffmpeg subprocess."""
-    return subprocess.run((  # noqa: S603
-        "ffmpeg",
-        "-hide_banner",  # be less verbose
-        "-nostdin",  # noninteractive
-        "-y",  # allow overwriting output file
-        *args,
-    ),
+    return subprocess.run(  # noqa: S603
+        (
+            "ffmpeg",
+            "-hide_banner",  # be less verbose
+            "-nostdin",  # noninteractive
+            "-y",  # allow overwriting output file
+            *args,
+        ),
         stdout=None if passthru else subprocess.DEVNULL,
         stderr=None if passthru else subprocess.DEVNULL,
         check=True,

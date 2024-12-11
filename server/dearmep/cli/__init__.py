@@ -33,7 +33,8 @@ class Context:
     def setup_logging(self, level: int = logging.INFO) -> None:
         def ignore_uninteresting(r: logging.LogRecord) -> int:
             ratelimit_backoff = re.compile(
-                r"^Backing off .+\(ratelimit.exception.RateLimitException")
+                r"^Backing off .+\(ratelimit.exception.RateLimitException"
+            )
             if r.name == "backoff" and ratelimit_backoff.match(r.getMessage()):
                 return 0
             return 1
@@ -66,9 +67,11 @@ def help_if_no_subcommand(parser: ArgumentParser) -> None:
     Passed to command parsers; they can set this as the default if they require
     a subcommand. If none was supplied, this function prints the help.
     """
+
     def exit_help(ctx: Context) -> None:  # noqa: ARG001
         parser.print_help(stderr)
         exit(127)
+
     parser.set_defaults(func=exit_help)
 
 
@@ -88,8 +91,10 @@ def run() -> None:
     help_if_no_subcommand(parser)
     args = parser.parse_args()
 
-    args.func(Context(
-        args=args,
-        # Commands can opt-in to have a raw stdout.
-        raw_stdout=getattr(args, "raw_stdout", False),
-    ))
+    args.func(
+        Context(
+            args=args,
+            # Commands can opt-in to have a raw stdout.
+            raw_stdout=getattr(args, "raw_stdout", False),
+        )
+    )

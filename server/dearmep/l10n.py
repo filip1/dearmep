@@ -107,7 +107,8 @@ def find_preferred_language(
         return fallback
 
     raise LanguageNotAvailableError(
-        "none of the preferred languages are available")
+        "none of the preferred languages are available"
+    )
 
 
 def get_country(
@@ -120,6 +121,7 @@ def get_country(
     if db_file is None:
         # Use the bundled one.
         import geoacumen  # type: ignore
+
         db_file = geoacumen.db_path
 
     country = res = None
@@ -131,9 +133,7 @@ def get_country(
                 country = res.get("country", None)
                 if isinstance(country, dict):
                     country = country.get("iso_code", None)
-    except (
-        FileNotFoundError, ValueError, mmdberrors.InvalidDatabaseError
-    ):
+    except (FileNotFoundError, ValueError, mmdberrors.InvalidDatabaseError):
         _logger.exception("could not determine country")
 
     if isinstance(country, str) and 1 < len(country) < 4:  # noqa: PLR2004

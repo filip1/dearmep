@@ -54,6 +54,7 @@ FEEDBACK_TOKEN_LETTERS = "BCDFGHKLMNPQRSTVWXZ"  # noqa: S105
 
 class FeedbackToken(ConstrainedStr):
     """A unique token that may be used once to enter feedback about a call."""
+
     min_length = FEEDBACK_TOKEN_LENGTH
     max_length = FEEDBACK_TOKEN_LENGTH
     to_upper = True
@@ -65,10 +66,12 @@ class FeedbackToken(ConstrainedStr):
     @staticmethod
     def generate() -> FeedbackToken:
         """Generate a new feedback token, not yet guaranteed to be unique."""
-        return FeedbackToken("".join(
-            secrets.choice(FEEDBACK_TOKEN_LETTERS)
-            for _ in range(FEEDBACK_TOKEN_LENGTH)
-        ))
+        return FeedbackToken(
+            "".join(
+                secrets.choice(FEEDBACK_TOKEN_LETTERS)
+                for _ in range(FEEDBACK_TOKEN_LENGTH)
+            )
+        )
 
 
 class CallState(str, enum.Enum):
@@ -106,6 +109,7 @@ class CallState(str, enum.Enum):
       the User requested to be connected to the Destination, but the
       Destination call could not be established due to an unexpected error.
     """
+
     NO_CALL = "NO_CALL"
     CALLING_USER = "CALLING_USER"
     IN_MENU = "IN_MENU"
@@ -135,6 +139,7 @@ class CallType(enum.Enum):
 
 class CountryCode(ConstrainedStr):
     """An ISO-639 country code."""
+
     min_length = 2
     max_length = 3
     to_upper = True
@@ -151,6 +156,7 @@ class DestinationInCallResponse(BaseModel):
 
 class FeedbackConvinced(str, enum.Enum):
     """Whether the User thinks they’ve convinced the Destination."""
+
     YES = "YES"
     LIKELY_YES = "LIKELY_YES"
     LIKELY_NO = "LIKELY_NO"
@@ -191,18 +197,21 @@ class OutsideHoursResponse(BaseModel):
 
 class SearchResultLimit(ConstrainedInt):
     """The number of search results to return."""
+
     gt = 0
     le = MAX_SEARCH_RESULT_LIMIT
 
 
 class Score(ConstrainedFloat):
     """A number between 0 and 1, inclusive."""
+
     ge = 0.0
     le = 1.0
 
 
 class MaintenanceMessageConfig(BaseModel):
     """Additional details about the maintenance mode message."""
+
     dismissable: bool = Field(
         False,
         description="Whether the user should be allowed to dismiss the "
@@ -212,6 +221,7 @@ class MaintenanceMessageConfig(BaseModel):
 
 class MaintenanceConfig(BaseModel):
     """Details about whether the system is in maintenance mode."""
+
     active: bool = Field(
         False,
         description="Whether maintenance is currently being performed on the "
@@ -224,6 +234,7 @@ class MaintenanceConfig(BaseModel):
 
 class FeaturesConfig(BaseModel):
     """Details about whether certain parts of the system are enabled."""
+
     maintenance: MaintenanceConfig = Field(default_factory=MaintenanceConfig)
 
 
@@ -237,12 +248,14 @@ class InputPhoneNumber(ConstrainedStr):
     strict enough to allow converting the number into a (canonicalized, E.164)
     `PhoneNumber`.
     """
+
     max_length = 32  # should allow enough superfluous characters
     regex = INPUT_NUMBER_REGEX
 
 
 class PhoneNumber(ConstrainedStr):
     """An E.164-canonicalized international phone number."""
+
     max_length = 16
     regex = re.compile(r"^\+[1-9][0-9]{1,14}$")
 
@@ -263,6 +276,7 @@ class PhoneRejectReason(str, enum.Enum):
       verification requests (each resulting in an SMS message being sent)
       without confirming them.
     """
+
     INVALID_PATTERN = "INVALID_PATTERN"
     DISALLOWED_COUNTRY = "DISALLOWED_COUNTRY"
     DISALLOWED_TYPE = "DISALLOWED_TYPE"
@@ -368,9 +382,18 @@ class UserPhone(str):  # noqa: FURB189, SLOT000
         value = encode_canonical_json(struct.dict(by_alias=True)).decode()
 
         instance = super().__new__(cls, value)
-        object.__setattr__(instance, "country_codes", tuple(map(
-            CountryCode,
-            phonenumbers.COUNTRY_CODE_TO_REGION_CODE[struct.calling_code])))
+        object.__setattr__(
+            instance,
+            "country_codes",
+            tuple(
+                map(
+                    CountryCode,
+                    phonenumbers.COUNTRY_CODE_TO_REGION_CODE[
+                        struct.calling_code
+                    ],
+                )
+            ),
+        )
         object.__setattr__(instance, "structured", struct)
         return instance
 
@@ -393,7 +416,8 @@ class UserPhone(str):  # noqa: FURB189, SLOT000
 
     def __setattr__(self, __name: str, __value: Any) -> None:  # noqa: ANN401
         raise TypeError(
-            "UserPhone is immutable and does not allow item assignment")
+            "UserPhone is immutable and does not allow item assignment"
+        )
 
     @staticmethod
     def compute_hash(number: str) -> str:
@@ -416,8 +440,11 @@ class UserPhone(str):  # noqa: FURB189, SLOT000
         You should use `UserPhone.parse_number()` to convert a phone number
         string into a `phonenumbers.PhoneNumber` object.
         """
-        return PhoneNumber(phonenumbers.format_number(
-            number, phonenumbers.PhoneNumberFormat.E164))
+        return PhoneNumber(
+            phonenumbers.format_number(
+                number, phonenumbers.PhoneNumberFormat.E164
+            )
+        )
 
     @classmethod
     def parse_number(cls, number: str) -> phonenumbers.PhoneNumber:
@@ -520,8 +547,11 @@ class UserPhone(str):  # noqa: FURB189, SLOT000
         However, this instance can only check itself against prefixes if its
         own `original_number` is available. Hash matching will always work.
         """
-        orig = self.format_number(self.original_number) \
-            if self.original_number else None
+        orig = (
+            self.format_number(self.original_number)
+            if self.original_number
+            else None
+        )
 
         for pattern in filter:
             if self.hash == pattern:
@@ -551,13 +581,14 @@ frontend_strings_field = Field(
         "title": "Call your MEP!",
         "call.start-call-btn.title": "Start Call",
         "verification.description": "We've sent a code to {{ number }}.",
-    }
+    },
 )
 
 
 class DestinationSearchGroup(BaseModel):
     """One of the groups a Destination belongs to, optimized for display in
     a search result."""
+
     name: str = Field(
         description="The group's long name, e.g. to display as alt text on "
         "the logo.",
@@ -577,6 +608,7 @@ class DestinationSearchGroup(BaseModel):
 
 class DestinationSearchResult(BaseModel):
     """A single Destination returned from a search."""
+
     id: str = Field(
         description="The Destination's ID.",
         example="36e04ddf-73e7-4af6-a8af-24556d610f6d",
@@ -630,7 +662,7 @@ class OfficeHoursResponse(BaseModel):
         example={
             day: [OfficeHoursInterval(begin="09:00", end="17:00")]
             for day in range(1, 6)
-        }
+        },
     )
 
 
@@ -643,13 +675,13 @@ class LanguageDetection(BaseModel):
     recommended: str = Field(
         ...,
         description="Which of the available languages best matches the user's "
-                    "preferences",
+        "preferences",
         example="en-GB",
     )
     user_preferences: List[str] = Field(
         ...,
         description="The preferences stated by the user, as recognized by the "
-                    "server, e.g. via parsing the `Accept-Language` header.",
+        "server, e.g. via parsing the `Accept-Language` header.",
         example=["en-US", "en", "tlh"],
     )
 
@@ -663,29 +695,29 @@ class LocationDetection(BaseModel):
     country: Optional[CountryCode] = Field(
         None,
         description="The ISO code of the country the user most likely "
-                    "currently is in.",
+        "currently is in.",
         example="be",
     )
     recommended: Optional[CountryCode] = Field(
         None,
         description="Which of the available languages matches the user's "
-                    "location. Will be `null` if none matches. There might "
-                    "be additional logic in the future that provides "
-                    "configurable fallbacks etc.",
+        "location. Will be `null` if none matches. There might "
+        "be additional logic in the future that provides "
+        "configurable fallbacks etc.",
         example="be",
     )
     db_result: Any = Field(
         None,
         title="DB Result",
         description="The raw geo database lookup result, mainly for debugging "
-                    "purposes.",
+        "purposes.",
         example={"country": "be"},
     )
     ip_address: Optional[str] = Field(
         None,
         title="IP Address",
         description="The client's IP address that has been looked up in the "
-                    "location database. Can be IPv4 or IPv6.",
+        "location database. Can be IPv4 or IPv6.",
         example="123.123.123.123",
     )
 
@@ -694,7 +726,7 @@ class LocalizationResponse(BaseModel):
     language: LanguageDetection = Field(
         ...,
         description="Information about the available and recommended "
-                    "languages.",
+        "languages.",
     )
     location: LocationDetection = Field(
         ...,
@@ -725,6 +757,7 @@ class RateLimitResponse(BaseModel):
 
 class SearchResult(GenericModel, Generic[T]):
     """Result of a search."""
+
     results: List[T] = Field(
         description="The actual search results.",
     )
@@ -754,6 +787,7 @@ class PhoneNumberVerificationResponse(BaseModel):
 
 class PhoneNumberVerificationRejectedResponse(BaseModel):
     """The phone number was rejected for one or more reasons."""
+
     errors: List[PhoneRejectReason]
 
 
@@ -767,6 +801,7 @@ class Schedule(BaseModel):
     Schedule entry. Closely related to ScheduledCalls model. So if you change
     this you should also check that.
     """
+
     day: WeekdayNumber = Field(
         description="The day of the week of this schedule entry. There can be "
         "only one entry per day (this might change in the future). We are "
@@ -789,6 +824,7 @@ class ScheduleResponse(BaseModel):
     """
     The response to the frontend, used to display the schedule of the User.
     """
+
     schedule: List[Schedule] = Field(
         description="The schedule that is currently set.",
     )
@@ -796,6 +832,7 @@ class ScheduleResponse(BaseModel):
 
 class SMSSenderName(ConstrainedStr):
     """The name of the SMS sender."""
+
     min_length = 3
     max_length = 11
     regex = re.compile(r"^[a-zA-Z][a-zA-Z0-9]{2,10}$")
@@ -841,6 +878,7 @@ class JWTResponse(BaseModel):
 
 class JWTClaims(BaseModel):
     """The signed data contained in the JWT."""
+
     phone: PhoneNumber
     exp: datetime
 

@@ -27,8 +27,7 @@ def test_python_info_in_metrics(metrics_lines: Iterable[str]):
     assert [
         line
         for line in metrics_lines
-        if line.startswith("python_info{")
-        and line.endswith(" 1.0")
+        if line.startswith("python_info{") and line.endswith(" 1.0")
     ]
 
 
@@ -37,12 +36,12 @@ def test_non_grouped_status_codes(client: TestClient):
     # metrics when doing the actual test.
     assert client.get("/metrics").status_code == status.HTTP_200_OK
 
-    mark = (f'starlette_requests_total{{app_name="{APP_NAME}",method="GET",'
-            'path="/metrics",status_code="200"} ')
+    mark = (
+        f'starlette_requests_total{{app_name="{APP_NAME}",method="GET",'
+        'path="/metrics",status_code="200"} '
+    )
     assert [
-        line
-        for line in metrics_lines_func(client)
-        if line.startswith(mark)
+        line for line in metrics_lines_func(client) if line.startswith(mark)
     ]
 
 
@@ -56,8 +55,10 @@ def test_no_unknown_paths(client: TestClient):
     assert client.get("/api/v1/foo").status_code == status.HTTP_404_NOT_FOUND
     assert client.get("/api/v1/bar").status_code == status.HTTP_404_NOT_FOUND
     # Try accessing an endpoint that exists, but will return 404.
-    assert client.get("/api/v1/blob/doesnotexist.exe").status_code \
+    assert (
+        client.get("/api/v1/blob/doesnotexist.exe").status_code
         == status.HTTP_404_NOT_FOUND
+    )
 
     # Assert that the non-existing endpoints are not showing up in the metrics.
     assert not [
@@ -69,7 +70,5 @@ def test_no_unknown_paths(client: TestClient):
     # Assert that the existing endpoint that returned 404 _does_ show up.
     mark = ',method="GET",path="/api/v1/blob/{name}",status_code="404"'
     assert [
-        line
-        for line in metrics_lines_func(client)
-        if line.find(mark) != -1
+        line for line in metrics_lines_func(client) if line.find(mark) != -1
     ]
