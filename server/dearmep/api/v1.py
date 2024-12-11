@@ -390,7 +390,8 @@ def get_suggested_destination(
                         event=DestinationSelectionLogEvent.WEB_SUGGESTED,
                     )
                 except query.NotFound as e2:
-                    raise HTTPException(status.HTTP_404_NOT_FOUND, str(e2)) from e2
+                    raise HTTPException(
+                        status.HTTP_404_NOT_FOUND, str(e2)) from e2
             else:
                 raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
         session.commit()
@@ -508,7 +509,10 @@ def request_number_verification(
             PhoneNumberVerificationRejectedResponse(errors=errors))
 
     user = UserPhone(request.phone_number)
-    assert user.original_number  # guarantee to mypy that this is not None  # noqa: S101
+    # The `assert` is just to guarantee to mypy that it's not None. Which we
+    # can guarantee because we've just created this UserPhone from an actual
+    # unhashed phone number.
+    assert user.original_number  # noqa: S101
     number = user.format_number(user.original_number)
 
     # Check if the number is forbidden by policy.

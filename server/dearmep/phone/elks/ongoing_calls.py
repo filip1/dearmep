@@ -99,4 +99,5 @@ def get_mep_number(call: Call) -> str:
         return query[0].contact
     except IndexError:
         raise CallError(
-            f"Destination {call.destination_id} has no phone number to call") from None
+            f"Destination {call.destination_id} has no phone number to call"
+        ) from None

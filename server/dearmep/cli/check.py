@@ -57,7 +57,9 @@ def cmd_translations(ctx: Context) -> None:
     sys.exit(0)
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand: Callable) -> None:
+def add_parser(
+    subparsers: _SubParsersAction, help_if_no_subcommand: Callable,
+) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "check",
         help="health checks on the system and configuration",

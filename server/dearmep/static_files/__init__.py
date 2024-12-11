@@ -16,7 +16,8 @@ from ..config import ENV_PREFIX, Settings
 _logger = logging.getLogger(__name__)
 
 
-DEMO_TEMPLATE = Path(Path(__file__).parent, "demo.html").read_text(encoding="utf-8")
+DEMO_TEMPLATE = Path(Path(__file__).parent, "demo.html") \
+    .read_text(encoding="utf-8")
 
 
 def demo_html(

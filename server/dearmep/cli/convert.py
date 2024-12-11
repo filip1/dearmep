@@ -131,7 +131,9 @@ def rollcallvote_votes(ctx: Context) -> None:
     table.print_to_console(ctx.console)
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand: Callable) -> None:
+def add_parser(
+    subparsers: _SubParsersAction, help_if_no_subcommand: Callable,
+) -> None:
     def rcv_template(parser: ArgumentParser, func: Callable) -> None:
         FlexiBytesReader.add_as_argument(parser)
         parser.add_argument(

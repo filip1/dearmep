@@ -54,7 +54,12 @@ class BaseTask:
     def __enter__(self):  # noqa: ANN204
         return self
 
-    def __exit__(self, exc_type: Optional[Type], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> Literal[False]:
+    def __exit__(
+        self,
+        exc_type: Optional[Type],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> Literal[False]:
         if exc_val is None:
             self.done()
         return False
@@ -319,7 +324,12 @@ class FlexiReader:
 
         return stream, can_tell
 
-    def __exit__(self, exc_type: Optional[Type], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]) -> Literal[False]:
+    def __exit__(
+        self,
+        exc_type: Optional[Type],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> Literal[False]:
         if self._stream is None:
             raise OSError("context was never entered")
         self._stream.close()

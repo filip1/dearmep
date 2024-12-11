@@ -215,7 +215,9 @@ def mount_router(app: FastAPI, prefix: str) -> None:  # noqa: C901, PLR0915
             return None
         return parl_group[0].id
 
-    def sanity_check(result: str, why: Optional[str], call: Call, session: Session) -> Optional[dict]:
+    def sanity_check(
+        result: str, why: Optional[str], call: Call, session: Session,
+    ) -> Optional[dict]:
         """
         Checks if no input by user.
             Either we are on voice mail OR user did not enter a number and

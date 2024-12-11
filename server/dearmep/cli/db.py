@@ -60,7 +60,9 @@ def cmd_store_blob(ctx: Context) -> None:
             print(blob.id)  # noqa: T201
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand: Callable) -> None:
+def add_parser(
+    subparsers: _SubParsersAction, help_if_no_subcommand: Callable,
+) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "db",
         help="manage the database",

@@ -43,7 +43,8 @@ md = MarkdownIt()
 def get_doc(path: Path) -> Document:
     markdown = path.read_text()
     html = md.render(markdown)
-    tree = ElementTree.fromstring(f"<body>{html}</body>")  # needs a document element
+    # Wrap the HTML in a document element, required to be well-formed XML.
+    tree = ElementTree.fromstring(f"<body>{html}</body>")
     h1 = tree.find("h1")
     return Document(
         title=h1.text if h1 is not None else None,

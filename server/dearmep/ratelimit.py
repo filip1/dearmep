@@ -72,11 +72,15 @@ class Limit:
     def reset_all_limits() -> None:
         limits_storage.reset()
 
-    def __init__(self, limit_name: Literal["simple", "computational", "sms"]) -> None:
+    def __init__(
+        self, limit_name: Literal["simple", "computational", "sms"],
+    ) -> None:
         self.limit_name = limit_name
         self.limits: Optional[Dict[str, limits.RateLimitItem]] = None
 
-    def __call__(self, request: Request, addr_str: str = Depends(client_addr)) -> None:
+    def __call__(
+        self, request: Request, addr_str: str = Depends(client_addr),
+    ) -> None:
         if self.limits is None:
             # First call, we need to get the values from the Config.
             rate_limits: IPRateLimits = getattr(

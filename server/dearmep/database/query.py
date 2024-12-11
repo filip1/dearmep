@@ -391,7 +391,7 @@ def get_recommended_destination(  # noqa: C901, PLR0914
         _logger.debug(f"feedback scores: {feedback_scores}")
 
     merged_scores = {
-        key: (base_endorsement_scores[key] + feedback_scores[key]) / 2  # average
+        key: (base_endorsement_scores[key] + feedback_scores[key]) / 2  # avg
         if key in feedback_scores  # if feedack existed
         else base_endorsement_scores[key]  # else: keep base_endorsement_score
         for key in base_endorsement_scores
@@ -868,7 +868,8 @@ def call_is_postponed(
     return session.exec(select(ScheduledCall).filter(
         ScheduledCall.phone_number == phone_number,
         col(ScheduledCall.postponed_to).is_not(None),
-        ScheduledCall.last_postpone_queued_at == datetime.now(tz=timezone.utc).date()
+        ScheduledCall.last_postpone_queued_at ==
+        datetime.now(tz=timezone.utc).date()
     )).one_or_none() is not None
 
 
