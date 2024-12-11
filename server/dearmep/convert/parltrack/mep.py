@@ -64,7 +64,7 @@ def parse_date(datestr: str) -> date:
 
 def get_group(
     id: str,
-    **kwargs: Any,
+    **kwargs: Any,  # noqa: ANN401
 ) -> Generator[DestinationGroupDump, None, str]:
     # Initialize "static variable" for tracking known groups. mypy doesn't like
     # this (yet, see <https://github.com/python/mypy/issues/2087>), hence the

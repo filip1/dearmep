@@ -48,7 +48,7 @@ class _SchemaExtra(TypedDict):
     schema_extra: Dict[str, Any]
 
 
-def _example(value: Any) -> _SchemaExtra:
+def _example(value: Any) -> _SchemaExtra:  # noqa: ANN401
     """Convenience function to add examples to SQLModel Fields."""
     return {
         "schema_extra": {
@@ -128,7 +128,7 @@ def auto_timestamp_column_kwargs() -> Dict[str, Any]:
     }
 
 
-def auto_timestamp_column(**kwargs: Any) -> Column:
+def auto_timestamp_column(**kwargs: Any) -> Column:  # noqa: ANN401
     """A timestamp column that will default to whenever the row is created.
 
     Note that this returns a `Column`, which will cause the field to be

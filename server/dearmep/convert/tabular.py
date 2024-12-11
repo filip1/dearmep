@@ -51,7 +51,7 @@ class Tabular:
 
         return cls(*headers, rows=converter())
 
-    def append(self, *row: Any) -> None:
+    def append(self, *row: Any) -> None:  # noqa: ANN401
         self.extend(row)
 
     def extend(self, *rows: Iterable) -> None:

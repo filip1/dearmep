@@ -135,12 +135,12 @@ class RichTask(BaseTask):
 
 
 class BaseTaskFactory:
-    def create_task(self, description: str, **kwargs: Any) -> BaseTask:
+    def create_task(self, description: str, **kwargs: Any) -> BaseTask:  # noqa: ANN401
         raise NotImplementedError
 
 
 class DummyTaskFactory(BaseTaskFactory):
-    def create_task(self, description: str, **kwargs: Any) -> BaseTask:  # noqa: PLR6301
+    def create_task(self, description: str, **kwargs: Any) -> BaseTask:  # noqa: ANN401, PLR6301
         return DummyTask(description, **kwargs)
 
 
@@ -148,7 +148,7 @@ class RichTaskFactory(BaseTaskFactory):
     def __init__(self, progress: RichProgress) -> None:
         self._progress = progress
 
-    def create_task(self, description: str, **kwargs: Any) -> RichTask:
+    def create_task(self, description: str, **kwargs: Any) -> RichTask:  # noqa: ANN401
         return RichTask(description, self._progress, **kwargs)
 
 
@@ -237,7 +237,7 @@ class FlexiReader:
         positional: bool = True,
         required: bool = False,
         constructor_args: Optional[Dict[str, Any]] = None,
-        **kwargs: Any,
+        **kwargs: Any,  # noqa: ANN401
     ) -> None:
         """Create an `ArgumentParser` argument that becomes a `FlexiReader`."""
         if not names:

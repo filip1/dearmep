@@ -391,7 +391,7 @@ class UserPhone(str):  # noqa: FURB189, SLOT000
     # Needs to be set explicitly since we define __eq__.
     __hash__ = str.__hash__
 
-    def __setattr__(self, __name: str, __value: Any) -> None:
+    def __setattr__(self, __name: str, __value: Any) -> None:  # noqa: ANN401
         raise TypeError(
             "UserPhone is immutable and does not allow item assignment")
 
