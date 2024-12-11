@@ -555,7 +555,8 @@ def get_number_verification_count(
         # successful login" logic will look.
         complete_filter.append(
             col(NumberVerificationRequest.requested_at) >=
-            datetime.now() - timedelta(seconds=cutoff_completed_older_than_s)
+            datetime.now(timezone.utc) -
+            timedelta(seconds=cutoff_completed_older_than_s)
         )
 
     request_counts: Dict[bool, int] = dict(session.exec(
@@ -592,7 +593,7 @@ def get_new_sms_auth_code(
 ) -> Union[PhoneRejectReason, VerificationCode]:
     """Generate SMS verification code & store it in the database."""
     config = Config.get()
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
 
     # Reject the user if they have too many open verification requests.
     cutoff_s = config.authentication.session.max_logins_cutoff_days * 86_400
@@ -634,11 +635,11 @@ def verify_sms_auth_code(
             NumberVerificationRequest.code == code,
             col(NumberVerificationRequest.ignore).is_(False),
             col(NumberVerificationRequest.completed_at).is_(None),
-            NumberVerificationRequest.expires_at > datetime.now(),
+            NumberVerificationRequest.expires_at > datetime.now(timezone.utc),
             NumberVerificationRequest.failed_attempts < max_wrong,
         ).order_by(col(NumberVerificationRequest.requested_at).desc())
     ).first():
-        request.completed_at = datetime.now()
+        request.completed_at = datetime.now(timezone.utc)
         return True
 
     # Look for the most recent active request and increase its number of failed
@@ -649,7 +650,7 @@ def verify_sms_auth_code(
             NumberVerificationRequest.user == user,
             col(NumberVerificationRequest.ignore).is_(False),
             col(NumberVerificationRequest.completed_at).is_(None),
-            NumberVerificationRequest.expires_at > datetime.now(),
+            NumberVerificationRequest.expires_at > datetime.now(timezone.utc),
         ).order_by(col(NumberVerificationRequest.requested_at).desc())
     ).first():
         most_recent.failed_attempts += 1
@@ -673,7 +674,7 @@ def create_feedback_token(
     the call, even if the call took place in another language due to the
     requested one not being available for calls.
     """
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     expires_at = now + timedelta(seconds=Config.get().feedback.token_timeout)
 
     @backoff.on_exception(
@@ -880,7 +881,7 @@ def postpone_call(
     adding it to the `session`. Raises NotFound if no call was found to
     postpone.
     """
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     postponed_to = now + timedelta(minutes=15)
     try:
         call = session.exec(select(ScheduledCall).filter(

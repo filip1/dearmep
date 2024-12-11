@@ -26,7 +26,7 @@ def create_token(phone: PhoneNumber) -> JWTResponse:
     auth_config = Config.get().authentication
     jwt_config = auth_config.secrets.jwt
     timeout = auth_config.session.authentication_timeout
-    valid_until = datetime.now() + timeout
+    valid_until = datetime.now(timezone.utc) + timeout
     token = jwt.encode(
         JWTClaims(phone=phone, exp=valid_until).dict(),
         jwt_config.key,

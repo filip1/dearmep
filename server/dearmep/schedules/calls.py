@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import datetime
+from datetime import datetime, timezone
 from random import choice
 
 from prometheus_client import Counter
@@ -27,7 +27,7 @@ queued_calls_total = Counter(
 
 def build_queue() -> None:
 
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     office_hours = Config.get().telephony.office_hours
     if not office_hours.open(now):
         return

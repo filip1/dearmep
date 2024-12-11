@@ -5,7 +5,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 
 from fastapi import (
@@ -605,7 +605,7 @@ def get_feedback_context(
         except query.NotFound as e:
             raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
         return FeedbackContext(
-            expired=feedback.expires_at <= datetime.now(),
+            expired=feedback.expires_at <= datetime.now(timezone.utc),
             used=feedback.feedback_entered_at is not None,
             destination=destination_to_destinationread(feedback.destination),
             language=feedback.language,
@@ -642,7 +642,7 @@ def submit_call_feedback(
             raise HTTPException(
                 status.HTTP_403_FORBIDDEN, "token has already been used")
 
-        feedback.feedback_entered_at = datetime.now()
+        feedback.feedback_entered_at = datetime.now(timezone.utc)
         feedback.convinced = submission.convinced
         feedback.technical_problems = submission.technical_problems
         feedback.additional = submission.additional

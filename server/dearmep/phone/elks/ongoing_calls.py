@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import cast
 
 from sqlalchemy import and_, select
@@ -44,7 +44,7 @@ def remove_call(call: Call, session: Session) -> None:
 
 def connect_call(call: Call, session: Session) -> None:
     """ sets a call as connected in database """
-    call.connected_at = datetime.now()
+    call.connected_at = datetime.now(timezone.utc)
     session.add(call)
     session.commit()
 

@@ -154,7 +154,7 @@ def start_elks_call(
         user_id=user_id,
         destination_id=destination_id,
         session=session,
-        started_at=datetime.now(),
+        started_at=datetime.now(timezone.utc),
         type=type_of_call,
     )
     query.log_destination_selection(
@@ -232,7 +232,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:  # noqa: C901, PLR0915
             return {
                 "play": f"{elks_url}/medialist/{medialist_id}/concat.ogg",
             }
-        duration_of_call = datetime.now() - call.started_at
+        duration_of_call = datetime.now(timezone.utc) - call.started_at
         if duration_of_call >= timedelta(minutes=menu_duration_timeout):
             playlist = ivr.try_again_later()
             medialist_id = ivr.prepare_medialist(session, playlist,
@@ -786,7 +786,8 @@ def mount_router(app: FastAPI, prefix: str) -> None:  # noqa: C901, PLR0915
 
             if call.connected_at:
                 connected_seconds = (
-                    datetime.now() - call.connected_at).total_seconds()
+                    datetime.now(timezone.utc) - call.connected_at
+                ).total_seconds()
                 elks_metrics.observe_connect_time(
                     destination_id=call.destination_id,
                     duration=round(connected_seconds)
