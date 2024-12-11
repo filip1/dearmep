@@ -2,6 +2,65 @@ version = 1
 requires-python = ">=3.8, <4"
 
 [[package]]
+name = "agate"
+version = "1.12.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "babel" },
+    { name = "isodate" },
+    { name = "leather" },
+    { name = "parsedatetime" },
+    { name = "python-slugify" },
+    { name = "pytimeparse" },
+    { name = "tzdata", marker = "platform_system == 'Windows'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/62/b5/7ea4dc82949dd40fb7277ce0fe9b57a44a1da28b1411327dc24ec2fffcff/agate-1.12.0.tar.gz", hash = "sha256:7989841ac7de69e57389485c0b7cdab2e1a54c7480c629a76912bb7c331d991b", size = 203989 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d1/8a/b17cdd489d42caf65ee97a0de9be8ad9886bbd0f3d7d291b30935a9437be/agate-1.12.0-py2.py3-none-any.whl", hash = "sha256:7cef2a88d2af8ec2eda2ae07c1c92a33ca1fd7f0fe564de7c61e427b14f39540", size = 95838 },
+]
+
+[[package]]
+name = "agate-dbf"
+version = "0.2.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "agate" },
+    { name = "dbfread" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e7/b1/4de32f53777a304f63fb781b0ec4520af4e011ba477d7214672b3c92d2da/agate-dbf-0.2.3.tar.gz", hash = "sha256:98a2b53757136cc74dc297e59e2101d34f6d48f41f74156bb6c0de26bba2aa3f", size = 7440 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d9/99/cd4729cb51d6c7de8ad00eab375021cb34b8ca132350efe401488af10483/agate_dbf-0.2.3-py2.py3-none-any.whl", hash = "sha256:b36e5a8321f9c42f812750256cadd600f779a19e334a80fee6e032395c0b9aa0", size = 3587 },
+]
+
+[[package]]
+name = "agate-excel"
+version = "0.4.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "agate" },
+    { name = "olefile" },
+    { name = "openpyxl" },
+    { name = "xlrd" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/07/93/350f95d3cca0e1f43d55d48879bc33dd54b8c5619ebdac7d2adf42a3cc92/agate-excel-0.4.1.tar.gz", hash = "sha256:28426618c90747111e6d566e983d838f1e2fae641ea6970d7acb0e9d4b384091", size = 271433 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d6/6f/5d71389b715654dc636180af8b33923926f73c4cf89450813c9380cbb3cf/agate_excel-0.4.1-py2.py3-none-any.whl", hash = "sha256:398f214cb24e3debcb6cc75f52dc558dee84d594f5f4b5e73997299c6c786158", size = 7114 },
+]
+
+[[package]]
+name = "agate-sql"
+version = "0.7.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "agate" },
+    { name = "sqlalchemy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/11/9e/004234db38834e805cf8df6dff5d5d819a9909b247ef57d4c23208b04332/agate-sql-0.7.2.tar.gz", hash = "sha256:9b1b30284a573fd416759437273dcc5c81022bdf2facb24b4aa029a62afd53b0", size = 13695 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/42/41/ce4192b0ee21d5120d20de58751ce56fae7bebe4c56966dc64c41534d4e4/agate_sql-0.7.2-py2.py3-none-any.whl", hash = "sha256:be1cb9a99b3e4ec7f6106278dfb7b534be9629c8a983abb168c3effacc79dd10", size = 7349 },
+]
+
+[[package]]
 name = "alembic"
 version = "1.12.1"
 source = { registry = "https://pypi.org/simple" }
@@ -28,6 +87,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/8b/94/6928d4345f2bc1beecbff03325cad43d320717f51ab74ab5a571324f4f5a/anyio-3.6.2.tar.gz", hash = "sha256:25ea0d673ae30af41a0c442f81cf3b38c7e79fdc7b60335a4c14e05eb0947421", size = 140378 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/77/2b/b4c0b7a3f3d61adb1a1e0b78f90a94e2b6162a043880704b7437ef297cad/anyio-3.6.2-py3-none-any.whl", hash = "sha256:fbbe32bd270d2a2ef3ed1c5d45041250284e31fc0a4df4a5a6071842051a51e3", size = 80622 },
+]
+
+[[package]]
+name = "babel"
+version = "2.16.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pytz", marker = "python_full_version < '3.9'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/2a/74/f1bc80f23eeba13393b7222b11d95ca3af2c1e28edca18af487137eefed9/babel-2.16.0.tar.gz", hash = "sha256:d1f3554ca26605fe173f3de0c65f750f5a42f924499bf134de6423582298e316", size = 9348104 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ed/20/bc79bc575ba2e2a7f70e8a1155618bb1301eaa5132a8271373a6903f73f8/babel-2.16.0-py3-none-any.whl", hash = "sha256:368b5b98b37c06b7daf6696391c3240c938b37767d4584413e8438c5c435fa8b", size = 9587599 },
 ]
 
 [[package]]
@@ -235,6 +306,34 @@ wheels = [
 ]
 
 [[package]]
+name = "csvkit"
+version = "2.0.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "agate" },
+    { name = "agate-dbf" },
+    { name = "agate-excel" },
+    { name = "agate-sql" },
+    { name = "importlib-metadata", marker = "python_full_version < '3.10'" },
+    { name = "openpyxl" },
+    { name = "sqlalchemy" },
+    { name = "xlrd" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b6/29/51d7c3221669a4a63410f9be61178436109217d77a31b539f41ef6c1448e/csvkit-2.0.1.tar.gz", hash = "sha256:aa9460266d5713ff312a414ed3edd86e0c3a31da9b2e2758cbe5643fe1146dd1", size = 3819039 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/37/05/b765c1d0ccc47d9206a63f19db148a48d4ba3fc215032c44ffc473a78f9b/csvkit-2.0.1-py2.py3-none-any.whl", hash = "sha256:193a6118dc9907cc26fb049e031d097c2f7ea7bd3ea6d63b0830a38a525684e4", size = 74683 },
+]
+
+[[package]]
+name = "dbfread"
+version = "2.0.7"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ad/ae/a5891681f5012724d062a4ca63ec2ff539c73d5804ba594e7e0e72099d3f/dbfread-2.0.7.tar.gz", hash = "sha256:07c8a9af06ffad3f6f03e8fe91ad7d2733e31a26d2b72c4dd4cfbae07ee3b73d", size = 33212 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4c/94/51349e43503e30ed7b4ecfe68a8809cdb58f722c0feb79d18b1f1e36fe74/dbfread-2.0.7-py2.py3-none-any.whl", hash = "sha256:f604def58c59694fa0160d7be5d0b8d594467278d2bb6a47d46daf7162c84cec", size = 20018 },
+]
+
+[[package]]
 name = "dearmep"
 version = "4.0.0.dev9999999999"
 source = { editable = "." }
@@ -312,6 +411,16 @@ dependencies = [
     { name = "zipp", marker = "python_full_version < '3.10'" },
 ]
 
+[package.optional-dependencies]
+convert = [
+    { name = "csvkit" },
+    { name = "visidata" },
+    { name = "xlsxwriter" },
+]
+specs = [
+    { name = "eralchemy2" },
+]
+
 [package.dev-dependencies]
 dev = [
     { name = "anyio" },
@@ -361,9 +470,11 @@ requires-dist = [
     { name = "colorama", marker = "(python_full_version >= '3.8' and python_full_version < '4.0' and sys_platform == 'win32') or (python_full_version >= '3.8' and python_full_version < '4.0' and platform_system == 'Windows')", specifier = "==0.4.6" },
     { name = "countryguess", marker = "python_full_version >= '3.8' and python_full_version < '4.0'", specifier = "==0.3.0" },
     { name = "cryptography", marker = "python_full_version >= '3.8' and python_full_version < '4.0'", specifier = "==41.0.4" },
+    { name = "csvkit", marker = "extra == 'convert'", specifier = ">=2" },
     { name = "defusedxml", marker = "python_full_version >= '3.8' and python_full_version < '4.0'", specifier = "==0.7.1" },
     { name = "deprecated", marker = "python_full_version >= '3.8' and python_full_version < '4.0'", specifier = "==1.2.13" },
     { name = "ecdsa", marker = "python_full_version >= '3.8' and python_full_version < '4.0'", specifier = "==0.18.0" },
+    { name = "eralchemy2", marker = "extra == 'specs'", specifier = "~=1.4" },
     { name = "fastapi", marker = "python_full_version >= '3.8' and python_full_version < '4.0'", specifier = "==0.95.1" },
     { name = "fastapi-restful", marker = "python_full_version >= '3.8' and python_full_version < '4.0'", specifier = "==0.5.0" },
     { name = "greenlet", marker = "(python_full_version >= '3.8' and python_full_version < '4.0' and platform_machine == 'AMD64') or (python_full_version >= '3.8' and python_full_version < '4.0' and platform_machine == 'WIN32') or (python_full_version >= '3.8' and python_full_version < '4.0' and platform_machine == 'aarch64') or (python_full_version >= '3.8' and python_full_version < '4.0' and platform_machine == 'amd64') or (python_full_version >= '3.8' and python_full_version < '4.0' and platform_machine == 'ppc64le') or (python_full_version >= '3.8' and python_full_version < '4.0' and platform_machine == 'win32') or (python_full_version >= '3.8' and python_full_version < '4.0' and platform_machine == 'x86_64')", specifier = "==3.0.3" },
@@ -417,9 +528,11 @@ requires-dist = [
     { name = "urllib3", marker = "python_full_version >= '3.8' and python_full_version < '4.0'", specifier = "==1.26.12" },
     { name = "uvicorn", extras = ["standard"], marker = "python_full_version >= '3.8' and python_full_version < '4.0'", specifier = "==0.21.1" },
     { name = "uvloop", marker = "python_full_version >= '3.8' and python_full_version < '4.0' and platform_python_implementation != 'PyPy' and sys_platform != 'cygwin' and sys_platform != 'win32'", specifier = "==0.19.0" },
+    { name = "visidata", marker = "extra == 'convert'", specifier = ">=3" },
     { name = "watchfiles", marker = "python_full_version >= '3.8' and python_full_version < '4.0'", specifier = "==0.18.1" },
     { name = "websockets", marker = "python_full_version >= '3.8' and python_full_version < '4.0'", specifier = "==10.4" },
     { name = "wrapt", marker = "python_full_version >= '3.8' and python_full_version < '4.0'", specifier = "==1.14.1" },
+    { name = "xlsxwriter", marker = "extra == 'convert'", specifier = "~=3.1" },
     { name = "zipp", marker = "python_full_version >= '3.8' and python_full_version < '3.10'", specifier = "==3.15.0" },
 ]
 
@@ -490,6 +603,28 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ff/7b/ba6547a76c468a0d22de93e89ae60d9561ec911f59532907e72b0d8bc0f1/ecdsa-0.18.0.tar.gz", hash = "sha256:190348041559e21b22a1d65cee485282ca11a6f81d503fddb84d5017e9ed1e49", size = 197938 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/09/d4/4f05f5d16a4863b30ba96c23b23e942da8889abfa1cdbabf2a0df12a4532/ecdsa-0.18.0-py2.py3-none-any.whl", hash = "sha256:80600258e7ed2f16b9aa1d7c295bd70194109ad5a30fdee0eaeefef1d4c559dd", size = 142915 },
+]
+
+[[package]]
+name = "eralchemy2"
+version = "1.4.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pygraphviz" },
+    { name = "sqlalchemy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6d/84/d43709501e867d00448ce98db3ea2e02d67b71813e1587f9aa94d338fc24/eralchemy2-1.4.1.tar.gz", hash = "sha256:1c1ee49b26287a459c5c89aa3eba3d6a9d1b8e6bd245d9fbacc6b15560fc66a5", size = 24101 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/29/b2/192f1f9b0eebd0169549e291bb9ca1b522636c48b530af655524e2a20896/eralchemy2-1.4.1-py3-none-any.whl", hash = "sha256:be3ecd4e696172fe4b439a3010b08564c6f7c7323b9e9b4369e47da7a7b48428", size = 18565 },
+]
+
+[[package]]
+name = "et-xmlfile"
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d3/38/af70d7ab1ae9d4da450eeec1fa3918940a5fafb9055e934af8d6eb0c2313/et_xmlfile-2.0.0.tar.gz", hash = "sha256:dab3f4764309081ce75662649be815c4c9081e88f0837825f90fd28317d4da54", size = 17234 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl", hash = "sha256:7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa", size = 18059 },
 ]
 
 [[package]]
@@ -708,6 +843,15 @@ wheels = [
 ]
 
 [[package]]
+name = "isodate"
+version = "0.7.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/54/4d/e940025e2ce31a8ce1202635910747e5a87cc3a6a6bb2d00973375014749/isodate-0.7.2.tar.gz", hash = "sha256:4cd1aa0f43ca76f4a6c6c0292a85f40b35ec2e43e315b59f06e6d32171a953e6", size = 29705 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/15/aa/0aca39a37d3c7eb941ba736ede56d689e7be91cab5d9ca846bde3999eba6/isodate-0.7.2-py3-none-any.whl", hash = "sha256:28009937d8031054830160fce6d409ed342816b543597cece116d966c6d99e15", size = 22320 },
+]
+
+[[package]]
 name = "jinja2"
 version = "3.1.2"
 source = { registry = "https://pypi.org/simple" }
@@ -717,6 +861,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/7a/ff/75c28576a1d900e87eb6335b063fab47a8ef3c8b4d88524c4bf78f670cce/Jinja2-3.1.2.tar.gz", hash = "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852", size = 268239 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/bc/c3/f068337a370801f372f2f8f6bad74a5c140f6fda3d9de154052708dd3c65/Jinja2-3.1.2-py3-none-any.whl", hash = "sha256:6088930bfe239f0e6710546ab9c19c9ef35e29792895fed6e6e31a023a182a61", size = 133101 },
+]
+
+[[package]]
+name = "leather"
+version = "0.4.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ed/6e/48a05e2f7f62a616d675cfee182643f2dd8023bf7429aa326f4bebd629c8/leather-0.4.0.tar.gz", hash = "sha256:f964bec2086f3153a6c16e707f20cb718f811f57af116075f4c0f4805c608b95", size = 43877 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a1/30/9ec597c962c5249ebd5c580386e4b5f2884cd943af42634291ee3b406415/leather-0.4.0-py2.py3-none-any.whl", hash = "sha256:18290bc93749ae39039af5e31e871fcfad74d26c4c3ea28ea4f681f4571b3a2b", size = 30256 },
 ]
 
 [[package]]
@@ -954,6 +1107,27 @@ wheels = [
 ]
 
 [[package]]
+name = "olefile"
+version = "0.47"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/69/1b/077b508e3e500e1629d366249c3ccb32f95e50258b231705c09e3c7a4366/olefile-0.47.zip", hash = "sha256:599383381a0bf3dfbd932ca0ca6515acd174ed48870cbf7fee123d698c192c1c", size = 112240 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/17/d3/b64c356a907242d719fc668b71befd73324e47ab46c8ebbbede252c154b2/olefile-0.47-py2.py3-none-any.whl", hash = "sha256:543c7da2a7adadf21214938bb79c83ea12b473a4b6ee4ad4bf854e7715e13d1f", size = 114565 },
+]
+
+[[package]]
+name = "openpyxl"
+version = "3.1.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "et-xmlfile" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/3d/f9/88d94a75de065ea32619465d2f77b29a0469500e99012523b91cc4141cd1/openpyxl-3.1.5.tar.gz", hash = "sha256:cf0e3cf56142039133628b5acffe8ef0c12bc902d2aadd3e0fe5878dc08d1050", size = 186464 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c0/da/977ded879c29cbd04de313843e76868e6e13408a94ed6b987245dc7c8506/openpyxl-3.1.5-py2.py3-none-any.whl", hash = "sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2", size = 250910 },
+]
+
+[[package]]
 name = "packaging"
 version = "21.3"
 source = { registry = "https://pypi.org/simple" }
@@ -963,6 +1137,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/df/9e/d1a7217f69310c1db8fdf8ab396229f55a699ce34a203691794c5d1cad0c/packaging-21.3.tar.gz", hash = "sha256:dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb", size = 84848 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/05/8e/8de486cbd03baba4deef4142bd643a3e7bbe954a784dc1bb17142572d127/packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522", size = 40750 },
+]
+
+[[package]]
+name = "parsedatetime"
+version = "2.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a8/20/cb587f6672dbe585d101f590c3871d16e7aec5a576a1694997a3777312ac/parsedatetime-2.6.tar.gz", hash = "sha256:4cb368fbb18a0b7231f4d76119165451c8d2e35951455dfee97c62a87b04d455", size = 60114 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9d/a4/3dd804926a42537bf69fb3ebb9fd72a50ba84f807d95df5ae016606c976c/parsedatetime-2.6-py3-none-any.whl", hash = "sha256:cb96edd7016872f58479e35879294258c71437195760746faffedb692aef000b", size = 42548 },
 ]
 
 [[package]]
@@ -1154,6 +1337,12 @@ wheels = [
 ]
 
 [[package]]
+name = "pygraphviz"
+version = "1.11"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/19/db/cc09516573e79a35ac73f437bdcf27893939923d1d06b439897ffc7f3217/pygraphviz-1.11.zip", hash = "sha256:a97eb5ced266f45053ebb1f2c6c6d29091690503e3a5c14be7f908b37b06f2d4", size = 120803 }
+
+[[package]]
 name = "pyparsing"
 version = "3.0.9"
 source = { registry = "https://pypi.org/simple" }
@@ -1190,6 +1379,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ea/70/da97fd5f6270c7d2ce07559a19e5bf36a76f0af21500256f005a69d9beba/pytest-cov-4.0.0.tar.gz", hash = "sha256:996b79efde6433cdbd0088872dbc5fb3ed7fe1578b68cdbba634f14bb8dd0470", size = 62013 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fe/1f/9ec0ddd33bd2b37d6ec50bb39155bca4fe7085fa78b3b434c05459a860e3/pytest_cov-4.0.0-py3-none-any.whl", hash = "sha256:2feb1b751d66a8bd934e5edfa2e961d11309dc37b73b0eabe73b5945fee20f6b", size = 21554 },
+]
+
+[[package]]
+name = "python-dateutil"
+version = "2.9.0.post0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/66/c0/0c8b6ad9f17a802ee498c46e004a0eb49bc148f2fd230864601a86dcf6db/python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3", size = 342432 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ec/57/56b9bcc3c9c6a792fcbaf139543cee77261f3651ca9da0c93f5c1221264b/python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427", size = 229892 },
 ]
 
 [[package]]
@@ -1239,6 +1440,27 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/67/94/bb4778be5d4c18329d60276d4e58b3974e2dce8ec3bee5569bfe9c81f36e/python_multipart-0.0.7.tar.gz", hash = "sha256:288a6c39b06596c1b988bb6794c6fbc80e6c369e35e5062637df256bee0c9af9", size = 31129 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/94/35/142fff3d85da49377ada6936ad9b776263549ab22656969b2fcd0bdb10f7/python_multipart-0.0.7-py3-none-any.whl", hash = "sha256:b1fef9a53b74c795e2347daac8c54b252d9e0df9c619712691c1cc8021bd3c49", size = 22191 },
+]
+
+[[package]]
+name = "python-slugify"
+version = "8.0.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "text-unidecode" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/87/c7/5e1547c44e31da50a460df93af11a535ace568ef89d7a811069ead340c4a/python-slugify-8.0.4.tar.gz", hash = "sha256:59202371d1d05b54a9e7720c5e038f928f45daaffe41dd10822f3907b937c856", size = 10921 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a4/62/02da182e544a51a5c3ccf4b03ab79df279f9c60c5e82d5e8bec7ca26ac11/python_slugify-8.0.4-py2.py3-none-any.whl", hash = "sha256:276540b79961052b66b7d116620b36518847f52d5fd9e3a70164fc8c50faa6b8", size = 10051 },
+]
+
+[[package]]
+name = "pytimeparse"
+version = "1.1.8"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/37/5d/231f5f33c81e09682708fb323f9e4041408d8223e2f0fb9742843328778f/pytimeparse-1.1.8.tar.gz", hash = "sha256:e86136477be924d7e670646a98561957e8ca7308d44841e21f5ddea757556a0a", size = 9403 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1b/b4/afd75551a3b910abd1d922dbd45e49e5deeb4d47dc50209ce489ba9844dd/pytimeparse-1.1.8-py2.py3-none-any.whl", hash = "sha256:04b7be6cc8bd9f5647a6325444926c3ac34ee6bc7e69da4367ba282f076036bd", size = 9969 },
 ]
 
 [[package]]
@@ -1496,6 +1718,15 @@ wheels = [
 ]
 
 [[package]]
+name = "text-unidecode"
+version = "1.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ab/e2/e9a00f0ccb71718418230718b3d900e71a5d16e701a3dae079a21e9cd8f8/text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93", size = 76885 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a6/a5/c0b6468d3824fe3fde30dbb5e1f687b291608f9473681bbf7dabbf5a87d7/text_unidecode-1.3-py2.py3-none-any.whl", hash = "sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8", size = 78154 },
+]
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1621,6 +1852,15 @@ wheels = [
 ]
 
 [[package]]
+name = "tzdata"
+version = "2024.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e1/34/943888654477a574a86a98e9896bae89c7aa15078ec29f490fef2f1e5384/tzdata-2024.2.tar.gz", hash = "sha256:7d85cc416e9382e69095b7bdf4afd9e3880418a2413feec7069d533d6b4e31cc", size = 193282 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a6/ab/7e5f53c3b9d14972843a647d8d7a853969a58aecc7559cb3267302c94774/tzdata-2024.2-py2.py3-none-any.whl", hash = "sha256:a48093786cdcde33cad18c2555e8532f34422074448fbc874186f0abd79565cd", size = 346586 },
+]
+
+[[package]]
 name = "urllib3"
 version = "1.26.12"
 source = { registry = "https://pypi.org/simple" }
@@ -1689,6 +1929,21 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/04/58/4d12d24220f2bf2c3125c74431035ddd7a461f9732a01cd5bd12f177370e/uvloop-0.19.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f467a5fd23b4fc43ed86342641f3936a68ded707f4627622fa3f82a120e18256", size = 3529552 },
     { url = "https://files.pythonhosted.org/packages/84/8d/3e23cb85cc2c12918a6d7585fdf50a05c69191a4969881e22e0eebcbf686/uvloop-0.19.0-cp39-cp39-musllinux_1_1_aarch64.whl", hash = "sha256:492e2c32c2af3f971473bc22f086513cedfc66a130756145a931a90c3958cb17", size = 4195068 },
     { url = "https://files.pythonhosted.org/packages/12/9d/f1d263d49f1909914bcec5d5608d2f819c109b08bf06e67a2ff072e82d81/uvloop-0.19.0-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:2df95fca285a9f5bfe730e51945ffe2fa71ccbfdde3b0da5772b4ee4f2e770d5", size = 4189373 },
+]
+
+[[package]]
+name = "visidata"
+version = "3.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "importlib-metadata" },
+    { name = "importlib-resources", marker = "python_full_version < '3.9'" },
+    { name = "python-dateutil" },
+    { name = "windows-curses", marker = "platform_system == 'Windows'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6c/41/b026336b7075a2c8461c1ba0dfffd456902f736722f4a016f21fee1e6d7c/visidata-3.1.1.tar.gz", hash = "sha256:8c4484158f0851e4887e595542bd65bdd991de9c20652b442b3fd9742ce8b031", size = 13166704 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/56/60/5026e693dbd4c38d2d13a697aa61846a6791bd6131e8a84c8aa61c0d5180/visidata-3.1.1-py3-none-any.whl", hash = "sha256:903d8bff23df18c794499bee2a653bdeff3a48f899638656287c704ceca63e8b", size = 526914 },
 ]
 
 [[package]]
@@ -1782,6 +2037,23 @@ wheels = [
 ]
 
 [[package]]
+name = "windows-curses"
+version = "2.4.0"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4d/d8/9f3740f6afe47bedec8f6dea6a8705215ebc0437e6feebd37d791d8be5d0/windows_curses-2.4.0-cp310-cp310-win32.whl", hash = "sha256:525fa12689aa54cd8e4cfa6d03f3d4d336f2e9ef0b6db4fdb4d3c1b22a71180b", size = 71133 },
+    { url = "https://files.pythonhosted.org/packages/93/0c/10e369eb0a6583890e1ebbb2e024040fde91299fbc167d5312ee18f138ae/windows_curses-2.4.0-cp310-cp310-win_amd64.whl", hash = "sha256:4621042a28f48e2240314a624eb36f18121483d47f12c488cad9670f402ba6d7", size = 81434 },
+    { url = "https://files.pythonhosted.org/packages/76/91/a24739ea1bd53ec0b4e05ba5c0c8f786715dfff1d6ce95bc8867f9677292/windows_curses-2.4.0-cp311-cp311-win32.whl", hash = "sha256:90fde3341b2361f45716cfbe44bd253ac6a07dfde7262f3afdcf7cc0285c35ac", size = 71133 },
+    { url = "https://files.pythonhosted.org/packages/ea/7f/e680c41be83302a40b2c9b45759e6105cf0e3afc5a0b67f8eb926ee478cc/windows_curses-2.4.0-cp311-cp311-win_amd64.whl", hash = "sha256:0c32be4aa97887febff175a8a6b3deeecc06c1a3f47ecbb5f62de6bf4165d6db", size = 81457 },
+    { url = "https://files.pythonhosted.org/packages/86/66/0a83825bd45f5cbd8dbeb7f96497e1162b355cbabd956b4960efceb04dc2/windows_curses-2.4.0-cp312-cp312-win32.whl", hash = "sha256:e165db84de30039f6da6bded9aa2f88e3c1ae7be11dc7c84416cbe6ba0ac4f29", size = 71403 },
+    { url = "https://files.pythonhosted.org/packages/07/fc/5faaef1ec5921953cc7c87ff60a5af751769cb996caab828ceb21f13ee95/windows_curses-2.4.0-cp312-cp312-win_amd64.whl", hash = "sha256:f50d02833a7e7866b9f42d62febbdf83c6703575240e9bbdd1446d09d70505d3", size = 81752 },
+    { url = "https://files.pythonhosted.org/packages/21/0c/bcc8a821e1ec1b93e5d6defaf69e3d3fbefc69ea4dd2aaea9f44c57496fa/windows_curses-2.4.0-cp38-cp38-win32.whl", hash = "sha256:342b786c82fda5f9592593b2f8f4078de40b31baaf331be57af4c3c9a2e40061", size = 76509 },
+    { url = "https://files.pythonhosted.org/packages/75/3f/e49501deeee0e641f68072ce44fca2668cdc99ab39a2b6e4ed9730dc46d2/windows_curses-2.4.0-cp38-cp38-win_amd64.whl", hash = "sha256:c77973c5af419c3d9bcb99908dc9791102813026d6abdda9236e44d9342c9579", size = 89371 },
+    { url = "https://files.pythonhosted.org/packages/fa/eb/adad8bf163cc858aaa97f6063b67b056edf409ee8de74bd6c13282437d7e/windows_curses-2.4.0-cp39-cp39-win32.whl", hash = "sha256:6f481322360dbcdfa37b30654c89aa2920f4528eaefec3a50fa6a6d07be49069", size = 76856 },
+    { url = "https://files.pythonhosted.org/packages/57/ed/03869584d15eccea26d45267d19a56ee82bfd6f65ebe989023e76fa81ad0/windows_curses-2.4.0-cp39-cp39-win_amd64.whl", hash = "sha256:441189fb71c455ed0575ffb1b840d5857c01c4dda441cbbbd34a6216e7207bfa", size = 89531 },
+]
+
+[[package]]
 name = "wrapt"
 version = "1.14.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1827,6 +2099,24 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/f9/3c/110e52b9da396a4ef3a0521552a1af9c7875a762361f48678c1ac272fd7e/wrapt-1.14.1-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:34aa51c45f28ba7f12accd624225e2b1e5a3a45206aa191f6f9aac931d9d56fe", size = 82281 },
     { url = "https://files.pythonhosted.org/packages/4b/07/782463e367a7c6b418af231ded753e4b2dd3293a157d9b0bb010806fc0c0/wrapt-1.14.1-cp39-cp39-win32.whl", hash = "sha256:dee0ce50c6a2dd9056c20db781e9c1cfd33e77d2d569f5d1d9321c641bb903d5", size = 33404 },
     { url = "https://files.pythonhosted.org/packages/5b/02/5ac7ea3b6722c84a2882d349ac581a9711b4047fe7a58475903832caa295/wrapt-1.14.1-cp39-cp39-win_amd64.whl", hash = "sha256:dee60e1de1898bde3b238f18340eec6148986da0455d8ba7848d50470a7a32fb", size = 35557 },
+]
+
+[[package]]
+name = "xlrd"
+version = "2.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a6/b3/19a2540d21dea5f908304375bd43f5ed7a4c28a370dc9122c565423e6b44/xlrd-2.0.1.tar.gz", hash = "sha256:f72f148f54442c6b056bf931dbc34f986fd0c3b0b6b5a58d013c9aef274d0c88", size = 100259 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a6/0c/c2a72d51fe56e08a08acc85d13013558a2d793028ae7385448a6ccdfae64/xlrd-2.0.1-py2.py3-none-any.whl", hash = "sha256:6a33ee89877bd9abc1158129f6e94be74e2679636b8a205b43b85206c3f0bbdd", size = 96531 },
+]
+
+[[package]]
+name = "xlsxwriter"
+version = "3.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a6/c3/b36fa44a0610a0f65d2e65ba6a262cbe2554b819f1449731971f7c16ea3c/XlsxWriter-3.2.0.tar.gz", hash = "sha256:9977d0c661a72866a61f9f7a809e25ebbb0fb7036baa3b9fe74afcfca6b3cb8c", size = 198732 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a7/ea/53d1fe468e63e092cf16e2c18d16f50c29851242f9dd12d6a66e0d7f0d02/XlsxWriter-3.2.0-py3-none-any.whl", hash = "sha256:ecfd5405b3e0e228219bcaf24c2ca0915e012ca9464a14048021d21a995d490e", size = 159925 },
 ]
 
 [[package]]
