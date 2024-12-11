@@ -381,9 +381,10 @@ class UserPhone(str):  # noqa: FURB189
         if isinstance(other, str):
             try:
                 parsed = UserPhone(other)
-                return self.hash == parsed.hash
             except Exception:  # apparently not a phone number
                 return False
+            else:
+                return self.hash == parsed.hash
         # All other things are not equal to us.
         return False
 
