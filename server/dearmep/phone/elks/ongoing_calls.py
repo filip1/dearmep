@@ -20,48 +20,55 @@ class CallError(Exception):
 
 
 def get_call(
-        callid: str,
-        provider: str,
-        session: Session,
+    callid: str,
+    provider: str,
+    session: Session,
 ) -> Call:
     try:
-        return cast("Call", session.query(Call)
-                .filter(Call.provider_call_id == callid)
-                .filter(Call.provider == provider)
-                .options(
-                joinedload(Call.destination)
-                .joinedload(Destination.contacts)
-                ).one())
+        return cast(
+            "Call",
+            session.query(Call)
+            .filter(Call.provider_call_id == callid)
+            .filter(Call.provider == provider)
+            .options(
+                joinedload(Call.destination).joinedload(Destination.contacts)
+            )
+            .one(),
+        )
     except NoResultFound as e:
         raise CallError(f"Call {callid=}, {provider=} not found") from e
 
 
 def remove_call(call: Call, session: Session) -> None:
-    """ removes a call from the database """
+    """removes a call from the database"""
     session.delete(call)
     session.commit()
 
 
 def connect_call(call: Call, session: Session) -> None:
-    """ sets a call as connected in database """
+    """sets a call as connected in database"""
     call.connected_at = datetime.now(timezone.utc)
     session.add(call)
     session.commit()
 
 
 def destination_is_in_call(destination_id: str, session: Session) -> bool:
-    """ returns True if the destination is in a call """
-    stmt = select(Call).where(
-        and_(
-            Call.destination_id == destination_id,
-            col(Call.connected_at).isnot(None),
+    """returns True if the destination is in a call"""
+    stmt = (
+        select(Call)
+        .where(
+            and_(
+                Call.destination_id == destination_id,
+                col(Call.connected_at).isnot(None),
+            )
         )
-    ).exists()
+        .exists()
+    )
     return bool(session.query(stmt).scalar())
 
 
 def user_is_in_call(user_id: UserPhone, session: Session) -> bool:
-    """ returns True if the user is in a call """
+    """returns True if the user is in a call"""
     stmt = select(Call).where(Call.user_id == user_id).exists()
     return bool(session.query(stmt).scalar())
 
@@ -77,7 +84,7 @@ def add_call(  # noqa: PLR0913
     started_at: datetime,
     session: Session,
 ) -> Call:
-    """ adds a call to the database """
+    """adds a call to the database"""
     call = Call(
         provider=provider,
         provider_call_id=provider_call_id,
@@ -93,7 +100,7 @@ def add_call(  # noqa: PLR0913
 
 
 def get_mep_number(call: Call) -> str:
-    """ returns the MEP number of the call """
+    """returns the MEP number of the call"""
     query = [x for x in call.destination.contacts if x.type == "phone"]
     try:
         return query[0].contact

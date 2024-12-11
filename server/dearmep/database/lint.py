@@ -12,8 +12,7 @@ from .models import Destination
 
 def destinations_without_name_audio(session: Session) -> List[Destination]:
     return session.exec(
-        select(Destination)
-        .where(col(Destination.name_audio_id).is_(None))
+        select(Destination).where(col(Destination.name_audio_id).is_(None))
     ).all()
 
 
@@ -29,8 +28,8 @@ def all_issues(session: Session) -> List[str]:
             return
 
         issues_list.append(
-            f"{message.format(pl='' if len(problem_items) == 1 else 's')}: " +
-            ", ".join(map(formatter, problem_items))
+            f"{message.format(pl='' if len(problem_items) == 1 else 's')}: "
+            + ", ".join(map(formatter, problem_items))
         )
 
     def destination_formatter(dest: Destination) -> str:

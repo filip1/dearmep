@@ -32,6 +32,7 @@ class BlobOrFile:
     they can be used in conjunction with other files, for example in command
     line tools.
     """
+
     def __init__(
         self,
         blob_or_file: Union[Blob, BlobID, Path],
@@ -53,7 +54,8 @@ class BlobOrFile:
     def __repr__(self) -> str:
         if isinstance(self._obj, Blob):
             return (
-                f"BlobOrFile(Blob(id={self._obj.id}, name={self._obj.name}))")
+                f"BlobOrFile(Blob(id={self._obj.id}, name={self._obj.name}))"
+            )
         return f"BlobOrFile({self._obj!r})"
 
     @classmethod
@@ -107,7 +109,8 @@ class BlobOrFile:
             session = session or self._session
             if not session:
                 raise ValueError(
-                    "cannot resolve blob ID without database session")
+                    "cannot resolve blob ID without database session"
+                )
             blob = query.get_blob_by_id(session, self._obj)
         elif isinstance(self._obj, Blob):
             blob = self._obj
@@ -163,8 +166,7 @@ def get_blobs_or_files(
 
     # Build list of names to retrieve, to reduce the number of DB queries.
     allnames = {
-        stem: names_with_languages(stem, languages, suffix)
-        for stem in names
+        stem: names_with_languages(stem, languages, suffix) for stem in names
     }
     flat = [name for expanded in allnames.values() for name in expanded]
 

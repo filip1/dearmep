@@ -115,34 +115,47 @@ def convert_person(raw_mep: Dict[str, Any]) -> Iterable[DumpableModels]:
     # Top-level contacts like web links and email.
     for pt_key, dmep_key in CONTACT_MAP.items():
         for addr in raw_mep.get(pt_key, []):
-            contacts.append(ContactDump(
-                type=dmep_key,
-                contact=addr,
-            ))
+            contacts.append(
+                ContactDump(
+                    type=dmep_key,
+                    contact=addr,
+                )
+            )
 
     # Contacts that differ between Brussels & Strasbourg (e.g. phone).
     for pt_loc, dmep_loc in LOCATION_MAP.items():
         loc_addr = raw_mep.get("Addresses", {}).get(pt_loc, {})
         for pt_key, dmep_key in CONTACT_MAP.items():
             if pt_key in loc_addr:
-                contacts.append(ContactDump(
-                    type=dmep_key,
-                    group=dmep_loc,
-                    contact=convert_contact(pt_key, loc_addr[pt_key]),
-                ))
+                contacts.append(
+                    ContactDump(
+                        type=dmep_key,
+                        group=dmep_loc,
+                        contact=convert_contact(pt_key, loc_addr[pt_key]),
+                    )
+                )
 
     # Get the current group & constituency.
-    group = next((
-        group
-        for group in cast("List[Dict[str, str]]", raw_mep.get("Groups", []))
-        if is_current(group)
-    ), None)
-    constituency = next((
-        constituency
-        for constituency in cast(
-            "List[Dict[str, str]]", raw_mep.get("Constituencies", []))
-        if is_current(constituency)
-    ), None)
+    group = next(
+        (
+            group
+            for group in cast(
+                "List[Dict[str, str]]", raw_mep.get("Groups", [])
+            )
+            if is_current(group)
+        ),
+        None,
+    )
+    constituency = next(
+        (
+            constituency
+            for constituency in cast(
+                "List[Dict[str, str]]", raw_mep.get("Constituencies", [])
+            )
+            if is_current(constituency)
+        ),
+        None,
+    )
 
     # Look up group & constituency, add them to the dump on first appearance.
     groups: List[str] = []
@@ -158,7 +171,8 @@ def convert_person(raw_mep: Dict[str, Any]) -> Iterable[DumpableModels]:
         name=raw_mep["Name"]["full"],
         sort_name=f"{raw_mep['Name']['family']} {raw_mep['Name']['sur']}",
         country=guess_country(constituency["country"], attribute="iso2")
-        if constituency else None,
+        if constituency
+        else None,
         groups=groups,
         contacts=contacts,
         portrait=f"{raw_mep['UserID']}.jpg",
@@ -179,8 +193,10 @@ def convert_meps(
         with input as input_stream:
             if lz_compressed:
                 from ..lz import lz_decompressor
-                src: Union[BufferedReader, Iterable[bytes]] \
-                    = lz_decompressor(input_stream)
+
+                src: Union[BufferedReader, Iterable[bytes]] = lz_decompressor(
+                    input_stream
+                )
             else:
                 src = input_stream
             # TODO: If src was a file-like, not a generator, we could skip this

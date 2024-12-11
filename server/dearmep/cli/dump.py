@@ -39,7 +39,8 @@ def fake_config(patch: Optional[Dict] = None) -> None:
             raise
         # Use the builtin config instead.
         environ[ENV_PREFIX + "CONFIG"] = str(
-            included_file("example-config.yaml"))
+            included_file("example-config.yaml")
+        )
         s = Settings()
     if patch:
         Config.set_patch(patch)
@@ -79,7 +80,8 @@ def dump_openapi(ctx: Context) -> None:
 
 
 def add_parser(
-    subparsers: _SubParsersAction, help_if_no_subcommand: Callable,
+    subparsers: _SubParsersAction,
+    help_if_no_subcommand: Callable,
 ) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "dump",
@@ -129,13 +131,17 @@ def add_parser(
         "--compact",
         help="use a compact JSON representation (default if stdout is not a "
         "terminal)",
-        action="store_const", dest="compact", const=True,
+        action="store_const",
+        dest="compact",
+        const=True,
     )
     openapi_compact.add_argument(
         "--no-compact",
         help="use a human-readable, indented JSON representation (default if "
         "stdout is a terminal)",
-        action="store_const", dest="compact", const=False,
+        action="store_const",
+        dest="compact",
+        const=False,
     )
     openapi.set_defaults(compact=not sys.stdout.isatty())
 

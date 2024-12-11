@@ -25,7 +25,7 @@ def test_l10n(
         "/api/v1/frontend-setup",
         headers={
             "Accept-Language": "tlh;q=1, en;q=0.8",
-        }
+        },
     )
     assert res.status_code == status.HTTP_200_OK
     data = res.json()

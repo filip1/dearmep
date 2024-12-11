@@ -31,6 +31,7 @@ def write_test_db(filename: str):
 
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser(
         description="create MMDB database with some entries for use in tests",
     )

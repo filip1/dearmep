@@ -25,9 +25,11 @@ DEFAULT_MASS_DOWNLOAD_JOBS = 3
 
 def new_session() -> requests.Session:
     s = requests.Session()
-    s.headers.update({
-        "User-Agent": f"{APP_NAME} {__version__}",
-    })
+    s.headers.update(
+        {
+            "User-Agent": f"{APP_NAME} {__version__}",
+        }
+    )
     return s
 
 
@@ -46,7 +48,8 @@ def _permanent_download_error(e: Exception) -> bool:
     url = req.url if req else "[unknown URL]"
     if res is None:
         _logger.warning(
-            f"downloading {url} failed without a response, will retry")
+            f"downloading {url} failed without a response, will retry"
+        )
         return False  # network error? server unreachable?
     code = res.status_code
     permanent = (400 <= code < 500) and (code != 429)  # noqa: PLR2004
@@ -75,10 +78,12 @@ class MassDownloader:
         self._task.total = 0
         self._overwrite = overwrite
         self._skip_existing = skip_existing
-        self._accept_codes = set() if accept_error_codes is None \
-            else accept_error_codes
-        self._ignore_codes = set() if ignore_error_codes is None \
-            else ignore_error_codes
+        self._accept_codes = (
+            set() if accept_error_codes is None else accept_error_codes
+        )
+        self._ignore_codes = (
+            set() if ignore_error_codes is None else ignore_error_codes
+        )
         self._queue: Queue[Tuple[str, Path]] = Queue()
         self._mgmt_thread: Optional[Thread] = None
         self._should_run: bool = False
@@ -95,8 +100,10 @@ class MassDownloader:
     def _fetch(self, url: str) -> bytes:
         """Load URL's contents, retrying with backoff."""
         res = self._session.get(url)
-        if self._accept_codes is not True \
-                and res.status_code not in self._accept_codes:
+        if (
+            self._accept_codes is not True
+            and res.status_code not in self._accept_codes
+        ):
             res.raise_for_status()
         return res.content
 

@@ -59,7 +59,8 @@ def ip_network(
     net: IPNetwork = (
         ipaddress.IPv4Network((addr, v4len), strict=False)
         if isinstance(addr, ipaddress.IPv4Address)
-        else ipaddress.IPv6Network((addr, v6len), strict=False))
+        else ipaddress.IPv6Network((addr, v6len), strict=False)
+    )
     return net.with_prefixlen
 
 
@@ -73,18 +74,22 @@ class Limit:
         limits_storage.reset()
 
     def __init__(
-        self, limit_name: Literal["simple", "computational", "sms"],
+        self,
+        limit_name: Literal["simple", "computational", "sms"],
     ) -> None:
         self.limit_name = limit_name
         self.limits: Optional[Dict[str, limits.RateLimitItem]] = None
 
     def __call__(
-        self, request: Request, addr_str: str = Depends(client_addr),
+        self,
+        request: Request,
+        addr_str: str = Depends(client_addr),
     ) -> None:
         if self.limits is None:
             # First call, we need to get the values from the Config.
             rate_limits: IPRateLimits = getattr(
-                Config.get().api.rate_limits, self.limit_name)
+                Config.get().api.rate_limits, self.limit_name
+            )
             self.limits = {
                 name: limits.parse(getattr(rate_limits, f"{name}_limit"))
                 for name in NETSIZES
@@ -101,7 +106,8 @@ class Limit:
         except ValueError:
             _logger.warning(
                 "client address seems to be a hostname, not an IP address, "
-                "rate limiting skipped")
+                "rate limiting skipped"
+            )
             return
 
         for unlimited_nework in Limit.not_limited_ip_networks:
@@ -112,7 +118,9 @@ class Limit:
             limit = self.limits[size_name]
             identifiers = (  # this is a tuple with one item
                 ip_network(addr, v4len=netsizes[0], v6len=netsizes[1])
-                if netsizes else ip_network(addr),)
+                if netsizes
+                else ip_network(addr),
+            )
             reset_at = moving_window.get_window_stats(limit, *identifiers)[0]
 
             if moving_window.hit(limit, *identifiers):

@@ -52,46 +52,32 @@ class ElksMetrics:
         labelnames=("provider", "country"),
     )
 
-    def observe_connect_time(self,
-                             destination_id: str,
-                             duration: int
-                             ) -> None:
+    def observe_connect_time(self, destination_id: str, duration: int) -> None:
         """Track the connected calltime of user to MEP in seconds"""
         self.call_duration_seconds.labels(
-            provider=self.provider,
-            destination_id=destination_id
+            provider=self.provider, destination_id=destination_id
         ).observe(duration)
 
-    def observe_cost(self,
-                     destination_id: str,
-                     cost: int
-                     ) -> None:
+    def observe_cost(self, destination_id: str, cost: int) -> None:
         """Track how much the call cost"""
         self.call_cost_euros.labels(
-            provider=self.provider,
-            destination_id=destination_id
+            provider=self.provider, destination_id=destination_id
         ).observe(cost / 10_000)
 
-    def inc_start(self,
-                  destination_number: str,
-                  our_number: str
-                  ) -> None:
+    def inc_start(self, destination_number: str, our_number: str) -> None:
         """Track a started call to MEP"""
         self.call_start_total.labels(
             provider=self.provider,
             destination_number=destination_number,
-            our_number=our_number
+            our_number=our_number,
         ).inc()
 
-    def inc_end(self,
-                destination_number: str,
-                our_number: str
-                ) -> None:
+    def inc_end(self, destination_number: str, our_number: str) -> None:
         """Track an ended call to MEP"""
         self.call_end_total.labels(
             provider=self.provider,
             destination_number=destination_number,
-            our_number=our_number
+            our_number=our_number,
         ).inc()
 
     def inc_menu_limit(self) -> None:
@@ -108,15 +94,15 @@ class ElksMetrics:
         recipient: str,
     ) -> None:
         country = str(UserPhone(recipient).calling_code)
-        self.sms_sent_total \
-            .labels(provider=self.provider, country=country) \
-            .inc()
-        self.sms_parts_sent_total \
-            .labels(provider=self.provider, country=country) \
-            .inc(parts)
-        self.sms_cost_euros \
-            .labels(provider=self.provider, country=country) \
-            .observe(cost / 10_000)
+        self.sms_sent_total.labels(
+            provider=self.provider, country=country
+        ).inc()
+        self.sms_parts_sent_total.labels(
+            provider=self.provider, country=country
+        ).inc(parts)
+        self.sms_cost_euros.labels(
+            provider=self.provider, country=country
+        ).observe(cost / 10_000)
 
 
 elks_metrics: ElksMetrics = ElksMetrics()

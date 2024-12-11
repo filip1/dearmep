@@ -51,8 +51,7 @@ def parse_dump_obj(data: Dict[str, Any], e_pref: str = "") -> DumpableModels:
     linetype = data[TYPE_KEY]
     modeltype = STR2TYPE.get(linetype)
     if not modeltype:
-        raise DumpFormatError(
-            f"{e_pref}unknown type '{linetype}'")
+        raise DumpFormatError(f"{e_pref}unknown type '{linetype}'")
 
     del data[TYPE_KEY]
     return modeltype.parse_obj(data)
@@ -70,7 +69,8 @@ def read_dump_json(input: IO[bytes]) -> Iterable[DumpableModels]:
         if version is None:
             if VERSION_KEY not in data:
                 raise DumpFormatError(
-                    "expected a dump version number as the first line")
+                    "expected a dump version number as the first line"
+                )
             if not isinstance(data[VERSION_KEY], (int, float)):
                 raise DumpFormatError(
                     "expected dump version number to be a number, got "
@@ -79,7 +79,8 @@ def read_dump_json(input: IO[bytes]) -> Iterable[DumpableModels]:
             version = data[VERSION_KEY]
             if version > 1:
                 raise DumpFormatError(
-                    f"expected dump version 1, got {version}")
+                    f"expected dump version 1, got {version}"
+                )
             continue  # to the next element
 
         yield parse_dump_obj(data, f"line {lnum}: ")

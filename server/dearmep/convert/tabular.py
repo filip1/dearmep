@@ -45,7 +45,8 @@ class Tabular:
                 keys = tuple(mapping.keys())
                 if keys != headers:
                     raise ValueError(
-                        f"expected input keys to be {headers}, got {keys}")
+                        f"expected input keys to be {headers}, got {keys}"
+                    )
                 row = tuple(mapping.values())
                 yield row
 

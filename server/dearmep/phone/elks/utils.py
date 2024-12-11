@@ -16,9 +16,9 @@ _logger = logging.getLogger(__name__)
 
 
 def choose_from_number(
-        user_number_prefix: str,
-        user_language: Language,
-        phone_numbers: List[Number],
+    user_number_prefix: str,
+    user_language: Language,
+    phone_numbers: List[Number],
 ) -> Number:
     """
     Returns a phonenumber we use to call the user. Preferably from the same
@@ -26,9 +26,11 @@ def choose_from_number(
     it falls back on the users language. In case there is no match it returns
     any international number.
     """
-    number_prefix = [n for n in phone_numbers
-                     if n.number.startswith(
-                         f"+{user_number_prefix}") == user_number_prefix]
+    number_prefix = [
+        n
+        for n in phone_numbers
+        if n.number.startswith(f"+{user_number_prefix}") == user_number_prefix
+    ]
     if number_prefix:
         return choice(number_prefix)  # noqa: S311
 
@@ -42,22 +44,20 @@ def choose_from_number(
 
 
 def get_numbers(
-        phone_numbers: List[Number],
-        auth: Tuple[str, str]
+    phone_numbers: List[Number], auth: Tuple[str, str]
 ) -> List[Number]:
     """
     Fetches all available numbers of an account at 46elks.
     """
 
     response = requests.get(
-        url="https://api.46elks.com/a1/numbers",
-        timeout=10,
-        auth=auth
+        url="https://api.46elks.com/a1/numbers", timeout=10, auth=auth
     )
     if response.status_code != 200:  # noqa: PLR2004
         raise Exception(  # noqa: TRY002
             "Could not fetch numbers from 46elks. "
-            f"Their http status: {response.status_code}")
+            f"Their http status: {response.status_code}"
+        )
 
     phone_numbers.clear()
     phone_numbers.extend(

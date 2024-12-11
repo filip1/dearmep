@@ -53,15 +53,20 @@ class AutoEngine:
         <https://sqlite.org/compile.html#threadsafe>
         <https://peps.python.org/pep-0249/#threadsafety>
         """
-        engine = create_engine(config.database.url, connect_args={
-            "check_same_thread": False,
-        })
+        engine = create_engine(
+            config.database.url,
+            connect_args={
+                "check_same_thread": False,
+            },
+        )
         # Check whether SQLite has been compiled with thread safety.
         with Session(engine) as session:
-            res = session.execute(text("""
+            res = session.execute(
+                text("""
                 select compile_options from pragma_compile_options
                 where compile_options like 'THREADSAFE=%'
-            """)).one()
+            """)
+            ).one()
             if res[0] != "THREADSAFE=1":
                 raise NotThreadsafeError(
                     "SQLite3 library needs to have been compiled with "
@@ -74,9 +79,11 @@ class AutoEngine:
     def get_engine(cls) -> Engine:
         if cls.engine is None:
             config = Config.get()
-            cls.engine = (cls.create_sqlite_engine(config)
-                          if config.database.url.startswith("sqlite")
-                          else create_engine(config.database.url))
+            cls.engine = (
+                cls.create_sqlite_engine(config)
+                if config.database.url.startswith("sqlite")
+                else create_engine(config.database.url)
+            )
         return cls.engine
 
 

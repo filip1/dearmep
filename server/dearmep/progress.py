@@ -46,9 +46,12 @@ class BaseTask:
         total: Union[Sized, float, None] = None,
     ) -> None:
         self._description = description
-        self._total: Optional[float] = len(total) if isinstance(total, Sized) \
+        self._total: Optional[float] = (
+            len(total)
+            if isinstance(total, Sized)
             else (total if isinstance(total, Real) else None)
-        self._completed = 0.
+        )
+        self._completed = 0.0
 
     # FIXME: Add `Self` type annotation.
     def __enter__(self):  # noqa: ANN204
@@ -64,7 +67,7 @@ class BaseTask:
             self.done()
         return False
 
-    def advance(self, amount: float = 1.) -> None:
+    def advance(self, amount: float = 1.0) -> None:
         self._completed += amount
 
     @property
@@ -112,7 +115,7 @@ class RichTask(BaseTask):
                 return task
         raise KeyError(f"did not find task with id {self._id}")
 
-    def advance(self, amount: float = 1.) -> None:
+    def advance(self, amount: float = 1.0) -> None:
         self._progress.advance(self._id, amount)
 
     @property
@@ -287,12 +290,12 @@ class FlexiReader:
         return sys.stdin.buffer
 
     @overload
-    def _prepare(self, open_flags: Literal["r"]) -> Tuple[IO[str], bool]:
-        ...
+    def _prepare(self, open_flags: Literal["r"]) -> Tuple[IO[str], bool]: ...
 
     @overload
-    def _prepare(self, open_flags: Literal["rb"]) -> Tuple[IO[bytes], bool]:
-        ...
+    def _prepare(
+        self, open_flags: Literal["rb"]
+    ) -> Tuple[IO[bytes], bool]: ...
 
     def _prepare(self, open_flags: str) -> Tuple[IO, bool]:
         if self._stream is not None:

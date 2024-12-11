@@ -59,8 +59,11 @@ def fastapi_factory_func(
     """
     top_dir = Path(__file__).parent.parent
     # By default, let the tests use the example config.
-    config_path = Path(top_dir, "dearmep", "example-config.yaml") \
-        if config_path is None else config_path
+    config_path = (
+        Path(top_dir, "dearmep", "example-config.yaml")
+        if config_path is None
+        else config_path
+    )
 
     # Allow dynamically passing config YAML.
     if config_content is not None:
@@ -93,18 +96,22 @@ def session_fixture(engine):
 
 @pytest.fixture
 def with_example_destinations(session: Session):
-    session.add(Destination(
-        id="36e04ddf-73e7-4af6-a8af-24556d610f6d",
-        name="Jakob Maria MIERSCHEID",
-        sort_name="MIERSCHEID Jakob Maria",
-        country="de",
-    ))
-    session.add(Destination(
-        id="257d8d78-76e2-4391-b542-a1fcdbdf20a9",
-        name="Erika MUSTERFRAU",
-        sort_name="MUSTERFRAU Erika",
-        country="at",
-    ))
+    session.add(
+        Destination(
+            id="36e04ddf-73e7-4af6-a8af-24556d610f6d",
+            name="Jakob Maria MIERSCHEID",
+            sort_name="MIERSCHEID Jakob Maria",
+            country="de",
+        )
+    )
+    session.add(
+        Destination(
+            id="257d8d78-76e2-4391-b542-a1fcdbdf20a9",
+            name="Erika MUSTERFRAU",
+            sort_name="MUSTERFRAU Erika",
+            country="at",
+        )
+    )
     session.commit()
     return session
 
@@ -146,9 +153,12 @@ def fastapi_app_func(factory: FactoryType):
         config_dict_orig = yaml.safe_load(f)
     # Modify the MMDB.
     # TODO: This can probably be simplified using Config.set_patch().
-    config_dict = deep_update(config_dict_orig, {
-        "l10n": {"geo_mmdb": str(Path(tests_dir, "geo_ip", "test.mmdb"))},
-    })
+    config_dict = deep_update(
+        config_dict_orig,
+        {
+            "l10n": {"geo_mmdb": str(Path(tests_dir, "geo_ip", "test.mmdb"))},
+        },
+    )
 
     app = factory(config_dict)
 

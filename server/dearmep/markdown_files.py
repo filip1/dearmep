@@ -58,17 +58,20 @@ def mount_if_configured(app: FastAPI, prefix: str) -> None:
     if markdown_dir_setting is None:
         _logger.info(
             f"{ENV_PREFIX}MARKDOWN_FILES_DIR is unset, will not serve "
-            "Markdown files")
+            "Markdown files"
+        )
         return
     markdown_dir = markdown_dir_setting.resolve(strict=True)
 
     for dir in (DOCS_DIR, STATIC_DIR, TEMPLATES_DIR):
         if not Path(markdown_dir, dir).is_dir():
             raise FileNotFoundError(
-                f"no `{dir}` sub-directory in Markdown directory")
+                f"no `{dir}` sub-directory in Markdown directory"
+            )
     if not Path(markdown_dir, TEMPLATES_DIR, TEMPLATE_NAME).exists():
         raise FileNotFoundError(
-            f"no `{TEMPLATES_DIR}/{TEMPLATE_NAME}` in Markdown directory")
+            f"no `{TEMPLATES_DIR}/{TEMPLATE_NAME}` in Markdown directory"
+        )
 
     jinja_env = Environment(
         loader=FileSystemLoader(Path(markdown_dir, TEMPLATES_DIR)),
@@ -83,22 +86,29 @@ def mount_if_configured(app: FastAPI, prefix: str) -> None:
         )
 
     @app.get(
-        prefix + "/{path:path}/{lang}/", operation_id="getMarkdownDoc",
+        prefix + "/{path:path}/{lang}/",
+        operation_id="getMarkdownDoc",
         summary="Get Markdown Document",
         responses={
             404: {"description": "Document Not Found"},
         },
     )
     def get_markdown_doc(
-        path: Annotated[str, PathParam(
-            description="Name of the document. Will be mapped to a directory "
-            "in the `docs` directory of the `DEARMEP_MARKDOWN_FILES_DIR`.",
-        )],
-        lang: Annotated[str, PathParam(
-            description="Language to retrieve the document in. Will be mapped "
-            "to an actual file like `en.md` inside of the `path` "
-            "corresponding to the requested document.",
-        )],
+        path: Annotated[
+            str,
+            PathParam(
+                description="Name of the document. Will be mapped to a directory "
+                "in the `docs` directory of the `DEARMEP_MARKDOWN_FILES_DIR`.",
+            ),
+        ],
+        lang: Annotated[
+            str,
+            PathParam(
+                description="Language to retrieve the document in. Will be mapped "
+                "to an actual file like `en.md` inside of the `path` "
+                "corresponding to the requested document.",
+            ),
+        ],
     ) -> HTMLResponse:
         """
         Serve a Markdown document from the server, converted to HTML.
@@ -109,8 +119,9 @@ def mount_if_configured(app: FastAPI, prefix: str) -> None:
         """
         lang = lang.lower()
         try:
-            abs_path = Path(markdown_dir, DOCS_DIR, path, f"{lang}.md") \
-                .resolve(strict=True)
+            abs_path = Path(
+                markdown_dir, DOCS_DIR, path, f"{lang}.md"
+            ).resolve(strict=True)
         except FileNotFoundError:
             raise_404(path)
         if not str(abs_path).startswith(str(Path(markdown_dir, DOCS_DIR))):
@@ -118,11 +129,15 @@ def mount_if_configured(app: FastAPI, prefix: str) -> None:
             raise_404(path)
 
         doc = get_doc(abs_path)
-        return HTMLResponse(template.render({
-            **dataclasses.asdict(doc),
-            "base_path": f"{prefix}/",
-            "language": lang,
-        }))
+        return HTMLResponse(
+            template.render(
+                {
+                    **dataclasses.asdict(doc),
+                    "base_path": f"{prefix}/",
+                    "language": lang,
+                }
+            )
+        )
 
     app.mount(
         prefix,

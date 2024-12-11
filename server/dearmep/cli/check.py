@@ -35,7 +35,8 @@ def cmd_translations(ctx: Context) -> None:
                 )
             else:
                 missing = [
-                    lang for lang in cfg.l10n.languages if lang not in entry]
+                    lang for lang in cfg.l10n.languages if lang not in entry
+                ]
                 if missing:
                     _logger.error(
                         f"{prefix} is not translated into {', '.join(missing)}"
@@ -47,10 +48,16 @@ def cmd_translations(ctx: Context) -> None:
     cfg = Config.load()
 
     had_error = check_entries("frontend", cfg.l10n.frontend_strings.__root__)
-    had_error = check_entries("backend", {
-        fname: getattr(cfg.l10n.strings, fname)
-        for fname in cfg.l10n.strings.__fields__
-    }) or had_error
+    had_error = (
+        check_entries(
+            "backend",
+            {
+                fname: getattr(cfg.l10n.strings, fname)
+                for fname in cfg.l10n.strings.__fields__
+            },
+        )
+        or had_error
+    )
 
     if had_error:
         sys.exit(1)
@@ -58,7 +65,8 @@ def cmd_translations(ctx: Context) -> None:
 
 
 def add_parser(
-    subparsers: _SubParsersAction, help_if_no_subcommand: Callable,
+    subparsers: _SubParsersAction,
+    help_if_no_subcommand: Callable,
 ) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "check",

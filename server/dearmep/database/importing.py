@@ -44,45 +44,50 @@ class Importer:
         self._logo_tpl = logo_template
         self._name_tpl = name_audio_template
 
-        self._fallback_portrait = image2blob(
-            "portrait", fallback_portrait,
-            description="fallback portrait",
-        ) if fallback_portrait else None
+        self._fallback_portrait = (
+            image2blob(
+                "portrait",
+                fallback_portrait,
+                description="fallback portrait",
+            )
+            if fallback_portrait
+            else None
+        )
 
     def _create_destination(self, input: DestinationDump) -> Destination:
-        contacts = [
-            Contact.from_orm(contact)
-            for contact in input.contacts
-        ]
-        groups = [
-            self._groups[group_id]
-            for group_id in input.groups
-        ]
+        contacts = [Contact.from_orm(contact) for contact in input.contacts]
+        groups = [self._groups[group_id] for group_id in input.groups]
         dest = Destination.from_orm(input)
         dest.contacts = contacts
         dest.groups = groups
 
         if self._portrait_tpl:
-            portrait_path = Path(self._portrait_tpl.format(
-                id=dest.id,
-                filename=input.portrait,
-            ))
+            portrait_path = Path(
+                self._portrait_tpl.format(
+                    id=dest.id,
+                    filename=input.portrait,
+                )
+            )
             if portrait_path.exists():
                 dest.portrait = image2blob(
-                    "portrait", portrait_path,
+                    "portrait",
+                    portrait_path,
                     description=f"portrait for Destination {dest.id}",
                 )
         if not dest.portrait and self._fallback_portrait:
             dest.portrait = self._fallback_portrait
 
         if self._name_tpl:
-            name_path = Path(self._name_tpl.format(
-                id=dest.id,
-                filename=input.name_audio,
-            ))
+            name_path = Path(
+                self._name_tpl.format(
+                    id=dest.id,
+                    filename=input.name_audio,
+                )
+            )
             if name_path.exists():
                 dest.name_audio = audio2blob(
-                    "name_audio", name_path,
+                    "name_audio",
+                    name_path,
                     description=f"pronounced name of Destination {dest.id}",
                 )
 
@@ -97,15 +102,18 @@ class Importer:
             raise DumpFormatError(f"duplicate group: {dg.id}")
 
         if self._logo_tpl:
-            logo_path = Path(self._logo_tpl.format(
-                id=dg.id,
-                filename=input.logo,
-                short_name=input.short_name,
-                long_name=input.long_name,
-            ))
+            logo_path = Path(
+                self._logo_tpl.format(
+                    id=dg.id,
+                    filename=input.logo,
+                    short_name=input.short_name,
+                    long_name=input.long_name,
+                )
+            )
             if logo_path.exists():
                 dg.logo = image2blob(
-                    "logo", logo_path,
+                    "logo",
+                    logo_path,
                     description=f"logo of Group {dg.long_name}",
                 )
 
@@ -113,7 +121,9 @@ class Importer:
         return dg
 
     def import_dump(
-        self, session: Session, objs: Iterable[DumpableModels],
+        self,
+        session: Session,
+        objs: Iterable[DumpableModels],
     ) -> None:
         self._groups = {}
         for obj in objs:

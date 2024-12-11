@@ -40,8 +40,10 @@ def list_topics(
             for ev, node in doc:
                 if ev == pulldom.START_ELEMENT and node.tagName == RESULT_TAG:
                     topic_id = node.getAttribute("Identifier")
-                elif ev == pulldom.START_ELEMENT \
-                        and node.tagName == DESCRIPTION_TAG:
+                elif (
+                    ev == pulldom.START_ELEMENT
+                    and node.tagName == DESCRIPTION_TAG
+                ):
                     doc.expandNode(node)
                     topic_text = get_text(node)
                     table.append(topic_id, topic_text)

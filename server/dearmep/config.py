@@ -57,7 +57,8 @@ ENV_PREFIX = f"{APP_NAME.upper()}_"
 
 
 EMBEDDED_STATIC_DIR: Optional[Path] = Path(
-    Path(__file__).parent, "static_files", "static")
+    Path(__file__).parent, "static_files", "static"
+)
 if EMBEDDED_STATIC_DIR and not EMBEDDED_STATIC_DIR.is_dir():
     EMBEDDED_STATIC_DIR = None
 
@@ -74,6 +75,7 @@ class IPRateLimits(BaseModel):
 
 class CorsConfig(BaseModel):
     """Allowed access for other web hosts to this backend via Ajax"""
+
     origins: List[Union[Literal["*"], AnyHttpUrl]]
 
 
@@ -264,7 +266,8 @@ class OfficeHoursConfig(BaseModel):
         if v.tzinfo:
             raise ValueError(
                 "you may not specify a time zone offset in `begin` or `end`, "
-                "use the `timezone` field instead")
+                "use the `timezone` field instead"
+            )
         return v
 
     @validator("end")
@@ -381,6 +384,7 @@ class SchedulerConfig(BaseModel):
 
 class Config(BaseModel):
     """The main application configuration supplied via the config file."""
+
     api: APIConfig
     authentication: AuthenticationConfig
     contact_timespan_filter: Optional[ContactTimespanFilterConfig]
@@ -399,8 +403,10 @@ class Config(BaseModel):
     def get(cls) -> "Config":
         """Get the singleton configuration object instance."""
         if cls._instance is None:
-            raise ConfigNotLoadedError("attempt to access config without "
-                                       "loading it first; this is a bug")
+            raise ConfigNotLoadedError(
+                "attempt to access config without "
+                "loading it first; this is a bug"
+            )
         return cls._instance
 
     @classmethod
@@ -456,6 +462,7 @@ class Config(BaseModel):
 
 class Settings(BaseSettings):
     """Settings supplied via environment variables."""
+
     config_file: FilePath = Field(
         "config.yaml",
         env={f"{ENV_PREFIX}CONFIG", f"{ENV_PREFIX}CONFIG_FILE"},  # allow both
@@ -491,7 +498,8 @@ def is_config_missing(e: ValidationError) -> bool:
     cfg_errs = (err for err in e.errors() if err["loc"] == ("config_file",))
     for err in cfg_errs:
         if err["type"] in {
-            "value_error.path.not_exists", "value_error.path.not_a_file",
+            "value_error.path.not_exists",
+            "value_error.path.not_a_file",
         }:
             return True
     return False

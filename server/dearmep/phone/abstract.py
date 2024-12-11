@@ -54,6 +54,8 @@ class AbstractPhoneService(ABC):
 def get_phone_service() -> AbstractPhoneService:
     if Config.get().telephony.dry_run:
         from .developer_phone import DeveloperPhoneService
+
         return DeveloperPhoneService()
     from .elks_phone import ElksPhoneService
+
     return ElksPhoneService()
