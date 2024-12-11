@@ -47,7 +47,7 @@ def get_doc(path: Path) -> Document:
     h1 = tree.find("h1")
     return Document(
         title=h1.text if h1 is not None else None,
-        content=str(Markup(html)),
+        content=str(Markup(html)),  # noqa: RUF035
     )
 
 
