@@ -4,6 +4,7 @@
 
 from typing import TYPE_CHECKING, Union, cast
 
+
 if TYPE_CHECKING:
     from xml.dom.minidom import Element, Text  # noqa: S408
 
