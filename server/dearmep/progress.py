@@ -3,20 +3,39 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-from argparse import ArgumentParser
+
+import os
+import stat
+import sys
+import warnings
 from collections.abc import Sized
 from functools import partial
 from io import BufferedReader, TextIOWrapper, UnsupportedOperation
 from numbers import Real
-import os
 from pathlib import Path
-import stat
-import sys
-from typing import IO, Any, Callable, Dict, Iterator, Literal, Optional, \
-    Tuple, TypeVar, Union, overload
-import warnings
+from typing import (
+    IO,
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    Literal,
+    Optional,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+    overload,
+)
 
-from rich.progress import Progress as RichProgress, Task as _RichTask
+
+if TYPE_CHECKING:
+    from argparse import ArgumentParser
+    from types import TracebackType
+
+    from rich.progress import Progress as RichProgress
+    from rich.progress import Task as _RichTask
 
 
 class BaseTask:
@@ -25,21 +44,27 @@ class BaseTask:
         description: str,
         *,
         total: Union[Sized, float, None] = None,
-    ):
+    ) -> None:
         self._description = description
         self._total: Optional[float] = len(total) if isinstance(total, Sized) \
             else (total if isinstance(total, Real) else None)
         self._completed = 0.
 
-    def __enter__(self):
+    # FIXME: Add `Self` type annotation.
+    def __enter__(self):  # noqa: ANN204
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: Optional[Type],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> Literal[False]:
         if exc_val is None:
             self.done()
         return False
 
-    def advance(self, amount: float = 1.):
+    def advance(self, amount: float = 1.) -> None:
         self._completed += amount
 
     @property
@@ -47,10 +72,10 @@ class BaseTask:
         return self._completed
 
     @completed.setter
-    def completed(self, completed: float):
+    def completed(self, completed: float) -> None:
         self._completed = completed
 
-    def done(self):
+    def done(self) -> None:
         pass
 
     @property
@@ -58,7 +83,7 @@ class BaseTask:
         return self._total
 
     @total.setter
-    def total(self, total: Optional[float]):
+    def total(self, total: Optional[float]) -> None:
         self._total = total
 
 
@@ -66,7 +91,7 @@ class DummyTask(BaseTask):
     @classmethod
     def if_no(cls, existing_task: Optional[BaseTask] = None) -> BaseTask:
         """Return `existing_task` or, if `None`, a new `DummyTask`."""
-        return existing_task if existing_task else cls("Dummy")
+        return existing_task or cls("Dummy")
 
 
 class RichTask(BaseTask):
@@ -75,7 +100,7 @@ class RichTask(BaseTask):
         description: str,
         progress: RichProgress,
         total: Union[Sized, float, None] = None,
-    ):
+    ) -> None:
         super().__init__(description, total=total)
         self._progress = progress
         self._id = progress.add_task(self._description, total=self._total)
@@ -87,7 +112,7 @@ class RichTask(BaseTask):
                 return task
         raise KeyError(f"did not find task with id {self._id}")
 
-    def advance(self, amount: float = 1.):
+    def advance(self, amount: float = 1.) -> None:
         self._progress.advance(self._id, amount)
 
     @property
@@ -95,10 +120,10 @@ class RichTask(BaseTask):
         return self._task.completed
 
     @completed.setter
-    def completed(self, completed: float):
+    def completed(self, completed: float) -> None:
         self._progress.update(self._id, completed=completed)
 
-    def done(self):
+    def done(self) -> None:
         total = self._task.total
         if total is None:
             self.total = self._task.completed
@@ -110,25 +135,25 @@ class RichTask(BaseTask):
         return self._task.total
 
     @total.setter
-    def total(self, total: Optional[float]):
+    def total(self, total: Optional[float]) -> None:
         self._progress.update(self._id, total=total)
 
 
 class BaseTaskFactory:
-    def create_task(self, description: str, **kwargs) -> BaseTask:
-        raise NotImplementedError()
+    def create_task(self, description: str, **kwargs: Any) -> BaseTask:  # noqa: ANN401
+        raise NotImplementedError
 
 
 class DummyTaskFactory(BaseTaskFactory):
-    def create_task(self, description: str, **kwargs) -> BaseTask:
+    def create_task(self, description: str, **kwargs: Any) -> BaseTask:  # noqa: ANN401, PLR6301
         return DummyTask(description, **kwargs)
 
 
 class RichTaskFactory(BaseTaskFactory):
-    def __init__(self, progress: RichProgress):
+    def __init__(self, progress: RichProgress) -> None:
         self._progress = progress
 
-    def create_task(self, description: str, **kwargs) -> RichTask:
+    def create_task(self, description: str, **kwargs: Any) -> RichTask:  # noqa: ANN401
         return RichTask(description, self._progress, **kwargs)
 
 
@@ -141,7 +166,8 @@ class TrackingMixin:
             self._task.completed = tellfunc()
         return val
 
-    def init_tracking(
+    # TODO: Once we're at mypy ≥ 1.9, we can probably annotate `-> Self  here.
+    def init_tracking(  # noqa: ANN201
         self,
         *,
         task: Optional[BaseTask] = None,
@@ -199,12 +225,12 @@ class FlexiReader:
         self,
         input: Union[IO, Path],
         *,
-        reconfigure: Dict[str, Any] = {},
-    ):
+        reconfigure: Optional[Dict[str, Any]] = None,
+    ) -> None:
         self._input = input
         self._orig_stream: Optional[IO] = None
         self._stream: Optional[IO] = None
-        self._reconfigure = reconfigure
+        self._reconfigure = reconfigure or {}
         self._did_open: bool = False
         self._task: Optional[BaseTask] = None
 
@@ -215,9 +241,9 @@ class FlexiReader:
         *names: str,
         positional: bool = True,
         required: bool = False,
-        constructor_args: Dict[str, Any] = {},
-        **kwargs,
-    ):
+        constructor_args: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,  # noqa: ANN401
+    ) -> None:
         """Create an `ArgumentParser` argument that becomes a `FlexiReader`."""
         if not names:
             names = ("input",) if positional else ("-i", "--input")
@@ -247,9 +273,11 @@ class FlexiReader:
         filename: Union[str, Path],
         *,
         dash_stdin: bool = False,
-        constructor_args: Dict[str, Any] = {},
+        constructor_args: Optional[Dict[str, Any]] = None,
     ) -> FlexiReader:
         """Create a new FlexiReader, interpreting str argument as file name."""
+        if constructor_args is None:
+            constructor_args = {}
         if filename == "-" and dash_stdin:
             return cls(cls._stdin(), **constructor_args)
         return cls(Path(filename), **constructor_args)
@@ -268,7 +296,7 @@ class FlexiReader:
 
     def _prepare(self, open_flags: str) -> Tuple[IO, bool]:
         if self._stream is not None:
-            raise IOError("context was already entered")
+            raise OSError("context was already entered")
         if isinstance(self._input, Path):
             stream = self._input.open(open_flags)
             self._did_open = True  # we need to close it on exit
@@ -283,7 +311,8 @@ class FlexiReader:
                 warnings.warn(
                     f"reconfiguration of stream {self._input} was requested "
                     f"({self._reconfigure}), but the stream does not support "
-                    "reconfiguration"
+                    "reconfiguration",
+                    stacklevel=3,
                 )
 
         # Check whether the stream supports tell().
@@ -295,16 +324,22 @@ class FlexiReader:
 
         return stream, can_tell
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: Optional[Type],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> Literal[False]:
         if self._stream is None:
-            raise IOError("context was never entered")
+            raise OSError("context was never entered")
         self._stream.close()
         if self._did_open:  # we need to close it again
             self._did_open = False
-            self._orig_stream.close()
+            if self._orig_stream:
+                self._orig_stream.close()
         return False
 
-    def set_task(self, task: BaseTask):
+    def set_task(self, task: BaseTask) -> None:
         self._task = task
 
 
@@ -330,8 +365,8 @@ class FlexiStrReader(FlexiReader):
         self,
         input: Union[IO[str], Path],
         *,
-        reconfigure: Dict[str, Any] = {},
-    ):
+        reconfigure: Optional[Dict[str, Any]] = None,
+    ) -> None:
         super().__init__(input, reconfigure=reconfigure)
 
     def __enter__(self) -> TrackingStrReader:

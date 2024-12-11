@@ -3,9 +3,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from typing import Type, TypeVar
-from xml.dom import pulldom
+from xml.dom import pulldom  # noqa: S409
 
-from defusedxml.pulldom import parse as pulldom_parse  # type: ignore[import]
+from defusedxml.pulldom import parse as pulldom_parse
 
 from ...progress import BaseTaskFactory, FlexiBytesReader
 from ..tabular import Tabular
@@ -55,7 +55,7 @@ def list_votes(
     topic: str,
 ) -> T:
     table = table_class("PersID", "MEPID", "Group", "Name", "Vote")
-    with tf.create_task("parsing XML") as task:
+    with tf.create_task("parsing XML") as task:  # noqa: PLR1702
         input.set_task(task)
         with input as stream:
             doc = pulldom_parse(stream)

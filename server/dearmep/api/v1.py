@@ -5,39 +5,74 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Callable, Dict, Iterable, List, Optional, Union
-from typing_extensions import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Header, Query, \
-    Response, status
-from fastapi.responses import JSONResponse
 
+from fastapi import (
+    APIRouter,
+    Depends,
+    Header,
+    HTTPException,
+    Query,
+    Response,
+    status,
+)
+from fastapi.responses import JSONResponse
 from prometheus_client import Counter
 from pydantic import BaseModel
 from sqlmodel import col
+from typing_extensions import Annotated
 
-from . import authtoken
 from ..config import Config, Language, all_frontend_strings
-from ..database.connection import get_session
-from ..database.models import Blob, Destination, DestinationGroupListItem, \
-    DestinationID, DestinationRead, DestinationSelectionLog, \
-    DestinationSelectionLogEvent, FeedbackContext
 from ..database import query
+from ..database.connection import get_session
+from ..database.models import (
+    Blob,
+    Destination,
+    DestinationGroupListItem,
+    DestinationID,
+    DestinationRead,
+    DestinationSelectionLog,
+    DestinationSelectionLogEvent,
+    FeedbackContext,
+)
 from ..l10n import find_preferred_language, get_country, parse_accept_language
-from ..models import MAX_SEARCH_RESULT_LIMIT, CallState, CallStateResponse, \
-    CallType, CountryCode, DestinationInCallResponse, \
-    DestinationSearchResult, FeedbackSubmission, FeedbackToken, \
-    FrontendSetupResponse, FrontendStringsResponse, InitiateCallRequest, \
-    JWTClaims, JWTResponse, LanguageDetection, LocalizationResponse, \
-    OfficeHoursResponse, OutsideHoursResponse, \
-    PhoneNumberVerificationRejectedResponse, PhoneNumberVerificationResponse, \
-    PhoneRejectReason, RateLimitResponse, ScheduleResponse, \
-    SetScheduleRequest, SMSCodeVerificationFailedResponse, SearchResult, \
-    SearchResultLimit, UserPhone, UserInCallResponse,  \
-    PhoneNumberVerificationRequest, SMSCodeVerificationRequest
-
-from ..ratelimit import Limit, client_addr
+from ..models import (
+    MAX_SEARCH_RESULT_LIMIT,
+    CallState,
+    CallStateResponse,
+    CallType,
+    CountryCode,
+    DestinationInCallResponse,
+    DestinationSearchResult,
+    FeedbackSubmission,
+    FeedbackToken,
+    FrontendSetupResponse,
+    FrontendStringsResponse,
+    InitiateCallRequest,
+    JWTClaims,
+    JWTResponse,
+    LanguageDetection,
+    LocalizationResponse,
+    OfficeHoursResponse,
+    OutsideHoursResponse,
+    PhoneNumberVerificationRejectedResponse,
+    PhoneNumberVerificationRequest,
+    PhoneNumberVerificationResponse,
+    PhoneRejectReason,
+    RateLimitResponse,
+    ScheduleResponse,
+    SearchResult,
+    SearchResultLimit,
+    SetScheduleRequest,
+    SMSCodeVerificationFailedResponse,
+    SMSCodeVerificationRequest,
+    UserInCallResponse,
+    UserPhone,
+)
 from ..phone.abstract import get_phone_service
+from ..ratelimit import Limit, client_addr
+from . import authtoken
 
 
 l10n_autodetect_total = Counter(
@@ -103,7 +138,7 @@ def _get_localization(
     frontend_strings: bool,
     client_addr: str,
     accept_language: str,
-):
+) -> LocalizationResponse:
     l10n_config = Config.get().l10n
     available_languages = l10n_config.languages
     default_language = l10n_config.default_language
@@ -145,7 +180,7 @@ def _get_localization(
 )
 def get_frontend_strings(
     language: Language,
-):
+) -> FrontendStringsResponse:
     """
     Returns a list of translation strings, for the given language, to be used
     by the frontend code. If a string is not available in that language, it
@@ -228,7 +263,7 @@ def get_frontend_setup(
 )
 def get_blob_contents(
     name: str,
-):
+) -> Response:
     """
     Returns the contents of a blob, e.g. an image or audio file.
     """
@@ -236,7 +271,7 @@ def get_blob_contents(
         try:
             blob = query.get_blob_by_name(session, name)
         except query.NotFound as e:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
     return Response(blob.data, media_type=blob.mime_type)
 
 
@@ -319,7 +354,7 @@ def get_destination_by_id(
         try:
             dest = query.get_destination_by_id(session, id)
         except query.NotFound as e:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
         return destination_to_destinationread(dest)
 
 
@@ -331,7 +366,7 @@ def get_destination_by_id(
 )
 def get_suggested_destination(
     country: Optional[CountryCode] = None,
-):
+) -> DestinationRead:
     """
     Return a suggested destination to contact, possibly limited by country.
 
@@ -355,9 +390,10 @@ def get_suggested_destination(
                         event=DestinationSelectionLogEvent.WEB_SUGGESTED,
                     )
                 except query.NotFound as e2:
-                    raise HTTPException(status.HTTP_404_NOT_FOUND, str(e2))
+                    raise HTTPException(
+                        status.HTTP_404_NOT_FOUND, str(e2)) from e2
             else:
-                raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+                raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
         session.commit()
         return destination_to_destinationread(dest)
 
@@ -381,7 +417,7 @@ def get_suggested_destination(
 def initiate_call(
     request: InitiateCallRequest,
     claims: Annotated[JWTClaims, Depends(authtoken.validate_token)],
-):
+) -> Union[CallStateResponse, JSONResponse]:
     """
     Call the User and start an IVR interaction with them.
     """
@@ -396,7 +432,7 @@ def initiate_call(
                 request.destination_id,
             )
         except query.NotFound as e:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
 
         fb_token = query.create_feedback_token(
             session,
@@ -428,7 +464,7 @@ def initiate_call(
 )
 def get_call_state(
     claims: Annotated[JWTClaims, Depends(authtoken.validate_token)],
-):
+) -> CallStateResponse:
     """
     Returns the state of the User’s latest call.
     """
@@ -473,7 +509,10 @@ def request_number_verification(
             PhoneNumberVerificationRejectedResponse(errors=errors))
 
     user = UserPhone(request.phone_number)
-    assert user.original_number  # sure, we just created it from one
+    # The `assert` is just to guarantee to mypy that it's not None. Which we
+    # can guarantee because we've just created this UserPhone from an actual
+    # unhashed phone number.
+    assert user.original_number  # noqa: S101
     number = user.format_number(user.original_number)
 
     # Check if the number is forbidden by policy.
@@ -568,9 +607,9 @@ def get_feedback_context(
         try:
             feedback = query.get_user_feedback_by_token(session, token=token)
         except query.NotFound as e:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
         return FeedbackContext(
-            expired=feedback.expires_at <= datetime.now(),
+            expired=feedback.expires_at <= datetime.now(timezone.utc),
             used=feedback.feedback_entered_at is not None,
             destination=destination_to_destinationread(feedback.destination),
             language=feedback.language,
@@ -590,7 +629,7 @@ def get_feedback_context(
 def submit_call_feedback(
     token: FeedbackToken,
     submission: FeedbackSubmission,
-):
+) -> None:
     """
     Submit User feedback about a call.
 
@@ -602,12 +641,12 @@ def submit_call_feedback(
         try:
             feedback = query.get_user_feedback_by_token(session, token=token)
         except query.NotFound as e:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+            raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
         if feedback.feedback_entered_at is not None:
             raise HTTPException(
                 status.HTTP_403_FORBIDDEN, "token has already been used")
 
-        feedback.feedback_entered_at = datetime.now()
+        feedback.feedback_entered_at = datetime.now(timezone.utc)
         feedback.convinced = submission.convinced
         feedback.technical_problems = submission.technical_problems
         feedback.additional = submission.additional
@@ -624,7 +663,7 @@ def submit_call_feedback(
 )
 def get_schedule(
     claims: Annotated[JWTClaims, Depends(authtoken.validate_token)],
-):
+) -> ScheduleResponse:
     """
     Returns the schedule of the User, i.e. when the system should call them.
     """
@@ -643,7 +682,7 @@ def get_schedule(
 def set_schedule(
     claims: Annotated[JWTClaims, Depends(authtoken.validate_token)],
     submission: SetScheduleRequest,
-):
+) -> ScheduleResponse:
     """
     Set the schedule of the User.
 

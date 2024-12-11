@@ -4,15 +4,20 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-from contextlib import contextmanager
 
-from sqlalchemy.future import Engine
+from contextlib import contextmanager
+from typing import TYPE_CHECKING, Iterator
+
 from sqlmodel import MetaData, Session, SQLModel, create_engine, select, text
 
 from ..config import Config
 
 
-class NotThreadsafe(Exception):
+if TYPE_CHECKING:
+    from sqlalchemy.future import Engine
+
+
+class NotThreadsafeError(Exception):
     """The selected database engine is not available in a threadsafe way."""
 
 
@@ -58,7 +63,7 @@ class AutoEngine:
                 where compile_options like 'THREADSAFE=%'
             """)).one()
             if res[0] != "THREADSAFE=1":
-                raise NotThreadsafe(
+                raise NotThreadsafeError(
                     "SQLite3 library needs to have been compiled with "
                     "SQLITE_THREADSAFE=1; instead it has been compiled with "
                     f"SQLITE_{res[0]}"
@@ -80,7 +85,7 @@ def get_metadata() -> MetaData:
 
 
 @contextmanager
-def get_session():
+def get_session() -> Iterator[Session]:
     with Session(AutoEngine.get_engine()) as session:
         yield session
 

@@ -9,8 +9,8 @@ from threading import Thread
 from typing import List, Literal, Optional, Set, Tuple, Union
 
 import backoff
-from ratelimit import RateLimitException, limits  # type: ignore[import]
 import requests
+from ratelimit import RateLimitException, limits  # type: ignore[import]
 
 from . import __version__
 from .config import APP_NAME
@@ -32,7 +32,7 @@ def new_session() -> requests.Session:
 
 
 def session_or_new(session: Optional[requests.Session]) -> requests.Session:
-    return session if session else new_session()
+    return session or new_session()
 
 
 def _permanent_download_error(e: Exception) -> bool:
@@ -49,7 +49,7 @@ def _permanent_download_error(e: Exception) -> bool:
             f"downloading {url} failed without a response, will retry")
         return False  # network error? server unreachable?
     code = res.status_code
-    permanent = (400 <= code < 500) and (code != 429)
+    permanent = (400 <= code < 500) and (code != 429)  # noqa: PLR2004
     if permanent:
         _logger.error(f"{code} when downloading {url}, giving up")
     else:
@@ -58,7 +58,7 @@ def _permanent_download_error(e: Exception) -> bool:
 
 
 class MassDownloader:
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         *,
         jobs: int = DEFAULT_MASS_DOWNLOAD_JOBS,
@@ -66,9 +66,9 @@ class MassDownloader:
         task: Optional[BaseTask] = None,
         overwrite: bool = False,
         skip_existing: bool = False,
-        accept_error_codes: Union[None, Literal[True], Set[int]] = None,
-        ignore_error_codes: Union[None, Literal[True], Set[int]] = None,
-    ):
+        accept_error_codes: Union[Literal[True], Set[int], None] = None,
+        ignore_error_codes: Union[Literal[True], Set[int], None] = None,
+    ) -> None:
         self._jobs = jobs
         self._session = session_or_new(session)
         self._task = DummyTask.if_no(task)
@@ -100,7 +100,7 @@ class MassDownloader:
             res.raise_for_status()
         return res.content
 
-    def _download(self, url: str, dest: Path):
+    def _download(self, url: str, dest: Path) -> None:
         """Load URL's contents and save at destination."""
         if not dest.parent.is_dir():
             raise FileNotFoundError(f'"{dest.parent}" is not a directory')
@@ -121,7 +121,7 @@ class MassDownloader:
             raise FileExistsError(f'"{dest}" already exists')
         dest.write_bytes(content)
 
-    def _queue_worker(self):
+    def _queue_worker(self) -> None:
         """Single thread processing the queue."""
         while self._should_run:
             try:
@@ -154,7 +154,7 @@ class MassDownloader:
         for i in range(self._jobs):
             thread = Thread(
                 target=self._queue_worker,
-                name=f"MassDownloadWorker{i+1}",
+                name=f"MassDownloadWorker{i + 1}",
                 daemon=True,
             )
             workers.append(thread)
@@ -170,13 +170,13 @@ class MassDownloader:
                 except Empty:
                     break
 
-    def add(self, url: str, dest: Path):
+    def add(self, url: str, dest: Path) -> None:
         """Enqueue a URL to download to a location."""
         self._queue.put((url, dest))
         if self._task.total is not None:
             self._task.total += 1
 
-    def start(self):
+    def start(self) -> None:
         """Start the processing of downloads in a background thread."""
         self._mgmt_thread = Thread(
             target=self._manage,
@@ -187,7 +187,7 @@ class MassDownloader:
         self._should_run = True
         self._mgmt_thread.start()
 
-    def stop(self, wait: bool = True):
+    def stop(self, wait: bool = True) -> None:
         """Stop processing downloads, optionally waiting for queue to empty."""
         try:
             if wait:

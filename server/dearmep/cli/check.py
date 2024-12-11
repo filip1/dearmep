@@ -3,19 +3,24 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-from argparse import _SubParsersAction, ArgumentParser
+
 import logging
-from typing import TYPE_CHECKING, Mapping
+import sys
+from typing import TYPE_CHECKING, Callable, Mapping
+
 
 if TYPE_CHECKING:
+    from argparse import ArgumentParser, _SubParsersAction
+
     from . import Context
+
 from ..config import APP_NAME, Config, L10nEntry
 
 
 _logger = logging.getLogger(__name__)
 
 
-def cmd_translations(ctx: Context):
+def cmd_translations(ctx: Context) -> None:
     def check_entries(section: str, entries: Mapping[str, L10nEntry]) -> bool:
         had_error = False
         for key, entry_model in entries.items():
@@ -44,15 +49,17 @@ def cmd_translations(ctx: Context):
     had_error = check_entries("frontend", cfg.l10n.frontend_strings.__root__)
     had_error = check_entries("backend", {
         fname: getattr(cfg.l10n.strings, fname)
-        for fname in cfg.l10n.strings.__fields__.keys()
+        for fname in cfg.l10n.strings.__fields__
     }) or had_error
 
     if had_error:
-        exit(1)
-    exit(0)
+        sys.exit(1)
+    sys.exit(0)
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
+def add_parser(
+    subparsers: _SubParsersAction, help_if_no_subcommand: Callable,
+) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "check",
         help="health checks on the system and configuration",

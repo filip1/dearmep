@@ -24,7 +24,7 @@ def all_issues(session: Session) -> List[str]:
         *,
         message: str,
         formatter: Callable,
-    ):
+    ) -> None:
         if not len(problem_items):
             return
 
@@ -48,12 +48,12 @@ def all_issues(session: Session) -> List[str]:
     return issues
 
 
-def print_all_issues(session: Session):
+def print_all_issues(session: Session) -> None:
     all = all_issues(session)
 
     if not len(all):
-        print("No issues found.")
+        print("No issues found.")  # noqa: T201
         return
 
     for issue in all_issues(session):
-        print(issue)
+        print(issue)  # noqa: T201

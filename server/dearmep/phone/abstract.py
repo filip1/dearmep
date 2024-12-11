@@ -10,8 +10,15 @@ from typing import Union
 from ..config import Config
 from ..database.connection import Session
 from ..database.models import DestinationID
-from ..models import CallState, CallType, DestinationInCallResponse, \
-    Language, PhoneNumber, SMSSenderName, UserInCallResponse
+from ..models import (
+    CallState,
+    CallType,
+    DestinationInCallResponse,
+    Language,
+    PhoneNumber,
+    SMSSenderName,
+    UserInCallResponse,
+)
 
 
 class AbstractPhoneService(ABC):
@@ -48,6 +55,5 @@ def get_phone_service() -> AbstractPhoneService:
     if Config.get().telephony.dry_run:
         from .developer_phone import DeveloperPhoneService
         return DeveloperPhoneService()
-    else:
-        from .elks_phone import ElksPhoneService
-        return ElksPhoneService()
+    from .elks_phone import ElksPhoneService
+    return ElksPhoneService()

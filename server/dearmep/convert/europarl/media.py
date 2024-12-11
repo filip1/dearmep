@@ -19,7 +19,7 @@ SAVE = "save"
 STOP = "stop"
 
 
-def download_media(
+def download_media(  # noqa: PLR0913
     mep_ids: Iterable[int],
     *,
     url_pattern: str,
@@ -29,7 +29,7 @@ def download_media(
     skip_existing: bool = False,
     not_found: NotFoundReaction = "stop",
     task: Optional[BaseTask] = None,
-):
+) -> None:
     downloader = MassDownloader(
         jobs=jobs,
         overwrite=overwrite,
@@ -46,7 +46,7 @@ def download_media(
     downloader.stop()
 
 
-def download_portraits(
+def download_portraits(  # noqa: PLR0913
     mep_ids: Iterable[int],
     *,
     filename_pattern: str,
@@ -55,8 +55,8 @@ def download_portraits(
     skip_existing: bool = False,
     not_found: NotFoundReaction = "stop",
     task: Optional[BaseTask] = None,
-):
-    return download_media(
+) -> None:
+    download_media(
         mep_ids,
         url_pattern=PORTRAIT_URL,
         filename_pattern=filename_pattern,
@@ -68,7 +68,7 @@ def download_portraits(
     )
 
 
-def download_name_audio(
+def download_name_audio(  # noqa: PLR0913
     mep_ids: Iterable[int],
     *,
     filename_pattern: str,
@@ -77,8 +77,8 @@ def download_name_audio(
     skip_existing: bool = False,
     not_found: NotFoundReaction = "stop",
     task: Optional[BaseTask] = None,
-):
-    return download_media(
+) -> None:
+    download_media(
         mep_ids,
         url_pattern=NAME_AUDIO_URL,
         filename_pattern=filename_pattern,

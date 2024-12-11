@@ -8,13 +8,13 @@ from os import environ
 from pathlib import Path
 from typing import Callable, Dict, Optional
 
+import pytest
+import yaml
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from pydantic.utils import deep_update
-import pytest
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
-import yaml
 
 from dearmep.database.connection import AutoEngine, get_session
 from dearmep.database.models import Destination
@@ -106,7 +106,7 @@ def with_example_destinations(session: Session):
         country="at",
     ))
     session.commit()
-    yield session
+    return session
 
 
 @pytest.fixture
@@ -142,8 +142,8 @@ def fastapi_app_func(factory: FactoryType):
     tests_dir = Path(__file__).parent
 
     # Read the original config file as a Python object.
-    with open(environ["DEARMEP_CONFIG"], "r") as f:
-        config_dict_orig = yaml.load(f, yaml.Loader)
+    with Path(environ["DEARMEP_CONFIG"]).open("r", encoding="utf-8") as f:
+        config_dict_orig = yaml.safe_load(f)
     # Modify the MMDB.
     # TODO: This can probably be simplified using Config.set_patch().
     config_dict = deep_update(config_dict_orig, {
@@ -164,4 +164,4 @@ def fastapi_app(fastapi_factory: FactoryType):
 @pytest.fixture
 def client(fastapi_app: FastAPI, session: Session):
     Limit.reset_all_limits()
-    yield TestClient(fastapi_app)
+    return TestClient(fastapi_app)

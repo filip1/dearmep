@@ -3,33 +3,42 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-from argparse import _SubParsersAction, ArgumentParser
+
 import json
 import logging
-from os import environ
 import sys
-from typing import TYPE_CHECKING, Dict, Optional
+from os import environ
+from typing import TYPE_CHECKING, Callable, Dict, Optional
 
 from pydantic import ValidationError
 
+
 if TYPE_CHECKING:
+    from argparse import ArgumentParser, _SubParsersAction
+
     from . import Context
-from ..config import APP_NAME, ENV_PREFIX, Config, Settings, included_file, \
-    is_config_missing
+from ..config import (
+    APP_NAME,
+    ENV_PREFIX,
+    Config,
+    Settings,
+    included_file,
+    is_config_missing,
+)
 from ..main import create_app
 
 
 _logger = logging.getLogger(__name__)
 
 
-def fake_config(patch: Optional[Dict] = None):
+def fake_config(patch: Optional[Dict] = None) -> None:
     try:
         s = Settings()
     except ValidationError as e:
         if not is_config_missing(e):
             raise
         # Use the builtin config instead.
-        environ[ENV_PREFIX+"CONFIG"] = str(
+        environ[ENV_PREFIX + "CONFIG"] = str(
             included_file("example-config.yaml"))
         s = Settings()
     if patch:
@@ -37,13 +46,14 @@ def fake_config(patch: Optional[Dict] = None):
     Config.load_yaml_file(s.config_file)
 
 
-def dump_included_file(name: str):
-    print(included_file(name).read_text())
+def dump_included_file(name: str) -> None:
+    print(included_file(name).read_text())  # noqa: T201
 
 
-def dump_erd(ctx: Context):
+def dump_erd(ctx: Context) -> None:
     try:
         from eralchemy2 import render_er
+
         from ..database import get_metadata
     except ModuleNotFoundError:
         _logger.exception(
@@ -54,21 +64,23 @@ def dump_erd(ctx: Context):
     render_er(get_metadata(), ctx.args.outfile)
 
 
-def dump_example_config(ctx: Context):
+def dump_example_config(ctx: Context) -> None:  # noqa: ARG001
     dump_included_file("example-config.yaml")
 
 
-def dump_log_config(ctx: Context):
+def dump_log_config(ctx: Context) -> None:  # noqa: ARG001
     dump_included_file("logging.yaml")
 
 
-def dump_openapi(ctx: Context):
+def dump_openapi(ctx: Context) -> None:
     fake_config()
     app = create_app()
-    print(json.dumps(app.openapi(), indent=None if ctx.args.compact else 2))
+    print(json.dumps(app.openapi(), indent=None if ctx.args.compact else 2))  # noqa: T201
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
+def add_parser(
+    subparsers: _SubParsersAction, help_if_no_subcommand: Callable,
+) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "dump",
         help="dump example files & specifications",

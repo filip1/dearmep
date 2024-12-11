@@ -5,16 +5,23 @@
 
 from typing import Union
 
-from .elks import elks
-from .abstract import AbstractPhoneService
 from ..database.connection import Session
 from ..database.models import DestinationID
-from ..models import CallState, CallType, DestinationInCallResponse, \
-    Language, PhoneNumber, SMSSenderName, UserInCallResponse
+from ..models import (
+    CallState,
+    CallType,
+    DestinationInCallResponse,
+    Language,
+    PhoneNumber,
+    SMSSenderName,
+    UserInCallResponse,
+)
+from .abstract import AbstractPhoneService
+from .elks import elks
 
 
 class ElksPhoneService(AbstractPhoneService):
-    def send_sms(
+    def send_sms(  # noqa: PLR6301
         self,
         *,
         recipient: PhoneNumber,
@@ -27,7 +34,7 @@ class ElksPhoneService(AbstractPhoneService):
             message=content,
         )
 
-    def establish_call(
+    def establish_call(  # noqa: PLR6301
         self,
         *,
         user_phone: PhoneNumber,

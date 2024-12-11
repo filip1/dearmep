@@ -2,16 +2,17 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import datetime
+from datetime import datetime, timezone
+from typing import cast
 
 from sqlalchemy import and_, select
-from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import NoResultFound
+from sqlalchemy.orm import joinedload
 from sqlmodel import Session, col
 
 from ...config import Language
 from ...database.models import Call, Destination
-from ...models import UserPhone, CallType
+from ...models import CallType, UserPhone
 
 
 class CallError(Exception):
@@ -24,32 +25,31 @@ def get_call(
         session: Session,
 ) -> Call:
     try:
-        call = (session.query(Call)
+        return cast("Call", session.query(Call)
                 .filter(Call.provider_call_id == callid)
                 .filter(Call.provider == provider)
                 .options(
                 joinedload(Call.destination)
                 .joinedload(Destination.contacts)
                 ).one())
-        return call  # type: ignore
-    except NoResultFound:
-        raise CallError(f"Call {callid=}, {provider=} not found")
+    except NoResultFound as e:
+        raise CallError(f"Call {callid=}, {provider=} not found") from e
 
 
-def remove_call(call: Call, session: Session):
+def remove_call(call: Call, session: Session) -> None:
     """ removes a call from the database """
     session.delete(call)
     session.commit()
 
 
-def connect_call(call: Call, session: Session):
+def connect_call(call: Call, session: Session) -> None:
     """ sets a call as connected in database """
-    call.connected_at = datetime.now()
+    call.connected_at = datetime.now(timezone.utc)
     session.add(call)
     session.commit()
 
 
-def destination_is_in_call(destination_id: str, session: Session):
+def destination_is_in_call(destination_id: str, session: Session) -> bool:
     """ returns True if the destination is in a call """
     stmt = select(Call).where(
         and_(
@@ -57,23 +57,22 @@ def destination_is_in_call(destination_id: str, session: Session):
             col(Call.connected_at).isnot(None),
         )
     ).exists()
-    in_call = session.query(stmt).scalar()
-    return in_call
+    return bool(session.query(stmt).scalar())
 
 
-def user_is_in_call(user_id: UserPhone, session: Session):
+def user_is_in_call(user_id: UserPhone, session: Session) -> bool:
     """ returns True if the user is in a call """
     stmt = select(Call).where(Call.user_id == user_id).exists()
-    in_call = session.query(stmt).scalar()
-    return in_call
+    return bool(session.query(stmt).scalar())
 
 
-def add_call(
+def add_call(  # noqa: PLR0913
+    *,
     provider: str,
     provider_call_id: str,
     destination_id: str,
     user_language: Language,
-    user_id,
+    user_id: str,
     type: CallType,
     started_at: datetime,
     session: Session,
@@ -100,4 +99,5 @@ def get_mep_number(call: Call) -> str:
         return query[0].contact
     except IndexError:
         raise CallError(
-            f"Destination {call.destination_id} has no phone number to call")
+            f"Destination {call.destination_id} has no phone number to call"
+        ) from None

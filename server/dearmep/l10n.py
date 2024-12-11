@@ -3,8 +3,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import logging
-from pathlib import Path
+import operator
 import re
+from pathlib import Path
 from typing import List, Optional, Sequence, Union
 
 import maxminddb
@@ -21,7 +22,7 @@ _logger = logging.getLogger(__name__)
 Q_VALUE_RE = r"^(?:0(?:\.[0-9]{0,3})?|1(?:\.0{0,3})?)$"
 
 
-class LanguageNotAvailableException(Exception):
+class LanguageNotAvailableError(Exception):
     pass
 
 
@@ -40,7 +41,7 @@ def parse_accept_language(spec: str) -> List[str]:
         lang = split[0].strip()
         # If the base language is empty (usually because the whole input string
         # is empty), it makes no sense to use it.
-        if lang == "":
+        if not lang:
             continue
 
         # To be future-proof, iterate over the other parts and look for one
@@ -55,7 +56,7 @@ def parse_accept_language(spec: str) -> List[str]:
 
         pairs.append((lang, q))
 
-    pairs.sort(reverse=True, key=lambda pair: pair[1])
+    pairs.sort(reverse=True, key=operator.itemgetter(1))
     # Cut off the q-value, the caller is probably not interested in it.
     return [pair[0] for pair in pairs]
 
@@ -77,16 +78,14 @@ def find_preferred_language(
     `de-de` would match `de-DE-1996`). Matching is case insensitive.
 
     If no preferred language is available, either return the fallback (if
-    specified), or raise a LanguageNotAvailableExecption. However, if there is
-    an asterisk `*` in the preferences, the first item in `available` will be
+    specified), or raise a LanguageNotAvailableError. However, if there is an
+    asterisk `*` in the preferences, the first item in `available` will be
     selected instead of the fallback or raising an exception.
     """
     if not len(available):
         raise ValueError("there should be at least one available language")
 
-    for preference in prefs:
-        preference = preference.lower()
-
+    for preference in [pref.lower() for pref in prefs]:
         # Look for an exact match.
         for av in available:
             if preference == av.lower():
@@ -107,7 +106,7 @@ def find_preferred_language(
     if fallback is not None:
         return fallback
 
-    raise LanguageNotAvailableException(
+    raise LanguageNotAvailableError(
         "none of the preferred languages are available")
 
 
@@ -134,10 +133,10 @@ def get_country(
                     country = country.get("iso_code", None)
     except (
         FileNotFoundError, ValueError, mmdberrors.InvalidDatabaseError
-    ) as e:
-        _logger.exception(e)
+    ):
+        _logger.exception("could not determine country")
 
-    if isinstance(country, str) and 1 < len(country) < 4:
+    if isinstance(country, str) and 1 < len(country) < 4:  # noqa: PLR2004
         country = country.upper()
     else:
         # Doesn't look right, country should be an ISO-639 code.

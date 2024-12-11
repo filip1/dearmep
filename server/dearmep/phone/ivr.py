@@ -3,10 +3,11 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import re
-from pydantic import UUID4
 from random import shuffle
-from sqlmodel import Session
 from typing import List, Optional
+
+from pydantic import UUID4
+from sqlmodel import Session
 
 from ..config import Config
 from ..convert import blobfile
@@ -28,16 +29,15 @@ def prepare_medialist(session: Session, playlist: List[str], language: str
         languages=(language, "en", ""),  # " " string needed
         suffix=".ogg",
     )
-    medialist_id = query.store_medialist(
+    return query.store_medialist(
         format="ogg",
         mimetype="audio/ogg",
         items=medialist,
         session=session
     )
-    return medialist_id
 
 
-def _group_filename(group_id: str):
+def _group_filename(group_id: str) -> str:
     return "group_" + re.sub(
         r"[^a-zA-Z]", "_",
         re.sub(r"^G:", "", group_id)
@@ -63,12 +63,12 @@ def main_menu(
 
 def arguments(*, destination_id: str) -> List[str]:
     """ IVR read arguments """
-    _arguments = ["argument_1", "argument_2", "argument_3", "argument_4",
+    arguments_ = ["argument_1", "argument_2", "argument_3", "argument_4",
                   "argument_5", "argument_6", "argument_7", "argument_8",
                   ]
-    shuffle(_arguments)
+    shuffle(arguments_)
     return ["arguments_campaign_intro", "arguments_choice_cancel_1",
-            destination_id, "arguments_choice_cancel_2", *_arguments,
+            destination_id, "arguments_choice_cancel_2", *arguments_,
             "arguments_end"]
 
 

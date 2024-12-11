@@ -8,8 +8,8 @@ from typing import Any, Dict, List, Literal, Optional, Union
 import pytest
 from sqlmodel import Session
 
-from dearmep.config import Config
 from dearmep import l10n
+from dearmep.config import Config
 
 
 TEST_MMDB = str(Path(Path(__file__).parent, "geo_ip", "test.mmdb"))
@@ -48,7 +48,7 @@ def test_find_preferred_language(
     expected: Union[str, Literal[False]],
 ):
     if expected is False:  # parameter means "expect an exception"
-        with pytest.raises(l10n.LanguageNotAvailableException):
+        with pytest.raises(l10n.LanguageNotAvailableError):
             l10n.find_preferred_language(
                 prefs=prefs,
                 available=available,
@@ -63,7 +63,9 @@ def test_find_preferred_language(
 
 
 def test_find_preferred_with_no_available_languages():
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError, match="there should be at least one available language",
+    ):
         l10n.find_preferred_language(prefs=["de-DE", "*"], available=[])
 
 
@@ -103,6 +105,6 @@ def test_get_country(
 def test_translate_string(fastapi_app):
     template = Config.strings().phone_number_verification_sms
     translated = template.apply({"code": "12345"})
-    assert translated == "12345 is your verification code. " \
-        "If you think you have received this message in error, simply " \
-        "ignore it."
+    assert translated == ("12345 is your verification code. "
+        "If you think you have received this message in error, simply "
+        "ignore it.")

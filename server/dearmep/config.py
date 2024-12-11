@@ -6,22 +6,47 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import logging
-from datetime import date, datetime, time, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone, tzinfo
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, ClassVar, Dict, List, Literal, Optional, Set, Tuple, \
-    Union, cast
+from typing import (
+    Any,
+    ClassVar,
+    Dict,
+    List,
+    Literal,
+    Optional,
+    Set,
+    Tuple,
+    Union,
+    cast,
+)
 
 import pytz
-from pydantic import AnyHttpUrl, BaseModel, BaseSettings, DirectoryPath, \
-    Field, FilePath, PositiveInt, ValidationError, validator
+import yaml
+from pydantic import (
+    AnyHttpUrl,
+    BaseModel,
+    BaseSettings,
+    DirectoryPath,
+    Field,
+    FilePath,
+    PositiveInt,
+    ValidationError,
+    validator,
+)
 from pydantic.fields import ModelField
 from pydantic.utils import deep_update
-import yaml
 from yaml.parser import ParserError
 
-from .models import FeaturesConfig, Language, OfficeHoursInterval, \
-    SMSSenderName, WeekdayNumber
+from .models import (
+    FeaturesConfig,
+    Language,
+    OfficeHoursInterval,
+    SMSSenderName,
+    WeekdayNumber,
+)
+
 
 _logger = logging.getLogger(__name__)
 
@@ -37,7 +62,7 @@ if EMBEDDED_STATIC_DIR and not EMBEDDED_STATIC_DIR.is_dir():
     EMBEDDED_STATIC_DIR = None
 
 
-class ConfigNotLoaded(Exception):
+class ConfigNotLoadedError(Exception):
     pass
 
 
@@ -131,7 +156,7 @@ class L10nEntry(BaseModel):
 
     def apply(
         self,
-        placeholders: Dict[str, Any] = {},
+        placeholders: Optional[Dict[str, Any]] = None,
         language: str = "",
     ) -> str:
         l10nconfig = Config.get().l10n
@@ -140,7 +165,7 @@ class L10nEntry(BaseModel):
         # TODO: Use a context-set language?
         lang = Language(language) if language else l10nconfig.default_language
 
-        return self.for_language(lang).format(**placeholders)
+        return self.for_language(lang).format(**(placeholders or {}))
 
     def for_language(self, language: Language) -> str:
         # If the entry is a simple string, use that.
@@ -176,7 +201,7 @@ class L10nConfig(BaseModel):
         cls,
         v: Language,
         values: Dict[str, Any],
-    ):
+    ) -> Language:
         if "languages" in values and v not in values["languages"]:
             raise ValueError(
                 f"default language '{v}' needs to be in the list of available "
@@ -190,7 +215,7 @@ class L10nConfig(BaseModel):
         v: Union[FrontendStrings, L10nStrings],
         field: ModelField,
         values: Dict[str, Any],
-    ):
+    ) -> Union[FrontendStrings, L10nStrings]:
         if "default_language" not in values:
             # Validation of `default_language` probably failed, skip.
             return v
@@ -248,7 +273,7 @@ class OfficeHoursConfig(BaseModel):
             raise ValueError("`end` has to be after `begin`")
         return v
 
-    def timezone_obj(self):
+    def timezone_obj(self) -> tzinfo:
         """Return a timezone definition object for the configured timezone."""
         return pytz.timezone(self.timezone)
 
@@ -268,7 +293,7 @@ class OfficeHoursConfig(BaseModel):
         If a weekday has no office hours, it will not be in the return value.
         """
         return {
-            cast(WeekdayNumber, daynum): [
+            cast("WeekdayNumber", daynum): [
                 OfficeHoursInterval(begin=self.begin, end=self.end),
             ]
             for daynum in range(1, 8)
@@ -292,10 +317,7 @@ class OfficeHoursConfig(BaseModel):
 
         # Check whether we're in the configured interval.
         time = now.time()
-        if time < self.begin or time >= self.end:
-            return False
-
-        return True
+        return not (time < self.begin or time >= self.end)
 
 
 class TelephonyConfig(BaseModel):
@@ -316,7 +338,7 @@ class EndorsementCutoffConfig(BaseModel):
     max: float = Field(ge=0, le=1, default=1)
 
     @validator("max")
-    def max_must_be_gt_min(cls, v, values):
+    def max_must_be_gt_min(cls, v: float, values: dict) -> float:
         if v <= values["min"]:
             raise ValueError("max must be greater than min")
         return v
@@ -377,8 +399,8 @@ class Config(BaseModel):
     def get(cls) -> "Config":
         """Get the singleton configuration object instance."""
         if cls._instance is None:
-            raise ConfigNotLoaded("attempt to access config without loading "
-                                  "it first; this is a bug")
+            raise ConfigNotLoadedError("attempt to access config without "
+                                       "loading it first; this is a bug")
         return cls._instance
 
     @classmethod
@@ -415,7 +437,7 @@ class Config(BaseModel):
     def load_yaml_file(cls, filename: Path) -> "Config":
         with filename.open("r") as f:
             try:
-                yaml_dict = yaml.load(f, yaml.Loader)
+                yaml_dict = yaml.safe_load(f)
             except ParserError:
                 _logger.exception(
                     "There was an error loading your YAML config.",
@@ -424,7 +446,7 @@ class Config(BaseModel):
             return cls.load_dict(yaml_dict)
 
     @classmethod
-    def set_patch(cls, patch: Optional[Dict]):
+    def set_patch(cls, patch: Optional[Dict]) -> None:
         cls._patch = patch
 
     @classmethod
@@ -458,17 +480,19 @@ class Settings(BaseSettings):
         env_prefix = ENV_PREFIX
 
     @validator("static_files_dir", "markdown_files_dir", pre=True)
-    def empty_string_is_none(cls, v):
-        return None if v == "" else v
+    def empty_string_is_none(
+        cls, v: Optional[DirectoryPath]
+    ) -> Optional[DirectoryPath]:
+        return v or None
 
 
-def is_config_missing(e: ValidationError):
+def is_config_missing(e: ValidationError) -> bool:
     """Check whether e means that the config is missing."""
     cfg_errs = (err for err in e.errors() if err["loc"] == ("config_file",))
     for err in cfg_errs:
-        if err["type"] in (
+        if err["type"] in {
             "value_error.path.not_exists", "value_error.path.not_a_file",
-        ):
+        }:
             return True
     return False
 

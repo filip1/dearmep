@@ -11,7 +11,7 @@ from PIL import Image
 from ..database.models import Blob
 
 
-class ImageLoadException(Exception):
+class ImageLoadError(Exception):
     pass
 
 
@@ -25,7 +25,7 @@ def image2blob(
     data_stream = BytesIO(data)
     image = Image.open(data_stream)
     if image.format is None:
-        raise ImageLoadException(f"could not determine image format of {path}")
+        raise ImageLoadError(f"could not determine image format of {path}")
     mimetype = Image.MIME[image.format]
     return Blob(
         type=type,

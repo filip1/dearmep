@@ -6,17 +6,17 @@
 import ipaddress
 import logging
 from time import time
-from typing import Dict, Literal, Optional, Tuple, Union, Set
+from typing import ClassVar, Dict, Literal, Optional, Set, Tuple, Union
 
-from fastapi import Depends, HTTPException, Request, routing, status
 import limits
+from fastapi import Depends, HTTPException, Request, routing, status
 from prometheus_client import Counter
 
 from .config import Config, IPRateLimits
 from .models import IPNetwork
 
 
-NETSIZES: Dict[str, Union[None, Tuple[int, int]]] = {
+NETSIZES: Dict[str, Union[Tuple[int, int], None]] = {
     "ip": None,
     "small_block": (24, 64),
     "large_block": (16, 48),
@@ -66,17 +66,21 @@ def ip_network(
 class Limit:
     """Dependency for rate limiting calls of an endpoint."""
 
-    not_limited_ip_networks: Set[IPNetwork] = set()
+    not_limited_ip_networks: ClassVar[Set[IPNetwork]] = set()
 
     @staticmethod
-    def reset_all_limits():
+    def reset_all_limits() -> None:
         limits_storage.reset()
 
-    def __init__(self, limit_name: Literal["simple", "computational", "sms"]):
+    def __init__(
+        self, limit_name: Literal["simple", "computational", "sms"],
+    ) -> None:
         self.limit_name = limit_name
         self.limits: Optional[Dict[str, limits.RateLimitItem]] = None
 
-    def __call__(self, request: Request, addr_str=Depends(client_addr)):
+    def __call__(
+        self, request: Request, addr_str: str = Depends(client_addr),
+    ) -> None:
         if self.limits is None:
             # First call, we need to get the values from the Config.
             rate_limits: IPRateLimits = getattr(
@@ -88,7 +92,7 @@ class Limit:
         route: routing.APIRoute = request.scope["route"]
         prom_labels = (request.method, route.path)
 
-        if addr_str == "":
+        if not addr_str:
             _logger.warning("client address unknown, rate limiting skipped")
             return
 
@@ -127,7 +131,7 @@ class Limit:
             )
 
     @classmethod
-    def allow_unlimited(cls, subnets: Set[IPNetwork]):
+    def allow_unlimited(cls, subnets: Set[IPNetwork]) -> None:
         """
         Exclude specific IP subnets from the limits.
         """

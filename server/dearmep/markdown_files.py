@@ -3,13 +3,14 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import dataclasses
-from functools import lru_cache
 import logging
+from functools import lru_cache
 from pathlib import Path
-from typing import Optional
+from typing import NoReturn, Optional
 
-import defusedxml.ElementTree as ET  # type: ignore[import]
-from fastapi import FastAPI, HTTPException, Path as PathParam, status
+from defusedxml import ElementTree
+from fastapi import FastAPI, HTTPException, status
+from fastapi import Path as PathParam
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -38,19 +39,20 @@ class Document:
 md = MarkdownIt()
 
 
-@lru_cache()
+@lru_cache
 def get_doc(path: Path) -> Document:
     markdown = path.read_text()
     html = md.render(markdown)
-    tree = ET.fromstring(f"<body>{html}</body>")  # needs a document element
+    # Wrap the HTML in a document element, required to be well-formed XML.
+    tree = ElementTree.fromstring(f"<body>{html}</body>")
     h1 = tree.find("h1")
     return Document(
         title=h1.text if h1 is not None else None,
-        content=str(Markup(html)),
+        content=str(Markup(html)),  # noqa: RUF035
     )
 
 
-def mount_if_configured(app: FastAPI, prefix: str):
+def mount_if_configured(app: FastAPI, prefix: str) -> None:
     settings = Settings()
     markdown_dir_setting = settings.markdown_files_dir
     if markdown_dir_setting is None:
@@ -74,7 +76,7 @@ def mount_if_configured(app: FastAPI, prefix: str):
     )
     template = jinja_env.get_template(TEMPLATE_NAME)
 
-    def raise_404(path: str):
+    def raise_404(path: str) -> NoReturn:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"file not found: {path}",
@@ -97,7 +99,7 @@ def mount_if_configured(app: FastAPI, prefix: str):
             "to an actual file like `en.md` inside of the `path` "
             "corresponding to the requested document.",
         )],
-    ):
+    ) -> HTMLResponse:
         """
         Serve a Markdown document from the server, converted to HTML.
 

@@ -3,13 +3,16 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-from argparse import _SubParsersAction, ArgumentParser
+
 import csv
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
+
 
 if TYPE_CHECKING:
+    from argparse import ArgumentParser, _SubParsersAction
+
     from . import Context
 from ..config import APP_NAME, CMD_NAME, Config
 from ..convert import dump
@@ -22,7 +25,7 @@ from ..progress import FlexiBytesReader, FlexiStrReader
 _logger = logging.getLogger(__name__)
 
 
-def import_destinations(ctx: Context):
+def import_destinations(ctx: Context) -> None:
     Config.load()
     input: FlexiBytesReader = ctx.args.input
 
@@ -33,38 +36,39 @@ def import_destinations(ctx: Context):
             logo_template=ctx.args.logo_template,
             name_audio_template=ctx.args.name_audio_template,
         )
-        with ctx.task_factory() as tf:
-            with tf.create_task("reading and converting JSON") as task:
-                input.set_task(task)
-                with input as input_stream:
-                    importer.import_dump(
-                        session,
-                        dump.read_dump_json(input_stream),
-                    )
+        with ctx.task_factory() as tf, \
+        tf.create_task("reading and converting JSON") as task:
+            input.set_task(task)
+            with input as input_stream:
+                importer.import_dump(
+                    session,
+                    dump.read_dump_json(input_stream),
+                )
         session.commit()
 
 
-def import_swayability(ctx: Context):
+def import_swayability(ctx: Context) -> None:
     Config.load()
     input: FlexiStrReader = ctx.args.input
 
-    with get_session() as session:
-        with ctx.task_factory() as tf:
-            with tf.create_task("reading and importing CSV") as task:
-                input.set_task(task)
-                with input as input_stream:
-                    csvr = csv.DictReader(input_stream)
-                    ignored = db_importing.import_swayability(session, map(
-                        SwayabilityImport.parse_obj, csvr
-                    ), ignore_unknown=ctx.args.ignore_unknown)
-                session.commit()
+    with get_session() as session, ctx.task_factory() as tf, \
+    tf.create_task("reading and importing CSV") as task:
+        input.set_task(task)
+        with input as input_stream:
+            csvr = csv.DictReader(input_stream)
+            ignored = db_importing.import_swayability(session, map(
+                SwayabilityImport.parse_obj, csvr
+            ), ignore_unknown=ctx.args.ignore_unknown)
+        session.commit()
     if ignored:
         _logger.warning(
             "Ignored the following IDs which were not found in the database: "
             f"{', '.join(ignored)}")
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
+def add_parser(
+    subparsers: _SubParsersAction, help_if_no_subcommand: Callable,
+) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "import",
         help=f"import data into the {APP_NAME} database",

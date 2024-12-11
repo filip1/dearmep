@@ -3,12 +3,15 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-from argparse import _SubParsersAction, ArgumentParser
+
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Callable, Type
+
 
 if TYPE_CHECKING:
+    from argparse import ArgumentParser, _SubParsersAction
+
     from . import Context
 from ..config import APP_NAME, CMD_NAME
 from ..convert import ActionIfExists, audio, dump
@@ -27,16 +30,15 @@ MEP_NAME_AUDIO_FILE_PATTERN = "{id}.mp3"
 _logger = logging.getLogger(__name__)
 
 
-def tabular_class(ctx: Context):
+def tabular_class(ctx: Context) -> Type[Tabular]:
     """Return the correct Tabular subclass depending on the output format."""
     format = ctx.args.output_format
     if format == "csv":
         return CSVStreamTabular
-    else:
-        return Tabular
+    return Tabular
 
 
-def convert_audio(ctx: Context):
+def convert_audio(ctx: Context) -> None:
     args = ctx.args
     for input in args.input:
         out_path = Path(input).with_suffix(f".{AUDIO_EXTENSION}")
@@ -54,10 +56,10 @@ def convert_audio(ctx: Context):
             input,
             out_path,
         )
-        print(out_path)
+        print(out_path)  # noqa: T201
 
 
-def parltrack_meps(ctx: Context):
+def parltrack_meps(ctx: Context) -> None:
     with ctx.task_factory() as tf:
         for output in dump.dump_iter_json(mep.convert_meps(
             ctx.args.input,
@@ -65,10 +67,10 @@ def parltrack_meps(ctx: Context):
             include_inactive=ctx.args.include_inactive,
             lz_compressed=ctx.args.lz,
         )):
-            print(output)
+            print(output)  # noqa: T201
 
 
-def europarl_portraits(ctx: Context):
+def europarl_portraits(ctx: Context) -> None:
     ctx.setup_logging()
     ids = set(ctx.args.ID)
     with ctx.task_factory() as tf:
@@ -88,7 +90,7 @@ def europarl_portraits(ctx: Context):
     )
 
 
-def europarl_name_audio(ctx: Context):
+def europarl_name_audio(ctx: Context) -> None:
     ctx.setup_logging()
     ids = set(ctx.args.ID)
     with ctx.task_factory() as tf:
@@ -108,7 +110,7 @@ def europarl_name_audio(ctx: Context):
     )
 
 
-def rollcallvote_topics(ctx: Context):
+def rollcallvote_topics(ctx: Context) -> None:
     with ctx.task_factory() as tf:
         table = rollcallvote.list_topics(
             ctx.args.input,
@@ -118,7 +120,7 @@ def rollcallvote_topics(ctx: Context):
     table.print_to_console(ctx.console)
 
 
-def rollcallvote_votes(ctx: Context):
+def rollcallvote_votes(ctx: Context) -> None:
     with ctx.task_factory() as tf:
         table = rollcallvote.list_votes(
             ctx.args.input,
@@ -129,8 +131,10 @@ def rollcallvote_votes(ctx: Context):
     table.print_to_console(ctx.console)
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
-    def rcv_template(parser: ArgumentParser, func: Callable):
+def add_parser(
+    subparsers: _SubParsersAction, help_if_no_subcommand: Callable,
+) -> None:
+    def rcv_template(parser: ArgumentParser, func: Callable) -> None:
         FlexiBytesReader.add_as_argument(parser)
         parser.add_argument(
             "-f", "--output-format",
@@ -146,7 +150,7 @@ def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
         *,
         default_pattern: str,
         can_save_notfound: bool,
-    ):
+    ) -> None:
         parser.add_argument(
             "-f", "--filename-template", metavar="TEMPLATE",
             default=default_pattern,

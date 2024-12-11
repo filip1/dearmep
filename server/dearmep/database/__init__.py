@@ -3,8 +3,8 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from .models import Contact, Destination
 from .connection import AutoEngine, get_metadata, get_session
+from .models import Contact, Destination
 
 
 __all__ = [

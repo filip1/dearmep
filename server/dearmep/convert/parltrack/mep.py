@@ -2,21 +2,37 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import date
-from io import BufferedReader
 import json
 import re
-from typing import Any, Dict, Generator, Iterable, List, Union, cast
+from datetime import date, datetime, timezone
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Dict,
+    Generator,
+    Iterable,
+    List,
+    Union,
+    cast,
+)
 
 from countryguess import guess_country  # type: ignore[import]
 
 from ...config import APP_NAME
-from ...database.models import ContactDump, DestinationDump, \
-    DestinationGroupDump, DumpableModels
+from ...database.models import (
+    ContactDump,
+    DestinationDump,
+    DestinationGroupDump,
+    DumpableModels,
+)
 from ...progress import BaseTaskFactory, FlexiBytesReader
 
 
-TODAY = date.today()
+if TYPE_CHECKING:
+    from io import BufferedReader
+
+
+TODAY = datetime.now(tz=timezone.utc).date()
 
 CONTACT_MAP = {
     "Facebook": "facebook",
@@ -48,7 +64,7 @@ def parse_date(datestr: str) -> date:
 
 def get_group(
     id: str,
-    **kwargs,
+    **kwargs: Any,  # noqa: ANN401
 ) -> Generator[DestinationGroupDump, None, str]:
     # Initialize "static variable" for tracking known groups. mypy doesn't like
     # this (yet, see <https://github.com/python/mypy/issues/2087>), hence the
@@ -63,7 +79,7 @@ def get_group(
         get_group.known[id] = new_group  # type: ignore[attr-defined]
         yield new_group
 
-    return id
+    return id  # noqa: B901
 
 
 def constituency_to_group(const: Dict[str, str]) -> Dict[str, str]:
@@ -88,7 +104,7 @@ def group_to_group(group: Dict[str, str]) -> Dict[str, str]:
 
 def convert_contact(type: str, contact: str) -> str:
     # Parltrack uses phone/fax numbers starting with `00` instead of `+`.
-    if type in ("Phone", "Fax") and contact.startswith("00"):
+    if type in {"Phone", "Fax"} and contact.startswith("00"):
         return f"+{contact[2:]}"
     # No conversion necessary.
     return contact
@@ -118,13 +134,13 @@ def convert_person(raw_mep: Dict[str, Any]) -> Iterable[DumpableModels]:
     # Get the current group & constituency.
     group = next((
         group
-        for group in cast(List[Dict[str, str]], raw_mep.get("Groups", []))
+        for group in cast("List[Dict[str, str]]", raw_mep.get("Groups", []))
         if is_current(group)
     ), None)
     constituency = next((
         constituency
         for constituency in cast(
-            List[Dict[str, str]], raw_mep.get("Constituencies", []))
+            "List[Dict[str, str]]", raw_mep.get("Constituencies", []))
         if is_current(constituency)
     ), None)
 

@@ -3,13 +3,17 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-import csv
-from itertools import chain
-import sys
-from typing import Any, Iterable, List, Mapping, Optional
 
-from rich.console import Console
+import csv
+import sys
+from itertools import chain
+from typing import TYPE_CHECKING, Any, Iterable, List, Mapping, Optional
+
 from rich.table import Table
+
+
+if TYPE_CHECKING:
+    from rich.console import Console
 
 
 class Tabular:
@@ -17,7 +21,7 @@ class Tabular:
         self,
         *headers: str,
         rows: Optional[Iterable[Iterable]] = None,
-    ):
+    ) -> None:
         self._headers = tuple(headers)
         self._rows: List[tuple] = []
         if rows is not None:
@@ -47,10 +51,10 @@ class Tabular:
 
         return cls(*headers, rows=converter())
 
-    def append(self, *row: Any):
+    def append(self, *row: Any) -> None:  # noqa: ANN401
         self.extend(row)
 
-    def extend(self, *rows: Iterable):
+    def extend(self, *rows: Iterable) -> None:
         num_headers = len(self._headers)
         for row_num, row in enumerate(rows, 1):
             values = tuple(row)
@@ -61,11 +65,11 @@ class Tabular:
                 )
             self._rows.append(values)
 
-    def print_to_console(self, console: Console):
+    def print_to_console(self, console: Console) -> None:
         console.print(self.to_rich_table())
 
-    def to_rich_table(self, **kwargs) -> Table:
-        t = Table(*self._headers, **kwargs)
+    def to_rich_table(self) -> Table:
+        t = Table(*self._headers)
         for row in self._rows:
             t.add_row(*row)
         return t
@@ -76,12 +80,12 @@ class CSVStreamTabular(Tabular):
         self,
         *headers: str,
         rows: Optional[Iterable[Iterable]] = None,
-    ):
+    ) -> None:
         super().__init__(*headers, rows=rows)
         self._csvw = csv.writer(sys.stdout)
         self._csvw.writerow(self._headers)
 
-    def extend(self, *rows: Iterable):
+    def extend(self, *rows: Iterable) -> None:
         num_headers = len(self._headers)
         for row_num, row in enumerate(rows, 1):
             values = tuple(row)
@@ -92,6 +96,6 @@ class CSVStreamTabular(Tabular):
                 )
             self._csvw.writerow(row)
 
-    def print_to_console(self, console: Console):
+    def print_to_console(self, console: Console) -> None:
         # We have already printed our stuff, nothing to do here.
         pass

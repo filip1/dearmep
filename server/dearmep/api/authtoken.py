@@ -4,12 +4,12 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from datetime import datetime, timezone
-from typing_extensions import Annotated
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import jwt, JWTError
+from jose import JWTError, jwt
 from pydantic import ValidationError
+from typing_extensions import Annotated
 
 from ..config import Config
 from ..models import JWTClaims, JWTResponse, PhoneNumber
@@ -26,7 +26,7 @@ def create_token(phone: PhoneNumber) -> JWTResponse:
     auth_config = Config.get().authentication
     jwt_config = auth_config.secrets.jwt
     timeout = auth_config.session.authentication_timeout
-    valid_until = datetime.now() + timeout
+    valid_until = datetime.now(timezone.utc) + timeout
     token = jwt.encode(
         JWTClaims(phone=phone, exp=valid_until).dict(),
         jwt_config.key,
@@ -48,12 +48,12 @@ def validate_token(
             options={"require_exp": True},
         )
         claims = JWTClaims.parse_obj(claims_dict)
-    except (JWTError, ValidationError):
+    except (JWTError, ValidationError) as e:
         raise HTTPException(
             status.HTTP_401_UNAUTHORIZED,
             "invalid JWT",
             headers={"WWW-Authenticate": "Bearer"},
-        )
+        ) from e
 
     if claims.exp <= datetime.now(timezone.utc):
         raise HTTPException(

@@ -4,14 +4,17 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-from argparse import _SubParsersAction, ArgumentParser
+
 from mimetypes import guess_type
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
 from sqlalchemy.exc import IntegrityError
 
+
 if TYPE_CHECKING:
+    from argparse import ArgumentParser, _SubParsersAction
+
     from . import Context
 from ..config import APP_NAME, Config
 from ..database import lint, query
@@ -19,16 +22,16 @@ from ..database.connection import get_session
 from ..database.models import Blob
 
 
-def cmd_lint(ctx: Context):
+def cmd_lint(ctx: Context) -> None:  # noqa: ARG001
     Config.load()
     with get_session() as session:
         lint.print_all_issues(session)
 
 
-def cmd_store_blob(ctx: Context):
+def cmd_store_blob(ctx: Context) -> None:
     Config.load()
     if ctx.args.name and len(ctx.args.files) > 1:
-        raise Exception("--name can only be used with a single input file")
+        raise ValueError("--name can only be used with a single input file")
     for file in ctx.args.files:
         name = ctx.args.name or file.name
         mime = ctx.args.mime or guess_type(file, strict=False)[0]
@@ -53,11 +56,13 @@ def cmd_store_blob(ctx: Context):
             try:
                 session.commit()
             except IntegrityError:
-                raise Exception(f"blob named {name} already exists") from None
-            print(blob.id)
+                raise ValueError(f"blob named {name} already exists") from None
+            print(blob.id)  # noqa: T201
 
 
-def add_parser(subparsers: _SubParsersAction, help_if_no_subcommand, **kwargs):
+def add_parser(
+    subparsers: _SubParsersAction, help_if_no_subcommand: Callable,
+) -> None:
     parser: ArgumentParser = subparsers.add_parser(
         "db",
         help="manage the database",

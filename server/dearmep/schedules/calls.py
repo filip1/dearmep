@@ -2,17 +2,22 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import datetime
+from datetime import datetime, timezone
 from random import choice
 
 from prometheus_client import Counter
 
 from ..config import Config
 from ..database import query
-from ..database.models import CallType, DestinationSelectionLogEvent, \
-    QueuedCall, UserPhone
 from ..database.connection import get_session
+from ..database.models import (
+    CallType,
+    DestinationSelectionLogEvent,
+    QueuedCall,
+    UserPhone,
+)
 from ..phone.abstract import get_phone_service
+
 
 queued_calls_total = Counter(
     name="queued_calls_total",
@@ -22,7 +27,7 @@ queued_calls_total = Counter(
 
 def build_queue() -> None:
 
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     office_hours = Config.get().telephony.office_hours
     if not office_hours.open(now):
         return
@@ -42,17 +47,15 @@ def build_queue() -> None:
                     language=call.language,
                     is_postponed=True,
                 ))
-        queued_calls_total.inc(
-            (len(calls.regular) + len(calls.postponed)))
+        queued_calls_total.inc(len(calls.regular) + len(calls.postponed))
         query.mark_scheduled_calls_queued(session, calls, now)
         session.commit()
 
 
 def handle_queue() -> None:
 
-    now = datetime.now()
     with get_session() as session:
-        queued_call = query.get_next_queued_call(session, now)
+        queued_call = query.get_next_queued_call(session)
         if queued_call is None:
             return
         session.delete(queued_call)
@@ -61,7 +64,7 @@ def handle_queue() -> None:
         try:
             destination = query.get_recommended_destination(
                 session,
-                country=choice(user_id.country_codes),
+                country=choice(user_id.country_codes),  # noqa: S311
                 event=DestinationSelectionLogEvent.IVR_SUGGESTED,
                 user_id=user_id,
             )

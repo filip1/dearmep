@@ -5,27 +5,50 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import datetime, time, date
 import enum
-from typing import Any, Dict, List, NamedTuple, Optional, TypedDict, \
-    Union
+from datetime import date, datetime, time
+from typing import Any, Dict, List, NamedTuple, Optional, TypedDict, Union
 from uuid import uuid4
 
 from pydantic import UUID4, BaseModel
-from sqlmodel import Column, Enum, Field, JSON, Relationship, SQLModel, \
-    String, TIMESTAMP, UniqueConstraint, and_, case, or_, func, text
+from sqlmodel import (
+    JSON,
+    TIMESTAMP,
+    Column,
+    Enum,
+    Field,
+    Relationship,
+    SQLModel,
+    String,
+    UniqueConstraint,
+    and_,
+    case,
+    func,
+    or_,
+    text,
+)
 
-from ..config import Config, ConfigNotLoaded, Language
-from ..models import CallType, CountryCode, FeedbackConvinced, FeedbackText, \
-    FeedbackToken, MediaListItem, PhoneNumber, Score, UserPhone, \
-    VerificationCode, WeekdayNumber
+from ..config import Config, ConfigNotLoadedError, Language
+from ..models import (
+    CallType,
+    CountryCode,
+    FeedbackConvinced,
+    FeedbackText,
+    FeedbackToken,
+    MediaListItem,
+    PhoneNumber,
+    Score,
+    UserPhone,
+    VerificationCode,
+    WeekdayNumber,
+)
 
 
 class _SchemaExtra(TypedDict):
     schema_extra: Dict[str, Any]
 
 
-def _example(value: Any) -> _SchemaExtra:
+def _example(value: Any) -> _SchemaExtra:  # noqa: ANN401
     """Convenience function to add examples to SQLModel Fields."""
     return {
         "schema_extra": {
@@ -47,7 +70,8 @@ def _rel_join(join: str) -> _SARelationshipKWArgs:
     }
 
 
-def _contact_filter():
+# FIXME: Find out what the return type annotation should be here.
+def _contact_filter():  # noqa: ANN202
     predicates = [
         Contact.destination_id == Destination.id,  # usual join condition
     ]
@@ -55,7 +79,7 @@ def _contact_filter():
     try:
         config = Config.get()
         tf = config.contact_timespan_filter
-    except ConfigNotLoaded:
+    except ConfigNotLoadedError:
         tf = None
 
     if tf:
@@ -104,7 +128,7 @@ def auto_timestamp_column_kwargs() -> Dict[str, Any]:
     }
 
 
-def auto_timestamp_column(**kwargs) -> Column:
+def auto_timestamp_column(**kwargs: Any) -> Column:  # noqa: ANN401
     """A timestamp column that will default to whenever the row is created.
 
     Note that this returns a `Column`, which will cause the field to be
@@ -176,7 +200,7 @@ class ContactBase(SQLModel):
         index=True,
         description="Which type of Contact this is. Can be any string that "
         "makes sense for the campaign. Some suggested values are: " +
-        ", ".join(map(lambda k: f"`{k}`", CONTACT_TYPES)),
+        ", ".join(f"`{k}`" for k in CONTACT_TYPES),
         **_example(CONTACT_TYPES[0]),
     )
     group: Optional[str] = Field(
@@ -348,15 +372,15 @@ class Destination(DestinationBase, table=True):
 
 class DestinationDump(DestinationBase):
     sort_name: str
-    contacts: List[ContactDump] = []
-    groups: List[DestinationGroupID] = []
+    contacts: List[ContactDump] = []  # noqa: RUF012
+    groups: List[DestinationGroupID] = []  # noqa: RUF012
     portrait: Optional[str]
     name_audio: Optional[str]
 
 
 class DestinationRead(DestinationBase):
-    contacts: List[ContactListItem] = []
-    groups: List["DestinationGroupListItem"] = []
+    contacts: List[ContactListItem] = []  # noqa: RUF012
+    groups: List["DestinationGroupListItem"] = []  # noqa: RUF012
     portrait: Optional[str] = Field(
         description="URL path to the portrait image of this Destination, if "
         "any is available.",

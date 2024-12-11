@@ -3,11 +3,13 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-from argparse import ArgumentParser, Namespace
-from contextlib import contextmanager
+
 import logging
 import re
+from argparse import ArgumentParser, Namespace
+from contextlib import contextmanager
 from sys import exit, stderr
+from typing import Iterator
 
 from dotenv import load_dotenv
 from rich.console import Console
@@ -15,20 +17,20 @@ from rich.highlighter import NullHighlighter
 from rich.logging import RichHandler
 from rich.progress import Progress
 
-from . import check, convert, db, dump, importing, serve, version
 from ..config import CMD_NAME
 from ..progress import DummyTaskFactory, RichTaskFactory
+from . import check, convert, db, dump, importing, serve, version
 
 
 class Context:
-    def __init__(self, *, args: Namespace, raw_stdout: bool = False):
+    def __init__(self, *, args: Namespace, raw_stdout: bool = False) -> None:
         self.args = args
         # Let the Console run on stderr if we need stdout for raw data.
         self.console = Console(stderr=raw_stdout)
         self.raw_stdout = raw_stdout
         self.dummy_factory = DummyTaskFactory()
 
-    def setup_logging(self, level: int = logging.INFO):
+    def setup_logging(self, level: int = logging.INFO) -> None:
         def ignore_uninteresting(r: logging.LogRecord) -> int:
             ratelimit_backoff = re.compile(
                 r"^Backing off .+\(ratelimit.exception.RateLimitException")
@@ -47,7 +49,7 @@ class Context:
         )
 
     @contextmanager
-    def task_factory(self):
+    def task_factory(self) -> Iterator[RichTaskFactory]:
         progress = Progress(
             console=self.console,
             # This needs to be False for commands that dump actual data to
@@ -58,14 +60,19 @@ class Context:
             yield RichTaskFactory(progress)
 
 
-def help_if_no_subcommand(parser: ArgumentParser):
-    def exit_help(ctx: Context):
+def help_if_no_subcommand(parser: ArgumentParser) -> None:
+    """Convenience function that prints help and exits.
+
+    Passed to command parsers; they can set this as the default if they require
+    a subcommand. If none was supplied, this function prints the help.
+    """
+    def exit_help(ctx: Context) -> None:  # noqa: ARG001
         parser.print_help(stderr)
         exit(127)
     parser.set_defaults(func=exit_help)
 
 
-def run():
+def run() -> None:
     load_dotenv()
     parser = ArgumentParser(
         prog=CMD_NAME.lower(),

@@ -4,28 +4,47 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Literal, Optional, Union
 
 import requests
-from fastapi import APIRouter, Depends, FastAPI, Form, HTTPException, \
-    Request, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    FastAPI,
+    Form,
+    HTTPException,
+    Request,
+    status,
+)
 from fastapi.responses import FileResponse
 from pydantic import UUID4, Json
-from sqlmodel import Session
 
 from ...config import Config, Language
 from ...convert import blobfile, ffmpeg
 from ...database import query
-from ...database.connection import get_session
-from ...database.models import Destination, DestinationSelectionLogEvent
-from ...models import CallType, CallState, DestinationInCallResponse, \
-    PhoneNumber, Schedule, UserPhone, UserInCallResponse
+from ...database.connection import Session, get_session
+from ...database.models import (
+    Call,
+    Destination,
+    DestinationSelectionLogEvent,
+    ScheduledCall,
+)
+from ...models import (
+    CallState,
+    CallType,
+    DestinationInCallResponse,
+    PhoneNumber,
+    Schedule,
+    UserInCallResponse,
+    UserPhone,
+)
 from .. import ivr
 from . import ongoing_calls
 from .metrics import elks_metrics
 from .models import InitialCallElkResponse, Number
 from .utils import choose_from_number, get_numbers
+
 
 _logger = logging.getLogger(__name__)
 
@@ -42,7 +61,7 @@ def send_sms(
     user_phone_number: str,
     from_title: str,
     message: str,
-):
+) -> None:
     provider_cfg = Config.get().telephony.provider
     auth = (
         provider_cfg.username,
@@ -50,6 +69,7 @@ def send_sms(
     )
     response = requests.post(
         url="https://api.46elks.com/a1/sms",
+        timeout=10,
         auth=auth,
         data={
             "from": from_title,
@@ -104,6 +124,7 @@ def start_elks_call(
 
     response = requests.post(
         url="https://api.46elks.com/a1/calls",
+        timeout=10,
         auth=auth,
         data={
             "to": user_phone_number,
@@ -133,7 +154,7 @@ def start_elks_call(
         user_id=user_id,
         destination_id=destination_id,
         session=session,
-        started_at=datetime.now(),
+        started_at=datetime.now(timezone.utc),
         type=type_of_call,
     )
     query.log_destination_selection(
@@ -148,7 +169,7 @@ def start_elks_call(
     return CallState.CALLING_USER
 
 
-def mount_router(app: FastAPI, prefix: str):
+def mount_router(app: FastAPI, prefix: str) -> None:  # noqa: C901, PLR0915
     """ Mount the 46elks router to the app """
 
     # configuration and instantiation at mount time
@@ -169,7 +190,7 @@ def mount_router(app: FastAPI, prefix: str):
         ))
 
     # helpers
-    def verify_origin(request: Request):
+    def verify_origin(request: Request) -> None:
         """ Makes sure the request is coming from a 46elks IP """
         client_ip = None if request.client is None else request.client.host
         if client_ip not in provider_cfg.allowed_ips:
@@ -194,7 +215,9 @@ def mount_router(app: FastAPI, prefix: str):
             return None
         return parl_group[0].id
 
-    def sanity_check(result, why, call, session) -> Optional[dict]:
+    def sanity_check(
+        result: str, why: Optional[str], call: Call, session: Session,
+    ) -> Optional[dict]:
         """
         Checks if no input by user.
             Either we are on voice mail OR user did not enter a number and
@@ -211,7 +234,7 @@ def mount_router(app: FastAPI, prefix: str):
             return {
                 "play": f"{elks_url}/medialist/{medialist_id}/concat.ogg",
             }
-        duration_of_call = datetime.now() - call.started_at
+        duration_of_call = datetime.now(timezone.utc) - call.started_at
         if duration_of_call >= timedelta(minutes=menu_duration_timeout):
             playlist = ivr.try_again_later()
             medialist_id = ivr.prepare_medialist(session, playlist,
@@ -222,8 +245,9 @@ def mount_router(app: FastAPI, prefix: str):
             }
         return None
 
-    def prepare_response(
-            valid_input: List[int] = [],
+    def prepare_response(  # noqa: PLR0913
+            *,
+            valid_input: Optional[List[int]] = None,
             invalid_next: str = "",
             language: str = "en",
             timeout: int = timeout,
@@ -282,14 +306,15 @@ def mount_router(app: FastAPI, prefix: str):
     )
 
     @router.post("/main_menu")
-    def main_menu(
+    def main_menu(  # noqa: PLR0911, PLR0913
+        *,
         callid: str = Form(),
-        direction: Literal["incoming", "outgoing"] = Form(),
-        from_number: PhoneNumber = Form(alias="from"),
+        direction: Literal["incoming", "outgoing"] = Form(),  # noqa: ARG001
+        from_number: PhoneNumber = Form(alias="from"),  # noqa: ARG001
         to_number: PhoneNumber = Form(alias="to"),
         result: str = Form(),
         why: Optional[str] = Form(default=None),
-    ):
+    ) -> dict:
         """
         Playback the intro in IVR
         Instant Calls: [1]connect [5]arguments
@@ -366,14 +391,15 @@ def mount_router(app: FastAPI, prefix: str):
         return response
 
     @router.post("/connect")
-    def connect(
+    def connect(  # noqa: PLR0913
+        *,
         callid: str = Form(),
-        direction: Literal["incoming", "outgoing"] = Form(),
-        from_number: PhoneNumber = Form(alias="from"),
-        to_number: PhoneNumber = Form(alias="to"),
+        direction: Literal["incoming", "outgoing"] = Form(),  # noqa: ARG001
+        from_number: PhoneNumber = Form(alias="from"),  # noqa: ARG001
+        to_number: PhoneNumber = Form(alias="to"),  # noqa: ARG001
         result: str = Form(),
         why: Optional[str] = Form(default=None),
-    ):
+    ) -> dict:
         """
         User wants to get connected to MEP
         If MEP is available, we connect them.
@@ -500,11 +526,11 @@ def mount_router(app: FastAPI, prefix: str):
     @router.post("/postpone")
     def postpone(
         callid: str = Form(),
-        from_number: PhoneNumber = Form(alias="from"),
+        from_number: PhoneNumber = Form(alias="from"),  # noqa: ARG001
         to_number: PhoneNumber = Form(alias="to"),
         result: str = Form(),
         why: Optional[str] = Form(default=None),
-    ):
+    ) -> dict:
         """
         Playback the postpone in IVR
         [1]: postpone to later this day
@@ -512,9 +538,10 @@ def mount_router(app: FastAPI, prefix: str):
         [3]: forward to delete menu
         """
 
-        def _next_scheduled_weekday(schedule):
+        today = datetime.now(tz=timezone.utc).isoweekday()
+
+        def _next_scheduled_weekday(schedule: List[ScheduledCall]) -> int:
             schedule = sorted(schedule, key=lambda x: x.day)
-            today = datetime.today().isoweekday()
             for scheduled_call in schedule:
                 if scheduled_call.day > today:
                     return scheduled_call.day
@@ -556,14 +583,14 @@ def mount_router(app: FastAPI, prefix: str):
             if len(schedule) > 1:
                 next_weekday = _next_scheduled_weekday(schedule)
                 playlist = ivr.postpone_menu(
-                    today=datetime.today().isoweekday(),
+                    today=today,
                     is_postponed=is_postponed,
                     others_scheduled=True,
                     next_day=next_weekday,
                 )
             else:
                 playlist = ivr.postpone_menu(
-                    today=datetime.today().isoweekday(),
+                    today=today,
                     is_postponed=is_postponed,
                     others_scheduled=False,
                 )
@@ -585,11 +612,11 @@ def mount_router(app: FastAPI, prefix: str):
     @router.post("/delete")
     def delete(
             callid: str = Form(),
-            from_number: PhoneNumber = Form(alias="from"),
+            from_number: PhoneNumber = Form(alias="from"),  # noqa: ARG001
             to_number: PhoneNumber = Form(alias="to"),
             result: str = Form(),
             why: Optional[str] = Form(default=None),
-    ):
+    ) -> dict:
         """
         Playback the delete menu in IVR
         [1]: delete all scheduled calls
@@ -602,7 +629,7 @@ def mount_router(app: FastAPI, prefix: str):
                     result, why, call, session)):
                 return response
 
-            today = datetime.today().isoweekday()
+            today = datetime.now(tz=timezone.utc).isoweekday()
             schedule = query.get_schedule(session, to_number)
 
             if result == "1":
@@ -647,11 +674,11 @@ def mount_router(app: FastAPI, prefix: str):
     @router.post("/arguments")
     def arguments(
             callid: str = Form(),
-            from_number: PhoneNumber = Form(alias="from"),
-            to_number: PhoneNumber = Form(alias="to"),
+            from_number: PhoneNumber = Form(alias="from"),  # noqa: ARG001
+            to_number: PhoneNumber = Form(alias="to"),  # noqa: ARG001
             result: str = Form(),
             why: Optional[str] = Form(default=None),
-    ):
+    ) -> dict:
         """
         Playback the arguments in IVR
          [1]: connect
@@ -682,14 +709,15 @@ def mount_router(app: FastAPI, prefix: str):
             return response
 
     @router.post("/finalize_connect")
-    def finalize_connect(
+    def finalize_connect(  # noqa: PLR0913
+        *,
         callid: str = Form(),
-        direction: Literal["incoming", "outgoing"] = Form(),
+        direction: Literal["incoming", "outgoing"] = Form(),  # noqa: ARG001
         from_number: PhoneNumber = Form(alias="from"),
-        to_number: PhoneNumber = Form(alias="to"),
+        to_number: PhoneNumber = Form(alias="to"),  # noqa: ARG001
         result: str = Form(),
         why: Optional[str] = Form(default=None),
-    ):
+    ) -> dict:
         with get_session() as session:
             call = ongoing_calls.get_call(callid, provider, session)
             if (response := sanity_check(
@@ -720,21 +748,22 @@ def mount_router(app: FastAPI, prefix: str):
             return connect
 
     @router.post("/hangup")
-    def hangup(
+    def hangup(  # noqa: PLR0913
+        *,
         # Arguments always present, also failures
         direction: Literal["incoming", "outgoing"] = Form(),
-        created: datetime = Form(),
+        created: datetime = Form(),  # noqa: ARG001
         from_number: PhoneNumber = Form(alias="from"),
         callid: str = Form(alias="id"),
-        to_number: PhoneNumber = Form(alias="to"),
+        to_number: PhoneNumber = Form(alias="to"),  # noqa: ARG001
         state: str = Form(),
         # Arguments present in some cases, i.e. success
         start: Optional[datetime] = Form(default=None),
-        actions: Optional[Json] = Form(default=None),
+        actions: Optional[Json] = Form(default=None),  # noqa: ARG001
         cost: Optional[int] = Form(default=None),  # in 100 = 1 cent
-        duration: Optional[int] = Form(default=None),  # in sec
-        legs: Optional[Json] = Form(default=None)
-    ):
+        duration: Optional[int] = Form(default=None),  # in sec  # noqa: ARG001
+        legs: Optional[Json] = Form(default=None)  # noqa: ARG001
+    ) -> None:
         """
         Handles the hangup and cleanup of calls
         Always gets called in the end of calls, no matter their outcome.
@@ -759,7 +788,8 @@ def mount_router(app: FastAPI, prefix: str):
 
             if call.connected_at:
                 connected_seconds = (
-                    datetime.now() - call.connected_at).total_seconds()
+                    datetime.now(timezone.utc) - call.connected_at
+                ).total_seconds()
                 elks_metrics.observe_connect_time(
                     destination_id=call.destination_id,
                     duration=round(connected_seconds)
@@ -808,7 +838,7 @@ def mount_router(app: FastAPI, prefix: str):
                 session.commit()
 
     @router.get("/medialist/{medialist_id}/concat.ogg")
-    def get_concatenated_media(medialist_id: UUID4):
+    def get_concatenated_media(medialist_id: UUID4) -> FileResponse:
         """ Get a concatenated media list as a stream for 46 elks IVR """
 
         with get_session() as session:

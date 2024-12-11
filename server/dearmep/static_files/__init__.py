@@ -16,7 +16,8 @@ from ..config import ENV_PREFIX, Settings
 _logger = logging.getLogger(__name__)
 
 
-DEMO_TEMPLATE = Path(Path(__file__).parent, "demo.html").read_text()
+DEMO_TEMPLATE = Path(Path(__file__).parent, "demo.html") \
+    .read_text(encoding="utf-8")
 
 
 def demo_html(
@@ -34,7 +35,7 @@ def demo_html(
     )
 
 
-def mount_if_configured(app: FastAPI, path: str):
+def mount_if_configured(app: FastAPI, path: str) -> None:
     settings = Settings()
     static_files_dir = settings.static_files_dir
     if static_files_dir is None:
@@ -49,7 +50,7 @@ def mount_if_configured(app: FastAPI, path: str):
             summary="Get Demo HTML",
             response_class=HTMLResponse,
         )
-        async def get_demo_html(req: Request):
+        async def get_demo_html(req: Request) -> str:  # noqa: RUF029
             """
             Return a HTML page that can be used to demo the application.
 

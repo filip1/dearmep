@@ -6,13 +6,19 @@
 from datetime import datetime, timezone
 from typing import Callable
 
+import pytest
 from fastapi import FastAPI
 from pydantic import ValidationError
-import pytest
 from yaml.parser import ParserError
 
-from dearmep.config import Config, FrontendStrings, L10nConfig, L10nEntry, \
-    L10nStrings, OfficeHoursConfig
+from dearmep.config import (
+    Config,
+    FrontendStrings,
+    L10nConfig,
+    L10nEntry,
+    L10nStrings,
+    OfficeHoursConfig,
+)
 
 
 UTC = timezone.utc
@@ -29,10 +35,9 @@ EXAMPLE_HOURS = OfficeHoursConfig.parse_obj({
 
 @pytest.fixture
 def dummy_translation_strings() -> L10nStrings:
-    return L10nStrings.parse_obj({
-        k: "foo"
-        for k in L10nStrings.__fields__.keys()
-    })
+    return L10nStrings.parse_obj(
+        dict.fromkeys(L10nStrings.__fields__.keys(), "foo")
+    )
 
 
 @pytest.fixture
@@ -52,7 +57,7 @@ def test_default_language_in_language_list():
             default_language="fr",
         )
     errs = e_info.value.errors()
-    assert len(errs) == 3
+    assert len(errs) == 3  # noqa: PLR2004
     assert errs[0]["loc"] == ("default_language",)
     assert errs[0]["type"] == "value_error"
     assert errs[0]["msg"].find(" needs to be in the list of available ") != -1

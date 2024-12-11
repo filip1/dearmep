@@ -5,15 +5,15 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from datetime import date, datetime, timedelta
-from typing import Callable, Dict, List, NamedTuple, Optional, Union, cast
-from secrets import randbelow
+import logging
+import random
 import re
+from datetime import date, datetime, timedelta, timezone
+from secrets import randbelow
+from typing import Callable, Dict, List, NamedTuple, Optional, Union, cast
+
 import backoff
 from pydantic import UUID4
-import random
-import logging
-
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.sql import label
@@ -21,21 +21,41 @@ from sqlmodel import and_, case, col, column, delete, or_
 
 from ..config import Config
 from ..convert.blobfile import BlobOrFile
-from ..models import CountryCode, DestinationSearchGroup, \
-    DestinationSearchResult, FeedbackToken, Language, PhoneNumber, \
-    PhoneRejectReason, Schedule, SearchResult, UserPhone, \
-    VerificationCode, FeedbackConvinced
+from ..models import (
+    CountryCode,
+    DestinationSearchGroup,
+    DestinationSearchResult,
+    FeedbackConvinced,
+    FeedbackToken,
+    Language,
+    PhoneNumber,
+    PhoneRejectReason,
+    Schedule,
+    SearchResult,
+    UserPhone,
+    VerificationCode,
+)
 from .connection import Session, select
-from .models import Blob, BlobID, CurrentlyScheduledCalls, Destination, \
-    DestinationID, DestinationSelectionLog, DestinationSelectionLogEvent, \
-    MediaList, NumberVerificationRequest, QueuedCall, ScheduledCall, \
-    UserFeedback
+from .models import (
+    Blob,
+    BlobID,
+    CurrentlyScheduledCalls,
+    Destination,
+    DestinationID,
+    DestinationSelectionLog,
+    DestinationSelectionLogEvent,
+    MediaList,
+    NumberVerificationRequest,
+    QueuedCall,
+    ScheduledCall,
+    UserFeedback,
+)
 
 
 _logger = logging.getLogger(__name__)
 
 
-class NotFound(Exception):
+class NotFound(Exception):  # noqa: N818
     pass
 
 
@@ -51,7 +71,7 @@ def escape_for_like(value: str) -> str:
 
 def get_available_countries(session: Session) -> List[str]:
     countries = session.exec(select(Destination.country).distinct()).all()
-    return cast(List[str], countries) \
+    return cast("List[str]", countries) \
         if isinstance(countries, List) and len(countries) \
         and isinstance(countries[0], str) \
         else []
@@ -66,8 +86,8 @@ def get_blob_by_id(session: Session, id: BlobID) -> Blob:
 def get_blob_by_name(session: Session, name: str) -> Blob:
     try:
         return session.exec(select(Blob).where(Blob.name == name)).one()
-    except NoResultFound:
-        raise NotFound(f"no blob named `{name}`")
+    except NoResultFound as e:
+        raise NotFound(f"no blob named `{name}`") from e
 
 
 def get_blobs_by_names(
@@ -98,12 +118,11 @@ def get_destinations_by_country(
     session: Session,
     country: CountryCode,
 ) -> List[Destination]:
-    dests = session.exec(
+    return session.exec(
         select(Destination)
         .where(Destination.country == country)
         .order_by(Destination.sort_name)
     ).all()
-    return dests
 
 
 def get_destinations_by_name(
@@ -130,8 +149,7 @@ def get_destinations_by_name(
             raise ValueError("country needs to be set")
         stmt = stmt.where(Destination.country == country)
     stmt = stmt.order_by(Destination.sort_name)
-    dests = session.exec(stmt).all()
-    return dests
+    return session.exec(stmt).all()
 
 
 def log_destination_selection(
@@ -141,7 +159,7 @@ def log_destination_selection(
     event: DestinationSelectionLogEvent,
     user_id: Optional[UserPhone] = None,
     call_id: Optional[str] = None,
-):
+) -> None:
     session.add(DestinationSelectionLog(
         destination=destination,
         event=event,
@@ -196,7 +214,7 @@ def base_endorsement_scoring(base_score: float) -> float:
                 base_score - center
             ) * steepness
         ) ** 3
-    ) * (1-minimum) + minimum
+    ) * (1 - minimum) + minimum
 
 
 def feedback_scoring(feedback_sum: Optional[int]) -> float:
@@ -211,11 +229,11 @@ def feedback_scoring(feedback_sum: Optional[int]) -> float:
     rc = Config.get().recommender
     threshold = rc.n_clear_feedback_threshold
     return 1 / (
-        1 + (abs(feedback_sum / (threshold*8)) * 3) ** 4
+        1 + (abs(feedback_sum / (threshold * 8)) * 3) ** 4
     )
 
 
-def get_recommended_destination(
+def get_recommended_destination(  # noqa: C901, PLR0914
     session: Session,
     *,
     country: Optional[CountryCode] = None,
@@ -245,6 +263,7 @@ def get_recommended_destination(
     - caller called destination already.
     """
     rc = Config.get().recommender
+    now = datetime.now(tz=timezone.utc)
 
     # select all destinations
     stmt_destinations = select(Destination)
@@ -257,8 +276,8 @@ def get_recommended_destination(
         )
 
     # cut off by base_endorsement
-    MAX_ENDORSEMENT_CUTOFF = rc.endorsement_cutoff.max
-    MIN_ENDORSEMENT_CUTOFF = rc.endorsement_cutoff.min
+    MAX_ENDORSEMENT_CUTOFF = rc.endorsement_cutoff.max  # noqa: N806
+    MIN_ENDORSEMENT_CUTOFF = rc.endorsement_cutoff.min  # noqa: N806
     stmt_destinations = stmt_destinations.where(
         Destination.base_endorsement <= MAX_ENDORSEMENT_CUTOFF,
         Destination.base_endorsement >= MIN_ENDORSEMENT_CUTOFF,
@@ -269,7 +288,7 @@ def get_recommended_destination(
     # outter joining with CALL_ENDED events as last event per destination
 
     # events designating a call is initiated
-    CALL_INITIATED = [
+    CALL_INITIATED = [  # noqa: N806
         DestinationSelectionLogEvent.CALLING_DESTINATION,
         DestinationSelectionLogEvent.CALLING_USER,
         DestinationSelectionLogEvent.DESTINATION_CONNECTED,
@@ -277,7 +296,7 @@ def get_recommended_destination(
     ]
 
     # events designating a call has ended
-    CALL_ENDED = [
+    CALL_ENDED = [  # noqa: N806
         DestinationSelectionLogEvent.CALL_ABORTED,
         DestinationSelectionLogEvent.CALLING_DESTINATION_FAILED,
         DestinationSelectionLogEvent.FINISHED_CALL,
@@ -287,7 +306,6 @@ def get_recommended_destination(
 
     # subquery selecting all the latest timestamps of
     # all CALL events (CALL_INITIATED + CALL_ENDED)
-    # from sqlalchemy import select
 
     max_timestamps_subquery = (
         select(  # type: ignore[call-overload]
@@ -295,7 +313,7 @@ def get_recommended_destination(
             func.max(DestinationSelectionLog.timestamp).label("max_timestamp")
         )
         .where(
-            col(DestinationSelectionLog.event).in_(CALL_INITIATED+CALL_ENDED)
+            col(DestinationSelectionLog.event).in_(CALL_INITIATED + CALL_ENDED)
         )
         .group_by(DestinationSelectionLog.destination_id)
         .subquery()
@@ -350,13 +368,13 @@ def get_recommended_destination(
                 "numeric_feedback",
                 case(
                     (UserFeedback.convinced ==
-                     FeedbackConvinced.YES,            2),
+                     FeedbackConvinced.YES, 2),
                     (UserFeedback.convinced ==
-                     FeedbackConvinced.LIKELY_YES,     1),
+                     FeedbackConvinced.LIKELY_YES, 1),
                     (UserFeedback.convinced ==
-                     FeedbackConvinced.LIKELY_NO,     -1),
+                     FeedbackConvinced.LIKELY_NO, -1),
                     (UserFeedback.convinced ==
-                     FeedbackConvinced.NO,            -2),
+                     FeedbackConvinced.NO, -2),
                 )
             )
         ).label("numeric_feedback_sum")
@@ -373,7 +391,7 @@ def get_recommended_destination(
         _logger.debug(f"feedback scores: {feedback_scores}")
 
     merged_scores = {
-        key: (base_endorsement_scores[key] + feedback_scores[key])/2  # average
+        key: (base_endorsement_scores[key] + feedback_scores[key]) / 2  # avg
         if key in feedback_scores  # if feedack existed
         else base_endorsement_scores[key]  # else: keep base_endorsement_score
         for key in base_endorsement_scores
@@ -384,7 +402,7 @@ def get_recommended_destination(
 
     # only applies for suggestion events, otherwise looking up the latest
     # suggestion is useless.
-    SUGGEST_EVENTS = [
+    SUGGEST_EVENTS = [  # noqa: N806
         DestinationSelectionLogEvent.WEB_SUGGESTED,
         DestinationSelectionLogEvent.IVR_SUGGESTED,
     ]
@@ -398,10 +416,10 @@ def get_recommended_destination(
             merged_scores[latest_log.destination_id] = 0.00001
 
     # destination was called recently
-    SOFT_COOL_DOWN_CALL_DURATION_MINUTES = (
+    SOFT_COOL_DOWN_CALL_DURATION_MINUTES = (  # noqa: N806
         rc.soft_cool_down_call_timeout
     )
-    recent_cutoff = datetime.utcnow() - \
+    recent_cutoff = now - \
         timedelta(minutes=SOFT_COOL_DOWN_CALL_DURATION_MINUTES)
 
     destination_logs_recent_calls = session.exec(
@@ -416,8 +434,8 @@ def get_recommended_destination(
 
     # caller called destination already
     if user_id:
-        SOFT_COOL_DOWN_CALLER_CALLED_DESTINATION_DURATION_HOURS = 24
-        recently_talked_cutoff = datetime.utcnow() - \
+        SOFT_COOL_DOWN_CALLER_CALLED_DESTINATION_DURATION_HOURS = 24  # noqa: N806
+        recently_talked_cutoff = now - \
             timedelta(
                 hours=SOFT_COOL_DOWN_CALLER_CALLED_DESTINATION_DURATION_HOURS
             )
@@ -447,7 +465,7 @@ def get_recommended_destination(
                 )
             )
         # select destination
-        final_dest_id = random.choices(
+        final_dest_id = random.choices(  # noqa: S311
             list(merged_scores.keys()),
             weights=list(merged_scores.values()),
             k=1,
@@ -526,7 +544,7 @@ def get_number_verification_count(
         incomplete_filter.append(
             NumberVerificationRequest.requested_at > func.coalesce(
                 last_successful,
-                datetime(2000, 1, 1),
+                datetime(2000, 1, 1),  # noqa: DTZ001
             ))
 
     complete_filter = [column("completed").is_(True)]
@@ -537,7 +555,8 @@ def get_number_verification_count(
         # successful login" logic will look.
         complete_filter.append(
             col(NumberVerificationRequest.requested_at) >=
-            datetime.now() - timedelta(seconds=cutoff_completed_older_than_s)
+            datetime.now(timezone.utc) -
+            timedelta(seconds=cutoff_completed_older_than_s)
         )
 
     request_counts: Dict[bool, int] = dict(session.exec(
@@ -574,7 +593,7 @@ def get_new_sms_auth_code(
 ) -> Union[PhoneRejectReason, VerificationCode]:
     """Generate SMS verification code & store it in the database."""
     config = Config.get()
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
 
     # Reject the user if they have too many open verification requests.
     cutoff_s = config.authentication.session.max_logins_cutoff_days * 86_400
@@ -616,11 +635,11 @@ def verify_sms_auth_code(
             NumberVerificationRequest.code == code,
             col(NumberVerificationRequest.ignore).is_(False),
             col(NumberVerificationRequest.completed_at).is_(None),
-            NumberVerificationRequest.expires_at > datetime.now(),
+            NumberVerificationRequest.expires_at > datetime.now(timezone.utc),
             NumberVerificationRequest.failed_attempts < max_wrong,
         ).order_by(col(NumberVerificationRequest.requested_at).desc())
     ).first():
-        request.completed_at = datetime.now()
+        request.completed_at = datetime.now(timezone.utc)
         return True
 
     # Look for the most recent active request and increase its number of failed
@@ -631,7 +650,7 @@ def verify_sms_auth_code(
             NumberVerificationRequest.user == user,
             col(NumberVerificationRequest.ignore).is_(False),
             col(NumberVerificationRequest.completed_at).is_(None),
-            NumberVerificationRequest.expires_at > datetime.now(),
+            NumberVerificationRequest.expires_at > datetime.now(timezone.utc),
         ).order_by(col(NumberVerificationRequest.requested_at).desc())
     ).first():
         most_recent.failed_attempts += 1
@@ -655,7 +674,7 @@ def create_feedback_token(
     the call, even if the call took place in another language due to the
     requested one not being available for calls.
     """
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     expires_at = now + timedelta(seconds=Config.get().feedback.token_timeout)
 
     @backoff.on_exception(
@@ -725,7 +744,7 @@ def get_medialist_by_id(
     id: UUID4,
 ) -> MediaList:
     if not (mlist := session.get(MediaList, str(id))):
-        raise NotFound(f"no such medialist: `{str(id)}`")
+        raise NotFound(f"no such medialist: `{id!s}`")
     return mlist
 
 
@@ -746,7 +765,7 @@ def set_schedule(
     phone_number: PhoneNumber,
     language: Language,
     schedules: List[Schedule],
-):
+) -> None:
     session.exec(
         delete(ScheduledCall)
         .where(
@@ -780,11 +799,11 @@ def get_currently_scheduled_calls(
         ScheduledCall.day == now.isoweekday(),
         and_(
             col(ScheduledCall.postponed_to).is_not(None),
-            cast(datetime, ScheduledCall.postponed_to) <= now,
+            cast("datetime", ScheduledCall.postponed_to) <= now,
         ),
         or_(
             col(ScheduledCall.last_postpone_queued_at).is_(None),
-            cast(date, ScheduledCall.last_postpone_queued_at) < now.date(),
+            cast("date", ScheduledCall.last_postpone_queued_at) < now.date(),
         ),
     ).order_by(ScheduledCall.postponed_to)).all()
 
@@ -797,7 +816,7 @@ def get_currently_scheduled_calls(
         ),
         or_(
             col(ScheduledCall.last_queued_at).is_(None),
-            cast(date, ScheduledCall.last_queued_at) < now.date(),
+            cast("date", ScheduledCall.last_queued_at) < now.date(),
         ),
     ).order_by(ScheduledCall.start_time)).all()
 
@@ -815,7 +834,7 @@ def mark_scheduled_calls_queued(
     session: Session,
     calls: CurrentlyScheduledCalls,
     now: datetime,
-):
+) -> None:
     """Timestamps to 'now' for calls."""
     for call in calls.regular:
         call.last_queued_at = now
@@ -827,7 +846,6 @@ def mark_scheduled_calls_queued(
 
 def get_next_queued_call(
     session: Session,
-    now: datetime,
 ) -> Optional[QueuedCall]:
     """
     Returns a QueuedCall object which was the first inserted.
@@ -850,7 +868,8 @@ def call_is_postponed(
     return session.exec(select(ScheduledCall).filter(
         ScheduledCall.phone_number == phone_number,
         col(ScheduledCall.postponed_to).is_not(None),
-        ScheduledCall.last_postpone_queued_at == date.today(),
+        ScheduledCall.last_postpone_queued_at ==
+        datetime.now(tz=timezone.utc).date()
     )).one_or_none() is not None
 
 
@@ -863,16 +882,16 @@ def postpone_call(
     adding it to the `session`. Raises NotFound if no call was found to
     postpone.
     """
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     postponed_to = now + timedelta(minutes=15)
     try:
         call = session.exec(select(ScheduledCall).filter(
             ScheduledCall.phone_number == phone_number,
             ScheduledCall.day == now.isoweekday(),
         )).one()
-    except NoResultFound:
+    except NoResultFound as e:
         raise NotFound("ScheduledCall to postpone not found. This can happen "
                        "if the User changes their schedule after the call was "
-                       "queued and they want to postpone.")
+                       "queued and they want to postpone.") from e
     call.postponed_to = postponed_to
     session.add(call)

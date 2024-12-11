@@ -6,7 +6,8 @@ from typing import List, Tuple
 
 import pytest
 
-from dearmep.models import PhoneRejectReason as Reason, UserPhone
+from dearmep.models import PhoneRejectReason as Reason
+from dearmep.models import UserPhone
 
 
 @pytest.mark.parametrize("number", (
@@ -14,7 +15,7 @@ from dearmep.models import PhoneRejectReason as Reason, UserPhone
     ("ring ring ring ring ring ring ring bananaphone"),
 ))
 def test_invalid_format(number: str):
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError):  # noqa: PT011
         UserPhone(number)
 
 

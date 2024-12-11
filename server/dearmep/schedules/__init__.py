@@ -9,8 +9,9 @@ from typing import Callable, List, Tuple
 from fastapi_restful.tasks import repeat_every
 from prometheus_client import Counter
 
-from .calls import build_queue, handle_queue
 from ..config import Config, SchedulerTaskConfig
+from .calls import build_queue, handle_queue
+
 
 SchedulerTask = Callable[[], None]
 
@@ -40,7 +41,7 @@ def task_wrapper(func: SchedulerTask) -> SchedulerTask:
     return wrapped
 
 
-def get_background_tasks(config: Config):
+def get_background_tasks(config: Config) -> List:
     """
     Returns a list of configured background tasks to be run at startup.
     """

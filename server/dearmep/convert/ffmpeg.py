@@ -2,10 +2,10 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+import subprocess  # noqa: S404
 from contextlib import ExitStack, contextmanager
-import subprocess
 from tempfile import NamedTemporaryFile
-from typing import IO, Generator, Iterable
+from typing import IO, Generator, Iterable, Sequence
 
 from .blobfile import BlobOrFile
 
@@ -31,15 +31,15 @@ def build_concat_listfile(
     to allow ffmpeg to access them. These files will also be deleted once you
     leave the context.
     """
-    with NamedTemporaryFile("wb", prefix="fflist.", suffix=".txt") as clist:
-        with ExitStack() as stack:
-            # Write the list of inputs to the concat list file.
-            clist.write(build_concat_list(
-                str(stack.enter_context(file.get_path()))
-                for file in files
-            ))
-            clist.flush()
-            yield clist
+    with NamedTemporaryFile("wb", prefix="fflist.", suffix=".txt") as clist, \
+    ExitStack() as stack:
+        # Write the list of inputs to the concat list file.
+        clist.write(build_concat_list(
+            str(stack.enter_context(file.get_path()))
+            for file in files
+        ))
+        clist.flush()
+        yield clist
 
 
 @contextmanager
@@ -77,19 +77,18 @@ def concat(
         yield output
 
 
-def run(args, passthru=False, **kwargs) -> subprocess.CompletedProcess:
+def run(
+    args: Sequence[str], passthru: bool = False,
+) -> subprocess.CompletedProcess:
     """Run an ffmpeg subprocess."""
-    completed = subprocess.run((  # type: ignore[call-overload]
+    return subprocess.run((  # noqa: S603
         "ffmpeg",
         "-hide_banner",  # be less verbose
         "-nostdin",  # noninteractive
         "-y",  # allow overwriting output file
         *args,
-    ), **{
-            "stdout": None if passthru else subprocess.DEVNULL,
-            "stderr": None if passthru else subprocess.DEVNULL,
-            **kwargs,
-        },
+    ),
+        stdout=None if passthru else subprocess.DEVNULL,
+        stderr=None if passthru else subprocess.DEVNULL,
+        check=True,
     )
-    completed.check_returncode()
-    return completed  # type: ignore[no-any-return]

@@ -5,21 +5,40 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from __future__ import annotations
-from base64 import b64encode
-from datetime import datetime, time
+
 import enum
-from hashlib import sha256
-from ipaddress import IPv4Network, IPv6Network
 import json
 import re
-from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, \
-    TypeVar, Union
 import secrets
+from base64 import b64encode
+from contextlib import suppress
+from datetime import datetime, time  # noqa: TC003
+from hashlib import sha256
+from ipaddress import IPv4Network, IPv6Network
+from typing import (
+    Any,
+    ClassVar,
+    Dict,
+    Generic,
+    List,
+    Literal,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
-from canonicaljson import encode_canonical_json
 import phonenumbers
-from pydantic import BaseModel, ConstrainedFloat, ConstrainedInt, \
-    ConstrainedStr, Field, PositiveInt, validator
+from canonicaljson import encode_canonical_json
+from pydantic import (
+    BaseModel,
+    ConstrainedFloat,
+    ConstrainedInt,
+    ConstrainedStr,
+    Field,
+    PositiveInt,
+    validator,
+)
 from pydantic.generics import GenericModel
 
 
@@ -30,7 +49,7 @@ MAX_SEARCH_RESULT_LIMIT = 20
 
 FEEDBACK_TEXT_LENGTH = 10_000  # characters
 FEEDBACK_TOKEN_LENGTH = 8
-FEEDBACK_TOKEN_LETTERS = "BCDFGHKLMNPQRSTVWXZ"
+FEEDBACK_TOKEN_LETTERS = "BCDFGHKLMNPQRSTVWXZ"  # noqa: S105
 
 
 class FeedbackToken(ConstrainedStr):
@@ -259,7 +278,7 @@ class UserInCallResponse(BaseModel):
     )
 
 
-class UserPhone(str):
+class UserPhone(str):  # noqa: FURB189, SLOT000
     """A User’s phone number, hashed & peppered.
 
     Since we do not want to store our users’ phone numbers in the database
@@ -317,7 +336,7 @@ class UserPhone(str):
             exclude=True,
         )
 
-    ALLOWED_TYPES = {
+    ALLOWED_TYPES: ClassVar[set] = {
         phonenumbers.PhoneNumberType.FIXED_LINE_OR_MOBILE,
         phonenumbers.PhoneNumberType.MOBILE,
     }
@@ -325,7 +344,7 @@ class UserPhone(str):
     country_codes: Tuple[CountryCode, ...]
     structured: Structured
 
-    def __new__(cls, value) -> UserPhone:
+    def __new__(cls, value: str) -> UserPhone:
         # Ensure that we're being initialized from a string.
         if not isinstance(value, str):
             value = str(value)
@@ -333,10 +352,10 @@ class UserPhone(str):
         # Try parsing as a JSON dict, if it starts with {
         struct: Optional[UserPhone.Structured] = None
         if value.startswith("{"):
-            try:
+            # Suppressing the error is okay, the struct will stay None and
+            # number parsing occurs.
+            with suppress(json.JSONDecodeError):
                 struct = cls.Structured.parse_obj(json.loads(value))
-            except json.JSONDecodeError:
-                pass  # Ignore, struct will stay None, number parsing occurs.
         if not struct:
             # Try parsing as a raw phone number.
             number = cls.parse_number(value)
@@ -348,7 +367,7 @@ class UserPhone(str):
 
         value = encode_canonical_json(struct.dict(by_alias=True)).decode()
 
-        instance = super(UserPhone, cls).__new__(cls, value)
+        instance = super().__new__(cls, value)
         object.__setattr__(instance, "country_codes", tuple(map(
             CountryCode,
             phonenumbers.COUNTRY_CODE_TO_REGION_CODE[struct.calling_code])))
@@ -362,16 +381,17 @@ class UserPhone(str):
         if isinstance(other, str):
             try:
                 parsed = UserPhone(other)
-                return self.hash == parsed.hash
             except Exception:  # apparently not a phone number
                 return False
+            else:
+                return self.hash == parsed.hash
         # All other things are not equal to us.
         return False
 
     # Needs to be set explicitly since we define __eq__.
     __hash__ = str.__hash__
 
-    def __setattr__(self, __name: str, __value: Any) -> None:
+    def __setattr__(self, __name: str, __value: Any) -> None:  # noqa: ANN401
         raise TypeError(
             "UserPhone is immutable and does not allow item assignment")
 
@@ -411,7 +431,7 @@ class UserPhone(str):
         try:
             parsed = phonenumbers.parse(number, region=None)
         except phonenumbers.NumberParseException as e:
-            raise ValueError(f"'{number}' could not be parsed: {e}")
+            raise ValueError(f"'{number}' could not be parsed: {e}") from e
         return parsed
 
     @property
@@ -516,7 +536,7 @@ class UserPhone(str):
             try:
                 prefix = self.parse_number(pattern)
             except ValueError:
-                pass
+                return False
             if prefix and orig.startswith(self.format_number(prefix)):
                 return True
 

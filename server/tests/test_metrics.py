@@ -4,9 +4,9 @@
 
 from typing import Iterable
 
+import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
-import pytest
 
 from dearmep.config import APP_NAME
 
@@ -20,7 +20,7 @@ def metrics_lines_func(client: TestClient) -> Iterable[str]:
 
 @pytest.fixture
 def metrics_lines(client: TestClient):
-    yield list(metrics_lines_func(client))
+    return list(metrics_lines_func(client))
 
 
 def test_python_info_in_metrics(metrics_lines: Iterable[str]):
@@ -37,8 +37,8 @@ def test_non_grouped_status_codes(client: TestClient):
     # metrics when doing the actual test.
     assert client.get("/metrics").status_code == status.HTTP_200_OK
 
-    mark = f'starlette_requests_total{{app_name="{APP_NAME}",method="GET",' \
-        + 'path="/metrics",status_code="200"} '
+    mark = (f'starlette_requests_total{{app_name="{APP_NAME}",method="GET",'
+            'path="/metrics",status_code="200"} ')
     assert [
         line
         for line in metrics_lines_func(client)
