@@ -4,7 +4,7 @@
 
 import re
 from random import shuffle
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import UUID4
 from sqlmodel import Session
@@ -15,7 +15,7 @@ from ..database import query
 
 
 def prepare_medialist(
-    session: Session, playlist: List[str], language: str
+    session: Session, playlist: list[str], language: str
 ) -> UUID4:
     """
     Function to create a medialist and get it's id. This medialist_id can be
@@ -47,7 +47,7 @@ def main_menu(
     destination_id: str,
     scheduled: bool = False,
     group_id: Optional[str] = None,
-) -> List[str]:
+) -> list[str]:
     """IVR main menu, greeting and present choices"""
     if not scheduled:
         return [
@@ -74,7 +74,7 @@ def main_menu(
     ]
 
 
-def arguments(*, destination_id: str) -> List[str]:
+def arguments(*, destination_id: str) -> list[str]:
     """IVR read arguments"""
     arguments_ = [
         "argument_1",
@@ -97,27 +97,27 @@ def arguments(*, destination_id: str) -> List[str]:
     ]
 
 
-def connecting() -> List[str]:
+def connecting() -> list[str]:
     """IVR connecting User to MEP"""
     return ["connect_connecting"]
 
 
-def no_input() -> List[str]:
+def no_input() -> list[str]:
     """IVR there was no input"""
     return ["generic_no_input"]
 
 
-def try_again_later() -> List[str]:
+def try_again_later() -> list[str]:
     """IVR try again later"""
     return ["connect_try_again_later", "generic_goodbye"]
 
 
-def wrong_input() -> List[str]:
+def wrong_input() -> list[str]:
     """IVR there was wrong input for the current menu"""
     return ["generic_invalid_input"]
 
 
-def silence() -> List[str]:
+def silence() -> list[str]:
     """IVR silence helper function"""
     return ["0.1_silence"]
 
@@ -126,7 +126,7 @@ def mep_unavailable_new_suggestion(
     *,
     destination_id: str,
     group_id: Optional[str] = None,
-) -> List[str]:
+) -> list[str]:
     """IVR MEP is unavailable, we make a new suggestion"""
     grp = []
     if group_id:
@@ -140,7 +140,7 @@ def mep_unavailable_new_suggestion(
     ]
 
 
-def mep_unavailable_try_again_later() -> List[str]:
+def mep_unavailable_try_again_later() -> list[str]:
     """IVR MEP is unavailable we ask to try again later"""
     return [
         "connect_unavailable",
@@ -149,7 +149,7 @@ def mep_unavailable_try_again_later() -> List[str]:
     ]
 
 
-def we_will_call_again() -> List[str]:
+def we_will_call_again() -> list[str]:
     """IVR MEP is unavailable we ask to try again later"""
     return ["connect_will_retry", "generic_goodbye"]
 
@@ -160,7 +160,7 @@ def postpone_menu(
     is_postponed: bool,
     others_scheduled: bool,
     next_day: Optional[int] = None,
-) -> List[str]:
+) -> list[str]:
     """IVR postpone menu with choices"""
 
     today_weekday = f"weekday_{today}"
@@ -189,17 +189,17 @@ def postpone_menu(
     ]
 
 
-def postpone_skipped() -> List[str]:
+def postpone_skipped() -> list[str]:
     """IVR postpone was skipped"""
     return ["postpone_skipped"]
 
 
-def postpone_snoozed() -> List[str]:
+def postpone_snoozed() -> list[str]:
     """IVR postpone was snoozed"""
     return ["postpone_snoozed"]
 
 
-def delete_menu(*, day: int) -> List[str]:
+def delete_menu(*, day: int) -> list[str]:
     """IVR delete menu"""
     return [
         "delete_has_others",
@@ -210,12 +210,12 @@ def delete_menu(*, day: int) -> List[str]:
     ]
 
 
-def deleted_all_scheduled_calls() -> List[str]:
+def deleted_all_scheduled_calls() -> list[str]:
     """IVR response if all scheduled calls were deleted"""
     return ["delete_all_deleted", "generic_goodbye"]
 
 
-def deleted_todays_scheduled_call(*, day: int) -> List[str]:
+def deleted_todays_scheduled_call(*, day: int) -> list[str]:
     """IVR response if todays scheduled calls were deleted"""
     return [
         "delete_this_deleted_1",

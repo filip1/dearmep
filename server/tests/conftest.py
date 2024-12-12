@@ -6,7 +6,7 @@
 from contextlib import contextmanager
 from os import environ
 from pathlib import Path
-from typing import Callable, Dict, Optional
+from typing import Callable, Optional
 
 import pytest
 import yaml
@@ -26,9 +26,9 @@ FactoryType = Callable[[Optional[dict]], FastAPI]
 
 
 @contextmanager
-def modified_environ(changes: Dict[str, str]):
+def modified_environ(changes: dict[str, str]):
     """Change env variables while in the context, then change them back."""
-    origs: Dict[str, Optional[str]] = {}
+    origs: dict[str, Optional[str]] = {}
     for name, replacement in changes.items():
         origs[name] = environ.get(name)
         environ[name] = replacement

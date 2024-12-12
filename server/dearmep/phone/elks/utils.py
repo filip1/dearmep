@@ -4,7 +4,6 @@
 
 import logging
 from random import choice
-from typing import List, Tuple
 
 import requests
 
@@ -18,7 +17,7 @@ _logger = logging.getLogger(__name__)
 def choose_from_number(
     user_number_prefix: str,
     user_language: Language,
-    phone_numbers: List[Number],
+    phone_numbers: list[Number],
 ) -> Number:
     """
     Returns a phonenumber we use to call the user. Preferably from the same
@@ -44,8 +43,8 @@ def choose_from_number(
 
 
 def get_numbers(
-    phone_numbers: List[Number], auth: Tuple[str, str]
-) -> List[Number]:
+    phone_numbers: list[Number], auth: tuple[str, str]
+) -> list[Number]:
     """
     Fetches all available numbers of an account at 46elks.
     """

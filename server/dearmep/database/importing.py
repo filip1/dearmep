@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Dict, Optional, Set, Type
+from typing import TYPE_CHECKING, Callable, Optional
 
 from ..convert.audio import audio2blob
 from ..convert.dump import DumpFormatError
@@ -37,11 +37,11 @@ class Importer:
         logo_template: Optional[str] = None,
         name_audio_template: Optional[str] = None,
     ) -> None:
-        self._dump2db: Dict[Type[DumpableModels], Callable] = {
+        self._dump2db: dict[type[DumpableModels], Callable] = {
             DestinationGroupDump: self._create_destination_group,
             DestinationDump: self._create_destination,
         }
-        self._groups: Dict[str, DestinationGroup] = {}
+        self._groups: dict[str, DestinationGroup] = {}
         self._portrait_tpl = portrait_template
         self._logo_tpl = logo_template
         self._name_tpl = name_audio_template
@@ -141,13 +141,13 @@ def import_swayability(
     objs: Iterable[SwayabilityImport],
     *,
     ignore_unknown: bool = False,
-) -> Set[DestinationID]:
+) -> set[DestinationID]:
     """Import endorsement for Destinations.
 
     If `ignore_unknown` is set, IDs not found in the database will be ignored.
     A set of ignored IDs will be returned.
     """
-    ignored: Set[DestinationID] = set()
+    ignored: set[DestinationID] = set()
     for obj in objs:
         dest = session.get(Destination, obj.id)
         if not dest:

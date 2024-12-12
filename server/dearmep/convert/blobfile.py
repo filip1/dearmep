@@ -9,9 +9,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import (
     TYPE_CHECKING,
-    List,
     Optional,
-    Tuple,
     Union,
 )
 
@@ -131,7 +129,7 @@ def get_blobs_or_files(
     folder: Path,
     languages: Sequence[str] = (),
     suffix: str = "",
-) -> List[BlobOrFile]:
+) -> list[BlobOrFile]:
     """Get BlobOrFile list by looking up names in database & filesystem.
 
     `names` is a sequence of file stems (without specifying a language suffix
@@ -156,7 +154,7 @@ def get_blobs_or_files(
 
     def names_with_languages(
         name: str, languages: Sequence[str], suffix: str
-    ) -> Tuple[str, ...]:
+    ) -> tuple[str, ...]:
         if not languages:  # no multi-language matching
             return (f"{name}{suffix}",)
         return tuple(
@@ -174,7 +172,7 @@ def get_blobs_or_files(
     blobs = query.get_blobs_by_names(session, flat)
 
     # Collect the actual result.
-    res: List[BlobOrFile] = []
+    res: list[BlobOrFile] = []
     for name in names:
         for candidate in names_with_languages(name, languages, suffix):
             if candidate in blobs:

@@ -18,11 +18,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
     Literal,
     Optional,
-    Tuple,
-    Type,
     TypeVar,
     Union,
     overload,
@@ -58,7 +55,7 @@ class BaseTask:
 
     def __exit__(
         self,
-        exc_type: Optional[Type],
+        exc_type: Optional[type],
         exc_val: Optional[BaseException],
         exc_tb: Optional[TracebackType],
     ) -> Literal[False]:
@@ -227,7 +224,7 @@ class FlexiReader:
         self,
         input: Union[IO, Path],
         *,
-        reconfigure: Optional[Dict[str, Any]] = None,
+        reconfigure: Optional[dict[str, Any]] = None,
     ) -> None:
         self._input = input
         self._orig_stream: Optional[IO] = None
@@ -243,7 +240,7 @@ class FlexiReader:
         *names: str,
         positional: bool = True,
         required: bool = False,
-        constructor_args: Optional[Dict[str, Any]] = None,
+        constructor_args: Optional[dict[str, Any]] = None,
         **kwargs: Any,  # noqa: ANN401
     ) -> None:
         """Create an `ArgumentParser` argument that becomes a `FlexiReader`."""
@@ -275,7 +272,7 @@ class FlexiReader:
         filename: Union[str, Path],
         *,
         dash_stdin: bool = False,
-        constructor_args: Optional[Dict[str, Any]] = None,
+        constructor_args: Optional[dict[str, Any]] = None,
     ) -> FlexiReader:
         """Create a new FlexiReader, interpreting str argument as file name."""
         if constructor_args is None:
@@ -289,14 +286,14 @@ class FlexiReader:
         return sys.stdin.buffer
 
     @overload
-    def _prepare(self, open_flags: Literal["r"]) -> Tuple[IO[str], bool]: ...
+    def _prepare(self, open_flags: Literal["r"]) -> tuple[IO[str], bool]: ...
 
     @overload
     def _prepare(
         self, open_flags: Literal["rb"]
-    ) -> Tuple[IO[bytes], bool]: ...
+    ) -> tuple[IO[bytes], bool]: ...
 
-    def _prepare(self, open_flags: str) -> Tuple[IO, bool]:
+    def _prepare(self, open_flags: str) -> tuple[IO, bool]:
         if self._stream is not None:
             raise OSError("context was already entered")
         if isinstance(self._input, Path):
@@ -328,7 +325,7 @@ class FlexiReader:
 
     def __exit__(
         self,
-        exc_type: Optional[Type],
+        exc_type: Optional[type],
         exc_val: Optional[BaseException],
         exc_tb: Optional[TracebackType],
     ) -> Literal[False]:
@@ -367,7 +364,7 @@ class FlexiStrReader(FlexiReader):
         self,
         input: Union[IO[str], Path],
         *,
-        reconfigure: Optional[Dict[str, Any]] = None,
+        reconfigure: Optional[dict[str, Any]] = None,
     ) -> None:
         super().__init__(input, reconfigure=reconfigure)
 

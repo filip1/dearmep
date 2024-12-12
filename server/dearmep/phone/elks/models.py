@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from datetime import datetime
-from typing import List, Literal
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -25,7 +25,7 @@ class Number(BaseModel):
     country: str
     expires: datetime
     number: str
-    capabilities: List[str]
+    capabilities: list[str]
     cost: int
     active: Literal["yes", "no"]
     allocated: datetime

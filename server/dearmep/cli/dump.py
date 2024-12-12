@@ -8,7 +8,7 @@ import json
 import logging
 import sys
 from os import environ
-from typing import TYPE_CHECKING, Callable, Dict, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from pydantic import ValidationError
 
@@ -31,7 +31,7 @@ from ..main import create_app
 _logger = logging.getLogger(__name__)
 
 
-def fake_config(patch: Optional[Dict] = None) -> None:
+def fake_config(patch: Optional[dict] = None) -> None:
     try:
         s = Settings()
     except ValidationError as e:

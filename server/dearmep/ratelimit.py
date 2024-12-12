@@ -6,7 +6,7 @@
 import ipaddress
 import logging
 from time import time
-from typing import ClassVar, Dict, Literal, Optional, Set, Tuple, Union
+from typing import ClassVar, Literal, Optional, Union
 
 import limits
 from fastapi import Depends, HTTPException, Request, routing, status
@@ -16,7 +16,7 @@ from .config import Config, IPRateLimits
 from .models import IPNetwork
 
 
-NETSIZES: Dict[str, Union[Tuple[int, int], None]] = {
+NETSIZES: dict[str, Union[tuple[int, int], None]] = {
     "ip": None,
     "small_block": (24, 64),
     "large_block": (16, 48),
@@ -67,7 +67,7 @@ def ip_network(
 class Limit:
     """Dependency for rate limiting calls of an endpoint."""
 
-    not_limited_ip_networks: ClassVar[Set[IPNetwork]] = set()
+    not_limited_ip_networks: ClassVar[set[IPNetwork]] = set()
 
     @staticmethod
     def reset_all_limits() -> None:
@@ -78,7 +78,7 @@ class Limit:
         limit_name: Literal["simple", "computational", "sms"],
     ) -> None:
         self.limit_name = limit_name
-        self.limits: Optional[Dict[str, limits.RateLimitItem]] = None
+        self.limits: Optional[dict[str, limits.RateLimitItem]] = None
 
     def __call__(
         self,
@@ -139,7 +139,7 @@ class Limit:
             )
 
     @classmethod
-    def allow_unlimited(cls, subnets: Set[IPNetwork]) -> None:
+    def allow_unlimited(cls, subnets: set[IPNetwork]) -> None:
         """
         Exclude specific IP subnets from the limits.
         """

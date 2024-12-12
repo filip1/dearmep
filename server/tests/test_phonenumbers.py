@@ -2,7 +2,6 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import List, Tuple
 
 import pytest
 
@@ -53,7 +52,7 @@ def test_valid_format(number: str, e164: str, hash: str, fastapi_app):
         ("+396123456", 39, ("IT", "VA")),
     ),
 )
-def test_country(number: str, prefix: int, countries: Tuple[str], fastapi_app):
+def test_country(number: str, prefix: int, countries: tuple[str], fastapi_app):
     up = UserPhone(number)
     assert up.calling_code == prefix
     assert up.country_codes == countries
@@ -83,7 +82,7 @@ def test_original_number_is_lost(fastapi_app):
         ("+496215555555", []),
     ),
 )
-def test_number_allowed(number: str, reasons: List[Reason], fastapi_app):
+def test_number_allowed(number: str, reasons: list[Reason], fastapi_app):
     up = UserPhone(number)
     assert up.check_allowed() == reasons
     assert not up.is_allowed() if reasons else up.is_allowed()

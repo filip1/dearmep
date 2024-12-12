@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Type
+from typing import TYPE_CHECKING, Callable
 
 
 if TYPE_CHECKING:
@@ -30,7 +30,7 @@ MEP_NAME_AUDIO_FILE_PATTERN = "{id}.mp3"
 _logger = logging.getLogger(__name__)
 
 
-def tabular_class(ctx: Context) -> Type[Tabular]:
+def tabular_class(ctx: Context) -> type[Tabular]:
     """Return the correct Tabular subclass depending on the output format."""
     format = ctx.args.output_format
     if format == "csv":

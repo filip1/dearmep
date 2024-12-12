@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Type, TypeVar
+from typing import TypeVar
 from xml.dom import pulldom  # noqa: S409
 
 from defusedxml.pulldom import parse as pulldom_parse
@@ -30,7 +30,7 @@ T = TypeVar("T", bound=Tabular)
 def list_topics(
     input: FlexiBytesReader,
     tf: BaseTaskFactory,
-    table_class: Type[T],
+    table_class: type[T],
 ) -> T:
     table = table_class("ID", "Description")
     with tf.create_task("parsing XML") as task:
@@ -53,7 +53,7 @@ def list_topics(
 def list_votes(
     input: FlexiBytesReader,
     tf: BaseTaskFactory,
-    table_class: Type[T],
+    table_class: type[T],
     topic: str,
 ) -> T:
     table = table_class("PersID", "MEPID", "Group", "Name", "Vote")

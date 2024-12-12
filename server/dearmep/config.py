@@ -12,12 +12,8 @@ from pathlib import Path
 from typing import (
     Any,
     ClassVar,
-    Dict,
-    List,
     Literal,
     Optional,
-    Set,
-    Tuple,
     Union,
     cast,
 )
@@ -76,7 +72,7 @@ class IPRateLimits(BaseModel):
 class CorsConfig(BaseModel):
     """Allowed access for other web hosts to this backend via Ajax"""
 
-    origins: List[Union[Literal["*"], AnyHttpUrl]]
+    origins: list[Union[Literal["*"], AnyHttpUrl]]
 
 
 class APIRateLimitConfig(BaseModel):
@@ -95,15 +91,15 @@ class ElksConfig(BaseModel):
     provider_name: Literal["46elks"]
     username: str
     password: str
-    allowed_ips: Tuple[str, ...]
+    allowed_ips: tuple[str, ...]
 
 
 class JWTConfig(BaseModel):
-    algorithms: List[str]
+    algorithms: list[str]
     key: str
 
     @validator("algorithms")
-    def list_not_empty(cls, v: List[str]) -> List[str]:
+    def list_not_empty(cls, v: list[str]) -> list[str]:
         if len(v) == 0:
             raise ValueError("at least one algorithm needs to be specified")
         return v
@@ -137,16 +133,16 @@ class ContactTimespanFilterTimespan(BaseModel):
     end: date
 
     @validator("end")
-    def end_not_before_start(cls, v: date, values: Dict[str, date]) -> date:
+    def end_not_before_start(cls, v: date, values: dict[str, date]) -> date:
         if v < values["start"]:
             raise ValueError("end date cannot be before start date")
         return v
 
 
 class ContactTimespanFilterConfig(BaseModel):
-    types: List[str]
+    types: list[str]
     default: str
-    timespans: Dict[str, List[ContactTimespanFilterTimespan]]
+    timespans: dict[str, list[ContactTimespanFilterTimespan]]
 
 
 class DatabaseConfig(BaseModel):
@@ -154,11 +150,11 @@ class DatabaseConfig(BaseModel):
 
 
 class L10nEntry(BaseModel):
-    __root__: Union[str, Dict[Language, str]]
+    __root__: Union[str, dict[Language, str]]
 
     def apply(
         self,
-        placeholders: Optional[Dict[str, Any]] = None,
+        placeholders: Optional[dict[str, Any]] = None,
         language: str = "",
     ) -> str:
         l10nconfig = Config.get().l10n
@@ -183,7 +179,7 @@ class L10nEntry(BaseModel):
 
 
 class FrontendStrings(BaseModel):
-    __root__: Dict[str, L10nEntry]
+    __root__: dict[str, L10nEntry]
 
 
 class L10nStrings(BaseModel):
@@ -192,7 +188,7 @@ class L10nStrings(BaseModel):
 
 
 class L10nConfig(BaseModel):
-    languages: List[Language]
+    languages: list[Language]
     default_language: Language
     geo_mmdb: Optional[FilePath]
     frontend_strings: FrontendStrings
@@ -202,7 +198,7 @@ class L10nConfig(BaseModel):
     def default_language_must_be_in_languages(
         cls,
         v: Language,
-        values: Dict[str, Any],
+        values: dict[str, Any],
     ) -> Language:
         if "languages" in values and v not in values["languages"]:
             raise ValueError(
@@ -216,7 +212,7 @@ class L10nConfig(BaseModel):
         cls,
         v: Union[FrontendStrings, L10nStrings],
         field: ModelField,
-        values: Dict[str, Any],
+        values: dict[str, Any],
     ) -> Union[FrontendStrings, L10nStrings]:
         if "default_language" not in values:
             # Validation of `default_language` probably failed, skip.
@@ -236,9 +232,9 @@ class L10nConfig(BaseModel):
     def every_language_must_have_a_name(
         cls,
         v: FrontendStrings,
-        values: Dict[str, Any],
+        values: dict[str, Any],
     ) -> FrontendStrings:
-        languages: List[Language] = values["languages"]
+        languages: list[Language] = values["languages"]
         for lang in languages:
             lang_key = f"languages.{lang}"
             if lang_key not in v.__root__:
@@ -256,7 +252,7 @@ class L10nConfig(BaseModel):
 
 class OfficeHoursConfig(BaseModel):
     timezone: str
-    weekdays: Set[WeekdayNumber]
+    weekdays: set[WeekdayNumber]
     begin: time
     end: time
     call_schedule_interval: PositiveInt = 15
@@ -271,7 +267,7 @@ class OfficeHoursConfig(BaseModel):
         return v
 
     @validator("end")
-    def end_after_begin(cls, v: time, values: Dict[str, time]) -> time:
+    def end_after_begin(cls, v: time, values: dict[str, time]) -> time:
         if v <= values["begin"]:
             raise ValueError("`end` has to be after `begin`")
         return v
@@ -290,7 +286,7 @@ class OfficeHoursConfig(BaseModel):
 
     def intervals_by_weekday(
         self,
-    ) -> Dict[WeekdayNumber, List[OfficeHoursInterval]]:
+    ) -> dict[WeekdayNumber, list[OfficeHoursInterval]]:
         """Return the "open" intervals for each weekday.
 
         If a weekday has no office hours, it will not be in the return value.
@@ -324,9 +320,9 @@ class OfficeHoursConfig(BaseModel):
 
 
 class TelephonyConfig(BaseModel):
-    allowed_calling_codes: List[int]
-    approved_numbers: List[str] = []
-    blocked_numbers: List[str] = []
+    allowed_calling_codes: list[int]
+    approved_numbers: list[str] = []
+    blocked_numbers: list[str] = []
     dry_run: bool = False
     office_hours: OfficeHoursConfig
     successful_call_duration: PositiveInt
@@ -397,7 +393,7 @@ class Config(BaseModel):
     scheduler: Optional[SchedulerConfig]
 
     _instance: ClassVar[Optional["Config"]] = None
-    _patch: ClassVar[Optional[Dict]] = None
+    _patch: ClassVar[Optional[dict]] = None
 
     @classmethod
     def get(cls) -> "Config":
@@ -426,7 +422,7 @@ class Config(BaseModel):
         return cls.load_yaml_file(settings.config_file)
 
     @classmethod
-    def load_dict(cls, obj: Dict) -> "Config":
+    def load_dict(cls, obj: dict) -> "Config":
         if cls._patch:
             obj = deep_update(obj, cls._patch)
         try:
@@ -452,7 +448,7 @@ class Config(BaseModel):
             return cls.load_dict(yaml_dict)
 
     @classmethod
-    def set_patch(cls, patch: Optional[Dict]) -> None:
+    def set_patch(cls, patch: Optional[dict]) -> None:
         cls._patch = patch
 
     @classmethod
@@ -510,7 +506,7 @@ def included_file(name: str) -> Path:
 
 
 @lru_cache(maxsize=1000)
-def all_frontend_strings(language: Language) -> Dict[str, str]:
+def all_frontend_strings(language: Language) -> dict[str, str]:
     """Get all frontend strings, if possible in the given language.
 
     If a given string has not been translated to the requested language, it
