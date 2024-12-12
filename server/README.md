@@ -32,17 +32,18 @@ For now, please install it "for development", as described below.
 
 ## Installation for Development
 
-1. Install [Poetry](https://python-poetry.org/).
+1. Install [uv](https://docs.astral.sh/uv/).
 2. Clone this repository and `cd` into it.
-3. Run `poetry install --all-extras`.
-  * See below on which extras this will install. Alternatively, you can select individual extras with `--extras NAME` or don’t install any extras at all.
+3. Run `uv sync --all-extras`.
+  * See below on which extras this will install. Alternatively, you can select individual extras with `--extra NAME` or don’t install any extras at all.
 4. Done.
 
-Poetry takes care of managing a [virtual environment](https://docs.python.org/3/tutorial/venv.html) for you, containing DearMEP and all of its dependencies, without messing with your global installation.
-You can use `poetry shell` to launch a new subshell with your `$PATH` modified to use the virtual environment.
-Alternatively, you can prefix individual commands with `poetry run` to run just that command inside of the virtual environment.
+uv takes care of managing a [virtual environment](https://docs.python.org/3/tutorial/venv.html) in `.venv/` for you, containing DearMEP and all of its dependencies, without messing with your global installation.
+You can update your `$PATH` accordingly to access the commands (including the `dearmep` command) available in `.venv/bin`.
+We recommend [direnv](https://direnv.net/) to automate this.
+Alternatively, you can prefix individual commands with `uv run` to run just that command inside of the virtual environment.
 
-**In the examples below, commands like `dearmep` or `uvicorn` should either be run inside of a `poetry shell`, or prefixed like `poetry run dearmep`.**
+**In the examples below, commands like `dearmep` or `uvicorn` should either be run using the command from `.venv/bin`, or prefixed like `uv run dearmep`.**
 
 ## Extras
 
@@ -130,6 +131,23 @@ You can modify the port with `-p 1234`.
 By default, DearMEP will serve on port 8000.
 
 See `dearmep serve --help` for other options, including how to start it via a custom ASGI server.
+
+## Accessing Development Tools
+
+You can use the [`Makefile`](Makefile) to access recommended development commands easily.
+
+* `make sync` to sync your environment, install dependencies, etc. This will run `uv sync --all-extras`.
+* `make fmt` runs the [Ruff](https://docs.astral.sh/ruff/) formatter on the code.
+* `make lint` runs Ruff's linter.
+* `make types` performs static type checking with mypy.
+* `make test` will run the testsuite using pytest.
+* `make trans` checks for missing translations.
+
+There are also some shortcuts for combining these operations:
+
+* `make flint` runs formatter and linter. This is super fast and can be done on every save, for example.
+* `make qa` runs the more expensive things: type checking, testsuite, translations.
+* And a simple `make` without any arguments runs all of the above. You can even use `make -j` to do all of it in parallel and save a few seconds.
 
 ## Serving Static Files (e.g. the Client)
 

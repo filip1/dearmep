@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-.PHONY: all flint fmt lint noqa qa test trans types
+.PHONY: all flint fmt lint noqa qa sync test trans types
 
 
 # By default, run all the formatting, linting, and testing.
@@ -20,20 +20,20 @@ flint: fmt lint
 # running the formatter, as noted in the ISC001 and ISC002 rules.
 # <https://docs.astral.sh/ruff/rules/single-line-implicit-string-concatenation/#formatter-compatibility>
 fmt:
-	ruff check --fix --select I
-	ruff format
+	uv run ruff check --fix --select I
+	uv run ruff format
 
 
 # Lint the code.
 lint:
-	ruff check --fix
+	uv run ruff check --fix
 
 
 # Add "noqa" markers to everything that the linter complains about. This can be
 # handy to use once you've fixed all legitimate warnings, to silence the rest
 # (hopefully because they're false positives).
 noqa:
-	ruff check --add-noqa
+	uv run ruff check --add-noqa
 
 
 # Check type annotations and run tests. This is a bit slower and recommended not
@@ -41,16 +41,20 @@ noqa:
 qa: types test trans
 
 
+# Sync the environment with all extras.
+sync:
+	uv sync --all-extras
+
 # Run tests.
 test:
-	pytest
+	uv run pytest
 
 
 # Look for untranslated strings in the configuration.
 trans:
-	dearmep check translations
+	uv run dearmep check translations
 
 
 # Check type annotations.
 types:
-	mypy
+	uv run mypy

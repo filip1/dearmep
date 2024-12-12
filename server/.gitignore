@@ -3,3 +3,24 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 /build-db/
+/dist/
+
+*.egg-info/
+__pycache__/
+
+/.coverage
+/coverage.xml
+/report.xml
+
+# Directory of the snippet bundled into the back-end.
+/dearmep/static_files/static/
+
+/*.mmdb
+/*.sqlite
+/openapi.json
+
+# For convenience, if people use their own config.yaml.
+/.config.yaml
+
+# Dotenv files.
+/*.env
