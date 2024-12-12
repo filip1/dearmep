@@ -4,14 +4,11 @@
 
 import json
 import re
+from collections.abc import Generator, Iterable
 from datetime import date, datetime, timezone
 from typing import (
     TYPE_CHECKING,
     Any,
-    Dict,
-    Generator,
-    Iterable,
-    List,
     Union,
     cast,
 )
@@ -82,7 +79,7 @@ def get_group(
     return id  # noqa: B901
 
 
-def constituency_to_group(const: Dict[str, str]) -> Dict[str, str]:
+def constituency_to_group(const: dict[str, str]) -> dict[str, str]:
     return {
         "type": "party",
         # Parltrack has some parties in different capitalizations.
@@ -92,7 +89,7 @@ def constituency_to_group(const: Dict[str, str]) -> Dict[str, str]:
     }
 
 
-def group_to_group(group: Dict[str, str]) -> Dict[str, str]:
+def group_to_group(group: dict[str, str]) -> dict[str, str]:
     return {
         "type": "parl_group",
         "id": f"G:{group['groupid']}",
@@ -110,7 +107,7 @@ def convert_contact(type: str, contact: str) -> str:
     return contact
 
 
-def convert_person(raw_mep: Dict[str, Any]) -> Iterable[DumpableModels]:
+def convert_person(raw_mep: dict[str, Any]) -> Iterable[DumpableModels]:
     contacts = []
     # Top-level contacts like web links and email.
     for pt_key, dmep_key in CONTACT_MAP.items():
@@ -140,7 +137,7 @@ def convert_person(raw_mep: Dict[str, Any]) -> Iterable[DumpableModels]:
         (
             group
             for group in cast(
-                "List[Dict[str, str]]", raw_mep.get("Groups", [])
+                "list[dict[str, str]]", raw_mep.get("Groups", [])
             )
             if is_current(group)
         ),
@@ -150,7 +147,7 @@ def convert_person(raw_mep: Dict[str, Any]) -> Iterable[DumpableModels]:
         (
             constituency
             for constituency in cast(
-                "List[Dict[str, str]]", raw_mep.get("Constituencies", [])
+                "list[dict[str, str]]", raw_mep.get("Constituencies", [])
             )
             if is_current(constituency)
         ),
@@ -158,7 +155,7 @@ def convert_person(raw_mep: Dict[str, Any]) -> Iterable[DumpableModels]:
     )
 
     # Look up group & constituency, add them to the dump on first appearance.
-    groups: List[str] = []
+    groups: list[str] = []
     if group:
         group_id = yield from get_group(**group_to_group(group))
         groups.append(group_id)

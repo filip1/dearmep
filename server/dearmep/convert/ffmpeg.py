@@ -3,9 +3,10 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import subprocess  # noqa: S404
+from collections.abc import Generator, Iterable, Sequence
 from contextlib import ExitStack, contextmanager
 from tempfile import NamedTemporaryFile
-from typing import IO, Generator, Iterable, Sequence
+from typing import IO
 
 from .blobfile import BlobOrFile
 
@@ -30,9 +31,10 @@ def build_concat_listfile(
     to allow ffmpeg to access them. These files will also be deleted once you
     leave the context.
     """
-    with NamedTemporaryFile(
-        "wb", prefix="fflist.", suffix=".txt"
-    ) as clist, ExitStack() as stack:
+    with (
+        NamedTemporaryFile("wb", prefix="fflist.", suffix=".txt") as clist,
+        ExitStack() as stack,
+    ):
         # Write the list of inputs to the concat list file.
         clist.write(
             build_concat_list(

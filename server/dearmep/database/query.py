@@ -10,7 +10,7 @@ import random
 import re
 from datetime import date, datetime, timedelta, timezone
 from secrets import randbelow
-from typing import Callable, Dict, List, NamedTuple, Optional, Union, cast
+from typing import Callable, NamedTuple, Optional, Union, cast
 
 import backoff
 from pydantic import UUID4
@@ -70,11 +70,11 @@ def escape_for_like(value: str) -> str:
     return re.sub(r"([%_#])", r"#\1", value)
 
 
-def get_available_countries(session: Session) -> List[str]:
+def get_available_countries(session: Session) -> list[str]:
     countries = session.exec(select(Destination.country).distinct()).all()
     return (
-        cast("List[str]", countries)
-        if isinstance(countries, List)
+        cast("list[str]", countries)
+        if isinstance(countries, list)
         and len(countries)
         and isinstance(countries[0], str)
         else []
@@ -96,8 +96,8 @@ def get_blob_by_name(session: Session, name: str) -> Blob:
 
 def get_blobs_by_names(
     session: Session,
-    names: List[str],
-) -> Dict[str, Blob]:
+    names: list[str],
+) -> dict[str, Blob]:
     blobs = session.exec(select(Blob).where(col(Blob.name).in_(names))).all()
     return {blob.name: blob for blob in blobs}
 
@@ -115,7 +115,7 @@ def get_destination_by_id(
 def get_destinations_by_country(
     session: Session,
     country: CountryCode,
-) -> List[Destination]:
+) -> list[Destination]:
     return session.exec(
         select(Destination)
         .where(Destination.country == country)
@@ -130,7 +130,7 @@ def get_destinations_by_name(
     all_countries: bool,
     country: Optional[CountryCode],
     limit: int,
-) -> List[Destination]:
+) -> list[Destination]:
     stmt = (
         select(Destination)
         .where(
@@ -494,7 +494,7 @@ def get_recommended_destination(  # noqa: C901, PLR0914
 
 
 def to_destination_search_result(
-    destinations: List[Destination],
+    destinations: list[Destination],
     blob_path: Callable[[Optional[Blob]], Optional[str]],
 ) -> SearchResult[DestinationSearchResult]:
     return SearchResult(
@@ -568,7 +568,7 @@ def get_number_verification_count(
             - timedelta(seconds=cutoff_completed_older_than_s)
         )
 
-    request_counts: Dict[bool, int] = dict(
+    request_counts: dict[bool, int] = dict(
         session.exec(
             select(  # type: ignore[call-overload]
                 label(
@@ -743,7 +743,7 @@ def get_user_feedback_by_token(
 
 def store_medialist(
     session: Session,
-    items: List[BlobOrFile],
+    items: list[BlobOrFile],
     *,
     format: str,
     mimetype: str,
@@ -777,7 +777,7 @@ def get_medialist_by_id(
 def get_schedule(
     session: Session,
     phone_number: PhoneNumber,
-) -> List[ScheduledCall]:
+) -> list[ScheduledCall]:
     """Get all scheduled calls for a user"""
 
     return session.exec(
@@ -789,7 +789,7 @@ def set_schedule(
     session: Session,
     phone_number: PhoneNumber,
     language: Language,
-    schedules: List[Schedule],
+    schedules: list[Schedule],
 ) -> None:
     session.exec(
         delete(ScheduledCall).where(ScheduledCall.phone_number == phone_number)

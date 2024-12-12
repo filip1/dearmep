@@ -6,7 +6,7 @@ import dataclasses
 import logging
 from functools import lru_cache
 from pathlib import Path
-from typing import NoReturn, Optional
+from typing import Annotated, NoReturn, Optional
 
 from defusedxml import ElementTree
 from fastapi import FastAPI, HTTPException, status
@@ -16,7 +16,6 @@ from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markdown_it import MarkdownIt
 from markupsafe import Markup
-from typing_extensions import Annotated
 
 from .config import ENV_PREFIX, Settings
 

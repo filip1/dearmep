@@ -5,7 +5,7 @@
 
 import logging
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Literal, Optional, Union
 
 import requests
 from fastapi import (
@@ -49,7 +49,7 @@ from .utils import choose_from_number, get_numbers
 _logger = logging.getLogger(__name__)
 
 
-phone_numbers: List[Number] = []
+phone_numbers: list[Number] = []
 timeout = 9  # seconds
 establish_call_timeout = 45  # seconds
 menu_duration_timeout = 7  # minutes
@@ -256,7 +256,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:  # noqa: C901, PLR0915
 
     def prepare_response(  # noqa: PLR0913
         *,
-        valid_input: Optional[List[int]] = None,
+        valid_input: Optional[list[int]] = None,
         invalid_next: str = "",
         language: str = "en",
         timeout: int = timeout,
@@ -274,7 +274,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:  # noqa: C901, PLR0915
         your call to this function MUST include an active session and
         invalid_next for the route which should be called.
         """
-        response: Dict[str, Any] = {"timeout": timeout, "repeat": repeat}
+        response: dict[str, Any] = {"timeout": timeout, "repeat": repeat}
 
         if valid_input:
             if not session or not invalid_next:
@@ -563,7 +563,7 @@ def mount_router(app: FastAPI, prefix: str) -> None:  # noqa: C901, PLR0915
 
         today = datetime.now(tz=timezone.utc).isoweekday()
 
-        def _next_scheduled_weekday(schedule: List[ScheduledCall]) -> int:
+        def _next_scheduled_weekday(schedule: list[ScheduledCall]) -> int:
             schedule = sorted(schedule, key=lambda x: x.day)
             for scheduled_call in schedule:
                 if scheduled_call.day > today:

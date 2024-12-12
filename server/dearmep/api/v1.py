@@ -5,8 +5,9 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from collections.abc import Iterable
 from datetime import datetime, timezone
-from typing import Any, Callable, Dict, Iterable, List, Optional, Union
+from typing import Annotated, Any, Callable, Optional, Union
 
 from fastapi import (
     APIRouter,
@@ -21,7 +22,6 @@ from fastapi.responses import JSONResponse
 from prometheus_client import Counter
 from pydantic import BaseModel
 from sqlmodel import col
-from typing_extensions import Annotated
 
 from ..config import Config, Language, all_frontend_strings
 from ..database import query
@@ -82,7 +82,7 @@ l10n_autodetect_total = Counter(
 )
 
 
-rate_limit_response: Dict[int, Dict[str, Any]] = {
+rate_limit_response: dict[int, dict[str, Any]] = {
     429: {
         "description": "Rate Limit Exceeded",
         "model": RateLimitResponse,
@@ -522,7 +522,7 @@ def request_number_verification(
     proving that you have access to that number.
     """
 
-    def reject(errors: List[PhoneRejectReason]) -> JSONResponse:
+    def reject(errors: list[PhoneRejectReason]) -> JSONResponse:
         return error_model(
             status.HTTP_400_BAD_REQUEST,
             PhoneNumberVerificationRejectedResponse(errors=errors),

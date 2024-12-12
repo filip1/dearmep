@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Literal, Optional, Union
 
 import pytest
 from sqlmodel import Session
@@ -35,7 +35,7 @@ TEST_MMDB = str(Path(Path(__file__).parent, "geo_ip", "test.mmdb"))
         ("de, , en", ["de", "en"]),  # ignore empty blocks
     ],
 )
-def test_parse_accept_language(header: str, expected: List[str]):
+def test_parse_accept_language(header: str, expected: list[str]):
     assert l10n.parse_accept_language(header) == expected
 
 
@@ -58,8 +58,8 @@ def test_parse_accept_language(header: str, expected: List[str]):
     ],
 )
 def test_find_preferred_language(
-    prefs: List[str],
-    available: List[str],
+    prefs: list[str],
+    available: list[str],
     fallback: Optional[str],
     expected: Union[str, Literal[False]],
 ):
@@ -140,7 +140,7 @@ def test_find_preferred_with_no_available_languages():
 def test_get_country(
     db: str,
     ip: str,
-    expect: Dict[str, Any],
+    expect: dict[str, Any],
     with_example_destinations: Session,
 ):
     res = l10n.get_country(with_example_destinations, db, ip)

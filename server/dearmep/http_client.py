@@ -6,7 +6,7 @@ import logging
 from pathlib import Path
 from queue import Empty, Queue
 from threading import Thread
-from typing import List, Literal, Optional, Set, Tuple, Union
+from typing import Literal, Optional, Union
 
 import backoff
 import requests
@@ -69,8 +69,8 @@ class MassDownloader:
         task: Optional[BaseTask] = None,
         overwrite: bool = False,
         skip_existing: bool = False,
-        accept_error_codes: Union[Literal[True], Set[int], None] = None,
-        ignore_error_codes: Union[Literal[True], Set[int], None] = None,
+        accept_error_codes: Union[Literal[True], set[int], None] = None,
+        ignore_error_codes: Union[Literal[True], set[int], None] = None,
     ) -> None:
         self._jobs = jobs
         self._session = session_or_new(session)
@@ -84,11 +84,11 @@ class MassDownloader:
         self._ignore_codes = (
             set() if ignore_error_codes is None else ignore_error_codes
         )
-        self._queue: Queue[Tuple[str, Path]] = Queue()
+        self._queue: Queue[tuple[str, Path]] = Queue()
         self._mgmt_thread: Optional[Thread] = None
         self._should_run: bool = False
         self._abort: bool = False
-        self.errors: List[Tuple[str, requests.Response]] = []
+        self.errors: list[tuple[str, requests.Response]] = []
 
     @backoff.on_exception(
         backoff.expo,
@@ -157,7 +157,7 @@ class MassDownloader:
 
     def _manage(self) -> None:
         """Main background thread managing the queue threads."""
-        workers: List[Thread] = []
+        workers: list[Thread] = []
         for i in range(self._jobs):
             thread = Thread(
                 target=self._queue_worker,

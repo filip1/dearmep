@@ -8,7 +8,7 @@
 name = "DearMEP"
 version = "4.0.0-dev.9999999999"
 description = "DearMEP helps people contact their representatives."
-requires-python = ">=3.8,<4"
+requires-python = ">=3.9,<4"
 authors = [
 	{name = "Tim Weber"},
 ]
@@ -93,7 +93,7 @@ artifacts = [
 
 [tool.mypy]
 packages = ["dearmep", "tests"]
-python_version = "3.8"
+python_version = "3.9"
 warn_return_any = true
 
 [tool.pytest.ini_options]
@@ -106,7 +106,7 @@ markers = [
 [tool.ruff]
 line-length = 79
 indent-width = 4
-target-version = "py38"  # when changing this, check below whether some rules can be re-enabled
+target-version = "py39"  # when changing this, check below whether some rules can be re-enabled
 exclude = [
 	".git",
 	"migrations",
@@ -165,8 +165,6 @@ ignore = [
 	"RUF002",   # complains about Unicode typography in docstrings
 	"RUF200",   # requires a name for projects
 	"TRY003",   # complains about simple ValueError messages
-	# to be re-enabled when minimum Python version is >= 3.9
-	"UP006",    # suggests stdlib generic collection annotations (list[...]), which can confuse Python < 3.9
 	# to be re-enabled when minimum Python version is >= 3.10
 	"FA100",    # suggests `from __future__ import annotations`, which causes trouble in SQLModel <https://github.com/tiangolo/sqlmodel/issues/196>
 	"UP007",    # suggests X | Y annotations, which can confuse Python < 3.10

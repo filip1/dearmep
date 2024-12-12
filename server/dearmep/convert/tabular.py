@@ -7,12 +7,14 @@ from __future__ import annotations
 import csv
 import sys
 from itertools import chain
-from typing import TYPE_CHECKING, Any, Iterable, List, Mapping, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from rich.table import Table
 
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable, Mapping
+
     from rich.console import Console
 
 
@@ -23,7 +25,7 @@ class Tabular:
         rows: Optional[Iterable[Iterable]] = None,
     ) -> None:
         self._headers = tuple(headers)
-        self._rows: List[tuple] = []
+        self._rows: list[tuple] = []
         if rows is not None:
             self.extend(rows)
 

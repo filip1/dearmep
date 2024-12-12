@@ -5,8 +5,9 @@
 import logging
 import operator
 import re
+from collections.abc import Sequence
 from pathlib import Path
-from typing import List, Optional, Sequence, Union
+from typing import Optional, Union
 
 import maxminddb
 from maxminddb import errors as mmdberrors
@@ -26,7 +27,7 @@ class LanguageNotAvailableError(Exception):
     pass
 
 
-def parse_accept_language(spec: str) -> List[str]:
+def parse_accept_language(spec: str) -> list[str]:
     """Convert the value of an Accept-Language header to an ordered list."""
     # This will become the resulting list.
     pairs = []
@@ -63,7 +64,7 @@ def parse_accept_language(spec: str) -> List[str]:
 
 def find_preferred_language(
     *,
-    prefs: List[str],
+    prefs: list[str],
     available: Sequence[str],
     fallback: Optional[str] = None,
 ) -> str:

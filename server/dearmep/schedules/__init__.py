@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from logging import getLogger
-from typing import Callable, List, Tuple
+from typing import Callable
 
 from fastapi_restful.tasks import repeat_every
 from prometheus_client import Counter
@@ -44,11 +44,11 @@ def task_wrapper(func: SchedulerTask) -> SchedulerTask:
     return wrapped
 
 
-def get_background_tasks(config: Config) -> List:
+def get_background_tasks(config: Config) -> list:
     """
     Returns a list of configured background tasks to be run at startup.
     """
-    tasks: List[Tuple[SchedulerTaskConfig, SchedulerTask]] = []
+    tasks: list[tuple[SchedulerTaskConfig, SchedulerTask]] = []
 
     if not config.scheduler:
         return []

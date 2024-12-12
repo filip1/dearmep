@@ -36,9 +36,10 @@ def import_destinations(ctx: Context) -> None:
             logo_template=ctx.args.logo_template,
             name_audio_template=ctx.args.name_audio_template,
         )
-        with ctx.task_factory() as tf, tf.create_task(
-            "reading and converting JSON"
-        ) as task:
+        with (
+            ctx.task_factory() as tf,
+            tf.create_task("reading and converting JSON") as task,
+        ):
             input.set_task(task)
             with input as input_stream:
                 importer.import_dump(
@@ -52,9 +53,11 @@ def import_swayability(ctx: Context) -> None:
     Config.load()
     input: FlexiStrReader = ctx.args.input
 
-    with get_session() as session, ctx.task_factory() as tf, tf.create_task(
-        "reading and importing CSV"
-    ) as task:
+    with (
+        get_session() as session,
+        ctx.task_factory() as tf,
+        tf.create_task("reading and importing CSV") as task,
+    ):
         input.set_task(task)
         with input as input_stream:
             csvr = csv.DictReader(input_stream)

@@ -7,7 +7,7 @@
 
 import enum
 from datetime import date, datetime, time
-from typing import Any, Dict, List, NamedTuple, Optional, TypedDict, Union
+from typing import Any, NamedTuple, Optional, TypedDict, Union
 from uuid import uuid4
 
 from pydantic import UUID4, BaseModel
@@ -45,7 +45,7 @@ from ..models import (
 
 
 class _SchemaExtra(TypedDict):
-    schema_extra: Dict[str, Any]
+    schema_extra: dict[str, Any]
 
 
 def _example(value: Any) -> _SchemaExtra:  # noqa: ANN401
@@ -58,7 +58,7 @@ def _example(value: Any) -> _SchemaExtra:  # noqa: ANN401
 
 
 class _SARelationshipKWArgs(TypedDict):
-    sa_relationship_kwargs: Dict[str, str]
+    sa_relationship_kwargs: dict[str, str]
 
 
 def _rel_join(join: str) -> _SARelationshipKWArgs:
@@ -134,7 +134,7 @@ DestinationGroupID = str
 DEFAULT_BASE_ENDORSEMENT = 0.5
 
 
-def auto_timestamp_column_kwargs() -> Dict[str, Any]:
+def auto_timestamp_column_kwargs() -> dict[str, Any]:
     return {
         "nullable": False,
         "server_default": func.now(),
@@ -355,13 +355,13 @@ class Destination(DestinationBase, table=True):
         "is free to handle this as they please.",
         **_example("MIERSCHEID Jakob Maria"),
     )
-    contacts: List[Contact] = Relationship(
+    contacts: list[Contact] = Relationship(
         back_populates="destination",
         sa_relationship_kwargs={
             "primaryjoin": _contact_filter,
         },
     )
-    groups: List["DestinationGroup"] = Relationship(
+    groups: list["DestinationGroup"] = Relationship(
         back_populates="destinations",
         link_model=DestinationGroupLink,
     )
@@ -394,15 +394,15 @@ class Destination(DestinationBase, table=True):
 
 class DestinationDump(DestinationBase):
     sort_name: str
-    contacts: List[ContactDump] = []  # noqa: RUF012
-    groups: List[DestinationGroupID] = []  # noqa: RUF012
+    contacts: list[ContactDump] = []  # noqa: RUF012
+    groups: list[DestinationGroupID] = []  # noqa: RUF012
     portrait: Optional[str]
     name_audio: Optional[str]
 
 
 class DestinationRead(DestinationBase):
-    contacts: List[ContactListItem] = []  # noqa: RUF012
-    groups: List["DestinationGroupListItem"] = []  # noqa: RUF012
+    contacts: list[ContactListItem] = []  # noqa: RUF012
+    groups: list["DestinationGroupListItem"] = []  # noqa: RUF012
     portrait: Optional[str] = Field(
         description="URL path to the portrait image of this Destination, if "
         "any is available.",
@@ -452,7 +452,7 @@ class DestinationGroup(DestinationGroupBase, table=True):
         description="The logo of this group.",
     )
     logo: Optional[Blob] = Relationship()
-    destinations: List[Destination] = Relationship(
+    destinations: list[Destination] = Relationship(
         back_populates="groups",
         link_model=DestinationGroupLink,
     )
@@ -737,8 +737,8 @@ class ScheduledCall(SQLModel, table=True):
 
 
 class CurrentlyScheduledCalls(NamedTuple):
-    postponed: List[ScheduledCall]
-    regular: List[ScheduledCall]
+    postponed: list[ScheduledCall]
+    regular: list[ScheduledCall]
 
 
 class QueuedCall(SQLModel, table=True):
@@ -782,7 +782,7 @@ class MediaList(SQLModel, table=True):
     created_at: datetime = Field(
         sa_column=auto_timestamp_column(index=True),
     )
-    items: List[MediaListItem] = Field(
+    items: list[MediaListItem] = Field(
         sa_column=Column(JSON),
     )
     format: str = Field(

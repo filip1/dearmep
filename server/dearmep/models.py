@@ -18,12 +18,9 @@ from ipaddress import IPv4Network, IPv6Network
 from typing import (
     Any,
     ClassVar,
-    Dict,
     Generic,
-    List,
     Literal,
     Optional,
-    Tuple,
     TypeVar,
     Union,
 )
@@ -355,7 +352,7 @@ class UserPhone(str):  # noqa: FURB189, SLOT000
         phonenumbers.PhoneNumberType.MOBILE,
     }
 
-    country_codes: Tuple[CountryCode, ...]
+    country_codes: tuple[CountryCode, ...]
     structured: Structured
 
     def __new__(cls, value: str) -> UserPhone:
@@ -482,7 +479,7 @@ class UserPhone(str):  # noqa: FURB189, SLOT000
         """
         return self.structured.original_number
 
-    def check_allowed(self) -> List[PhoneRejectReason]:
+    def check_allowed(self) -> list[PhoneRejectReason]:
         """Return reasons why this phone number may not use the application.
 
         The reasons are sorted by priority. If for example the user interface
@@ -500,7 +497,7 @@ class UserPhone(str):  # noqa: FURB189, SLOT000
         from .config import Config
 
         config = Config.get().telephony
-        reasons: List[PhoneRejectReason] = []
+        reasons: list[PhoneRejectReason] = []
 
         # Allow if it's been manually approved.
         if self.matches_filter(config.approved_numbers):
@@ -536,7 +533,7 @@ class UserPhone(str):  # noqa: FURB189, SLOT000
         """
         return len(self.check_allowed()) == 0
 
-    def matches_filter(self, filter: List[str]) -> bool:
+    def matches_filter(self, filter: list[str]) -> bool:
         """Check whether this phone number matches an entry in the list.
 
         List items may either be raw hashes (not the whole JSON), or a phone
@@ -621,13 +618,13 @@ class DestinationSearchResult(BaseModel):
         description="The country code associated with this Destination.",
         example="DE",
     )
-    groups: List[DestinationSearchGroup] = Field(
+    groups: list[DestinationSearchGroup] = Field(
         description="The groups this Destination is a member of.",
     )
 
 
 class FrontendStringsResponse(BaseModel):
-    frontend_strings: Dict[str, str] = frontend_strings_field
+    frontend_strings: dict[str, str] = frontend_strings_field
 
 
 class OfficeHoursInterval(BaseModel):
@@ -639,7 +636,7 @@ class OfficeHoursInterval(BaseModel):
     )
 
     @validator("end")
-    def end_after_begin(cls, v: time, values: Dict[str, time]) -> time:
+    def end_after_begin(cls, v: time, values: dict[str, time]) -> time:
         if v <= values["begin"]:
             raise ValueError("`end` has to be after `begin`")
         return v
@@ -654,7 +651,7 @@ class OfficeHoursResponse(BaseModel):
         description="The Olson timezone specifier used for the office hours.",
         example="Europe/Brussels",
     )
-    weekdays: Dict[WeekdayNumber, List[OfficeHoursInterval]] = Field(
+    weekdays: dict[WeekdayNumber, list[OfficeHoursInterval]] = Field(
         description="For each weekday, the office hour intervals. Weekdays "
         "are numbered according to ISO 8601, i.e. 1 is Monday, 7 is Sunday. "
         "Not all weekdays may be present; if a weekday is missing, there are "
@@ -667,7 +664,7 @@ class OfficeHoursResponse(BaseModel):
 
 
 class LanguageDetection(BaseModel):
-    available: List[str] = Field(
+    available: list[str] = Field(
         ...,
         description="The list of languages supported by the server.",
         example=["en-GB", "fr-FR", "de"],
@@ -678,7 +675,7 @@ class LanguageDetection(BaseModel):
         "preferences",
         example="en-GB",
     )
-    user_preferences: List[str] = Field(
+    user_preferences: list[str] = Field(
         ...,
         description="The preferences stated by the user, as recognized by the "
         "server, e.g. via parsing the `Accept-Language` header.",
@@ -687,7 +684,7 @@ class LanguageDetection(BaseModel):
 
 
 class LocationDetection(BaseModel):
-    available: List[CountryCode] = Field(
+    available: list[CountryCode] = Field(
         ...,
         description="The list of countries supported by the server.",
         example=["at", "be", "uk"],
@@ -732,7 +729,7 @@ class LocalizationResponse(BaseModel):
         ...,
         description="Information about the probable physical location.",
     )
-    frontend_strings: Optional[Dict[str, str]] = frontend_strings_field
+    frontend_strings: Optional[dict[str, str]] = frontend_strings_field
 
 
 class FrontendSetupResponse(LocalizationResponse):
@@ -758,7 +755,7 @@ class RateLimitResponse(BaseModel):
 class SearchResult(GenericModel, Generic[T]):
     """Result of a search."""
 
-    results: List[T] = Field(
+    results: list[T] = Field(
         description="The actual search results.",
     )
 
@@ -788,7 +785,7 @@ class PhoneNumberVerificationResponse(BaseModel):
 class PhoneNumberVerificationRejectedResponse(BaseModel):
     """The phone number was rejected for one or more reasons."""
 
-    errors: List[PhoneRejectReason]
+    errors: list[PhoneRejectReason]
 
 
 class VerificationCode(ConstrainedStr):
@@ -815,7 +812,7 @@ class Schedule(BaseModel):
 
 
 class SetScheduleRequest(LanguageMixin):
-    schedule: List[Schedule] = Field(
+    schedule: list[Schedule] = Field(
         description="The schedule to set.",
     )
 
@@ -825,7 +822,7 @@ class ScheduleResponse(BaseModel):
     The response to the frontend, used to display the schedule of the User.
     """
 
-    schedule: List[Schedule] = Field(
+    schedule: list[Schedule] = Field(
         description="The schedule that is currently set.",
     )
 
