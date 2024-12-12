@@ -29,7 +29,7 @@ dependencies = [
 	"lzip~=1.2.0",
 	"markdown-it-py~=2.2.0",
 	"phonenumbers~=8.13.22",
-	"pillow~=9.5.0",
+	"pillow~=11.0",
 	"pydantic>=1.10.16,<2",
 	"python-dotenv~=1.0.0",
 	"python-geoacumen>=2023",
@@ -40,10 +40,10 @@ dependencies = [
 	"ratelimit~=2.2.1",
 	"requests~=2.31",
 	"rich~=13.4.2",
-	"sqlmodel~=0.0.8",
+	"sqlmodel~=0.0.22",
 	"starlette-exporter~=0.15.1",
 	"types-python-jose~=3.3.4.8",
-	"uvicorn[standard]~=0.21.1",
+	"uvicorn[standard]~=0.32",
 ]
 
 [dependency-groups]
