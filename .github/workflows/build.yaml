@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.12"]
+        python-version: ["3.9", "3.13"]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -37,7 +37,7 @@ jobs:
       - name: Test with pytest
         run: uv run pytest
       - name: Export OpenAPI spec & ERD
-        if: ${{ matrix.python-version == '3.12' }}  # We only need it once.
+        if: ${{ matrix.python-version == '3.13' }}  # We only need it once.
         run: |
           uv run dearmep dump openapi > openapi.json
           uv run dearmep dump erd dearmep-erd.svg
@@ -45,7 +45,7 @@ jobs:
           mkdir ../.github-pages
           cp openapi.json ../.github-pages
       - name: Collect OpenAPI spec & ERD as an artifact
-        if: ${{ matrix.python-version == '3.12' }}
+        if: ${{ matrix.python-version == '3.13' }}
         uses: actions/upload-artifact@v3
         with:
           name: specs
@@ -63,7 +63,7 @@ jobs:
             server/coverage.xml
             server/report.xml
       - name: Prepare OpenAPI spec for GitHub Pages
-        if: ${{ matrix.python-version == '3.12' }}
+        if: ${{ matrix.python-version == '3.13' }}
         uses: actions/upload-pages-artifact@v3
         with:
           path: .github-pages
@@ -112,10 +112,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.12
+      - name: Set up Python 3.13
         uses: actions/setup-python@v4
         with:
-          python-version: 3.12
+          python-version: 3.13
       - name: Set package version
         run: |
           if [ "$GITHUB_REF_TYPE" = 'tag' ]; then
