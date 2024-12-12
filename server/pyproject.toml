@@ -78,15 +78,18 @@ specs = [
     "eralchemy2~=1.4",
 ]
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [tool.uv]
 package = true
 
-[tool.setuptools]
-# Only "dearmep" is a package, not tests or migrations.
-packages = ["dearmep"]
-
-# Include the frontend, see <https://github.com/python-poetry/poetry/issues/2809>
-# include = ["dearmep/static_files/static/**/*"]
+[tool.hatch.build]
+# Include the frontend in distributions.
+artifacts = [
+	"dearmep/static_files/static/**/*",
+]
 
 [tool.mypy]
 packages = ["dearmep", "tests"]
