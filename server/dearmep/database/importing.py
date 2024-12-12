@@ -4,7 +4,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Dict, Optional, Set, Type
 
@@ -24,6 +23,8 @@ from .models import (
 
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from sqlmodel import Session, SQLModel
 
 

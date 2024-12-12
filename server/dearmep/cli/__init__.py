@@ -7,9 +7,9 @@ from __future__ import annotations
 import logging
 import re
 from argparse import ArgumentParser, Namespace
-from collections.abc import Iterator
 from contextlib import contextmanager
 from sys import exit, stderr
+from typing import TYPE_CHECKING
 
 from dotenv import load_dotenv
 from rich.console import Console
@@ -20,6 +20,10 @@ from rich.progress import Progress
 from ..config import CMD_NAME
 from ..progress import DummyTaskFactory, RichTaskFactory
 from . import check, convert, db, dump, importing, serve, version
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 class Context:

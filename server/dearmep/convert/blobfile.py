@@ -4,7 +4,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Generator, Sequence
 from contextlib import contextmanager
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -20,6 +19,8 @@ from ..database.models import Blob, BlobID
 
 
 if TYPE_CHECKING:
+    from collections.abc import Generator, Sequence
+
     from ..database.connection import Session
     from ..models import MediaListItem
 

@@ -5,7 +5,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterator
 from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
@@ -15,6 +14,8 @@ from ..config import Config
 
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
     from sqlalchemy.future import Engine
 
 

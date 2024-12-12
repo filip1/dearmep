@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import csv
 import sys
-from collections.abc import Iterable, Mapping
 from itertools import chain
 from typing import TYPE_CHECKING, Any, List, Optional
 
@@ -14,6 +13,8 @@ from rich.table import Table
 
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable, Mapping
+
     from rich.console import Console
 
 

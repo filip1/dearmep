@@ -6,12 +6,12 @@ from __future__ import annotations
 
 import logging
 import sys
-from collections.abc import Mapping
 from typing import TYPE_CHECKING, Callable
 
 
 if TYPE_CHECKING:
     from argparse import ArgumentParser, _SubParsersAction
+    from collections.abc import Mapping
 
     from . import Context
 
