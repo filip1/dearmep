@@ -2,8 +2,8 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from collections.abc import Iterable
 from io import BufferedReader
-from typing import Iterable
 
 import lzip  # type: ignore[import]
 

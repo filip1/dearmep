@@ -5,8 +5,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from contextlib import contextmanager
-from typing import TYPE_CHECKING, Iterator
+from typing import TYPE_CHECKING
 
 from sqlmodel import MetaData, Session, SQLModel, create_engine, select, text
 

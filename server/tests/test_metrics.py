@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from typing import Iterable
+from collections.abc import Iterable
 
 import pytest
 from fastapi import status

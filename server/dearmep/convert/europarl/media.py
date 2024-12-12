@@ -2,8 +2,9 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable, Literal, Optional
+from typing import Literal, Optional
 
 from ...http_client import MassDownloader
 from ...progress import BaseTask

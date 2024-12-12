@@ -8,7 +8,7 @@ import os
 import stat
 import sys
 import warnings
-from collections.abc import Sized
+from collections.abc import Iterator, Sized
 from functools import partial
 from io import BufferedReader, TextIOWrapper, UnsupportedOperation
 from numbers import Real
@@ -19,7 +19,6 @@ from typing import (
     Any,
     Callable,
     Dict,
-    Iterator,
     Literal,
     Optional,
     Tuple,

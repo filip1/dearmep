@@ -7,9 +7,9 @@ from __future__ import annotations
 import logging
 import re
 from argparse import ArgumentParser, Namespace
+from collections.abc import Iterator
 from contextlib import contextmanager
 from sys import exit, stderr
-from typing import Iterator
 
 from dotenv import load_dotenv
 from rich.console import Console

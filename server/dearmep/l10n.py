@@ -5,8 +5,9 @@
 import logging
 import operator
 import re
+from collections.abc import Sequence
 from pathlib import Path
-from typing import List, Optional, Sequence, Union
+from typing import List, Optional, Union
 
 import maxminddb
 from maxminddb import errors as mmdberrors

@@ -3,7 +3,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import json
-from typing import IO, Any, Dict, Iterable, Optional, Type
+from collections.abc import Iterable
+from typing import IO, Any, Dict, Optional, Type
 
 from ..config import CMD_NAME
 from ..database.models import (

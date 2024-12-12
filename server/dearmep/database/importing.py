@@ -4,8 +4,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Dict, Iterable, Optional, Set, Type
+from typing import TYPE_CHECKING, Callable, Dict, Optional, Set, Type
 
 from ..convert.audio import audio2blob
 from ..convert.dump import DumpFormatError

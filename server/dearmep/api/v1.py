@@ -5,8 +5,9 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from collections.abc import Iterable
 from datetime import datetime, timezone
-from typing import Any, Callable, Dict, Iterable, List, Optional, Union
+from typing import Annotated, Any, Callable, Dict, List, Optional, Union
 
 from fastapi import (
     APIRouter,
@@ -21,7 +22,6 @@ from fastapi.responses import JSONResponse
 from prometheus_client import Counter
 from pydantic import BaseModel
 from sqlmodel import col
-from typing_extensions import Annotated
 
 from ..config import Config, Language, all_frontend_strings
 from ..database import query

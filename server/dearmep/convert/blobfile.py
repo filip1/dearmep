@@ -4,15 +4,14 @@
 
 from __future__ import annotations
 
+from collections.abc import Generator, Sequence
 from contextlib import contextmanager
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import (
     TYPE_CHECKING,
-    Generator,
     List,
     Optional,
-    Sequence,
     Tuple,
     Union,
 )

@@ -4,13 +4,12 @@
 
 import json
 import re
+from collections.abc import Generator, Iterable
 from datetime import date, datetime, timezone
 from typing import (
     TYPE_CHECKING,
     Any,
     Dict,
-    Generator,
-    Iterable,
     List,
     Union,
     cast,
