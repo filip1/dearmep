@@ -17,6 +17,7 @@ from ..config import APP_NAME, CMD_NAME, ENV_PREFIX, included_file
 
 
 DEFAULT_PORT = 8000
+DEFAULT_HOST = "127.0.0.1"
 LOG_LEVELS = ("critical", "error", "warning", "info", "debug")
 DEFAULT_LOG_LEVEL = "info"
 
@@ -60,9 +61,8 @@ def add_parser(
 
     parser.add_argument(
         "--host",
-        type=str,
-        default="localhost",
-        help="local address on which the service listens",
+        default=DEFAULT_HOST,
+        help=f"TCP host address to bind to (default: {DEFAULT_HOST})",
     )
 
     parser.add_argument(
