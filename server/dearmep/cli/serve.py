@@ -17,6 +17,7 @@ from ..config import APP_NAME, CMD_NAME, ENV_PREFIX, included_file
 
 
 DEFAULT_PORT = 8000
+DEFAULT_HOST = "127.0.0.1"
 LOG_LEVELS = ("critical", "error", "warning", "info", "debug")
 DEFAULT_LOG_LEVEL = "info"
 
@@ -26,6 +27,7 @@ def serve(ctx: Context) -> None:
         "dearmep.main:create_app",
         factory=True,
         port=ctx.args.port,
+        host=ctx.args.host,
         reload=ctx.args.reload,
         reload_excludes=["node_modules"],  # TODO: doesn't seem to be working
         log_config=ctx.args.log_config,
@@ -55,6 +57,12 @@ def add_parser(
         type=int,
         default=DEFAULT_PORT,
         help=f"TCP port number to use (default: {DEFAULT_PORT})",
+    )
+
+    parser.add_argument(
+        "--host",
+        default=DEFAULT_HOST,
+        help=f"TCP host address to bind to (default: {DEFAULT_HOST})",
     )
 
     parser.add_argument(
