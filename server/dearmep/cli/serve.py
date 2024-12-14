@@ -26,6 +26,7 @@ def serve(ctx: Context) -> None:
         "dearmep.main:create_app",
         factory=True,
         port=ctx.args.port,
+        host=ctx.args.host,
         reload=ctx.args.reload,
         reload_excludes=["node_modules"],  # TODO: doesn't seem to be working
         log_config=ctx.args.log_config,
@@ -55,6 +56,13 @@ def add_parser(
         type=int,
         default=DEFAULT_PORT,
         help=f"TCP port number to use (default: {DEFAULT_PORT})",
+    )
+
+    parser.add_argument(
+        "--host",
+        type=str,
+        default="localhost",
+        help="local address on which the service listens",
     )
 
     parser.add_argument(
