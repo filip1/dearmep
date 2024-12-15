@@ -6,17 +6,16 @@
 from datetime import datetime, timezone
 from typing import Annotated
 
+import jwt
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import ValidationError
 
 from ..config import Config
 from ..models import JWTClaims, JWTResponse, PhoneNumber
 
 
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/api/v1/number-verification/request",
+oauth2_scheme = HTTPBearer(
     auto_error=True,
 )
 
@@ -36,19 +35,20 @@ def create_token(phone: PhoneNumber) -> JWTResponse:
 
 
 def validate_token(
-    token: Annotated[str, Depends(oauth2_scheme)],
+    token: Annotated[HTTPAuthorizationCredentials, Depends(oauth2_scheme)],
 ) -> JWTClaims:
     """Validate a JWT and return the signed claims it contains."""
     jwt_config = Config.get().authentication.secrets.jwt
     try:
         claims_dict = jwt.decode(
-            token,
+            token.credentials.encode("utf-8"),
             jwt_config.key,
             algorithms=jwt_config.algorithms,
+            verify=True,
             options={"require_exp": True},
         )
         claims = JWTClaims.parse_obj(claims_dict)
-    except (JWTError, ValidationError) as e:
+    except ValidationError as e:
         raise HTTPException(
             status.HTTP_401_UNAUTHORIZED,
             "invalid JWT",
