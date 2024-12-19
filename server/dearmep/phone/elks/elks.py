@@ -7,7 +7,7 @@ import logging
 from datetime import datetime, timedelta, timezone
 from typing import Any, Literal, Optional, Union
 
-import requests
+import httpx
 from fastapi import (
     APIRouter,
     Depends,
@@ -67,7 +67,7 @@ def send_sms(
         provider_cfg.username,
         provider_cfg.password,
     )
-    response = requests.post(
+    response = httpx.post(
         url="https://api.46elks.com/a1/sms",
         timeout=10,
         auth=auth,
@@ -77,7 +77,7 @@ def send_sms(
             "message": message,
         },
     )
-    if not response.ok:
+    if not response.is_success:
         _logger.critical(
             f"46elks request to send sms failed: {response.status_code}"
         )
@@ -123,7 +123,7 @@ def start_elks_call(
         phone_numbers=phone_numbers,
     )
 
-    response = requests.post(
+    response = httpx.post(
         url="https://api.46elks.com/a1/calls",
         timeout=10,
         auth=auth,
@@ -136,7 +136,7 @@ def start_elks_call(
         },
     )
 
-    if not response.ok:
+    if not response.is_success:
         _logger.critical(
             f"46elks request to start call failed: {response.status_code}"
         )

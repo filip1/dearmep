@@ -5,7 +5,7 @@
 import logging
 from random import choice
 
-import requests
+import httpx
 
 from ...config import Language
 from .models import Number
@@ -49,7 +49,7 @@ def get_numbers(
     Fetches all available numbers of an account at 46elks.
     """
 
-    response = requests.get(
+    response = httpx.get(
         url="https://api.46elks.com/a1/numbers", timeout=10, auth=auth
     )
     if response.status_code != 200:  # noqa: PLR2004
