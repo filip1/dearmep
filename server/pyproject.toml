@@ -84,8 +84,11 @@ build-backend = "hatchling.build"
 package = true
 constraint-dependencies = [
 	"cffi>=1.16.0",
+	"certifi>=2024.7.4",
 	"greenlet>=3.1",
+	"idna>=3.7",
 	"typing_extensions>=4.12.0",
+	"zipp>=3.19.1",
 ]
 
 [tool.hatch.build]
