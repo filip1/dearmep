@@ -47,18 +47,13 @@ def validate_token(
             options={"require_exp": True},
         )
         claims = JWTClaims.parse_obj(claims_dict)
-    except ValidationError as e:
+    except (ValidationError, jwt.InvalidTokenError) as e:
         raise HTTPException(
             status.HTTP_401_UNAUTHORIZED,
-            "invalid JWT",
+            "JWT expired"
+            if isinstance(e, jwt.ExpiredSignatureError)
+            else "invalid JWT",
             headers={"WWW-Authenticate": "Bearer"},
         ) from e
-
-    if claims.exp <= datetime.now(timezone.utc):
-        raise HTTPException(
-            status.HTTP_401_UNAUTHORIZED,
-            "JWT expired",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
 
     return claims

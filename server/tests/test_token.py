@@ -1,14 +1,13 @@
-# SPDX-FileCopyrightText: © 2024 Jörn Bethune & Tim Weber
+# SPDX-FileCopyrightText: © 2024 Jörn Bethune
+# SPDX-FileCopyrightText: © 2024 Tim Weber
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from datetime import datetime, timedelta, timezone
 
 import jwt
-import pytest
 from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
-from jwt.exceptions import ExpiredSignatureError
 from sqlmodel import Session, col, select
 
 from dearmep.config import Config
@@ -134,10 +133,9 @@ def test_expired_token(fastapi_app: FastAPI, client: TestClient):
 
     # make a request with the expired token
     headers["Authorization"] = f"Bearer {expired_token}"
-    with pytest.raises(ExpiredSignatureError) as e_info:
-        response = client.get(url, headers=headers)
-    assert str(e_info.value) == "Signature has expired"
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    response = client.get(url, headers=headers)
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+    assert response.json()["detail"] == "JWT expired"
 
     # make a request with a fresh token
     headers["Authorization"] = f"Bearer {fresh_token}"
