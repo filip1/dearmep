@@ -82,7 +82,10 @@ l10n_autodetect_total = Counter(
 )
 
 
-rate_limit_response: dict[int, dict[str, Any]] = {
+# This is typehinted as Union[int, str] even though the keys are just ints
+# because of <https://github.com/python/mypy/issues/16072>. The
+# `**rate_limit_response` instances below would cause mypy errors otherwise.
+rate_limit_response: dict[Union[int, str], dict[str, Any]] = {
     429: {
         "description": "Rate Limit Exceeded",
         "model": RateLimitResponse,
@@ -181,7 +184,7 @@ def _get_localization(
     "/frontend-strings/{language}",
     operation_id="getFrontendStrings",
     response_model=FrontendStringsResponse,
-    responses=rate_limit_response,  # type: ignore[arg-type]
+    responses=rate_limit_response,
     dependencies=(simple_rate_limit,),
 )
 def get_frontend_strings(
@@ -207,7 +210,7 @@ def get_frontend_strings(
     "/frontend-setup",
     operation_id="getFrontendSetup",
     response_model=FrontendSetupResponse,
-    responses=rate_limit_response,  # type: ignore[arg-type]
+    responses=rate_limit_response,
     dependencies=(computational_rate_limit,),
 )
 def get_frontend_setup(
@@ -260,7 +263,7 @@ def get_frontend_setup(
     operation_id="getBlob",
     response_class=Response,
     responses={
-        **rate_limit_response,  # type: ignore[arg-type]
+        **rate_limit_response,
         200: {
             "content": {"application/octet-stream": {}},
             "description": "The contents of the named blob, with a matching "
@@ -288,7 +291,7 @@ def get_blob_contents(
     operation_id="getDestinationsByCountry",
     summary="Get Destinations by Country",
     response_model=SearchResult[DestinationSearchResult],
-    responses=rate_limit_response,  # type: ignore[arg-type]
+    responses=rate_limit_response,
     dependencies=(simple_rate_limit,),
 )
 def get_destinations_by_country(
@@ -306,13 +309,13 @@ def get_destinations_by_country(
     operation_id="getDestinationsByName",
     summary="Get Destinations by Name",
     response_model=SearchResult[DestinationSearchResult],
-    responses=rate_limit_response,  # type: ignore[arg-type]
+    responses=rate_limit_response,
     dependencies=(simple_rate_limit,),
 )
 def get_destinations_by_name(
     name: str = Query(
         description="The (part of the) name to search for.",
-        example="miers",
+        examples=["miers"],
     ),
     all_countries: bool = Query(
         True,
@@ -325,12 +328,12 @@ def get_destinations_by_name(
         description="The country to search in (if `all_countries` is false) "
         "or prefer (if `all_countries` is true). Has to be specified if "
         "`all_countries` is false.",
-        example="DE",
+        examples=["DE"],
     ),
     limit: SearchResultLimit = Query(
         MAX_SEARCH_RESULT_LIMIT,
         description="Maximum number of results to be returned.",
-        example=MAX_SEARCH_RESULT_LIMIT,
+        examples=[MAX_SEARCH_RESULT_LIMIT],
     ),
 ) -> SearchResult[DestinationSearchResult]:
     """Return Destinations by searching for (parts of) their name."""
@@ -355,7 +358,7 @@ def get_destinations_by_name(
     operation_id="getDestinationByID",
     summary="Get Destination by ID",
     response_model=DestinationRead,
-    responses=rate_limit_response,  # type: ignore[arg-type]
+    responses=rate_limit_response,
     dependencies=(simple_rate_limit,),
 )
 def get_destination_by_id(
@@ -374,7 +377,7 @@ def get_destination_by_id(
     "/destinations/suggested",
     operation_id="getSuggestedDestination",
     response_model=DestinationRead,
-    responses=rate_limit_response,  # type: ignore[arg-type]
+    responses=rate_limit_response,
     dependencies=(computational_rate_limit,),
 )
 def get_suggested_destination(
@@ -417,7 +420,7 @@ def get_suggested_destination(
     operation_id="initiateCall",
     response_model=CallStateResponse,
     responses={
-        **rate_limit_response,  # type: ignore[arg-type]
+        **rate_limit_response,
         503: {
             "model": Union[
                 DestinationInCallResponse,
@@ -475,7 +478,7 @@ def initiate_call(
     "/call/state",
     operation_id="getCallState",
     response_model=CallStateResponse,
-    responses=rate_limit_response,  # type: ignore[arg-type]
+    responses=rate_limit_response,
     dependencies=(simple_rate_limit,),
 )
 def get_call_state(
@@ -506,7 +509,7 @@ def get_call_state(
     "/number-verification/request",
     operation_id="requestNumberVerification",
     responses={
-        **rate_limit_response,  # type: ignore[arg-type]
+        **rate_limit_response,
         400: {"model": PhoneNumberVerificationRejectedResponse},
     },
     response_model=PhoneNumberVerificationResponse,
@@ -573,7 +576,7 @@ def request_number_verification(
     "/number-verification/verify",
     operation_id="verifyNumber",
     responses={
-        **rate_limit_response,  # type: ignore[arg-type]
+        **rate_limit_response,
         400: {"model": SMSCodeVerificationFailedResponse},
     },
     response_model=JWTResponse,
@@ -611,7 +614,7 @@ def verify_number(
     operation_id="getFeedbackContext",
     response_model=FeedbackContext,
     responses={
-        **rate_limit_response,  # type: ignore[arg-type]
+        **rate_limit_response,
         404: {"description": "Token Not Found"},
     },
     dependencies=(simple_rate_limit,),
@@ -650,7 +653,7 @@ def get_feedback_context(
     operation_id="submitCallFeedback",
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
-        **rate_limit_response,  # type: ignore[arg-type]
+        **rate_limit_response,
         403: {"description": "Token Already Used"},
         404: {"description": "Token Not Found"},
     },
@@ -689,7 +692,7 @@ def submit_call_feedback(
     "/schedule",
     operation_id="getSchedule",
     response_model=ScheduleResponse,
-    responses=rate_limit_response,  # type: ignore[arg-type]
+    responses=rate_limit_response,
     dependencies=(simple_rate_limit,),
 )
 def get_schedule(
@@ -708,7 +711,7 @@ def get_schedule(
     "/schedule",
     operation_id="setSchedule",
     response_model=ScheduleResponse,
-    responses=rate_limit_response,  # type: ignore[arg-type]
+    responses=rate_limit_response,
     dependencies=(simple_rate_limit,),
 )
 def set_schedule(

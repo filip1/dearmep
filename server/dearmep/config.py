@@ -460,7 +460,7 @@ class Settings(BaseSettings):
     """Settings supplied via environment variables."""
 
     config_file: FilePath = Field(
-        "config.yaml",
+        Path("config.yaml"),
         env={f"{ENV_PREFIX}CONFIG", f"{ENV_PREFIX}CONFIG_FILE"},  # allow both
     )
     demo_page: bool = Field(

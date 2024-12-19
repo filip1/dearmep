@@ -35,13 +35,13 @@ class Context:
         self.dummy_factory = DummyTaskFactory()
 
     def setup_logging(self, level: int = logging.INFO) -> None:
-        def ignore_uninteresting(r: logging.LogRecord) -> int:
+        def ignore_uninteresting(r: logging.LogRecord) -> bool:
             ratelimit_backoff = re.compile(
                 r"^Backing off .+\(ratelimit.exception.RateLimitException"
             )
-            if r.name == "backoff" and ratelimit_backoff.match(r.getMessage()):
-                return 0
-            return 1
+            if r.name == "backoff" and ratelimit_backoff.match(r.getMessage()):  # noqa: SIM103
+                return False
+            return True
 
         handler = RichHandler(
             console=self.console,
