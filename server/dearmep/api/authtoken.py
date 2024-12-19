@@ -15,7 +15,7 @@ from ..config import Config
 from ..models import JWTClaims, JWTResponse, PhoneNumber
 
 
-oauth2_scheme = HTTPBearer(
+bearer_scheme = HTTPBearer(
     auto_error=True,
 )
 
@@ -35,7 +35,7 @@ def create_token(phone: PhoneNumber) -> JWTResponse:
 
 
 def validate_token(
-    token: Annotated[HTTPAuthorizationCredentials, Depends(oauth2_scheme)],
+    token: Annotated[HTTPAuthorizationCredentials, Depends(bearer_scheme)],
 ) -> JWTClaims:
     """Validate a JWT and return the signed claims it contains."""
     jwt_config = Config.get().authentication.secrets.jwt
