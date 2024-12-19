@@ -9,7 +9,7 @@ from threading import Thread
 from typing import Literal, Optional, Union
 
 import backoff
-import requests
+import httpx
 from ratelimit import RateLimitException, limits  # type: ignore[import]
 
 from . import __version__
@@ -23,17 +23,15 @@ _logger = logging.getLogger(__name__)
 DEFAULT_MASS_DOWNLOAD_JOBS = 3
 
 
-def new_session() -> requests.Session:
-    s = requests.Session()
-    s.headers.update(
-        {
+def new_session() -> httpx.Client:
+    return httpx.Client(
+        headers={
             "User-Agent": f"{APP_NAME} {__version__}",
         }
     )
-    return s
 
 
-def session_or_new(session: Optional[requests.Session]) -> requests.Session:
+def session_or_new(session: Optional[httpx.Client]) -> httpx.Client:
     return session or new_session()
 
 
@@ -41,11 +39,15 @@ def _permanent_download_error(e: Exception) -> bool:
     """Whether a HTTP error is considered permanent & retrying should stop."""
     if isinstance(e, RateLimitException):
         return False
-    if not isinstance(e, requests.exceptions.HTTPError):
+    if not isinstance(e, httpx.HTTPError):
         return True
-    req: Optional[requests.Request] = e.request
-    res: Optional[requests.Response] = e.response
-    url = req.url if req else "[unknown URL]"
+    req = (
+        e.request
+        if isinstance(e, (httpx.RequestError, httpx.HTTPStatusError))
+        else None
+    )
+    res = e.response if isinstance(e, httpx.HTTPStatusError) else None
+    url = str(req.url) if req else "[unknown URL]"
     if res is None:
         _logger.warning(
             f"downloading {url} failed without a response, will retry"
@@ -65,7 +67,7 @@ class MassDownloader:
         self,
         *,
         jobs: int = DEFAULT_MASS_DOWNLOAD_JOBS,
-        session: Optional[requests.Session] = None,
+        session: Optional[httpx.Client] = None,
         task: Optional[BaseTask] = None,
         overwrite: bool = False,
         skip_existing: bool = False,
@@ -88,11 +90,11 @@ class MassDownloader:
         self._mgmt_thread: Optional[Thread] = None
         self._should_run: bool = False
         self._abort: bool = False
-        self.errors: list[tuple[str, requests.Response]] = []
+        self.errors: list[tuple[str, httpx.Response]] = []
 
     @backoff.on_exception(
         backoff.expo,
-        (requests.exceptions.HTTPError, RateLimitException),
+        (httpx.HTTPError, RateLimitException),
         giveup=_permanent_download_error,
         max_time=120,
     )
@@ -137,8 +139,8 @@ class MassDownloader:
                 continue
             try:
                 self._download(url, dest)
-            except requests.exceptions.HTTPError as e:
-                if e.response is not None and (
+            except httpx.HTTPStatusError as e:
+                if (
                     self._ignore_codes is True
                     or e.response.status_code in self._ignore_codes
                 ):
@@ -147,6 +149,10 @@ class MassDownloader:
                     self._abort = True
                     self._should_run = False
                     raise
+            except httpx.HTTPError:
+                self._abort = True
+                self._should_run = False
+                raise
             except BaseException:
                 self._abort = True
                 self._should_run = False
