@@ -204,7 +204,8 @@ class TrackingBytesReader(BufferedReader, TrackingMixin):  # type: ignore[misc]
 
 class TrackingStrReader(TextIOWrapper, TrackingMixin):  # type: ignore[misc]
     def read(self, size: Optional[int] = -1) -> str:
-        return self._with_tracking(super().read(size), self.buffer.tell)
+        # FIXME: self.buffer.tell _works_, but is not guaranteed.
+        return self._with_tracking(super().read(size), self.buffer.tell)  # type: ignore[attr-defined]
 
     def readline(  # type: ignore[override]
         self,
@@ -212,7 +213,8 @@ class TrackingStrReader(TextIOWrapper, TrackingMixin):  # type: ignore[misc]
     ) -> str:
         return self._with_tracking(
             super().readline(-1 if size is None else size),
-            self.buffer.tell,
+            # FIXME: self.buffer.tell _works_, but is not guaranteed.
+            self.buffer.tell,  # type: ignore[attr-defined]
         )
 
 
