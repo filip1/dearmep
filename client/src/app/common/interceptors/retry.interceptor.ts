@@ -124,7 +124,7 @@ export class RetryInterceptor implements HttpInterceptor {
     console.error(
       `${errorName} encountered. Retrying after ${retryInterval / 1000.0}s (url: ${url}).`
     );
-    return this.reatryAfter(retryInterval);
+    return this.retryAfter(retryInterval);
   }
 
   private getRetryAfter(
@@ -142,7 +142,7 @@ export class RetryInterceptor implements HttpInterceptor {
     return Math.max(retryAfter, minRetryAfter);
   }
 
-  private reatryAfter(timeout: number): Observable<void> {
+  private retryAfter(timeout: number): Observable<void> {
     return of(undefined).pipe(delay(timeout));
   }
 
