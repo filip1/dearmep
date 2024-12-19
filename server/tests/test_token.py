@@ -66,7 +66,6 @@ def test_authentication_flow(fastapi_app: FastAPI, session: Session):
         bearer_token.access_token,
         jwt_config.key,
         algorithms=jwt_config.algorithms,
-        verify=True,
         options={"require_exp": True},
     )
     claims = JWTClaims.parse_obj(jwt_claims)

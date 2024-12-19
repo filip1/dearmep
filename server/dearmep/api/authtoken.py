@@ -44,7 +44,6 @@ def validate_token(
             token.credentials.encode("utf-8"),
             jwt_config.key,
             algorithms=jwt_config.algorithms,
-            verify=True,
             options={"require_exp": True},
         )
         claims = JWTClaims.parse_obj(claims_dict)
