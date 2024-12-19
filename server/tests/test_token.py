@@ -3,25 +3,19 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from datetime import datetime, timedelta, timezone
-from json import loads
 
 import jwt
 import pytest
 from fastapi import FastAPI, status
-from fastapi.responses import JSONResponse
 from fastapi.testclient import TestClient
 from jwt.exceptions import ExpiredSignatureError
 from sqlmodel import Session, col, select
 
-from dearmep.api.v1 import request_number_verification, verify_number
 from dearmep.config import Config
 from dearmep.database.models import NumberVerificationRequest
 from dearmep.models import (
     JWTClaims,
-    JWTResponse,
     PhoneNumberVerificationRequest,
-    PhoneNumberVerificationResponse,
-    SMSCodeVerificationRequest,
     UserPhone,
 )
 
@@ -29,7 +23,7 @@ from dearmep.models import (
 phone_number = "+491751234567"
 
 
-def test_authentication_flow(fastapi_app: FastAPI, session: Session):
+def test_authentication_flow(client: TestClient, session: Session):
     jwt_config = Config.load().authentication.secrets.jwt
 
     request = PhoneNumberVerificationRequest(
@@ -37,9 +31,18 @@ def test_authentication_flow(fastapi_app: FastAPI, session: Session):
     )
 
     # side effect: Insert confirmation code in the database
-    response = request_number_verification(request)
-    assert isinstance(response, PhoneNumberVerificationResponse)
-    assert response.phone_number == phone_number
+    response = client.post(
+        "/api/v1/number-verification/request",
+        json={
+            "language": "de",
+            "phone_number": phone_number,
+            "accepted_dpp": True,
+        },
+    )
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+    assert "phone_number" in data
+    assert data["phone_number"] == phone_number
 
     user = UserPhone(request.phone_number)
 
@@ -55,15 +58,20 @@ def test_authentication_flow(fastapi_app: FastAPI, session: Session):
         .order_by(col(NumberVerificationRequest.requested_at).desc())
     ).one()
 
-    bearer_token = verify_number(
-        SMSCodeVerificationRequest(
-            phone_number=phone_number, code=confirmation_code.code
-        )
+    response = client.post(
+        "/api/v1/number-verification/verify",
+        json={
+            "phone_number": phone_number,
+            "code": confirmation_code.code,
+        },
     )
-    assert isinstance(bearer_token, JWTResponse)
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+    assert data["token_type"] == "Bearer"  # noqa: S105
+    assert isinstance(data["access_token"], str)
 
     jwt_claims = jwt.decode(
-        bearer_token.access_token,
+        data["access_token"],
         jwt_config.key,
         algorithms=jwt_config.algorithms,
         options={"require_exp": True},
@@ -72,25 +80,30 @@ def test_authentication_flow(fastapi_app: FastAPI, session: Session):
     assert claims.phone == phone_number
 
 
-def test_incorrect_sms_code(session: Session):
-    request = PhoneNumberVerificationRequest(
-        language="de", phone_number=phone_number, accepted_dpp=True
-    )
-
+def test_incorrect_sms_code(client: TestClient, session: Session):
     # create an entry server-side for good measure
-    request_number_verification(request)
+    response = client.post(
+        "/api/v1/number-verification/request",
+        json={
+            "language": "de",
+            "phone_number": phone_number,
+            "accepted_dpp": True,
+        },
+    )
+    assert response.status_code == status.HTTP_200_OK
+
     # but don't make any attempt to receive the code
     # and provide a code that is guaranteed to be wrong
-    response = verify_number(
-        SMSCodeVerificationRequest(
-            phone_number=phone_number,
-            code="blabla",  # we expect the real code to be a number
-        )
+    response = client.post(
+        "/api/v1/number-verification/verify",
+        json={
+            "phone_number": phone_number,
+            "code": "blabla",  # we expect the real code to be a number
+        },
     )
 
-    assert isinstance(response, JSONResponse)
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert loads(response.body.decode())["error"] == "CODE_VERIFICATION_FAILED"
+    assert response.json()["error"] == "CODE_VERIFICATION_FAILED"
 
 
 def test_expired_token(fastapi_app: FastAPI, client: TestClient):
