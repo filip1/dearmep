@@ -514,6 +514,7 @@ l10n:
       sv: "Hur var ditt samtal med {name}? Återkoppla gärna här: {URL}"
       da: "Hvordan var din samtale med {name}? Venligst giv din feedback her: {URL}"
       pt: "Como foi a tua chamada com {name}? Partilha os teus comentários aqui: {URL}"
+      fr: "Comment s'est passé ton appel avec {name} ? Merci de nous donner votre impression en cliquant ici : {URL}"
 
   frontend_strings:
     # Main title of the campaign.
@@ -530,6 +531,7 @@ l10n:
     maintenance.message:
       en: The system is currently down for maintenance. Please check back later.
       de: Das System ist momentan im Wartungsmodus und daher nicht verfügbar. Bitte versuche es später noch einmal.
+      fr: Le système est actuellement en maintenance. Merci de revenir plus tard.
 
   # Translation strings for the calling-section on the right side of the screen
 
@@ -584,6 +586,7 @@ l10n:
       sv: Samtal är bara möjliga under kontorstid.
       da: Opkald er kun muligt under kontortiden.
       pt: As chamadas só podem ser feitas durante o horário de atendimento.
+      fr: Les appels ne sont possibles que pendant les heures de bureau.
 
     # Title for UI popover explaining the current office hours
     call.office-hours.title:
@@ -592,6 +595,7 @@ l10n:
       sv: Kontorstider
       da: Kontortider
       pt: Horário de atendimento
+      fr: Heures de bureau
 
     # Description for UI popover explaining the current office hours
     call.office-hours.description:
@@ -600,6 +604,7 @@ l10n:
       sv: Samtal är bara möjliga under kontorstid.
       da: Opkald er kun muligt under kontortiden.
       pt: As chamadas só podem ser feitas durante o horário de atendimento.
+      fr: Les appels ne sont possibles que pendant les heures de bureau.
 
     # Text specifying the office hours in original and local timezone
     # Examples:
@@ -614,6 +619,7 @@ l10n:
       sv: "{{ dayOrRange }}: {{ timeRange }}"
       da: "{{ dayOrRange }}: {{ timeRange }}"
       pt: "{{ dayOrRange }}: {{ timeRange }}"
+      fr: "{{ dayOrRange }}: {{ timeRange }}"
 
     # Specifies a Day-Range
     # Example:
@@ -624,6 +630,7 @@ l10n:
       sv: "{{ startDayOfWeek }} till {{ endDayOfWeek }}"
       da: "{{ startDayOfWeek }} til {{ endDayOfWeek }}"
       pt: "{{ startDayOfWeek }} a {{ endDayOfWeek }}"
+      fr: "{{ startDayOfWeek }} a {{ endDayOfWeek }}"
 
     # Specifies a time-range with a start and end time
     # Example:
@@ -635,6 +642,7 @@ l10n:
       sv: "{{ startTime }} - {{ endTime }} {{ timeZone }}"
       da: "{{ startTime }} - {{ endTime }} {{ timeZone }}"
       pt: "{{ startTime }} - {{ endTime }} {{ timeZone }}"
+      fr: "{{ startTime }} - {{ endTime }} {{ timeZone }}"
 
     # Same as 'call.office-hours.time-range-zoned' applies when the user is in the same time-zone as the destination
     # Example:
@@ -645,6 +653,7 @@ l10n:
       sv: "{{ startTime }} - {{ endTime }}"
       da: "{{ startTime }} - {{ endTime }}"
       pt: "{{ startTime }} - {{ endTime }}"
+      fr: "{{ startTime }} - {{ endTime }}"
 
     # Specifies that a certain time is in local timezone
     call.office-hours.time-zone-local:
@@ -653,13 +662,14 @@ l10n:
       sv: lokal tid
       da: lokal tid
       pt: Hora local
+      fr: Locale
 
     # Text of the button that allows the user to schedule a call at a later point in time.
     call.call-later-btn.title:
       en: Call later
       de: Später anrufen
       sv: Ringa senare
-      fr: Appeler à une date plus tard
+      fr: Appeler plus tard
       da: Ring senere
       pt: Ligar mais tarde
 
@@ -684,6 +694,7 @@ l10n:
       sv: Välkommen tillbaka!
       da: Velkommen tilbage!
       pt: Bem-vinde de volta!
+      fr: Bienvenue à nouveau!
 
     # Description paragraphs of the calling-section of the app.
     # The paragraphs are displayed in the first step (thus "home") of the calling flow. This means
@@ -718,6 +729,7 @@ l10n:
       sv: Du är redan inloggad med numret {{ number }}.
       da: Du er allerede logget på med nummeret {{ number }}
       pt: Já iniciaste sessão com o número {{ number }}.
+      fr: Vous êtes déjà enregistré avec le numéro {{ number }}.
 
     # Text of the link-button that allows the user log-out and re-authenticate with a different number
     call.home.notYourNumber:
@@ -767,6 +779,7 @@ l10n:
       sv: Telefonnumret behövs!
       da: Telefonnummeret kræves!
       pt: O número de telefone é obrigatório!
+      fr: Il faut un numéro de téléphone!
 
     # Error-Label that is shown when the entered number is invalid
     verification.enterNumber.invalidNumber:
@@ -775,6 +788,7 @@ l10n:
       sv: Ogiltigt telefonnummer!
       da: Ugyldigt telefonnummer!
       pt: Número de telefone inválido!
+      fr: Numéro de téléphone incorrect!
 
     # Error-Label that is shown when the entered number not allowed
     verification.enterNumber.numberNotAllowed:
@@ -783,6 +797,7 @@ l10n:
       sv: Detta nummer är inte tillåtit!
       da: Dette nummer er ikke tilladt!
       pt: Número de telefone não permitido!
+      fr: Ce numéro n'est pas autorisé!
 
     # Error-Label that is shown when the entered number has been blocked
     verification.enterNumber.numberBlocked:
@@ -791,6 +806,7 @@ l10n:
       sv: Detta nummer har blockerats!
       da: Dette nummer er blockeret!
       pt: Número de telefone bloqueado!
+      fr: Ce numéro a été supprimé!
 
     # Error-Label that is shown when the verification was attempted too many times
     verification.enterNumber.tooManyAttempts:
@@ -799,6 +815,7 @@ l10n:
       sv: För många försök, var god prova igen senare!
       da: For mange forsøg, venligst prøv igen senere!
       pt: Demasiadas tentativas, tenta outra vez mais tarde!
+      fr:  Trop de demandes, essayez à nouveau plus tard!
 
     # Text for the mandatory privacy-policy checkbox below the number-input.
     # The placeholder {{ policyLink }} is replaced with an HTML A-Tag linking to the privacy
@@ -856,7 +873,7 @@ l10n:
       en: Not your number?
       de: Nicht deine Nummer?
       sv: Inte ditt nummer?
-      fr: Ce n'est pas ton numéro de téléphone?
+      fr: Ce n'est pas ton numéro?
       da: Ikke dit nummer?
       pt: Número errado?
 
@@ -877,6 +894,7 @@ l10n:
       sv: Koden är ogiltig!
       da: Koden er ugyldigt!
       pt: Código inválido!
+      fr: Le code n'est pas correct!
 
     # Button text of the button that allows the user to submit the verification code in order to complete the verification
     # process.
@@ -932,6 +950,7 @@ l10n:
       sv: Samtalet kunde inte kopplas, var god försök igen!
       da: Opkaldet fejlede, venligst prøv igen senere!
       pt: Não conseguimos estabelecer a chamada, tenta novamente.
+      fr: La connexion n'a pas pu être établi, merci de réessayer!
 
     # Error message: It is not possible to reach the selected person at the moment, maybe they
     # are in a call already or they did not pick up the phone.
@@ -945,6 +964,7 @@ l10n:
       da: Ingen forbindelse. Personen kunne være optaget i et andet opkald. Venligst prøv igen senere og ring til en anden person i mellemtiden.
       pt: Não conseguimos por-te em contacto com a pessoa seleccionada. Podem estar noutra chamada.
         Tenta novamente mais tarde e considera entretanto ligar a outra pessoa.
+      fr: Connexion indisponible. La personne concernée est peut-être en train de répondre à un autre appel. Vous pouvez réessayer plus tard et considérer d'appeler une autre personne entretemps!
 
     # Error message: It is not possible to make a call right now as we are outside office hours
     callSetup.error.outsideOfficeHours:
@@ -953,6 +973,7 @@ l10n:
       sv: Samtal utanför kontorstid är inte möjliga. Var god försök igen under kontorstiden.
       da: Opkald udenfor kontortiden er ikke muligt. Venligst prøv igen under kontortiden.
       pt: Não é possível ligar fora do horário de atendimento. Tenta novamente durante o horário de atendimento.
+      fr: Il n'est pas possible d'appeler en dehors des heures de bureau. Nous vous invitons à réessayer pendant les heures de bureau.
 
   # Translation strings related to the feedback step that will be displayed as soon as the user is connected to the MEP.
   # This means the feedback can already be entered during the call. This can be helpful for textual notes during the call.
@@ -983,7 +1004,7 @@ l10n:
       sv: 'Ja'
       fr: 'Oui'
       da: 'Ja'
-      pt: Sim
+      pt: 'Sim'
 
     # Second possible answer indicates more likely yes than no in the question of whether the MEP was convinced.
     feedback.convincingQuestionFeedback.likelyYes:
@@ -1010,7 +1031,7 @@ l10n:
       sv: 'Nej'
       fr: 'Non'
       da: 'Nej'
-      pt: Não
+      pt: 'Não'
 
     # Checkbox-text for a checkbox that lets the user indicate that there were technical problems during the call.
     feedback.technicalProblemsQuestion:
@@ -1055,6 +1076,7 @@ l10n:
       sv: Hoppa över
       da: Spring over
       pt: Não enviar
+      fr: Sauter
 
     # Error message that is shown if feedback was already submitted. This could happen if the user
     # opens the same feedback link twice.
@@ -1064,6 +1086,7 @@ l10n:
       sv: Återkopplingen för detta samtal har redan skickats in.
       da: Tilbagemeldingen for dette opkald er allerede sendt ud.
       pt: Já submeteste os teus comentários para esta chamada.
+      fr: Le feedback pour cet appel est déjà soumis.
 
   # Translation strings related to the section of the MEP-Selection section on the left side of the screen
 
@@ -1702,6 +1725,7 @@ l10n:
       sv: Fel! Ingen förbindelse till servern!
       da: Fejl! Ingen forbindelse til serveren!
       pt: Erro ao comunicar com o servidor.
+      fr: Erreur! La connexion au serveur ne pouvait pas être établie!
 
     # Generic error message that is used when an unusual error has occurred and we do not know what has happend.
     errro.genericError:
@@ -1710,6 +1734,7 @@ l10n:
       sv: Ett fel har uppstått.
       da: Et fejl er opstået.
       pt: Ocorreu um erro.
+      fr: Une erreur est survenue!
 
     # Title of the error-dialog, that will be shown when a severe error has occured.
     error.errorDialogTitle:
@@ -1718,6 +1743,7 @@ l10n:
       sv: Fel
       da: Fejl
       pt: Erro
+      fr: Erreur
 
     # OK-Button of the error-dialog, that will be shown when a severe error has occured.
     error.errorDialogOK:
@@ -1726,3 +1752,4 @@ l10n:
       sv: OK
       da: OK
       pt: OK
+      fr: OK
