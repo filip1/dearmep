@@ -21,6 +21,14 @@ from ..config import APP_NAME, Config, L10nEntry
 _logger = logging.getLogger(__name__)
 
 
+# For the following keys, missing translations will output only a warning, not
+# an error.
+WARNING_KEYS = [
+    "maintenance.message",
+    "verification.enterNumber.policyLinkUrl",
+]
+
+
 def cmd_translations(ctx: Context) -> None:
     def check_entries(section: str, entries: Mapping[str, L10nEntry]) -> bool:
         had_error = False
@@ -39,10 +47,14 @@ def cmd_translations(ctx: Context) -> None:
                     lang for lang in cfg.l10n.languages if lang not in entry
                 ]
                 if missing:
-                    _logger.error(
-                        f"{prefix} is not translated into {', '.join(missing)}"
+                    _logger.log(
+                        logging.WARNING
+                        if key in WARNING_KEYS
+                        else logging.ERROR,
+                        f"{prefix} is not translated into "
+                        + ", ".join(missing),
                     )
-                    had_error = True
+                    had_error = key not in WARNING_KEYS
         return had_error
 
     ctx.setup_logging()
@@ -79,7 +91,10 @@ def add_parser(
     translations = subsub.add_parser(
         "translations",
         help="ensure all strings are translated",
-        description="Look for untranslated strings in the configuration.",
+        description="Look for untranslated strings in the configuration. Will "
+        "exit with return code 0 if everything is translated, 1 if not. A few "
+        "translation keys count as optional; they will only emit a warning "
+        "and not count as an error.",
     )
     translations.set_defaults(func=cmd_translations)
 
