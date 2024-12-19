@@ -834,9 +834,9 @@ l10n:
       en: Privacy Policy
       de: Datenschutzerklärung
       sv: integritetspolicy
+      fr: Règles de confidentialité
       # Danish grammar note: I am using the -ken suffix because of the definite article,
       # given that it will probably be used in a sentence with a definite meaning.
-      fr: Règles de confidentialité
       da: Privatlivspolitikken
       pt: Política de privacidade
 
