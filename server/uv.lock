@@ -148,15 +148,6 @@ wheels = [
 ]
 
 [[package]]
-name = "charset-normalizer"
-version = "2.1.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a1/34/44964211e5410b051e4b8d2869c470ae8a68ae274953b1c7de6d98bbcf94/charset-normalizer-2.1.1.tar.gz", hash = "sha256:5a3d016c7c547f69d6f81fb0db9449ce888b418b5b9952cc5e6e66843e9dd845", size = 82360 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/db/51/a507c856293ab05cdc1db77ff4bc1268ddd39f29e7dc4919aa497f0adbec/charset_normalizer-2.1.1-py3-none-any.whl", hash = "sha256:83e9a75d1911279afd89352c68b45348559d1fc0506b054b346651b5e7fee29f", size = 39748 },
-]
-
-[[package]]
 name = "click"
 version = "8.1.3"
 source = { registry = "https://pypi.org/simple" }
@@ -288,7 +279,6 @@ dependencies = [
     { name = "rich" },
     { name = "sqlmodel" },
     { name = "starlette-exporter" },
-    { name = "types-python-jose" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 
@@ -346,7 +336,6 @@ requires-dist = [
     { name = "rich", specifier = "~=13.9" },
     { name = "sqlmodel", specifier = "<0.0.11" },
     { name = "starlette-exporter", specifier = "~=0.15.1" },
-    { name = "types-python-jose", specifier = "~=3.3.4.8" },
     { name = "uvicorn", extras = ["standard"], specifier = "~=0.32" },
     { name = "visidata", marker = "extra == 'convert'", specifier = ">=3" },
     { name = "xlsxwriter", marker = "extra == 'convert'", specifier = "~=3.1" },
@@ -1468,27 +1457,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/fe/b4/ffa2908d4b69a4cb983289fdf30cb11ca33bee293012fc663529fcba7615/types-Pillow-9.5.0.5.tar.gz", hash = "sha256:de9877aa1e6226b6479459ca84df02fd7e999b970c79cfee3b8298840336e77c", size = 31062 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fb/59/da720528719fa078d1de45a1dc617f7ab538477d2d599f57125aec769aae/types_Pillow-9.5.0.5-py3-none-any.whl", hash = "sha256:2b17f95c5c16e4962e4032bdb95494766a85569fa278ee21e5fcbbd318e9ccd2", size = 51326 },
-]
-
-[[package]]
-name = "types-pyasn1"
-version = "0.4.0.6"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/f1/30/9481e16cbea374c90f1b4def0d3f1cd91f08a2cde3a2e2236f576e8cd77f/types-pyasn1-0.4.0.6.tar.gz", hash = "sha256:8f1965d0b79152f9d1efc89f9aa9a8cdda7cd28b2619df6737c095cbedeff98b", size = 11210 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/29/7e/66a647e343804ffbdeec990d8082b14a84ea3540e65836b4e37a5c499127/types_pyasn1-0.4.0.6-py3-none-any.whl", hash = "sha256:dd5fc818864e63a66cd714be0a7a59a493f4a81b87ee9ac978c41f1eaa9a0cef", size = 18039 },
-]
-
-[[package]]
-name = "types-python-jose"
-version = "3.3.4.8"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "types-pyasn1" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/f8/db/f637deaf4e4564af8ecfb1b0330bb663ec6187d5d6dae89134fe80f23e31/types-python-jose-3.3.4.8.tar.gz", hash = "sha256:3c316675c3cee059ccb9aff87358254344915239fa7f19cee2787155a7db14ac", size = 6709 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/0c/60/a471823488173d8584fe1e3ea1201cc40768bb8d0aada0aac36ae94ef46d/types_python_jose-3.3.4.8-py3-none-any.whl", hash = "sha256:95592273443b45dc5cc88f7c56aa5a97725428753fb738b794e63ccb4904954e", size = 9556 },
 ]
 
 [[package]]
