@@ -78,18 +78,18 @@ Get started quickly and explore all aspects of this project with our detailed do
 
 ### Core Documentation
 
-- [Server README](./server/README.md): Discover how to set the server up, manage the database, and instructions for development.
-- [Client README](./client/README.md): Learn how to embed the client application, options for customizing as well as build and development steps.
+- [Server README](./server/README.md): Discover how to set up the server, maintain the database, and manage a development environment.
+- [Client README](./client/README.md): Learn how to embed the client application, how to customize it, as well as build and development steps.
 
 ### Additional Resources
 
 - [Glossary](./doc/glossary.md): Key terms and concepts used throughout the project.
-- [Data Protection & Privacy](./doc/data-protection.md): Understand how we handle sensitive data and protect users privacy.
+- [Data Protection & Privacy](./doc/data-protection.md): Understand how we handle sensitive data and protect the privacy of our users.
 - [Security](./doc/security.md): Measures we take to ensure the security of our software.
 - [Converting Data](./doc/data-conversion.md): Steps to convert European Parliament data for use with DearMEP.
 - [Theming](./doc/theming.md): Tailor the client design to match your campaign’s homepage design.
 - [DearMEP Prometheus Metrics](./doc/metrics.md): Metrics that let you know what is going on with a production instance.
-- [Selecting Destinations](./doc/selecting-destinations.md): How DearMEP suggest who to call.
+- [Selecting Destinations](./doc/selecting-destinations.md): How DearMEP suggests who to call.
 - [Interactive Voice Response (IVR)](./doc/ivr.md): Describes the structure of the voice menu that our users interact with over the phone.
 - [Scheduler](./doc/scheduler.md): The internals of how we are scheduling calls.
 - [API Documentation](https://redocly.github.io/redoc/?url=https://akvorrat.github.io/dearmep/openapi.json) (OpenAPI ReDoc): Detailed API reference for advanced integrations and custom client implementations.
@@ -98,7 +98,7 @@ Get started quickly and explore all aspects of this project with our detailed do
 
 ## 🛡️ License
 
-This project is licensed under the **AGPL License**. See the [`LICENSE`](LICENSE) file for details.
+This project is licensed under the **AGPL License**. See the [`LICENSE.md`](LICENSE.md) file for details.
 
 ---
 
@@ -106,7 +106,7 @@ This project is licensed under the **AGPL License**. See the [`LICENSE`](LICENSE
 
 We appreciate contributions from the community!
 
-Before you get started, please take a moment to review our [`CONTRIBUTING`](CONTRIBUTING) guidelines.
+Before you get started, please take a moment to review our [contribution guidelines](CONTRIBUTING.md).
 
 Ideally discuss your planned contributions with members of the core team in a GitHub Issue beforehand.
 
