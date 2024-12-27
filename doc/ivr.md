@@ -346,8 +346,10 @@ If you would like to use different group names, make sure to record audio files 
 
 The IVR will only use groups of type `parl_group`, i.e. not the `party` of the Destination.
 
-The group name's audio file ID is derived from the group ID by first removing the `G:` prefix if it exists, and then replacing all characters except `a-z` (and `A-Z`) with underscores (`_`).
+The group name's audio file ID is derived from the group ID by first removing the `G:` prefix if it exists, then replacing all characters except `a-z` (and `A-Z`) with underscores (`_`), and adding a `group_` prefix.
 The result will be converted to lower case, if it's not already.
+
+For example, the group ID `G:Verts/ALE` will be converted to `group_verts_ale`.
 
 
 ## File Format
