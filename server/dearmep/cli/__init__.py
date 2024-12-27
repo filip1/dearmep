@@ -114,7 +114,7 @@ def run() -> None:
     # used. This is because it needs to pass the rest of argv to Alembic
     # verbatim, but argparse can't ignore arguments that look like flags.
     # <https://github.com/python/cpython/issues/61252>
-    if argv[1] == "alembic":
+    if len(argv) > 1 and argv[1] == "alembic":
         argv.insert(2, "--")
 
     args = parser.parse_args()
