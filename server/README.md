@@ -35,7 +35,7 @@ For now, please install it "for development", as described below.
 1. Install [uv](https://docs.astral.sh/uv/).
 2. Clone this repository and `cd` into it.
 3. Run `uv sync --all-extras`.
-  * See below on which extras this will install. Alternatively, you can select individual extras with `--extra NAME` or don’t install any extras at all.
+    * See below on which extras this will install. Alternatively, you can select individual extras with `--extra NAME` or don’t install any extras at all.
 4. Done.
 
 uv takes care of managing a [virtual environment](https://docs.python.org/3/tutorial/venv.html) in `.venv/` for you, containing DearMEP and all of its dependencies, without messing with your global installation.
