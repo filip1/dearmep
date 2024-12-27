@@ -376,6 +376,9 @@ If a file is missing, the behavior is undefined and it's quite possible that Dea
 Use `dearmep db store-blob --type ivr_audio FILENAMES` to import them into DearMEP's database.
 Make sure to check out `dearmep db store-blob --help` for additional options.
 
+Alternatively, you can provide the messages as normal files in your filesystem.
+The path to these files is configured using the `telephony.audio_source` setting in the config file.
+
 
 ## Additional Files
 
