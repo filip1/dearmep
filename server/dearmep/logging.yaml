@@ -20,9 +20,11 @@ handlers:
     formatter: uvicorn
 
 loggers:
+  markdown-it:
+    level: WARNING  # DEBUG is too verbose
   sqlalchemy.engine:
     level: WARNING  # set to INFO to log queries; DEBUG to also log results
 
 root:
-  level: DEBUG
+  level: INFO
   handlers: [console]
