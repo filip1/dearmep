@@ -230,8 +230,11 @@ There are often over 200 parties represented in the European Parliament; collect
 However, there are only around 10 parliamentary groups.
 Providing a logo for them allows DearMEP to display it alongside MEPs and in search results, which is helpful for users.
 
-The parliamentary groups usually don't change often, but for copyright reasons, we don't distribute their logos with DearMEP.
-You'll have to supply them yourself.
+**Note:**
+DearMEP, despite the name, tries to be flexible when it comes to which groups of people are actually being targeted by the Campaign, whether they belong to the European Parliament or not.
+This is why we don't curate and supply EP group logos, you will have to bring your own.
+The [DearMEP media repository](https://github.com/AKVorrat/dearmep-media/) contains some group logos that we, the authors, have used in the past.
+They are provided on a best-effort basis and may or may not be up to date and/or fitting for the purpose of your Campaign.
 
 To get a list of the groups (which can include characters like `/`) and the file names (which shouldn't), you can extract that information from the Destination Stream we've created above.
 We need to filter for objects of type `group`, then select only parliamentary groups (thus excluding parties) and retrieve the two fields we're interested in:
