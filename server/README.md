@@ -78,6 +78,7 @@ Please set the environment variable `DEARMEP_CONFIG` (which defaults to `config.
 See [`example-config.yaml`](dearmep/example-config.yaml) for an extensively commented example.
 
 You can use `dearmep dump example-config` to produce a config file, which you can then modify according to your needs.
+**Make sure to at least change the secrets, i.e. `authentication.secrets.pepper` and `authentication.secrets.jwt.key`.**
 
 ## Providing MEPs & Scoring
 
@@ -220,6 +221,8 @@ Additional available variables are:
 **Note:**
 The generated HTML is cached in memory.
 If you modify the document or the Jinja template after its initial render, these modifications will not show up in the HTML output until DearMEP is restarted.
+
+The [`example-markdown` directory](example-markdown) contains, as the name suggests, an example setup.
 
 ## Retrieving the OpenAPI specification
 
