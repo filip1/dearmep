@@ -111,9 +111,12 @@ See the data conversion document's section on [converting the audio files](../do
 DearMEP is using [Alembic](https://alembic.sqlalchemy.org/) to manage the database and perform version upgrades to it.
 Currently, this is a manual process.
 
+Note that Alembic requires a configuration file telling it where to find the database and migrations.
+Fortunately, DearMEP comes with a [prepared `alembic.ini`](dearmep/migrations/alembic.ini) as well as a special CLI subcommand, `dearmep alembic`, that will invoke Alembic with the environment variable `ALEMBIC_CONFIG` already pointing to the location of this configuration file.
+
 ### For Administrators of a DearMEP Instance
 
-If you upgrade DearMEP, make sure to `alembic upgrade head` before starting the `dearmep serve` process again.
+If you upgrade DearMEP, make sure to run `dearmep alembic upgrade head` before starting the `dearmep serve` process again.
 It will ensure that all changes to the database structure required for the new version are applied.
 Make sure to have a backup of your database, just in case.
 
@@ -122,10 +125,10 @@ Make sure to have a backup of your database, just in case.
 If you change the models which are reflected in the database, you'll need to do use Alembic to handle database migrations. You can create migrations via
 
 ```sh
-alembic revision --autogenerate --message "your short alembic message about the reason of this migration"
+dearmep alembic revision --autogenerate --message "your short alembic message about the reason of this migration"
 ```
 
-Alembic generates a file in `migrations/versions/`. **Check this file** for sanity. You can edit or delete this file though this usually should not be necessary. If you are happy about the migration, commit to version control.
+Alembic generates a file in `dearmep/migrations/versions/`. **Check this file** for sanity. You can edit or delete this file though this usually should not be necessary. If you are happy about the migration, commit to version control.
 
 Make sure to `upgrade` the database to the latest revision when developing. It is recommended to check the upgrades first, for example by making a copy of the database source and changing the `sqlalchemy.uri` in the `alembic.ini` or by checking the raw SQL with the `--sql` flag.
 

@@ -8,7 +8,7 @@ import logging
 import re
 from argparse import ArgumentParser, Namespace
 from contextlib import contextmanager
-from sys import exit, stderr
+from sys import argv, exit, stderr
 from typing import TYPE_CHECKING
 
 from dotenv import load_dotenv
@@ -19,7 +19,7 @@ from rich.progress import Progress
 
 from ..config import CMD_NAME
 from ..progress import DummyTaskFactory, RichTaskFactory
-from . import check, convert, db, dump, importing, serve, version
+from . import check, convert, db, dump, importing, run_alembic, serve, version
 
 
 if TYPE_CHECKING:
@@ -27,8 +27,15 @@ if TYPE_CHECKING:
 
 
 class Context:
-    def __init__(self, *, args: Namespace, raw_stdout: bool = False) -> None:
+    def __init__(
+        self,
+        *,
+        args: Namespace,
+        parser: ArgumentParser,
+        raw_stdout: bool = False,
+    ) -> None:
         self.args = args
+        self.parser = parser
         # Let the Console run on stderr if we need stdout for raw data.
         self.console = Console(stderr=raw_stdout)
         self.raw_stdout = raw_stdout
@@ -87,17 +94,35 @@ def run() -> None:
     subparsers = parser.add_subparsers(
         metavar="COMMAND",
     )
-    for module in (version, dump, serve, db, convert, importing, check):
+    for module in (
+        version,
+        dump,
+        serve,
+        db,
+        run_alembic,
+        convert,
+        importing,
+        check,
+    ):
         module.add_parser(
             subparsers,
             help_if_no_subcommand=help_if_no_subcommand,
         )
     help_if_no_subcommand(parser)
+
+    # Special hack for the `alembic` subcommand: Inject a double dash if it's
+    # used. This is because it needs to pass the rest of argv to Alembic
+    # verbatim, but argparse can't ignore arguments that look like flags.
+    # <https://github.com/python/cpython/issues/61252>
+    if argv[1] == "alembic":
+        argv.insert(2, "--")
+
     args = parser.parse_args()
 
     args.func(
         Context(
             args=args,
+            parser=parser,
             # Commands can opt-in to have a raw stdout.
             raw_stdout=getattr(args, "raw_stdout", False),
         )
