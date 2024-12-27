@@ -96,6 +96,16 @@ Importing Swayability scores is done using the `dearmep import swayability` comm
 Calling it with `--help` provides information about the CSV format it expects.
 The scoring algorithm is explained and configured in DearMEP's config file; look for the `recommender` section.
 
+## Providing IVR Audio
+
+When DearMEP calls a User, they are presented with a pretty standard audio-based [IVR](https://en.wikipedia.org/wiki/Interactive_voice_response) menu.
+Of course the menu needs audio files to play.
+
+We have a separate document explaining [how the menu works and which files to supply](../doc/ivr.md), and we provide prerecorded IVR audio in several languages in the [DearMEP media repository](https://github.com/AKVorrat/dearmep-media/).
+However, you will still need to record [at least a few messages](https://github.com/AKVorrat/dearmep-media/blob/main/README.md#voice-menu-audio) to customize them to your own Campaign.
+Also, while the media repo provides the files as `.wav` recordings for maximum fidelity and lossless editing, DearMEP expects them in Ogg Vorbis format.
+See the data conversion document's section on [converting the audio files](../doc/data-conversion.md#converting-the-audio-files) for details.
+
 ## Database Migrations
 
 DearMEP is using [Alembic](https://alembic.sqlalchemy.org/) to manage the database and perform version upgrades to it.
