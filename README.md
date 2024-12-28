@@ -96,6 +96,19 @@ Get started quickly and explore all aspects of this project with our detailed do
 
 ---
 
+## 🆘 Support
+
+If you need help setting up DearMEP, have questions, or found a bug, there are several ways to contact us:
+
+- [GitHub Discussions](https://github.com/AKVorrat/dearmep/discussions) for general Q & A.
+- [GitHub Issues](https://github.com/AKVorrat/dearmep/issues) for bugs and contributions.
+- Our [public chat](https://signal.group/#CjQKIIvA-iVKQh2KW5Y5Ng8jaYsgd9ScDmQkUkJLuZ1mSG3yEhDUzv3WmAAVHkm6d-cLpy50) on [Signal](https://signal.org/).
+
+Some of the people behind DearMEP are also available for paid consulting services and feature development.
+Contact us and let us know what you need.
+
+---
+
 ## 🛡️ License
 
 This project is licensed under the **AGPL License**. See the [`LICENSE.md`](LICENSE.md) file for details.

@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # DearMEP Server
 
-This is the server side of DearMEP.
+This is the server side of [DearMEP](https://github.com/AKVorrat/dearmep).
 It provides a RESTful API and employs
 
 * [FastAPI](https://fastapi.tiangolo.com/) as its application framework,
@@ -68,6 +68,7 @@ The most accurate documentation about the command line interface is always what 
 * `convert`: Several tools to convert data into into formats that DearMEP can use, or intermediate formats for further manipulation.
 * `import`: Import Destinations (people to contact, e.g. MEPs) or scoring information into the database.
 * `db`: Check the database for issues, add files to the blob storage.
+* `alembic`: Launch a pre-configured version of the [Alembic](https://alembic.sqlalchemy.org/) CLI, i.e. with `ALEMBIC_CONFIG` already pointing to [our configuration](https://github.com/AKVorrat/dearmep/blob/main/server/dearmep/migrations/alembic.ini).
 * `dump`: Print example configuration files and specifications.
 * `version`: Print the version numbers of Python, DearMEP, and its most important libraries.
 * `check`: Run checks against your configuration, e.g. whether all strings are translated in all languages.
