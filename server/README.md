@@ -21,7 +21,7 @@ as well as several other libraries to do its job.
 
 * [Pydantic](https://docs.pydantic.dev/1.10/)-powered rigorous validation of user-supplied data
 * Fully configurable rate limiting and telephony subsystem to protect against malicious users and manage spending
-* [Prometheus metrics](../doc/metrics.md) to observe the system's health
+* [Prometheus metrics](https://github.com/AKVorrat/dearmep/blob/main/doc/metrics.md) to observe the system's health
 * Convenient command line interface and composable import and export tools
 * Privacy-first design, keeping information stored about users to a minimum
 
@@ -75,7 +75,7 @@ The most accurate documentation about the command line interface is always what 
 ## Providing a Configuration File
 
 Please set the environment variable `DEARMEP_CONFIG` (which defaults to `config.yaml`) to the name of a YAML file containing the configuration.
-See [`example-config.yaml`](dearmep/example-config.yaml) for an extensively commented example.
+See [`example-config.yaml`](https://github.com/AKVorrat/dearmep/blob/main/server/dearmep/example-config.yaml) for an extensively commented example.
 
 You can use `dearmep dump example-config` to produce a config file, which you can then modify according to your needs.
 **Make sure to at least change the secrets, i.e. `authentication.secrets.pepper` and `authentication.secrets.jwt.key`.**
@@ -84,14 +84,14 @@ You can use `dearmep dump example-config` to produce a config file, which you ca
 
 DearMEP does not come with a built-in list of Members of Parliament.
 That list would change quite often, and you might only want to offer your users a subset of them, or an entirely different group of people and not MEPs at all.
-(For that reason, we often call them _Destinations_ instead, i.e. people that can be called. For more on some of our special terms, please see the [glossary](../doc/glossary.md).)
+(For that reason, we often call them _Destinations_ instead, i.e. people that can be called. For more on some of our special terms, please see the [glossary](https://github.com/AKVorrat/dearmep/blob/main/doc/glossary.md).)
 
 Also, one of DearMEP's key features is that you can configure, for each Destination, how important it is to contact them.
 Usually, you'd want to focus on MEPs that are still undecided on the policy your campaign attempts to influence, and not waste time and money calling people who are guaranteed to oppose you (or guaranteed to support you).
-Therefore, DearMEP uses a concept we call [Swayability](../doc/selecting-destinations.md) to calculate a kind of scoring to determine the priority assigned to a Destination.
+Therefore, DearMEP uses a concept we call [Swayability](https://github.com/AKVorrat/dearmep/blob/main/doc/selecting-destinations.md) to calculate a kind of scoring to determine the priority assigned to a Destination.
 Of course, these criteria vary wildly between the policy issue at hand, and therefore you need to provide DearMEP with your desired scores as well.
 
-We have a separate document on [how to convert data for use in DearMEP](../doc/data-conversion.md) that talks about tools and methods in general, but also how to get a list of MEPs from publicly available data.
+We have a separate document on [how to convert data for use in DearMEP](https://github.com/AKVorrat/dearmep/blob/main/doc/data-conversion.md) that talks about tools and methods in general, but also how to get a list of MEPs from publicly available data.
 
 Importing Swayability scores is done using the `dearmep import swayability` command.
 Calling it with `--help` provides information about the CSV format it expects.
@@ -102,10 +102,10 @@ The scoring algorithm is explained and configured in DearMEP's config file; look
 When DearMEP calls a User, they are presented with a pretty standard audio-based [IVR](https://en.wikipedia.org/wiki/Interactive_voice_response) menu.
 Of course the menu needs audio files to play.
 
-We have a separate document explaining [how the menu works and which files to supply](../doc/ivr.md), and we provide prerecorded IVR audio in several languages in the [DearMEP media repository](https://github.com/AKVorrat/dearmep-media/).
+We have a separate document explaining [how the menu works and which files to supply](https://github.com/AKVorrat/dearmep/blob/main/doc/ivr.md), and we provide prerecorded IVR audio in several languages in the [DearMEP media repository](https://github.com/AKVorrat/dearmep-media/).
 However, you will still need to record [at least a few messages](https://github.com/AKVorrat/dearmep-media/blob/main/README.md#voice-menu-audio) to customize them to your own Campaign.
 Also, while the media repo provides the files as `.wav` recordings for maximum fidelity and lossless editing, DearMEP expects them in Ogg Vorbis format.
-See the data conversion document's section on [converting the audio files](../doc/data-conversion.md#converting-the-audio-files) for details.
+See the data conversion document's section on [converting the audio files](https://github.com/AKVorrat/dearmep/blob/main/doc/data-conversion.md#converting-the-audio-files) for details.
 
 ## Database Migrations
 
@@ -113,7 +113,7 @@ DearMEP is using [Alembic](https://alembic.sqlalchemy.org/) to manage the databa
 Currently, this is a manual process.
 
 Note that Alembic requires a configuration file telling it where to find the database and migrations.
-Fortunately, DearMEP comes with a [prepared `alembic.ini`](dearmep/migrations/alembic.ini) as well as a special CLI subcommand, `dearmep alembic`, that will invoke Alembic with the environment variable `ALEMBIC_CONFIG` already pointing to the location of this configuration file.
+Fortunately, DearMEP comes with a [prepared `alembic.ini`](https://github.com/AKVorrat/dearmep/blob/main/server/dearmep/migrations/alembic.ini) as well as a special CLI subcommand, `dearmep alembic`, that will invoke Alembic with the environment variable `ALEMBIC_CONFIG` already pointing to the location of this configuration file.
 
 ### For Administrators of a DearMEP Instance
 
@@ -148,7 +148,7 @@ See `dearmep serve --help` for other options, including how to start it via a cu
 
 ## Accessing Development Tools
 
-You can use the [`Makefile`](Makefile) to access recommended development commands easily.
+You can use the [`Makefile`](https://github.com/AKVorrat/dearmep/blob/main/server/Makefile) to access recommended development commands easily.
 
 * `make sync` to sync your environment, install dependencies, etc. This will run `uv sync --all-extras`.
 * `make fmt` runs the [Ruff](https://docs.astral.sh/ruff/) formatter on the code.
@@ -222,7 +222,7 @@ Additional available variables are:
 The generated HTML is cached in memory.
 If you modify the document or the Jinja template after its initial render, these modifications will not show up in the HTML output until DearMEP is restarted.
 
-The [`example-markdown` directory](example-markdown) contains, as the name suggests, an example setup.
+The [`example-markdown` directory](https://github.com/AKVorrat/dearmep/blob/main/server/example-markdown) contains, as the name suggests, an example setup.
 
 ## Retrieving the OpenAPI specification
 
@@ -243,7 +243,7 @@ For nginx, and if you’re using `dearmep serve`, check out [Uvicorn’s best pr
 ## Prometheus Metrics
 
 DearMEP exports [Prometheus](https://prometheus.io/) metrics on the usual `/metrics` endpoint, providing you with insight about the health of the system as well as statistics.
-The [available metrics](../doc/metrics.md) are documented on a separate page.
+The [available metrics](https://github.com/AKVorrat/dearmep/blob/main/doc/metrics.md) are documented on a separate page.
 
 Note that you probably don't want to allow public access to these metrics.
 They don't contain user data, but do expose information about the phone numbers DearMEP itself is using to call people, which destination is being called how often and for how long, as well as cost statistics.
