@@ -11,9 +11,29 @@ description = "DearMEP helps people contact their representatives."
 requires-python = ">=3.9,<4"
 authors = [
 	{name = "Tim Weber"},
+	{name = "Tobias Mühlberger"},
+	{name = "iameru"},
+	{name = "Philipp Aaron Becker"},
+	{name = "Jörn Bethune"},
 ]
+maintainers = [
+	{name = "Tim Weber"},
+]
+readme = "README.md"
 classifiers = [
+	"Development Status :: 5 - Production/Stable",
+	"Environment :: Console",
+	"Environment :: Web Environment",
+	"Framework :: FastAPI",
 	"License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+	"Operating System :: POSIX",
+	"Programming Language :: Python :: 3 :: Only",
+	"Programming Language :: Python :: 3.9",
+	"Programming Language :: Python :: 3.10",
+	"Programming Language :: Python :: 3.11",
+	"Programming Language :: Python :: 3.12",
+	"Programming Language :: Python :: 3.13",
+	"Topic :: Communications :: Telephony",
 ]
 dependencies = [
 	"alembic~=1.12.1",
@@ -43,6 +63,12 @@ dependencies = [
 	"uvicorn[standard]~=0.32",
 	"pyjwt>=2.10.1",
 ]
+
+[project.urls]
+homepage = "https://dearmep.eu/"
+source = "https://github.com/AKVorrat/dearmep"
+documentation = "https://github.com/AKVorrat/dearmep/blob/main/README.md"
+issues = "https://github.com/AKVorrat/dearmep/issues"
 
 [dependency-groups]
 dev = [
