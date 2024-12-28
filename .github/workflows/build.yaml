@@ -155,6 +155,27 @@ jobs:
           cd dist
           find . -type f -exec curl --netrc --upload-file '{}' "$NEXTCLOUD_BASE" \;
 
+  pypi-publish:
+    name: Upload release to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/dearmep
+    permissions:
+      id-token: write
+    steps:
+      - name: Retrieve Python package
+        uses: actions/download-artifact@v3
+        with:
+          name: python-package
+          path: dist
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          verbose: true
+
   deploy:
     needs: build  # Technically, it only needs "backend", but we want the build to succeed first.
 
