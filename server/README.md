@@ -27,8 +27,9 @@ as well as several other libraries to do its job.
 
 ## Installation
 
-DearMEP is not yet available on PyPI.
-For now, please install it "for development", as described below.
+DearMEP is available [on PyPI](https://pypi.org/project/DearMEP/) and can be installed and run using normal Python packaging tools, e.g. `pip install dearmep` or `uvx dearmep`.
+
+The packages include a matching version of the [client](https://github.com/AKVorrat/dearmep/blob/main/client/README.md) and are able to serve it via HTTP, see [serving static files](#serving-static-files-eg-the-client) below.
 
 ## Installation for Development
 
