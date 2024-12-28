@@ -286,7 +286,7 @@ In fact, the example config should have this setting point to a file called `dea
 So, let’s ask DearMEP to set up a fresh database.
 
 ```console
-$ alembic upgrade head
+$ dearmep alembic upgrade head
 The configuration file was not found. This usually means that you did not set the DEARMEP_CONFIG environment variable to the config file name, or its path is incorrect.
 Traceback (most recent call last):
 …
@@ -296,7 +296,7 @@ That didn’t work.
 See, you not only need a configuration file, you also need to _tell_ DearMEP where to _find_ it.
 By default, it will look for a file named `config.yaml` in the current directory.
 Since we named ours differently (yes, of course this was for demonstration purposes), we need to set the environment variable `DEARMEP_CONFIG` to the path to this file.
-This can be done by prefixing the `dearmep` command with it, e.g. `DEARMEP_CONFIG=dearmep-config.yaml alembic upgrade head`, but you’d need to do it every time you invoke DearMEP.
+This can be done by prefixing the `dearmep` command with it, e.g. `DEARMEP_CONFIG=dearmep-config.yaml dearmep alembic upgrade head`, but you’d need to do it every time you invoke DearMEP.
 
 The easier way is probably to execute `export DEARMEP_CONFIG="$(pwd)/dearmep-config.yaml"` once.
 This setting will persist while you’re logged in to your current shell.
@@ -306,7 +306,7 @@ For this, create a file called `.env` and write `DEARMEP_CONFIG=dearmep-config.y
 Now, initializing the database should work:
 
 ```console
-$ alembic upgrade head # no output means nothing went wrong
+$ dearmep alembic upgrade head  # no output means nothing went wrong
 $ ls -lh dearmep.sqlite
 -rw-r--r-- 1 scy scy 64K Jul  8 14:13 dearmep.sqlite
 ```
