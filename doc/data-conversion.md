@@ -34,14 +34,14 @@ This approach might seem more complicated than it needs to be, but it provides a
 
 ### Converting the MEP dump to a Destination Stream
 
-If you go to [Parltrack’s dumps page](https://parltrack.org/dumps), you will find a `ep_meps.json.lz` file available to download.
+If you go to [Parltrack’s dumps page](https://parltrack.org/dumps), you will find a `ep_meps.json.zst` file available to download.
 It contains all of the past and present MEPs, as well as how to contact them, which parliamentary groups, parties, committees etc. they were a member of, and a few other things.
 DearMEP does not (yet) use all of that information, but it supports extracting the information relevant to it.
 
 To create a Destination Stream from the MEP dump, use the `dearmep convert parltrack.meps` command:
 
 ```console
-$ dearmep convert parltrack.meps ep_meps.json.lz > dearmep-destinations.json
+$ dearmep convert parltrack.meps ep_meps.json.zst > dearmep-destinations.json
 reading and decompressing input ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
 parsing JSON                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
 converting to DearMEP format    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
