@@ -96,6 +96,7 @@ convert = [
 	"csvkit>=2",
 	"visidata>=3",
 	"xlsxwriter~=3.1",
+	"zstandard~=0.24",
 ]
 specs = [
 	"eralchemy2~=1.4",

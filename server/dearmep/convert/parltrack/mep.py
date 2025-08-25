@@ -6,9 +6,11 @@ import json
 import re
 from collections.abc import Generator, Iterable
 from datetime import date, datetime, timezone
+from enum import Enum
 from typing import (
     TYPE_CHECKING,
     Any,
+    Optional,
     Union,
     cast,
 )
@@ -47,6 +49,12 @@ LOCATION_MAP = {
 }
 
 NON_FILENAME_SAFE = re.compile(r"[^\w\d _-]")
+
+
+class Compression(Enum):
+    NONE = 0
+    LZ = 1
+    ZSTD = 2
 
 
 def is_current(item: dict) -> bool:
@@ -182,18 +190,24 @@ def convert_meps(
     tf: BaseTaskFactory,
     *,
     include_inactive: bool = False,
-    lz_compressed: bool = True,
+    compression: Optional[Compression] = None,
 ) -> Iterable[DumpableModels]:
-    dc_str = " and decompressing" if lz_compressed else ""
+    if compression is None:
+        compression = Compression.NONE
+    dc_str = "" if compression == Compression.NONE else " and decompressing"
     with tf.create_task(f"reading{dc_str} input") as task:
         input.set_task(task)
         with input as input_stream:
-            if lz_compressed:
+            if compression == Compression.LZ:
                 from ..lz import lz_decompressor
 
                 src: Union[BufferedReader, Iterable[bytes]] = lz_decompressor(
                     input_stream
                 )
+            elif compression == Compression.ZSTD:
+                from ..zstd import zstd_decompressor
+
+                src = zstd_decompressor(input_stream)
             else:
                 src = input_stream
             # TODO: If src was a file-like, not a generator, we could skip this

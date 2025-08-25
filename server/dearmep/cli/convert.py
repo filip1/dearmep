@@ -61,13 +61,16 @@ def convert_audio(ctx: Context) -> None:
 
 
 def parltrack_meps(ctx: Context) -> None:
+    compression_str = ctx.args.compression
+    if ctx.args.lz is not None:
+        compression_str = "lz" if ctx.args.lz else "none"
     with ctx.task_factory() as tf:
         for output in dump.dump_iter_json(
             mep.convert_meps(
                 ctx.args.input,
                 tf,
                 include_inactive=ctx.args.include_inactive,
-                lz_compressed=ctx.args.lz,
+                compression=mep.Compression[compression_str.upper()],
             )
         ):
             print(output)  # noqa: T201
@@ -285,25 +288,40 @@ def add_parser(
         "destinations`) as the list of Destinations to contact.",
     )
     FlexiBytesReader.add_as_argument(meps)
-    meps_lz = meps.add_mutually_exclusive_group()
-    meps_lz.add_argument(
+    meps_compression = meps.add_mutually_exclusive_group()
+    meps_compression.add_argument(
+        "--compression",
+        metavar="METHOD",
+        choices=[method.name.lower() for method in mep.Compression],
+        help="assume the input to be compressed using METHOD; choices are "
+        "`none` (uncompressed JSON), `lz` (used by Parltrack until 2024), or "
+        "`zstd` (used by Parltrack since 2024, the default)",
+        default="zstd",
+    )
+    meps_compression.add_argument(
         "--lz",
         action="store_true",
-        help="assume the input to be lz compressed, just as you would "
-        "download it from the Parltrack website (default)",
+        deprecated=True,
+        help="deprecated alias for --compression=lz",
     )
-    meps_lz.add_argument(
+    meps_compression.add_argument(
         "--no-lz",
         dest="lz",
         action="store_false",
-        help="assume the input to be uncompressed JSON",
+        deprecated=True,
+        help="deprecated alias for --compression=none",
     )
     meps.add_argument(
         "--include-inactive",
         action="store_true",
         help='include MEPs that are marked in the input as being "inactive"',
     )
-    meps.set_defaults(func=parltrack_meps, raw_stdout=True, lz=True)
+    meps.set_defaults(
+        func=parltrack_meps,
+        raw_stdout=True,
+        compression="zstd",
+        lz=None,
+    )
 
     audio = subsub.add_parser(
         "audio",
