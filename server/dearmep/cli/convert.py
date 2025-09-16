@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import logging
+import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
@@ -25,6 +26,9 @@ from ..progress import FlexiBytesReader
 
 MEP_PORTRAIT_FILE_PATTERN = "{id}.jpg"
 MEP_NAME_AUDIO_FILE_PATTERN = "{id}.mp3"
+
+# The "deprecated" argument exists in argparse since Python 3.13.
+DEPRECATED_ARG = {"deprecated": True} if sys.version_info >= (3, 13) else {}
 
 
 _logger = logging.getLogger(__name__)
@@ -301,15 +305,15 @@ def add_parser(
     meps_compression.add_argument(
         "--lz",
         action="store_true",
-        deprecated=True,
         help="deprecated alias for --compression=lz",
+        **DEPRECATED_ARG,  # type: ignore[arg-type]
     )
     meps_compression.add_argument(
         "--no-lz",
         dest="lz",
         action="store_false",
-        deprecated=True,
         help="deprecated alias for --compression=none",
+        **DEPRECATED_ARG,  # type: ignore[arg-type]
     )
     meps.add_argument(
         "--include-inactive",
