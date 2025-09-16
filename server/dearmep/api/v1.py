@@ -531,7 +531,11 @@ def request_number_verification(
             PhoneNumberVerificationRejectedResponse(errors=errors),
         )
 
-    user = UserPhone(request.phone_number)
+    try:
+        user = UserPhone(request.phone_number)
+    except ValueError:
+        return reject([PhoneRejectReason.INVALID_PATTERN])
+
     # The `assert` is just to guarantee to mypy that it's not None. Which we
     # can guarantee because we've just created this UserPhone from an actual
     # unhashed phone number.
