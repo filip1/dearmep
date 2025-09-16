@@ -2,11 +2,16 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-.PHONY: all flint fmt lint noqa qa sync test trans types
+.PHONY: all audit flint fmt lint noqa qa sync test trans types
 
 
 # By default, run all the formatting, linting, and testing.
 all: flint qa
+
+
+# Check all dependencies for security advisories.
+audit:
+	uv run --with pip-audit pip-audit -s osv
 
 
 # Run formatting and linting. This is fast and can be done on every save, for
