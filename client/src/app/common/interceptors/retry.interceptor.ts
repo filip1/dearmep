@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -21,6 +21,8 @@ export const SKIP_RETRY_STATUS_CODES = new HttpContextToken<number[]>(() => []);
 
 @Injectable()
 export class RetryInterceptor implements HttpInterceptor {
+  private readonly errorServcie = inject(ErrorService);
+
   private readonly rateLimitMinRetryInterval = 1000;
   private readonly rateLimitMaxRetries = 20;
 
@@ -32,8 +34,6 @@ export class RetryInterceptor implements HttpInterceptor {
 
   private readonly connectionErrorInterval = 1000;
   private readonly connectionErrorMaxRetries = 5;
-
-  constructor(private readonly errorServcie: ErrorService) {}
 
   intercept(
     request: HttpRequest<unknown>,

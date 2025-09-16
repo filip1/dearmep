@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { throwError } from 'rxjs';
 import { FeedbackSubmission } from 'src/app/api/models';
 import { ApiService } from 'src/app/api/services';
@@ -11,9 +11,9 @@ import { ApiService } from 'src/app/api/services';
   providedIn: 'root',
 })
 export class FeedbackService {
-  private feedbackToken?: string;
+  private readonly apiService = inject(ApiService);
 
-  constructor(private readonly apiService: ApiService) {}
+  private feedbackToken?: string;
 
   public setToken(token: string | undefined) {
     this.feedbackToken = token;

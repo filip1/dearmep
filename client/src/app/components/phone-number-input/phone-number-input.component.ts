@@ -7,13 +7,11 @@ import {
   Component,
   ElementRef,
   HostBinding,
-  Inject,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
-  Self,
   ViewChild,
+  inject,
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -71,6 +69,15 @@ export class PhoneNumberInputComponent
     OnInit,
     OnDestroy
 {
+  private readonly translocoService = inject(TranslocoService);
+  private formBuilder = inject(FormBuilder);
+  private _focusMonitor = inject(FocusMonitor);
+  private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly configService = inject(ConfigService);
+  private readonly l10nService = inject(L10nService);
+  _formField = inject<MatFormField>(MAT_FORM_FIELD, { optional: true });
+  ngControl = inject(NgControl, { optional: true, self: true });
+
   static nextId = 0;
 
   private readonly destroyed$ = new Subject<void>();
@@ -151,16 +158,7 @@ export class PhoneNumberInputComponent
     this.stateChanges.next();
   }
 
-  constructor(
-    private readonly translocoService: TranslocoService,
-    private formBuilder: FormBuilder,
-    private _focusMonitor: FocusMonitor,
-    private _elementRef: ElementRef<HTMLElement>,
-    private readonly configService: ConfigService,
-    private readonly l10nService: L10nService,
-    @Optional() @Inject(MAT_FORM_FIELD) public _formField: MatFormField,
-    @Optional() @Self() public ngControl: NgControl
-  ) {
+  constructor() {
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
@@ -246,7 +244,7 @@ export class PhoneNumberInputComponent
   }
 
   get errorState() {
-    return this.ngControl.errors !== null && !!this.ngControl.touched;
+    return this.ngControl?.errors !== null && !!this.ngControl?.touched;
   }
 
   get empty() {

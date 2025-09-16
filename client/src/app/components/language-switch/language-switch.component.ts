@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { L10nService } from 'src/app/services/l10n/l10n.service';
 import { TranslocoModule } from '@ngneat/transloco';
 import { MatOption } from '@angular/material/core';
@@ -23,10 +23,10 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
   ],
 })
 export class LanguageSwitchComponent implements OnInit {
+  private readonly l10nPerfService = inject(L10nService);
+
   public availableLanguages?: string[];
   public selectedLanguage?: string;
-
-  constructor(private readonly l10nPerfService: L10nService) {}
 
   public ngOnInit(): void {
     this.l10nPerfService.getAvailableLanguages$().subscribe({

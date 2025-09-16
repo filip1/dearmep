@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ApiService } from 'src/app/api/services';
 import { L10nService } from '../l10n/l10n.service';
 import {
@@ -21,6 +21,9 @@ import {
   providedIn: 'root',
 })
 export class SelectDestinationService {
+  private readonly apiService = inject(ApiService);
+  private readonly l10nService = inject(L10nService);
+
   private initializedSuggestedDestination = false;
   private selectedCountry?: string;
   private readonly selectedDestination = new BehaviorSubject<
@@ -30,10 +33,9 @@ export class SelectDestinationService {
     DestinationSearchResult[] | undefined
   >(undefined);
 
-  constructor(
-    private readonly apiService: ApiService,
-    private readonly l10nService: L10nService
-  ) {
+  constructor() {
+    const l10nService = this.l10nService;
+
     l10nService
       .getCountry$()
       .pipe(

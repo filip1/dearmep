@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { HttpContext } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   Observable,
   concat,
@@ -40,12 +40,10 @@ export type CallingErrorType =
   providedIn: 'root',
 })
 export class CallingService {
-  private readonly callStatePollInterval = 5000;
+  private readonly apiService = inject(ApiService);
+  private readonly feedbackService = inject(FeedbackService);
 
-  constructor(
-    private readonly apiService: ApiService,
-    private readonly feedbackService: FeedbackService
-  ) {}
+  private readonly callStatePollInterval = 5000;
 
   public setUpCall(destinationID: string, language: string): Observable<void> {
     return concat(

@@ -12,4 +12,4 @@ import { SafePipe } from 'src/app/common/pipes/safe.pipe';
   styleUrls: ['./talking-points.component.scss'],
   imports: [TranslocoModule, SafePipe],
 })
-export class TalkingPointsComponent { }
+export class TalkingPointsComponent {}

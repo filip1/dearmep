@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { take } from 'rxjs';
 import { FeedbackConvinced } from 'src/app/api/models';
@@ -34,6 +34,11 @@ import { TranslocoModule } from '@ngneat/transloco';
   ],
 })
 export class FeedbackStepComponent {
+  private readonly routingStateManager = inject(RoutingStateManagerService);
+  private readonly selectDestinationService = inject(SelectDestinationService);
+  private readonly feedbackService = inject(FeedbackService);
+  private readonly errorService = inject(ErrorService);
+
   public readonly convincedYes = FeedbackConvinced.Yes;
   public readonly convincedLikeleyYes = FeedbackConvinced.LikelyYes;
   public readonly convincedLikeleyNo = FeedbackConvinced.LikelyNo;
@@ -48,13 +53,6 @@ export class FeedbackStepComponent {
       updateOn: 'change',
     }),
   });
-
-  constructor(
-    private readonly routingStateManager: RoutingStateManagerService,
-    private readonly selectDestinationService: SelectDestinationService,
-    private readonly feedbackService: FeedbackService,
-    private readonly errorService: ErrorService
-  ) {}
 
   public async submitClick() {
     this.feedbackService

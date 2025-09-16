@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -20,7 +20,7 @@ export const AUTH_TOKEN_REQUIRED = new HttpContextToken<boolean>(() => false);
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private readonly authService: AuthenticationService) {}
+  private readonly authService = inject(AuthenticationService);
 
   intercept(
     request: HttpRequest<unknown>,

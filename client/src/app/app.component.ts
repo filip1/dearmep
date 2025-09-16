@@ -11,6 +11,7 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import { delay, filter, map, Observable, timer } from 'rxjs';
 import { BaseUrlService } from './common/services/base-url.service';
@@ -55,6 +56,13 @@ import { ResponsiveDirective } from './common/directives/responsive.directive';
   ],
 })
 export class AppComponent implements OnInit, OnChanges, AfterViewInit {
+  private readonly baseUrlService = inject(BaseUrlService);
+  private readonly routingStateManagerService = inject(
+    RoutingStateManagerService
+  );
+  private readonly l10nService = inject(L10nService);
+  private readonly configService = inject(ConfigService);
+
   public styleUrl$?: Observable<string>;
   public flagsStyleUrl$?: Observable<string>;
   public shouldDisplayTalkingPoints$?: Observable<boolean>;
@@ -144,13 +152,6 @@ export class AppComponent implements OnInit, OnChanges, AfterViewInit {
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('default-country')
   public defaultCountry?: string;
-
-  constructor(
-    private readonly baseUrlService: BaseUrlService,
-    private readonly routingStateManagerService: RoutingStateManagerService,
-    private readonly l10nService: L10nService,
-    private readonly configService: ConfigService
-  ) {}
 
   public ngOnInit() {
     if (!this.hostUrl) {

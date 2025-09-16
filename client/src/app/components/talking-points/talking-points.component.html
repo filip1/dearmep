@@ -13,6 +13,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     </div>
   }
   @if (t('talkingPoints.moreArgumentsHtml')) {
-    <div class="dmep-more-arguments" [innerHTML]="'talkingPoints.moreArgumentsHtml' | transloco | safe: 'html'"></div>
+    <div
+      class="dmep-more-arguments"
+      [innerHTML]="
+        'talkingPoints.moreArgumentsHtml' | transloco | safe: 'html'
+      "></div>
   }
 </div>

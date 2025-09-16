@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { AppConfig } from './app-config.model';
 import {
   BehaviorSubject,
@@ -19,6 +19,9 @@ import { LocalStorageService } from '../local-storage/local-storage.service';
   providedIn: 'root',
 })
 export class ConfigService {
+  private readonly apiService = inject(ApiService);
+  private readonly localStorageService = inject(LocalStorageService);
+
   private readonly languageStorageKey = 'language';
   private readonly countryStorageKey = 'country';
 
@@ -59,10 +62,7 @@ export class ConfigService {
   private availableLanguages: string[] | undefined;
 
   // Note: This service should depend on as few services as possible as it is used early in the bootstrap process
-  constructor(
-    private readonly apiService: ApiService,
-    private readonly localStorageService: LocalStorageService
-  ) {
+  constructor() {
     const userSelectedLanguage = this.getSelectedLanguage();
     this.getServerConfig$(userSelectedLanguage);
   }

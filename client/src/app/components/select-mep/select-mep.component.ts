@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
   MatAutocompleteTrigger,
@@ -63,6 +63,11 @@ import {
   ],
 })
 export class SelectMEPComponent implements OnInit {
+  private readonly routingStateManagerService = inject(
+    RoutingStateManagerService
+  );
+  private readonly selectDestinationService = inject(SelectDestinationService);
+
   public mepSelectionPossible$?: Observable<boolean>;
 
   public selectedMEP$?: Observable<DestinationRead | undefined>;
@@ -77,11 +82,6 @@ export class SelectMEPComponent implements OnInit {
 
   @ViewChild('destinationSearchInput', { read: MatAutocompleteTrigger })
   public autoComplete?: MatAutocompleteTrigger;
-
-  constructor(
-    private readonly routingStateManagerService: RoutingStateManagerService,
-    private readonly selectDestinationService: SelectDestinationService
-  ) {}
 
   public ngOnInit(): void {
     this.mepSelectionPossible$ = this.routingStateManagerService

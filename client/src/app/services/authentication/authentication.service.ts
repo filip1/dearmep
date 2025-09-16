@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 import { JwtResponse } from 'src/app/api/models';
 import {
@@ -17,6 +17,8 @@ import { PhoneNupmberUtil } from 'src/app/common/util/phone-number.util';
   providedIn: 'root',
 })
 export class AuthenticationService {
+  private readonly localStorageService = inject(LocalStorageService);
+
   private readonly tokenStorageKey = 'auth-token';
   private readonly tokenTypeStorageKey = 'auth-token-type';
   private readonly tokenExpiryTimeStorageKey = 'auth-token-expiry-time';
@@ -33,7 +35,7 @@ export class AuthenticationService {
     string | undefined
   >(undefined);
 
-  constructor(private readonly localStorageService: LocalStorageService) {
+  constructor() {
     this.loadTokens();
   }
 

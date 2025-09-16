@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   ValidatorFn,
@@ -60,6 +60,17 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
   ],
 })
 export class VerifyNumberComponent implements OnInit, OnDestroy {
+  private readonly routingStateManager = inject(RoutingStateManagerService);
+  private readonly callintService = inject(CallingService);
+  private readonly translocoService = inject(TranslocoService);
+  private readonly baseUrlService = inject(BaseUrlService);
+  private readonly apiService = inject(ApiService);
+  private readonly l10nService = inject(L10nService);
+  private readonly authenticationService = inject(AuthenticationService);
+  private readonly selectDestinationService = inject(SelectDestinationService);
+  private readonly errorService = inject(ErrorService);
+  private readonly officeHoursService = inject(OfficeHoursService);
+
   private phoneNumberSentToServerForValidation?: string; // The number that correponds to the below error as string => error is not relevant if number changed
   private phoneNumberValidationServerError: PhoneNumberValidationErrors | null =
     null;
@@ -116,18 +127,7 @@ export class VerifyNumberComponent implements OnInit, OnDestroy {
     updateOn: 'change',
   });
 
-  constructor(
-    private readonly routingStateManager: RoutingStateManagerService,
-    private readonly callintService: CallingService,
-    private readonly translocoService: TranslocoService,
-    private readonly baseUrlService: BaseUrlService,
-    private readonly apiService: ApiService,
-    private readonly l10nService: L10nService,
-    private readonly authenticationService: AuthenticationService,
-    private readonly selectDestinationService: SelectDestinationService,
-    private readonly errorService: ErrorService,
-    private readonly officeHoursService: OfficeHoursService
-  ) {
+  constructor() {
     this.officeHoursText$ = this.officeHoursService.getOfficeHoursText$();
     this.isOfficeHours$ = this.officeHoursService.inOfficeHours$();
     this.officeHoursTimezone =

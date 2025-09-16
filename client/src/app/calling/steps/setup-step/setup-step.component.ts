@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Observable, combineLatest, filter, map, take } from 'rxjs';
 import {
   CallState,
@@ -31,15 +31,17 @@ import { TranslocoModule } from '@ngneat/transloco';
   imports: [TranslocoModule, MatIcon, AsyncPipe],
 })
 export class SetupStepComponent implements OnInit {
+  private readonly selectDestinationService = inject(SelectDestinationService);
+  private readonly l10nService = inject(L10nService);
+  private readonly callingService = inject(CallingService);
+  private readonly routingStateManager = inject(RoutingStateManagerService);
+  private readonly errorService = inject(ErrorService);
+
   public readonly selectedDestinationNameHtml$;
 
-  constructor(
-    private readonly selectDestinationService: SelectDestinationService,
-    private readonly l10nService: L10nService,
-    private readonly callingService: CallingService,
-    private readonly routingStateManager: RoutingStateManagerService,
-    private readonly errorService: ErrorService
-  ) {
+  constructor() {
+    const selectDestinationService = this.selectDestinationService;
+
     this.selectedDestinationNameHtml$ = selectDestinationService
       .getDestination$()
       .pipe(

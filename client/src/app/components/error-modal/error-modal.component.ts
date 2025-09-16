@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ErrorDialogModel } from './error-dialog.model';
 import {
   MAT_DIALOG_DATA,
@@ -29,10 +29,9 @@ import { TranslocoModule } from '@ngneat/transloco';
   ],
 })
 export class ErrorModalComponent {
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public readonly model: ErrorDialogModel,
-    private readonly dialogRef: MatDialogRef<ErrorModalComponent>
-  ) {}
+  readonly model = inject<ErrorDialogModel>(MAT_DIALOG_DATA);
+  private readonly dialogRef =
+    inject<MatDialogRef<ErrorModalComponent>>(MatDialogRef);
 
   public onCancelClick() {
     this.dialogRef.close();

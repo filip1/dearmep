@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { TranslocoService, TranslocoModule } from '@ngneat/transloco';
 import {
   Observable,
@@ -42,17 +42,15 @@ interface Country {
   ],
 })
 export class CountrySelectComponent implements OnInit, OnDestroy {
+  private readonly l10nService = inject(L10nService);
+  private readonly translocoService = inject(TranslocoService);
+  private readonly selectDestinationService = inject(SelectDestinationService);
+
   private readonly destroyed$ = new Subject<void>();
 
   public countries$?: Observable<Country[]>;
 
   public selectedCountry?: string;
-
-  constructor(
-    private readonly l10nService: L10nService,
-    private readonly translocoService: TranslocoService,
-    private readonly selectDestinationService: SelectDestinationService
-  ) {}
 
   public ngOnInit(): void {
     this.countries$ = this.l10nService.getAvailableCountries$().pipe(

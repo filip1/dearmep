@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
   role="group"
   class="dmep-phone-number-input-container"
   [formGroup]="_numberFormGroup"
-  [attr.aria-labelledby]="_formField.getLabelId()"
+  [attr.aria-labelledby]="_formField?.getLabelId()"
   (focusin)="onFocusIn()"
   (focusout)="onFocusOut($event)">
   <mat-select

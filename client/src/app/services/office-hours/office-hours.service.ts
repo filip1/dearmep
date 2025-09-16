@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { getTimezoneOffset, utcToZonedTime } from 'date-fns-tz';
 import {
   Observable,
@@ -26,15 +26,15 @@ import { TimeUtil } from 'src/app/common/util/time.util';
   providedIn: 'root',
 })
 export class OfficeHoursService {
+  private readonly timeService = inject(TimeService);
+  private readonly translocoService = inject(TranslocoService);
+  private readonly configService = inject(ConfigService);
+
   private officeHours: OfficeHoursResponse;
 
   private readonly isOfficeHours$;
 
-  constructor(
-    private readonly timeService: TimeService,
-    private readonly translocoService: TranslocoService,
-    private readonly configService: ConfigService
-  ) {
+  constructor() {
     this.officeHours = this.configService.getConfig().office_hours;
 
     // check every second if we are in office hours
