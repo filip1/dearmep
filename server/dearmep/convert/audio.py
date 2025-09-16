@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from itertools import chain
 from mimetypes import guess_type
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -20,6 +21,8 @@ IMPORT_OPTS = (
         (
             # normalize loudness
             # "loudnorm",
+            # apply ReplayGain data
+            "volume=replaygain=track",
             # remove silence
             "silenceremove=stop_periods=-1:stop_duration=1:stop_threshold=-50dB",
         )
@@ -29,6 +32,11 @@ IMPORT_OPTS = (
     str(AUDIO_SAMPLERATE),
     "-ac",
     "1",  # mix down to mono -- beware of phase cancellation though
+    # Remove ReplayGain metadata (because we've baked the gain into the file).
+    *chain.from_iterable(
+        ("-metadata", f"REPLAYGAIN_{field}=")
+        for field in ["TRACK_GAIN", "TRACK_PEAK", "ALBUM_GAIN", "ALBUM_PEAK"]
+    ),
 )
 
 
