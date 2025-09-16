@@ -32,4 +32,7 @@
 }
 .dmep-phone-number-field-wrapper {
   min-height: 5rem; // min height to avoid layout shift when error message shows
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }

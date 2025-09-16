@@ -244,7 +244,7 @@ export class PhoneNumberInputComponent
   }
 
   get errorState() {
-    return this.ngControl.errors !== null && !!this.ngControl.touched;
+    return this.ngControl?.errors !== null && !!this.ngControl?.touched;
   }
 
   get empty() {
