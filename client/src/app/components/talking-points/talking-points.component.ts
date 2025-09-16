@@ -4,11 +4,12 @@
 
 import { Component } from '@angular/core';
 import { TranslocoModule } from '@ngneat/transloco';
+import { SafePipe } from 'src/app/common/pipes/safe.pipe';
 
 @Component({
   selector: 'dmep-talking-points',
   templateUrl: './talking-points.component.html',
   styleUrls: ['./talking-points.component.scss'],
-  imports: [TranslocoModule],
+  imports: [TranslocoModule, SafePipe],
 })
-export class TalkingPointsComponent {}
+export class TalkingPointsComponent { }
