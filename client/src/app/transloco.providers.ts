@@ -7,7 +7,7 @@ import {
   TranslocoLoader,
   translocoConfig,
 } from '@ngneat/transloco';
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable, isDevMode, inject } from '@angular/core';
 import { Observable, map, mergeMap, of } from 'rxjs';
 import { ApiService } from './api/services';
 import { ObjectUtil } from './common/util/object.util';
@@ -15,10 +15,8 @@ import { ConfigService } from './services/config/config.service';
 
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
-  constructor(
-    private apiService: ApiService,
-    private configService: ConfigService
-  ) {}
+  private apiService = inject(ApiService);
+  private configService = inject(ConfigService);
 
   getTranslation(lang: string): Observable<Translation> {
     return this.configService.getConfig$().pipe(

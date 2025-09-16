@@ -8,6 +8,7 @@ import {
   ElementRef,
   Input,
   OnInit,
+  inject,
 } from '@angular/core';
 
 /**
@@ -23,6 +24,9 @@ import {
   standalone: true,
 })
 export class ResponsiveDirective implements OnInit {
+  private readonly elementRef = inject(ElementRef);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
   private resizeObserver?: ResizeObserver;
 
   /**
@@ -36,11 +40,6 @@ export class ResponsiveDirective implements OnInit {
    */
   @Input()
   public breakpoints: { [key: string]: number } = {};
-
-  constructor(
-    private readonly elementRef: ElementRef,
-    private readonly changeDetectorRef: ChangeDetectorRef
-  ) {}
 
   public ngOnInit(): void {
     this.resizeObserver = new ResizeObserver(entries => this.onResize(entries));

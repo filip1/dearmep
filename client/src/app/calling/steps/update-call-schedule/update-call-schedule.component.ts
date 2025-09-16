@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { HttpContext } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoService, TranslocoModule } from '@ngneat/transloco';
 import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
@@ -59,6 +59,13 @@ import { CountrySelectComponent } from '../../../components/country-select/count
   ],
 })
 export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
+  private readonly translocoService = inject(TranslocoService);
+  private readonly timeService = inject(TimeService);
+  private readonly l10nService = inject(L10nService);
+  private readonly routingStateManager = inject(RoutingStateManagerService);
+  private readonly officeHoursService = inject(OfficeHoursService);
+  private readonly apiService = inject(ApiService);
+
   private readonly destroyed$ = new Subject<void>();
 
   public localTimeZone?: string;
@@ -78,14 +85,9 @@ export class UpdateCallScheduleComponent implements OnInit, OnDestroy {
 
   private language?: string;
 
-  constructor(
-    private readonly translocoService: TranslocoService,
-    private readonly timeService: TimeService,
-    private readonly l10nService: L10nService,
-    private readonly routingStateManager: RoutingStateManagerService,
-    private readonly officeHoursService: OfficeHoursService,
-    private readonly apiService: ApiService
-  ) {
+  constructor() {
+    const officeHoursService = this.officeHoursService;
+
     this.officeHours = officeHoursService.getOfficeHours();
     this.availableDays = officeHoursService.getDays();
 

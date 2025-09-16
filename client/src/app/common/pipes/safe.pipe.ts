@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import {
   DomSanitizer,
   SafeHtml,
@@ -24,7 +24,7 @@ import {
   standalone: true,
 })
 export class SafePipe implements PipeTransform {
-  constructor(private readonly sanitizer: DomSanitizer) {}
+  private readonly sanitizer = inject(DomSanitizer);
 
   transform(
     value: string | undefined | null,

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -18,7 +18,7 @@ import { UrlUtil } from '../util/url.util';
  */
 @Injectable()
 export class BaseUrlInterceptor implements HttpInterceptor {
-  constructor(private readonly baseUrlService: BaseUrlService) {}
+  private readonly baseUrlService = inject(BaseUrlService);
 
   intercept(
     request: HttpRequest<unknown>,

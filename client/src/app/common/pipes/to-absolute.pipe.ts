@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { BaseUrlService } from '../services/base-url.service';
 
 @Pipe({
@@ -11,7 +11,7 @@ import { BaseUrlService } from '../services/base-url.service';
   standalone: true,
 })
 export class ToAbsolutePipe implements PipeTransform {
-  constructor(private readonly baseUrlService: BaseUrlService) {}
+  private readonly baseUrlService = inject(BaseUrlService);
 
   transform(
     url: string | undefined,

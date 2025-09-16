@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { MatIconRegistry, MatIcon } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SafePipe } from '../../common/pipes/safe.pipe';
@@ -22,6 +22,9 @@ import { CdkOverlayOrigin, CdkConnectedOverlay } from '@angular/cdk/overlay';
   ],
 })
 export class SocialIconComponent implements OnInit {
+  private readonly matIconRegistry = inject(MatIconRegistry);
+  private readonly domSanitizer = inject(DomSanitizer);
+
   public popoverIsOpen = false;
 
   @Input()
@@ -29,11 +32,6 @@ export class SocialIconComponent implements OnInit {
 
   @Input()
   public target?: string;
-
-  public constructor(
-    private readonly matIconRegistry: MatIconRegistry,
-    private readonly domSanitizer: DomSanitizer
-  ) {}
 
   public ngOnInit(): void {
     // Add icons that are not part of the Material Icon Font here as SVG

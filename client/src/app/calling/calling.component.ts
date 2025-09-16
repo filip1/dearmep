@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CallingStep } from '../model/calling-step.enum';
 import { RoutingStateManagerService } from '../services/routing/routing-state-manager.service';
 import { AsyncPipe } from '@angular/common';
@@ -38,7 +38,9 @@ export class CallingComponent {
   @Input()
   public disableScheduling = false;
 
-  constructor(routingStateManager: RoutingStateManagerService) {
+  constructor() {
+    const routingStateManager = inject(RoutingStateManagerService);
+
     this.step$ = routingStateManager.getStep$();
   }
 }

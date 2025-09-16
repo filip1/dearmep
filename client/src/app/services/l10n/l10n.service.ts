@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   BehaviorSubject,
   Observable,
@@ -20,6 +20,9 @@ import { ConfigService } from '../config/config.service';
   providedIn: 'root',
 })
 export class L10nService {
+  private readonly configService = inject(ConfigService);
+  private readonly translocoService = inject(TranslocoService);
+
   private readonly defaultCountry$ = new ReplaySubject<string | undefined>();
 
   private readonly availableLanguages$: Observable<string[]>;
@@ -33,10 +36,9 @@ export class L10nService {
   private readonly randomCountry$: Observable<string>;
   private readonly country$: Observable<string>;
 
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly translocoService: TranslocoService
-  ) {
+  constructor() {
+    const translocoService = this.translocoService;
+
     this.userSelectedLanguage$ = new BehaviorSubject<string | undefined>(
       this.configService.getSelectedLanguage()
     );

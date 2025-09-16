@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslocoService } from '@ngneat/transloco';
@@ -14,13 +14,11 @@ import { ErrorModalComponent } from 'src/app/components/error-modal/error-modal.
   providedIn: 'root',
 })
 export class ErrorService {
-  private _translocoServiceLazy?: TranslocoService;
+  private readonly matSnackBar = inject(MatSnackBar);
+  private readonly matDialog = inject(MatDialog);
+  private readonly injector = inject(Injector);
 
-  constructor(
-    private readonly matSnackBar: MatSnackBar,
-    private readonly matDialog: MatDialog,
-    private readonly injector: Injector
-  ) {}
+  private _translocoServiceLazy?: TranslocoService;
 
   public displayErrorDialog(
     body: string,

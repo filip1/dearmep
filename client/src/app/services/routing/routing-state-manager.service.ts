@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CallingStep } from 'src/app/model/calling-step.enum';
 import { AuthenticationService } from '../authentication/authentication.service';
@@ -11,9 +11,9 @@ import { AuthenticationService } from '../authentication/authentication.service'
   providedIn: 'root',
 })
 export class RoutingStateManagerService {
-  private readonly step$ = new BehaviorSubject<CallingStep>(CallingStep.Home);
+  private readonly authService = inject(AuthenticationService);
 
-  public constructor(private readonly authService: AuthenticationService) {}
+  private readonly step$ = new BehaviorSubject<CallingStep>(CallingStep.Home);
 
   public getStep$() {
     return this.step$.asObservable();

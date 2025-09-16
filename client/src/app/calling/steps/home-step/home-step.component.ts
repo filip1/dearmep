@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { TranslocoService, TranslocoModule } from '@ngneat/transloco';
 import { filter, map } from 'rxjs';
 import { MarkupUtil } from 'src/app/common/util/markup.util';
@@ -19,6 +19,11 @@ import { CallingButtonsComponent } from '../../../components/calling-buttons/cal
   imports: [TranslocoModule, CallingButtonsComponent, AsyncPipe],
 })
 export class HomeStepComponent {
+  private readonly routingStateManager = inject(RoutingStateManagerService);
+  private readonly translocoService = inject(TranslocoService);
+  private readonly authService = inject(AuthenticationService);
+  private readonly officeHoursService = inject(OfficeHoursService);
+
   public descriptions$;
   public isAuthenticated$;
   public authenticatedNumberHtml$;
@@ -29,12 +34,9 @@ export class HomeStepComponent {
   @Input()
   public disableScheduling = false;
 
-  constructor(
-    private readonly routingStateManager: RoutingStateManagerService,
-    private readonly translocoService: TranslocoService,
-    private readonly authService: AuthenticationService,
-    private readonly officeHoursService: OfficeHoursService
-  ) {
+  constructor() {
+    const authService = this.authService;
+
     this.descriptions$ = this.translocoService
       .selectTranslate('call.home.descriptions')
       .pipe(filter(d => Array.isArray(d)));
