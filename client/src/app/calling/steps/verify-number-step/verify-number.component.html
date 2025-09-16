@@ -12,44 +12,46 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       transloco="verification.enterNumber.description"
       class="enter-number-description description"></p>
 
-    <mat-form-field appearance="outline" subscriptSizing="fixed">
-      <mat-label
-        transloco="verification.enterNumber.numberFieldLabel"></mat-label>
-      <dmep-phone-number-input
-        [formControl]="numberFormControl"></dmep-phone-number-input>
-      @if (
-        numberFormControl.errors && numberFormControl.errors['isEmptyError']
-      ) {
-        <mat-error
-          transloco="verification.enterNumber.numberIsRequired"></mat-error>
-      }
-      @if (
-        numberFormControl.errors && numberFormControl.errors['isInvalidError']
-      ) {
-        <mat-error
-          transloco="verification.enterNumber.invalidNumber"></mat-error>
-      }
-      @if (
-        numberFormControl.errors &&
-        numberFormControl.errors['isNotAllowedError']
-      ) {
-        <mat-error
-          transloco="verification.enterNumber.numberNotAllowed"></mat-error>
-      }
-      @if (
-        numberFormControl.errors && numberFormControl.errors['isBlockedError']
-      ) {
-        <mat-error
-          transloco="verification.enterNumber.numberBlocked"></mat-error>
-      }
-      @if (
-        numberFormControl.errors &&
-        numberFormControl.errors['isTooManyAttempts']
-      ) {
-        <mat-error
-          transloco="verification.enterNumber.tooManyAttempts"></mat-error>
-      }
-    </mat-form-field>
+    <div class="dmep-phone-number-field-wrapper">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label
+          transloco="verification.enterNumber.numberFieldLabel"></mat-label>
+        <dmep-phone-number-input
+          [formControl]="numberFormControl"></dmep-phone-number-input>
+        @if (
+          numberFormControl.errors && numberFormControl.errors['isEmptyError']
+        ) {
+          <mat-error
+            transloco="verification.enterNumber.numberIsRequired"></mat-error>
+        }
+        @if (
+          numberFormControl.errors && numberFormControl.errors['isInvalidError']
+        ) {
+          <mat-error
+            transloco="verification.enterNumber.invalidNumber"></mat-error>
+        }
+        @if (
+          numberFormControl.errors &&
+          numberFormControl.errors['isNotAllowedError']
+        ) {
+          <mat-error
+            transloco="verification.enterNumber.numberNotAllowed"></mat-error>
+        }
+        @if (
+          numberFormControl.errors && numberFormControl.errors['isBlockedError']
+        ) {
+          <mat-error
+            transloco="verification.enterNumber.numberBlocked"></mat-error>
+        }
+        @if (
+          numberFormControl.errors &&
+          numberFormControl.errors['isTooManyAttempts']
+        ) {
+          <mat-error
+            transloco="verification.enterNumber.tooManyAttempts"></mat-error>
+        }
+      </mat-form-field>
+    </div>
 
     <section class="dmep-policy-section">
       <mat-checkbox

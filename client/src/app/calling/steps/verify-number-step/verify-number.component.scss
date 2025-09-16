@@ -30,3 +30,6 @@
   height: 125px;
   width: 125px;
 }
+.dmep-phone-number-field-wrapper {
+  min-height: 5rem; // min height to avoid layout shift when error message shows
+}
