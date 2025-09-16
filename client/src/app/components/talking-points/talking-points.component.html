@@ -12,4 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       <p>{{ talkingPoint.body }}</p>
     </div>
   }
+  @if (t('talkingPoints.moreArgumentsHtml')) {
+    <div class="dmep-more-arguments" [innerHTML]="'talkingPoints.moreArgumentsHtml' | transloco | safe: 'html'"></div>
+  }
 </div>
