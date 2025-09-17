@@ -21,7 +21,6 @@ class InitialCallElkResponse(BaseModel):
 
 
 class Number(BaseModel):
-    category: Literal["fixed", "mobile", "voip"]
     country: str
     expires: datetime
     number: str
